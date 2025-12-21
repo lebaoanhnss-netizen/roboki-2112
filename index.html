@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Ôn tập Vật lí 12 – Roboki</title>
+    
+    <!-- Google Fonts: Quicksand for a friendly EdTech feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Quicksand', 'sans-serif'],
+            },
+            colors: {
+              roboki: {
+                50: '#fff7ed', // Orange 50
+                100: '#ffedd5', // Orange 100
+                200: '#fed7aa', // Orange 200
+                300: '#fdba74', // Orange 300
+                400: '#fb923c', // Orange 400
+                500: '#f97316', // Orange 500 (Primary Brand - Robot Body)
+                600: '#ea580c', // Orange 600
+                700: '#c2410c', // Orange 700
+                800: '#9a3412', // Orange 800
+                900: '#7c2d12', // Orange 900
+                950: '#431407',
+              },
+              'tech-dark': '#0f172a', // Slate 900 for tech background
+            },
+            animation: {
+              'float': 'float 3s ease-in-out infinite',
+              'bounce-short': 'bounce-short 1s infinite',
+              'fade-in': 'fadeIn 0.5s ease-out',
+              'pulse-glow': 'pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-5px)' },
+              },
+              'bounce-short': {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-20%)' },
+              },
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              pulseGlow: {
+                '0%, 100%': { opacity: '1', boxShadow: '0 0 10px #22c55e' },
+                '50%': { opacity: '.8', boxShadow: '0 0 20px #22c55e' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+
+    <style>
+      /* Custom scrollbar for mobile feel */
+      ::-webkit-scrollbar {
+        width: 4px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1; 
+        border-radius: 10px;
+      }
+      /* Prevent select on non-interactive elements for app-like feel */
+      .no-select {
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      body {
+        font-family: 'Quicksand', sans-serif;
+      }
+      .text-neon-green {
+        color: #4ade80;
+        text-shadow: 0 0 5px rgba(74, 222, 128, 0.5);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
+    "path": "https://esm.sh/path@^0.12.7",
+    "vite": "https://esm.sh/vite@^7.3.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+    "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+    "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js",
+    "firebase/": "https://esm.sh/firebase@^12.7.0/",
+    "url": "https://esm.sh/url@^0.11.4",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-slate-50 text-slate-800 font-sans antialiased h-screen w-screen overflow-hidden">
+    <div id="root" class="h-full w-full"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
