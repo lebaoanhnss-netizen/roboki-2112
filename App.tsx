@@ -6,7 +6,7 @@ import Toast from './components/Toast';
 import { UserProfile, Question, Lesson } from './types'; 
 import { 
   auth, 
-  db,
+  db, 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
   onAuthStateChanged,
@@ -535,7 +535,13 @@ const PracticeScreen: React.FC<{
             <div className="grid grid-cols-2 gap-2">
               <button onClick={() => updateSession({ selectedTopic: 'TẤT CẢ' })} className={`p-3 rounded-xl text-left text-xs font-bold border transition-all ${selectedTopic === 'TẤT CẢ' ? 'bg-roboki-500 text-white border-roboki-500 shadow-md shadow-roboki-200' : 'bg-white text-slate-500 border-slate-100 hover:border-roboki-200'}`}>Tất cả</button>
               {Array.from(new Set(questions.map(q => q.topic))).map(t => (
-                  <button key={t} onClick={() => updateSession({ selectedTopic: t })} className={`p-3 rounded-xl text-left text-xs font-bold border transition-all truncate ${selectedTopic === t ? 'bg-roboki-500 text-white border-roboki-500 shadow-md shadow-roboki-200' : 'bg-white text-slate-500 border-slate-100 hover:border-roboki-200'}`}>{t}</button>
+                  <button 
+                    key={t as string} 
+                    onClick={() => updateSession({ selectedTopic: t as string })} 
+                    className={`p-3 rounded-xl text-left text-xs font-bold border transition-all truncate ${selectedTopic === t ? 'bg-roboki-500 text-white border-roboki-500 shadow-md shadow-roboki-200' : 'bg-white text-slate-500 border-slate-100 hover:border-roboki-200'}`}
+                  >
+                    {t as string}
+                  </button>
               ))}
             </div>
            </div>
@@ -657,16 +663,16 @@ const GameScreen: React.FC<{
        const winningSegment = WHEEL_SEGMENTS[safeIndex];
 
        if (winningSegment.value > 0) {
-          setSessionData(prev => ({ 
+         setSessionData(prev => ({ 
              ...prev, 
              isSpinning: false, 
              pendingPoints: winningSegment.value,
              showWheelQuestion: true,
              currentQ: questions[Math.floor(Math.random() * questions.length)],
              isCorrect: null
-          }));
+         }));
        } else {
-          setSessionData(prev => ({ ...prev, isSpinning: false, pendingPoints: 0 }));
+         setSessionData(prev => ({ ...prev, isSpinning: false, pendingPoints: 0 }));
        }
     }, 3000);
   };
@@ -775,8 +781,8 @@ const GameScreen: React.FC<{
     return (
         <div className="flex flex-col h-full pb-20 pt-4 px-4 bg-slate-50 overflow-hidden">
            <div className="flex items-center justify-between mb-4 shrink-0">
-              <div className="bg-white px-4 py-2 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-2"><Timer size={18} className="text-rose-500"/><span className={`font-black text-xl ${timeLeft < 10 ? 'text-rose-500' : 'text-slate-700'}`}>{timeLeft}s</span></div>
-              <div className="bg-white px-4 py-2 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-2"><Star size={18} className="text-yellow-400 fill-yellow-400"/><span className="font-black text-xl text-slate-700">{score}</span></div>
+             <div className="bg-white px-4 py-2 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-2"><Timer size={18} className="text-rose-500"/><span className={`font-black text-xl ${timeLeft < 10 ? 'text-rose-500' : 'text-slate-700'}`}>{timeLeft}s</span></div>
+             <div className="bg-white px-4 py-2 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-2"><Star size={18} className="text-yellow-400 fill-yellow-400"/><span className="font-black text-xl text-slate-700">{score}</span></div>
            </div>
            {currentQ && (
              <div className="flex-1 flex flex-col min-h-0">
@@ -815,8 +821,8 @@ const GameScreen: React.FC<{
       return (
         <div className="pb-24 pt-4 px-4 h-full flex flex-col bg-slate-50 relative overflow-hidden">
            <div className="flex justify-between items-center z-10">
-              <button onClick={() => setSessionData(prev => ({...prev, mode: 'MENU'}))} className="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center border border-slate-100"><ChevronLeft size={20}/></button>
-              <div className="bg-white px-4 py-2 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-2"><Star size={18} className="text-yellow-400 fill-yellow-400"/><span className="font-black text-xl text-slate-700">{score}</span></div>
+             <button onClick={() => setSessionData(prev => ({...prev, mode: 'MENU'}))} className="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center border border-slate-100"><ChevronLeft size={20}/></button>
+             <div className="bg-white px-4 py-2 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-2"><Star size={18} className="text-yellow-400 fill-yellow-400"/><span className="font-black text-xl text-slate-700">{score}</span></div>
            </div>
            <div className="flex-1 flex flex-col items-center justify-center relative">
                <div className="relative w-80 h-80">
@@ -1007,7 +1013,7 @@ const App: React.FC = () => {
   const [practiceSession, setPracticeSession] = useState<PracticeSessionData>(INITIAL_PRACTICE_STATE);
   const [gameSession, setGameSession] = useState<GameSessionData>(INITIAL_GAME_STATE);
   const [challengeSession, setChallengeSession] = useState<ChallengeSessionData>(INITIAL_CHALLENGE_STATE);
-  
+   
   // Home States
   const [selectedTopic, setSelectedTopic] = useState<{id: string, label: string} | null>(null);
   const [expandedLessonIds, setExpandedLessonIds] = useState<string[]>([]);
@@ -1060,7 +1066,7 @@ const App: React.FC = () => {
       ...user,
       totalScore: user.totalScore + pts,
       practiceScore: source === 'practice'  ? user.practiceScore + pts  : user.practiceScore,
-      gameScore:      source === 'game'      ? user.gameScore + pts      : user.gameScore,
+      gameScore:       source === 'game'       ? user.gameScore + pts       : user.gameScore,
       challengeScore: source === 'challenge' ? user.challengeScore + pts : user.challengeScore,
     };
     setUser(updatedUser);
