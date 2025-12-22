@@ -901,7 +901,7 @@ const GameScreen: React.FC<{
         isCorrect: isRight
     }));
 
-    if (isRight) onScore(10); // Sync global
+    if (isRight) onScore(10, 'game'); // Sync global
 
     // Show result briefly then next question
     setTimeout(() => {
@@ -919,7 +919,7 @@ const GameScreen: React.FC<{
      const correct = opt === currentQ.answerKey;
      if (correct) {
         const points = pendingPoints;
-        onScore(points);
+        onScore(points, 'game');
         setSessionData(prev => ({
           ...prev,
           isCorrect: true,
@@ -1127,9 +1127,9 @@ const GameScreen: React.FC<{
                 </div>
 
                 <button 
-                   onClick={submitSpeedAnswer}
-                   disabled={!selectedSpeedOpt || isCorrect !== null}
-                   className="w-full bg-slate-800 text-white py-4 rounded-3xl font-bold shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:shadow-none disabled:transform-none shrink-0"
+                    onClick={submitSpeedAnswer}
+                    disabled={!selectedSpeedOpt || isCorrect !== null}
+                    className="w-full bg-slate-800 text-white py-4 rounded-3xl font-bold shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:shadow-none disabled:transform-none shrink-0"
                 >
                    {isCorrect !== null ? (isCorrect ? 'Chính xác!' : 'Sai rồi!') : 'Nộp bài ngay'} <ArrowRight size={20}/>
                 </button>
@@ -1213,8 +1213,8 @@ const GameScreen: React.FC<{
 
                        {/* Text Labels - UPDATED POSITIONING */}
                        {WHEEL_SEGMENTS.map((seg, i) => {
-                          const rotation = (i * SEGMENT_ANGLE) + (SEGMENT_ANGLE / 2); // Center of segment
-                          return (
+                         const rotation = (i * SEGMENT_ANGLE) + (SEGMENT_ANGLE / 2); // Center of segment
+                         return (
                              <div 
                                key={i}
                                className="absolute top-1/2 left-1/2 flex justify-center items-center"
@@ -1226,10 +1226,10 @@ const GameScreen: React.FC<{
                                }}
                              >
                                <span className="text-white font-black text-lg drop-shadow-md whitespace-nowrap">
-                                  {seg.label}
+                                 {seg.label}
                                </span>
                              </div>
-                          )
+                         )
                        })}
 
                        {/* Center Cap - Simple */}
@@ -1242,7 +1242,7 @@ const GameScreen: React.FC<{
                {/* Loose Notification */}
                {!isSpinning && pendingPoints === 0 && !showWheelQuestion && wheelRotation > 0 && (
                   <div className="mt-8 text-slate-500 font-bold animate-bounce-short flex items-center gap-2">
-                     <Frown /> Tiếc quá, mất lượt rồi!
+                      <Frown /> Tiếc quá, mất lượt rồi!
                   </div>
                )}
 
@@ -1318,11 +1318,10 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
         setLoading(true);
         setError(null);
 
-        // users có class = currentUser.class, sắp xếp theo totalScore giảm dần
         const q = query(
           collection(db, 'users'),
-          where('class', '==', currentUser.class), // Điều kiện 1: Lọc theo lớp
-          orderBy('totalScore', 'desc'),           // Điều kiện 2: Sắp xếp điểm giảm dần
+          where('class', '==', currentUser.class),
+          orderBy('totalScore', 'desc'),
           limit(50)
         );
 
@@ -1342,13 +1341,11 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
     fetchLeaderboard();
   }, [currentUser.class]);
 
-  // Tìm vị trí của user hiện tại trong BXH
   const currentIndex = players.findIndex((u) => u.uid === currentUser.uid);
   const currentRank = currentIndex >= 0 ? currentIndex + 1 : '—';
 
   return (
     <div className="pb-24 pt-4 px-4 h-full flex flex-col bg-slate-50">
-      {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={onBack}
@@ -1364,7 +1361,6 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
         </div>
       </div>
 
-      {/* Thẻ thông tin của chính học sinh đang đăng nhập */}
       <div className="mb-4 bg-gradient-to-r from-roboki-500 to-orange-500 rounded-3xl p-4 text-white shadow-md flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center font-black">
@@ -1383,7 +1379,6 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
         </div>
       </div>
 
-      {/* Nội dung chính */}
       <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 flex-1 overflow-y-auto">
         {loading && (
           <div className="h-full flex items-center justify-center text-slate-400 text-sm">
@@ -1475,7 +1470,7 @@ const ChallengeScreen: React.FC<{
         if (!session.todayQ) return;
         const isCorrect = opt === session.todayQ.answerKey;
         setSession(prev => ({ ...prev, selectedOpt: opt, isSubmitted: true, isCorrect }));
-        if (isCorrect) onScore(20);
+        if (isCorrect) onScore(20, 'challenge');
     };
 
     return (
@@ -1560,7 +1555,6 @@ const ChatScreen: React.FC<{
                 </div>
             </div>
 
-            {/* ROBOKI.VN EMBED */}
             <div className="flex-1 relative bg-white overflow-hidden">
                 <iframe 
                     src="https://roboki.vn/" 
@@ -1570,7 +1564,6 @@ const ChatScreen: React.FC<{
                     sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"
                 />
 
-                {/* Initial Prompt Copy Overlay */}
                 {showCopyOverlay && (
                     <div className="absolute top-4 left-4 right-4 bg-slate-800/90 text-white p-4 rounded-xl shadow-xl flex items-start gap-3 backdrop-blur-sm animate-fade-in z-50">
                         <CheckCircle className="text-emerald-400 shrink-0 mt-0.5" size={20} />
@@ -1590,6 +1583,14 @@ const ChatScreen: React.FC<{
 
 // --- MAIN APP COMPONENT ---
 const App: React.FC = () => {
+  // --- MÃ XỬ LÝ LỖI #418 ---
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  // -------------------------
+
   const [user, setUser] = useState<UserProfile | null>(null);
   const [screen, setScreen] = useState<'AUTH' | 'HOME' | 'PRACTICE' | 'GAME' | 'CHALLENGE' | 'LEADERBOARD' | 'CHAT'>('AUTH');
   const [toastMsg, setToastMsg] = useState<string | null>(null);
@@ -1608,9 +1609,7 @@ const App: React.FC = () => {
     // Check auth
     const unsubscribe = onAuthStateChanged(auth, (u: any) => {
         if (u) {
-            // In a real app, we would fetch the user profile from Firestore here.
-            // For now, we wait for AuthScreen to call handleLogin or if already logged in,
-            // we could fetch here.
+            // Logic check user profile here if needed
         }
     });
     return () => unsubscribe();
@@ -1623,95 +1622,74 @@ const App: React.FC = () => {
 
   type ScoreSource = 'practice' | 'game' | 'challenge';
 
-const handleScore = async (pts: number, source: ScoreSource) => {
-  if (!user) return;
+  const handleScore = async (pts: number, source: ScoreSource) => {
+    if (!user) return;
 
-  // Cập nhật state trên app
-  const updatedUser: UserProfile = {
-    ...user,
-    totalScore: user.totalScore + pts,
-    practiceScore: source === 'practice'  ? user.practiceScore + pts  : user.practiceScore,
-    gameScore:      source === 'game'      ? user.gameScore + pts      : user.gameScore,
-    challengeScore: source === 'challenge' ? user.challengeScore + pts : user.challengeScore,
-  };
-
-  setUser(updatedUser);
-  setToastMsg(`+${pts} điểm!`);
-
-  // Cập nhật Firestore
-  try {
-    const userRef = doc(db, 'users', user.uid);
-    const updateData: any = {
-      totalScore: increment(pts),
+    const updatedUser: UserProfile = {
+      ...user,
+      totalScore: user.totalScore + pts,
+      practiceScore: source === 'practice'  ? user.practiceScore + pts  : user.practiceScore,
+      gameScore:      source === 'game'      ? user.gameScore + pts      : user.gameScore,
+      challengeScore: source === 'challenge' ? user.challengeScore + pts : user.challengeScore,
     };
 
-    if (source === 'practice') {
-      updateData.practiceScore = increment(pts);
-    } else if (source === 'game') {
-      updateData.gameScore = increment(pts);
-    } else if (source === 'challenge') {
-      updateData.challengeScore = increment(pts);
-    }
+    setUser(updatedUser);
+    setToastMsg(`+${pts} điểm!`);
 
-    await updateDoc(userRef, updateData);
-  } catch (e) {
-    console.error('Lỗi cập nhật điểm:', e);
-  }
-};
-
-
- // --- CODE MỚI (Dán vào thay thế) ---
-const handleCopy = async (txt: string) => {
-  let isCopied = false;
-
-  // CÁCH 1: Dùng API hiện đại (Chạy tốt trên HTTPS/Localhost)
-  if (navigator.clipboard && navigator.clipboard.writeText) {
     try {
-      await navigator.clipboard.writeText(txt);
-      isCopied = true;
-    } catch (err) {
-      console.warn('Clipboard API thất bại, chuyển sang cách cũ...', err);
+      const userRef = doc(db, 'users', user.uid);
+      const updateData: any = {
+        totalScore: increment(pts),
+      };
+
+      if (source === 'practice') updateData.practiceScore = increment(pts);
+      else if (source === 'game') updateData.gameScore = increment(pts);
+      else if (source === 'challenge') updateData.challengeScore = increment(pts);
+
+      await updateDoc(userRef, updateData);
+    } catch (e) {
+      console.error('Lỗi cập nhật điểm:', e);
     }
-  }
+  };
 
-  // CÁCH 2: Dùng thủ thuật cũ (Fallback cho Android/Webview cũ)
-  if (!isCopied) {
-    try {
-      const textArea = document.createElement("textarea");
-      textArea.value = txt;
-      
-      // Giấu textarea đi để người dùng không thấy
-      textArea.style.position = "fixed";
-      textArea.style.left = "-9999px";
-      textArea.style.top = "0";
-      document.body.appendChild(textArea);
-      
-      textArea.focus();
-      textArea.select();
-      
-      // Lệnh copy kinh điển
-      isCopied = document.execCommand('copy');
-      document.body.removeChild(textArea);
-    } catch (err) {
-      console.error('Không thể copy:', err);
+  const handleCopy = async (txt: string) => {
+    let isCopied = false;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(txt);
+        isCopied = true;
+      } catch (err) {
+        console.warn('Clipboard API failed, using fallback...');
+      }
     }
-  }
 
-  // Dù copy thành công hay thất bại, vẫn chuyển sang màn hình Chat
-  // để người dùng có thể tự nhập nếu cần
-  setCopyText(txt);
-  setScreen('CHAT');
-  
-  if (!isCopied) {
-      setToastMsg("Lỗi bảo mật: Không thể tự động copy. Vui lòng copy thủ công.");
-  }
-};
+    if (!isCopied) {
+      try {
+        const textArea = document.createElement("textarea");
+        textArea.value = txt;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        isCopied = document.execCommand('copy');
+        document.body.removeChild(textArea);
+      } catch (err) {
+        console.error('Cannot copy:', err);
+      }
+    }
 
-
+    setCopyText(txt);
+    setScreen('CHAT');
+    if (!isCopied) setToastMsg("Lỗi: Không thể tự động copy.");
+  };
 
   const handleToggleLesson = (id: string) => {
      setExpandedLessonIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
   };
+
+  // KIỂM TRA ISCLIENT TRƯỚC KHI RENDER
+  if (!isClient) return null;
 
   if (!user) {
       return (
@@ -1724,7 +1702,6 @@ const handleCopy = async (txt: string) => {
 
   return (
     <div className="max-w-md mx-auto h-[100dvh] bg-white shadow-2xl overflow-hidden relative font-sans text-slate-800 flex flex-col">
-        {/* Main Content Area - Added pb-24 to prevent bottom bar overlap */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden w-full relative pb-24">
             {screen === 'HOME' && (
                 <ContentScreen 
@@ -1734,7 +1711,7 @@ const handleCopy = async (txt: string) => {
                     onNavToGames={() => setScreen('GAME')}
                     onNavToChallenge={() => setScreen('CHALLENGE')}
                     onNavToLeaderboard={() => setScreen('LEADERBOARD')}
-                    onNavToProfile={() => {}} // Placeholder
+                    onNavToProfile={() => {}} 
                     onNavToChat={() => { setCopyText(''); setScreen('CHAT'); }}
                     selectedTopic={selectedTopic}
                     setSelectedTopic={setSelectedTopic}
@@ -1744,34 +1721,31 @@ const handleCopy = async (txt: string) => {
             )}
 
             {screen === 'PRACTICE' && (
-  <PracticeScreen 
-    onCopy={handleCopy} 
-    onScore={(pts) => handleScore(pts, 'practice')}
-    sessionData={practiceSession} 
-    setSessionData={setPracticeSession}
-  />
-)}
-
+              <PracticeScreen 
+                onCopy={handleCopy} 
+                onScore={(pts) => handleScore(pts, 'practice')}
+                sessionData={practiceSession} 
+                setSessionData={setPracticeSession}
+              />
+            )}
 
             {screen === 'GAME' && (
-  <GameScreen 
-    onCopy={handleCopy} 
-    onScore={(pts) => handleScore(pts, 'game')}
-    sessionData={gameSession} 
-    setSessionData={setGameSession}
-  />
-)}
-
+              <GameScreen 
+                onCopy={handleCopy} 
+                onScore={(pts) => handleScore(pts, 'game')}
+                sessionData={gameSession} 
+                setSessionData={setGameSession}
+              />
+            )}
 
             {screen === 'CHALLENGE' && (
-  <ChallengeScreen 
-    onBack={() => setScreen('HOME')}
-    session={challengeSession}
-    setSession={setChallengeSession}
-    onScore={(pts) => handleScore(pts, 'challenge')}
-  />
-)}
-
+              <ChallengeScreen 
+                onBack={() => setScreen('HOME')}
+                session={challengeSession}
+                setSession={setChallengeSession}
+                onScore={(pts) => handleScore(pts, 'challenge')}
+              />
+            )}
 
             {screen === 'LEADERBOARD' && (
                 <LeaderboardScreen 
@@ -1788,7 +1762,6 @@ const handleCopy = async (txt: string) => {
             )}
         </div>
 
-        {/* Bottom Navigation Bar - Fixed at bottom */}
         {screen !== 'CHAT' && (
             <div className="absolute bottom-0 w-full max-w-md bg-white border-t border-slate-100 p-3 pb-6 flex justify-around items-end z-50 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
                 <button onClick={() => setScreen('HOME')} className={`flex flex-col items-center gap-1 transition-colors ${screen === 'HOME' ? 'text-roboki-600' : 'text-slate-400'}`}>
@@ -1800,7 +1773,6 @@ const handleCopy = async (txt: string) => {
                     <span className="text-[10px] font-bold">Luyện đề</span>
                 </button>
                 
-                {/* Chat Button (Center Floating) */}
                 <button onClick={() => setScreen('CHAT')} className="relative -top-6 group">
                     <div className="absolute inset-0 bg-orange-200 rounded-full blur opacity-50 group-hover:opacity-100 transition-opacity"></div>
                     <div className="w-16 h-16 bg-gradient-to-tr from-roboki-500 to-orange-500 rounded-full shadow-xl shadow-orange-200 flex items-center justify-center text-white border-[4px] border-slate-50 transform group-hover:scale-105 group-active:scale-95 transition-transform relative z-10">

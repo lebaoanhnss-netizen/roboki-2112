@@ -16,15 +16,14 @@ export const MOCK_USER: UserProfile = {
 // Physics Lessons (Updated based on user request)
 export const PHYSICS_LESSONS: Lesson[] = [
   // --- TOPIC 1: VẬT LÍ NHIỆT ---
-  {
+ {
     id: 'l1.1',
     topic: 'VẬT LÍ NHIỆT',
-    title: '1.1 Nội năng ',
-    theory: '- Nội năng ($U$) là tổng động năng và thế năng của các phân tử.\n- Nội năng của khí lí tưởng chỉ phụ thuộc vào nhiệt độ.\n- Hai cách làm biến đổi nội năng: Thực hiện công và Truyền nhiệt.',
-    formulas: '$$\\Delta U = Q + A$$',
-    examples: [
-        'Hệ nhận nhiệt lượng $100$ J và thực hiện công $60$ J. Tính độ biến thiên nội năng: $\\Delta U = 100 + (-60) = 40$ J.'
-    ]
+    title: '1.1 Sự chuyển thể',
+    theory: '...', 
+    // PHẢI có dấu $ kẹp hai đầu như thế này:
+    formulas: '$Q = \\lambda m$\n$Q = Lm$', 
+    examples: ['...']
   },
   
   {
