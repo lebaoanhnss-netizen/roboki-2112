@@ -17,7 +17,7 @@ export const MOCK_USER: UserProfile = {
 export const PHYSICS_LESSONS: Lesson[] = [
   // --- TOPIC 1: VẬT LÍ NHIỆT ---
   {
-    id: 'l1.2',
+    id: 'l1.1',
     topic: 'VẬT LÍ NHIỆT',
     title: '1.2 Nội năng - Định luật I',
     theory: '- Nội năng ($U$) là tổng động năng và thế năng của các phân tử.\n- Nội năng của khí lí tưởng chỉ phụ thuộc vào nhiệt độ.\n- Hai cách làm biến đổi nội năng: Thực hiện công và Truyền nhiệt.',
