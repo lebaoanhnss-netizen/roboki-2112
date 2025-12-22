@@ -22,6 +22,7 @@ import {
   where,
   orderBy,
   limit,
+  writeBatch, // <-- Đã thêm mới
 } from "firebase/firestore";
 
 // ---- CONFIG CỦA BẠN ----
@@ -58,4 +59,5 @@ export {
   where,
   orderBy,
   limit,
+  writeBatch, // <-- Đã thêm mới
 };
