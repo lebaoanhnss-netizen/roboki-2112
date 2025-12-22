@@ -17,18 +17,13 @@ export const MOCK_USER: UserProfile = {
 export const PHYSICS_LESSONS: Lesson[] = [
   // --- TOPIC 1: VẬT LÍ NHIỆT ---
   {
-    id: 'l1.1',
+    id: 'l1.2',
     topic: 'VẬT LÍ NHIỆT',
-    title: '1.1 Sự chuyển thể',
-    // Thêm ký hiệu vào phần lý thuyết cho chuyên nghiệp
-    theory: '- Chuyển thể là sự biến đổi trạng thái của chất (rắn–lỏng–khí).\n- Các quá trình: nóng chảy, đông đặc, bay hơi, ngưng tụ, thăng hoa.\n- Trong quá trình chuyển thể (ở áp suất không đổi), nhiệt độ thường không đổi.\n- Nhiệt lượng cung cấp dùng để phá vỡ hoặc tạo liên kết phân tử (ẩn nhiệt).',
-    
-    // Sử dụng $$ để công thức tự động căn giữa và hiển thị to, rõ ràng hơn
-    formulas: '$$Q = \\lambda m$$\n$$Q = Lm$$',
-    
-    // Đã sửa lại các ký hiệu độ C và số mũ để hiển thị chuẩn KaTeX
+    title: '1.2 Nội năng - Định luật I',
+    theory: '- Nội năng ($U$) là tổng động năng và thế năng của các phân tử.\n- Nội năng của khí lí tưởng chỉ phụ thuộc vào nhiệt độ.\n- Hai cách làm biến đổi nội năng: Thực hiện công và Truyền nhiệt.',
+    formulas: '$$\\Delta U = Q + A$$',
     examples: [
-        'Tính nhiệt lượng cần cung cấp để làm nóng chảy hoàn toàn $100$ g nước đá ở $0^\\circ\\text{C}$. Biết $\\lambda = 3,34 \\cdot 10^5$ J/kg.'
+        'Hệ nhận nhiệt lượng $100$ J và thực hiện công $60$ J. Tính độ biến thiên nội năng: $\\Delta U = 100 + (-60) = 40$ J.'
     ]
   },
   
