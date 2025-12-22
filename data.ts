@@ -19,7 +19,7 @@ export const PHYSICS_LESSONS: Lesson[] = [
   {
     id: 'l1.1',
     topic: 'VẬT LÍ NHIỆT',
-    title: '1.2 Nội năng - Định luật I',
+    title: '1.1 Nội năng ',
     theory: '- Nội năng ($U$) là tổng động năng và thế năng của các phân tử.\n- Nội năng của khí lí tưởng chỉ phụ thuộc vào nhiệt độ.\n- Hai cách làm biến đổi nội năng: Thực hiện công và Truyền nhiệt.',
     formulas: '$$\\Delta U = Q + A$$',
     examples: [
