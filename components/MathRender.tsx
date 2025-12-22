@@ -1,18 +1,13 @@
-// file: src/components/MathRender.tsx
 import React from 'react';
 import Latex from 'react-latex-next';
-
-// Thay đổi cách import CSS này để chắc chắn không bị lỗi 404
+// Đảm bảo có dòng này để lấy font chữ toán học từ thư viện đã cài
 import 'katex/dist/katex.min.css'; 
 
 const MathRender: React.FC<{ content: string; className?: string }> = ({ content, className }) => {
   if (!content) return null;
-
   return (
-    <div className={`math-container ${className || ''}`}>
-      <Latex strict={false}>
-        {content}
-      </Latex>
+    <div className={className}>
+      <Latex>{content}</Latex>
     </div>
   );
 };
