@@ -20,15 +20,17 @@ export const PHYSICS_LESSONS: Lesson[] = [
     id: 'l1.1',
     topic: 'VẬT LÍ NHIỆT',
     title: '1.1 Sự chuyển thể',
-    // Thêm dấu $ vào các ký hiệu toán học để kích hoạt KaTeX
-    theory: '- Chuyển thể là sự biến đổi trạng thái của chất (rắn–lỏng–khí).\n- Các quá trình: nóng chảy, đông đặc, bay hơi, ngưng tụ, thăng hoa.\n- Trong quá trình chuyển thể (ở áp suất không đổi), nhiệt độ thường không đổi.\n- Nhiệt lượng cung cấp dùng để phá vỡ/liên kết phân tử (ẩn nhiệt).',
+    // Thêm ký hiệu vào phần lý thuyết cho chuyên nghiệp
+    theory: '- Chuyển thể là sự biến đổi trạng thái của chất (rắn–lỏng–khí).\n- Các quá trình: nóng chảy, đông đặc, bay hơi, ngưng tụ, thăng hoa.\n- Trong quá trình chuyển thể (ở áp suất không đổi), nhiệt độ thường không đổi.\n- Nhiệt lượng cung cấp dùng để phá vỡ hoặc tạo liên kết phân tử (ẩn nhiệt).',
     
-    // QUAN TRỌNG: Phải dùng 2 dấu gạch chéo \\lambda để máy không hiểu lầm
-    formulas: '$Q = \\\\lambda m$\n$Q = Lm$',
+    // Sử dụng $$ để công thức tự động căn giữa và hiển thị to, rõ ràng hơn
+    formulas: '$$Q = \\lambda m$$\n$$Q = Lm$$',
     
-    // Ví dụ cũng cần dùng 2 dấu gạch chéo trước lambda và circ
-    examples: ['Tính nhiệt lượng cần cung cấp để làm nóng chảy hoàn toàn $100\\text{g}$ nước đá ở $0^\\circ\\text{C}$. Biết $\\\\lambda = 3,34 \\cdot 10^5 \\text{ J/kg}$.']
-},
+    // Đã sửa lại các ký hiệu độ C và số mũ để hiển thị chuẩn KaTeX
+    examples: [
+        'Tính nhiệt lượng cần cung cấp để làm nóng chảy hoàn toàn $100$ g nước đá ở $0^\\circ\\text{C}$. Biết $\\lambda = 3,34 \\cdot 10^5$ J/kg.'
+    ]
+  },
   
   {
     id: 'l1.2',
