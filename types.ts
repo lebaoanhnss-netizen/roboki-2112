@@ -5,6 +5,7 @@ export interface UserProfile {
   name: string;
   email: string;
   class: string;
+  school: string; // 👈 MỚI: Thêm trường Trường học
   totalScore: number;
   practiceScore: number;
   gameScore: number;
@@ -23,10 +24,21 @@ export interface Question {
   type: QuestionType;
   promptText: string;
   
-  // 👇 ĐÂY LÀ DÒNG QUAN TRỌNG VỪA THÊM VÀO
+  // Link ảnh minh họa (nếu có)
   imageUrl?: string; 
   
-  options?: string[]; // For MCQ
+  // MÃ BÀI HỌC (Ví dụ: l1.1, l1.2...)
+  lessonId?: string;
+
+  // CẤU TRÚC CHO CÂU TRẮC NGHIỆM ĐÚNG/SAI (4 Ý)
+  subQuestions?: {
+    id: string;        // Ví dụ: sq1, sq2...
+    content: string;   // Nội dung ý nhỏ
+    isCorrect: boolean;// true = Đúng, false = Sai
+    explanation?: string; // Giải thích riêng cho ý này
+  }[];
+  
+  options?: string[]; // Dùng cho MCQ thường
   answerKey: string;
   explanationText: string;
 }

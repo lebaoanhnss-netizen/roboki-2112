@@ -6,6 +6,7 @@ export const MOCK_USER: UserProfile = {
   name: 'Nguyễn Văn A',
   email: 'hocsinh@roboki.edu.vn',
   class: '12A1',
+  school: 'THPT Chuyên Lý Tự Trọng', // Đã bổ sung trường school để khớp với type UserProfile mới
   totalScore: 1250,
   practiceScore: 500,
   gameScore: 450,
@@ -109,10 +110,10 @@ export const PHYSICS_LESSONS: Lesson[] = [
     examples: ['Từ thông qua một khung dây giảm đều từ 1.2Wb về 0 trong 0.2s. Tính suất điện động cảm ứng.']
   },
 
-  // --- TOPIC 4: VẬT LÍ HẠT NHÂN & PHÓNG XẠ ---
+  // --- TOPIC 4: HẠT NHÂN & PHÓNG XẠ ---
   {
     id: 'l4.1',
-    topic: 'VẬT LÍ HẠT NHÂN & PHÓNG XẠ',
+    topic: 'HẠT NHÂN & PHÓNG XẠ',
     title: '4.1 Cấu trúc hạt nhân',
     theory: '- Hạt nhân gồm proton (p) và nơtron (n), gọi chung là nuclon.\n- Số proton Z xác định nguyên tố; số khối A là tổng số nuclon.\n- Kí hiệu hạt nhân: ^A_Z X.\n- N = A - Z là số nơtron.',
     formulas: '$A = Z + N$\n$N = A - Z$',
@@ -120,7 +121,7 @@ export const PHYSICS_LESSONS: Lesson[] = [
   },
   {
     id: 'l4.2',
-    topic: 'VẬT LÍ HẠT NHÂN & PHÓNG XẠ',
+    topic: 'HẠT NHÂN & PHÓNG XẠ',
     title: '4.2 Độ hụt khối và năng lượng liên kết hạt nhân',
     theory: '- Khối lượng hạt nhân nhỏ hơn tổng khối lượng các nuclon rời rạc → độ hụt khối.\n- Độ hụt khối tương ứng năng lượng liên kết (theo E = \\Delta mc^2).\n- Năng lượng liên kết riêng (chia cho A) cho biết độ bền vững hạt nhân.\n- Hạt nhân bền thường có năng lượng liên kết riêng lớn.',
     formulas: '$\\Delta m = Zm_p + Nm_n - m_{hn}$\n$E = \\Delta mc^2$\n$E_{lk\\_rieng} = \\frac{E}{A}$',
@@ -128,7 +129,7 @@ export const PHYSICS_LESSONS: Lesson[] = [
   },
   {
     id: 'l4.3',
-    topic: 'VẬT LÍ HẠT NHÂN & PHÓNG XẠ',
+    topic: 'HẠT NHÂN & PHÓNG XẠ',
     title: '4.3 Sự phóng xạ và chu kì bán rã',
     theory: '- Phóng xạ là quá trình hạt nhân không bền tự phân rã (ngẫu nhiên).\n- Chu kì bán rã T: thời gian để số hạt nhân còn lại giảm còn một nửa.\n- Số hạt và hoạt độ giảm theo hàm mũ theo thời gian.\n- Dùng mô hình N(t) để dự đoán phần còn lại sau thời gian t.',
     formulas: '$N = N_0 \\cdot 2^{-t/T}$\n$N = N_0 e^{-\\lambda t}$\n$\\lambda = \\frac{\\ln 2}{T}$',
@@ -143,41 +144,19 @@ export const QUESTION_BANK: Question[] = [
    CHƯƠNG 1 – VẬT LÍ NHIỆT (10 CÂU)
 ============================================================ */
 
-{
-  id: 'c1-50',
-  topic: 'VẬT LÍ NHIỆT',
-  level: 'Biết',
-  type: 'MCQ',
-  promptText: 'Đại lượng đặc trưng cho mức độ nóng lạnh của vật là:',
+  {
+    id: 'c1.1-3', // Câu này có hình ảnh
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.1',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Câu 3: Quan sát đồ thị nóng chảy của nước đá (hình bên). Đoạn nằm ngang ứng với quá trình nào?',
+    imageUrl: 'https://i.postimg.cc/Y2VtbMn1/Please-make-the-202512140930.jpg', // Link ảnh mẫu
+    options: ['Tăng nhiệt độ', 'Nóng chảy', 'Sôi', 'Ngưng tụ'],
+    answerKey: 'Nóng chảy',
+    explanationText: 'Đoạn nằm ngang nhiệt độ không đổi là quá trình chuyển thể.'
+  },
   
-  // 👇 Đã thêm link ảnh vào đây (nhớ dấu phẩy cuối dòng)
-  imageUrl: 'https://i.postimg.cc/Y2VtbMn1/Please-make-the-202512140930.jpg',
-  
-  options: ['Nội năng', 'Nhiệt lượng', 'Nhiệt độ', 'Nhiệt dung'],
-  answerKey: 'Nhiệt độ',
-  explanationText: 'Nhiệt độ đặc trưng cho trạng thái nóng – lạnh của vật.'
-},
-
-{
-  id: 'c1-9',
-  topic: 'VẬT LÍ NHIỆT',
-  level: 'Biết',
-  type: 'Short',
-  promptText: 'Khi vật tỏa nhiệt thì $Q$ mang dấu gì?',
-  answerKey: 'Âm',
-  explanationText: 'Vật tỏa nhiệt ⇒ $Q<0$.'
-},
-{
-  id: 'c1-10',
-  topic: 'VẬT LÍ NHIỆT',
-  level: 'Hiểu',
-  type: 'TrueFalse',
-  promptText: 'Nhiệt dung riêng phụ thuộc vào khối lượng của vật.',
-  options: ['Đúng', 'Sai'],
-  answerKey: 'Sai',
-  explanationText: 'Nhiệt dung riêng chỉ phụ thuộc bản chất chất.'
-},
-
 /* ============================================================
    CHƯƠNG 2 – KHÍ LÍ TƯỞNG (10 CÂU)
 ============================================================ */
@@ -191,199 +170,9 @@ export const QUESTION_BANK: Question[] = [
   answerKey: 'p, V, T',
   explanationText: 'Trạng thái khí xác định bởi $p, V, T$.'
 },
-{
-  id: 'c2-2',
-  topic: 'KHÍ LÍ TƯỞNG',
-  level: 'Biết',
-  type: 'Short',
-  promptText: 'Viết phương trình trạng thái khí lí tưởng.',
-  answerKey: '$pV = nRT$',
-  explanationText: 'Phương trình trạng thái khí lí tưởng.'
-},
-{
-  id: 'c2-3',
-  topic: 'KHÍ LÍ TƯỞNG',
-  level: 'Hiểu',
-  type: 'MCQ',
-  promptText: 'Quá trình đẳng nhiệt là quá trình có:',
-  options: ['V không đổi', 'p không đổi', 'T không đổi', 'U không đổi'],
-  answerKey: 'T không đổi',
-  explanationText: 'Đẳng nhiệt ⇒ $T=const$.'
-},
-{
-  id: 'c2-4',
-  topic: 'KHÍ LÍ TƯỞNG',
-  level: 'Hiểu',
-  type: 'TrueFalse',
-  promptText: 'Ở cùng nhiệt độ, các khí khác nhau có động năng phân tử trung bình như nhau.',
-  options: ['Đúng', 'Sai'],
-  answerKey: 'Đúng',
-  explanationText: '$\\overline{E_k}=\\frac{3}{2}kT$.'
-},
-{
-  id: 'c2-5',
-  topic: 'KHÍ LÍ TƯỞNG',
-  level: 'Vận dụng',
-  type: 'MCQ',
-  promptText: 'Khí có $V_1=2$ lít, $p_1=1$ atm. Nén đẳng nhiệt còn 1 lít. Áp suất mới là:',
-  options: ['0.5 atm', '1 atm', '2 atm', '4 atm'],
-  answerKey: '2 atm',
-  explanationText: '$p_1V_1=p_2V_2$.'
-},
-{
-  id: 'c2-6',
-  topic: 'KHÍ LÍ TƯỞNG',
-  level: 'Hiểu',
-  type: 'MCQ',
-  promptText: 'Trong quá trình đẳng tích, đại lượng nào không đổi?',
-  options: ['Áp suất', 'Nhiệt độ', 'Thể tích', 'Nội năng'],
-  answerKey: 'Thể tích',
-  explanationText: 'Đẳng tích ⇒ $V=const$.'
-},
-{
-  id: 'c2-7',
-  topic: 'KHÍ LÍ TƯỞNG',
-  level: 'Vận dụng',
-  type: 'MCQ',
-  promptText: 'Giữ thể tích không đổi, nhiệt độ tăng từ 300 K lên 600 K. Áp suất:',
-  options: ['Giảm 2 lần', 'Không đổi', 'Tăng 2 lần', 'Tăng 4 lần'],
-  answerKey: 'Tăng 2 lần',
-  explanationText: '$p \\sim T$ khi $V=const$.'
-},
-{
-  id: 'c2-8',
-  topic: 'KHÍ LÍ TƯỞNG',
-  level: 'Biết',
-  type: 'Short',
-  promptText: 'Nhiệt độ tuyệt đối được đo theo thang nào?',
-  answerKey: 'Kelvin',
-  explanationText: 'Nhiệt độ tuyệt đối đo theo thang Kelvin.'
-},
-{
-  id: 'c2-9',
-  topic: 'KHÍ LÍ TƯỞNG',
-  level: 'Hiểu',
-  type: 'TrueFalse',
-  promptText: 'Quá trình đẳng áp có $\\dfrac{V}{T}=const$.',
-  options: ['Đúng', 'Sai'],
-  answerKey: 'Đúng',
-  explanationText: 'Định luật Charles.'
-},
-{
-  id: 'c2-10',
-  topic: 'KHÍ LÍ TƯỞNG',
-  level: 'Vận dụng',
-  type: 'MCQ',
-  promptText: 'Một mol khí ở điều kiện chuẩn có thể tích:',
-  options: ['11.2 lít', '22.4 lít', '24 lít', '44.8 lít'],
-  answerKey: '22.4 lít',
-  explanationText: 'Thể tích mol ở ĐKC là 22.4 lít.'
-},
 
 /* ============================================================
-   CHƯƠNG 3 – DÒNG ĐIỆN KHÔNG ĐỔI (10 CÂU)
-============================================================ */
-{
-  id: 'c3-1',
-  topic: 'DÒNG ĐIỆN KHÔNG ĐỔI',
-  level: 'Biết',
-  type: 'MCQ',
-  promptText: 'Cường độ dòng điện được xác định bằng:',
-  options: ['$I=\\dfrac{q}{t}$', '$I=UR$', '$I=Rt$', '$I=qU$'],
-  answerKey: '$I=\\dfrac{q}{t}$',
-  explanationText: 'Định nghĩa cường độ dòng điện.'
-},
-{
-  id: 'c3-2',
-  topic: 'DÒNG ĐIỆN KHÔNG ĐỔI',
-  level: 'Biết',
-  type: 'MCQ',
-  promptText: 'Đơn vị của cường độ dòng điện là:',
-  options: ['V', 'Ω', 'A', 'W'],
-  answerKey: 'A',
-  explanationText: 'Đơn vị là Ampe.'
-},
-{
-  id: 'c3-3',
-  topic: 'DÒNG ĐIỆN KHÔNG ĐỔI',
-  level: 'Hiểu',
-  type: 'MCQ',
-  promptText: 'Định luật Ôm cho đoạn mạch có dạng:',
-  options: ['$U=IR$', '$I=UR$', '$R=UI$', '$P=UI$'],
-  answerKey: '$U=IR$',
-  explanationText: 'Hệ thức định luật Ôm.'
-},
-{
-  id: 'c3-4',
-  topic: 'DÒNG ĐIỆN KHÔNG ĐỔI',
-  level: 'Hiểu',
-  type: 'TrueFalse',
-  promptText: 'Cường độ dòng điện tỉ lệ thuận với hiệu điện thế.',
-  options: ['Đúng', 'Sai'],
-  answerKey: 'Đúng',
-  explanationText: 'Theo $I=\\dfrac{U}{R}$.'
-},
-{
-  id: 'c3-5',
-  topic: 'DÒNG ĐIỆN KHÔNG ĐỔI',
-  level: 'Biết',
-  type: 'Short',
-  promptText: 'Viết công thức tính công suất điện.',
-  answerKey: '$P=UI$',
-  explanationText: 'Công suất điện.'
-},
-{
-  id: 'c3-6',
-  topic: 'DÒNG ĐIỆN KHÔNG ĐỔI',
-  level: 'Vận dụng',
-  type: 'MCQ',
-  promptText: 'Điện trở 10Ω mắc vào nguồn 20V. Cường độ dòng điện là:',
-  options: ['0.5 A', '1 A', '2 A', '10 A'],
-  answerKey: '2 A',
-  explanationText: '$I=\\dfrac{20}{10}=2$ A.'
-},
-{
-  id: 'c3-7',
-  topic: 'DÒNG ĐIỆN KHÔNG ĐỔI',
-  level: 'Hiểu',
-  type: 'TrueFalse',
-  promptText: 'Điện năng tiêu thụ của đoạn mạch tỉ lệ với thời gian sử dụng.',
-  options: ['Đúng', 'Sai'],
-  answerKey: 'Đúng',
-  explanationText: '$A=Pt$.'
-},
-{
-  id: 'c3-8',
-  topic: 'DÒNG ĐIỆN KHÔNG ĐỔI',
-  level: 'Biết',
-  type: 'Short',
-  promptText: 'Đơn vị của điện năng trong hệ SI là gì?',
-  answerKey: 'Joule',
-  explanationText: 'Đơn vị điện năng là Jun (J).'
-},
-{
-  id: 'c3-9',
-  topic: 'DÒNG ĐIỆN KHÔNG ĐỔI',
-  level: 'Vận dụng',
-  type: 'MCQ',
-  promptText: 'Công suất của đoạn mạch khi $U=10V$, $I=2A$ là:',
-  options: ['5 W', '10 W', '20 W', '40 W'],
-  answerKey: '20 W',
-  explanationText: '$P=UI=20$ W.'
-},
-{
-  id: 'c3-10',
-  topic: 'DÒNG ĐIỆN KHÔNG ĐỔI',
-  level: 'Hiểu',
-  type: 'TrueFalse',
-  promptText: 'Điện trở của dây dẫn phụ thuộc vào nhiệt độ.',
-  options: ['Đúng', 'Sai'],
-  answerKey: 'Đúng',
-  explanationText: 'Điện trở kim loại tăng khi nhiệt độ tăng.'
-},
-
-/* ============================================================
-   CHƯƠNG 4 – TỪ TRƯỜNG (10 CÂU)
+   CHƯƠNG 3 – TỪ TRƯỜNG (10 CÂU)
 ============================================================ */
 {
   id: 'c4-1',
@@ -396,104 +185,83 @@ export const QUESTION_BANK: Question[] = [
   explanationText: 'Đơn vị Tesla.'
 },
 {
-  id: 'c4-2',
-  topic: 'TỪ TRƯỜNG',
-  level: 'Biết',
-  type: 'MCQ',
-  promptText: 'Đường sức từ có đặc điểm:',
-  options: [
-    'Không khép kín',
-    'Là đường thẳng',
-    'Là đường cong khép kín',
-    'Song song nhau'
-  ],
-  answerKey: 'Là đường cong khép kín',
-  explanationText: 'Đường sức từ là các đường cong khép kín.'
-},
-{
-  id: 'c4-3',
-  topic: 'TỪ TRƯỜNG',
-  level: 'Hiểu',
-  type: 'MCQ',
-  promptText: 'Lực từ tác dụng lên dây dẫn mang dòng điện phụ thuộc vào:',
-  options: [
-    'Chiều dòng điện',
-    'Cảm ứng từ',
-    'Chiều dài dây',
-    'Cả ba yếu tố trên'
-  ],
-  answerKey: 'Cả ba yếu tố trên',
-  explanationText: '$F=BIl\\sin\\alpha$.'
-},
-{
-  id: 'c4-4',
-  topic: 'TỪ TRƯỜNG',
-  level: 'Hiểu',
-  type: 'TrueFalse',
-  promptText: 'Đường sức từ bên ngoài nam châm đi từ cực Bắc sang cực Nam.',
-  options: ['Đúng', 'Sai'],
-  answerKey: 'Đúng',
-  explanationText: 'Quy ước chiều đường sức từ.'
-},
-{
-  id: 'c4-5',
-  topic: 'TỪ TRƯỜNG',
-  level: 'Biết',
-  type: 'Short',
-  promptText: 'Nêu tên quy tắc xác định chiều lực từ tác dụng lên dây dẫn.',
-  answerKey: 'Quy tắc bàn tay trái',
-  explanationText: 'Quy tắc bàn tay trái.'
-},
-{
-  id: 'c4-6',
-  topic: 'TỪ TRƯỜNG',
-  level: 'Vận dụng',
-  type: 'MCQ',
-  promptText: 'Lực từ tác dụng lên dây dẫn dài $l$ mang dòng $I$ đặt vuông góc với từ trường $B$ là:',
-  options: ['$F=BIl$', '$F=BI$', '$F=Bl$', '$F=Il$'],
-  answerKey: '$F=BIl$',
-  explanationText: 'Công thức lực từ.'
-},
-{
-  id: 'c4-7',
-  topic: 'TỪ TRƯỜNG',
-  level: 'Hiểu',
-  type: 'TrueFalse',
-  promptText: 'Hạt mang điện chuyển động song song với đường sức từ thì không chịu lực từ.',
-  options: ['Đúng', 'Sai'],
-  answerKey: 'Đúng',
-  explanationText: '$F=qvB\\sin\\alpha$, với $\\alpha=0$ thì $F=0$.'
-},
-{
-  id: 'c4-8',
-  topic: 'TỪ TRƯỜNG',
-  level: 'Biết',
-  type: 'Short',
-  promptText: 'Đơn vị của lực từ là gì?',
-  answerKey: 'Newton',
-  explanationText: 'Đơn vị lực là Newton (N).'
-},
-{
-  id: 'c4-9',
-  topic: 'TỪ TRƯỜNG',
-  level: 'Vận dụng',
-  type: 'MCQ',
-  promptText: 'Khi tăng cường độ dòng điện trong dây dẫn, lực từ tác dụng lên dây:',
-  options: ['Giảm', 'Không đổi', 'Tăng', 'Bằng 0'],
-  answerKey: 'Tăng',
-  explanationText: 'Vì $F \\sim I$.'
-},
-{
-  id: 'c4-10',
-  topic: 'TỪ TRƯỜNG',
-  level: 'Hiểu',
-  type: 'TrueFalse',
-  promptText: 'Từ trường tồn tại xung quanh điện tích đứng yên.',
-  options: ['Đúng', 'Sai'],
-  answerKey: 'Sai',
-  explanationText: 'Từ trường tồn tại quanh điện tích chuyển động.'
-}
+    id: 'demo-tf-1',
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Vận dụng',
+    type: 'TrueFalse', 
+    promptText: 'Một lượng khí lí tưởng xác định đang ở trạng thái (1) có $p_1=1 atm$, $V_1=4$ lít. Nén đẳng nhiệt đến trạng thái (2) có $V_2=2$ lít. Sau đó làm lạnh đẳng tích đến trạng thái (3) có $p_3=1 atm$.',
+    // 👇 Đây là phần 4 ý Đúng/Sai
+    subQuestions: [
+      {
+        id: 'sq1',
+        content: 'Quá trình biến đổi từ (1) sang (2) là quá trình đẳng áp.',
+        isCorrect: false,
+        explanation: 'Đề bài cho nén đẳng nhiệt, không phải đẳng áp.'
+      },
+      {
+        id: 'sq2',
+        content: 'Áp suất của khí tại trạng thái (2) bằng 2 atm.',
+        isCorrect: true,
+        explanation: 'Đẳng nhiệt: p1.V1 = p2.V2 => 1.4 = p2.2 => p2 = 2 atm.'
+      },
+      {
+        id: 'sq3',
+        content: 'Trong quá trình (2) sang (3), áp suất của khí giảm.',
+        isCorrect: true,
+        explanation: 'Từ p2=2 atm về p3=1 atm => Áp suất giảm.'
+      },
+      {
+        id: 'sq4',
+        content: 'Nhiệt độ tại trạng thái (3) bằng nhiệt độ tại trạng thái (1).',
+        isCorrect: false,
+        explanation: 'Trạng thái (3) có p=1, V=2. Trạng thái (1) có p=1, V=4. Vì pV khác nhau nên T khác nhau.'
+      }
+    ],
+    // Các trường dưới để trống hoặc mặc định vì không dùng cho dạng này
+    options: [], 
+    answerKey: '', 
+    explanationText: 'Giải chi tiết các bước tính toán p, V, T tại từng trạng thái.'
+  },
 
+  // =========================================================
+  // DẠNG 2: TRẮC NGHIỆM 4 LỰA CHỌN (MCQ - Truyền thống)
+  // Cấu trúc: Có trường `options` chứa 4 đáp án A,B,C,D
+  // =========================================================
+  {
+    id: 'demo-mcq-1',
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.1',
+    level: 'Biết',
+    type: 'MCQ',
+    promptText: 'Đơn vị đo của nhiệt dung riêng trong hệ SI là:',
+    options: ['J/kg.K', 'J/kg', 'J.kg', 'J'],
+    answerKey: 'J/kg.K', // Phải khớp hoàn toàn với 1 trong 4 options
+    explanationText: 'Nhiệt dung riêng c có đơn vị là Jun trên kilogam Kenvin (J/kg.K).'
+  },
+
+  // =========================================================
+  // DẠNG 3: TRẢ LỜI NGẮN / ĐIỀN TỪ (Short Answer)
+  // Cấu trúc: Người dùng tự gõ phím, máy so sánh với `answerKey`
+  // =========================================================
+  {
+    id: 'demo-short-1',
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Vận dụng',
+    type: 'Short',
+    promptText: 'Một đoạn dây dẫn dài 5cm đặt trong từ trường đều có cảm ứng từ B = 0,1T. Dòng điện qua dây là 2A. Lực từ tác dụng lên dây khi dây đặt vuông góc với đường sức từ là bao nhiêu Newton? (Nhập số thập phân)',
+    
+    // 👇 Đáp án chuẩn (Code đã hỗ trợ tự động viết hoa/thường nên thầy nhập sao cũng được)
+    answerKey: '0.01', 
+    
+    // Các trường không dùng
+    options: [],
+    explanationText: 'Áp dụng công thức: F = B.I.l.sin(90) = 0,1 * 2 * 0,05 * 1 = 0,01 N.'
+  },
+  
+   // =========================================================
+  // DẠNG 4: CÂU HỎI CÓ HÌNH ẢNH (Bổ sung)
+  // =========================================================
+  
 ];
-
-
