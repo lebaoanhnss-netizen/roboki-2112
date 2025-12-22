@@ -1,3 +1,5 @@
+// src/types.ts
+
 export interface UserProfile {
   uid: string;
   name: string;
@@ -16,9 +18,14 @@ export type Difficulty = 'Biết' | 'Hiểu' | 'Vận dụng';
 export interface Question {
   id: string;
   topic: string;
-  level: Difficulty;
+  // Cho phép string để tránh lỗi nếu thầy lỡ gõ sai chính tả xíu
+  level: Difficulty | string; 
   type: QuestionType;
   promptText: string;
+  
+  // 👇 ĐÂY LÀ DÒNG QUAN TRỌNG VỪA THÊM VÀO
+  imageUrl?: string; 
+  
   options?: string[]; // For MCQ
   answerKey: string;
   explanationText: string;

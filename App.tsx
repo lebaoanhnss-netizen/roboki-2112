@@ -2,20 +2,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRender from './components/MathRender';
 import Toast from './components/Toast';
-// Chỉ giữ lại import Types, bỏ import data cứng
-import { UserProfile, Question, Lesson } from './types'; 
-import { 
-  auth, 
-  db, 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, 
+import { UserProfile, Question, Lesson } from './types';
+// 👇 Import dữ liệu từ file data.ts
+import { PHYSICS_LESSONS, QUESTION_BANK } from './data';
+
+import {
+  auth,
+  db,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
   updateProfile,
-  doc, 
-  setDoc, 
-  getDoc, 
-  updateDoc, 
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
   increment,
   collection,
   getDocs,
@@ -24,11 +26,11 @@ import {
   orderBy,
   limit
 } from './firebase';
-import { 
-  BookOpen, MessageCircle, User, Copy, 
-  CheckCircle, ExternalLink, Target, 
+import {
+  BookOpen, MessageCircle, User, Copy,
+  CheckCircle, ExternalLink, Target,
   Trophy, ClipboardCopy, Bell, Search, ChevronRight, ChevronLeft,
-  Video, Share2, Thermometer, Wind, Atom, 
+  Video, Share2, Thermometer, Wind, Atom,
   BarChart3, Magnet, Crown, Flame, XCircle, Play, Settings2, Filter,
   List, Type, CheckSquare, Gamepad2, Zap, Timer, RotateCcw, Ghost,
   Dna, Calendar, Star, Award, Menu, LogOut, ArrowRight, Lock, Mail,
@@ -39,11 +41,11 @@ import {
 // --- UTILS ---
 
 const generateRobokiPrompt = (
-  topic: string, 
-  title: string, 
-  level: string, 
-  content: string, 
-  options?: string[], 
+  topic: string,
+  title: string,
+  level: string,
+  content: string,
+  options?: string[],
   type: 'LESSON' | 'QUESTION' = 'QUESTION'
 ) => {
   let mainContent = content;
@@ -101,7 +103,7 @@ interface GameSessionData {
   score: number;
   timeLeft: number;
   currentQ: Question | null;
-  isCorrect: boolean | null; 
+  isCorrect: boolean | null;
   // Speed Specific
   selectedSpeedOpt: string | null; // Track selected option before submit
   correctCount: number;
@@ -152,16 +154,16 @@ const INITIAL_CHALLENGE_STATE: ChallengeSessionData = {
 // --- SUB COMPONENTS ---
 
 // Lesson Card
-const LessonCard: React.FC<{ 
-  lesson: Lesson; 
+const LessonCard: React.FC<{
+  lesson: Lesson;
   onCopy: (txt: string) => void;
   isExpanded: boolean;
   onToggle: () => void;
 }> = ({ lesson, onCopy, isExpanded, onToggle }) => {
-  
+
   return (
     <div className={`bg-white rounded-2xl border overflow-hidden transition-all duration-300 ${isExpanded ? 'shadow-lg border-roboki-200' : 'shadow-sm border-slate-100 hover:border-roboki-100'}`}>
-      <div 
+      <div
         className="p-4 flex gap-4 cursor-pointer hover:bg-slate-50 active:bg-slate-100 items-center"
         onClick={onToggle}
       >
@@ -171,12 +173,12 @@ const LessonCard: React.FC<{
         <div className="flex-1 flex flex-col justify-center">
           <h4 className={`text-base font-bold leading-tight transition-colors ${isExpanded ? 'text-roboki-700' : 'text-slate-800'}`}>{lesson.title}</h4>
           <span className="text-[11px] text-slate-400 mt-1 flex items-center gap-1 font-medium">
-            {isExpanded ? 'Nhấn để thu gọn' : 'Nhấn để xem bài học'} 
+            {isExpanded ? 'Nhấn để thu gọn' : 'Nhấn để xem bài học'}
             <ChevronRight size={12} className={`transition-transform ${isExpanded ? 'rotate-90 text-roboki-500' : ''}`} />
           </span>
         </div>
       </div>
-      
+
       {isExpanded && (
         <div className="px-4 pb-4 animate-fade-in">
           <div className="pt-2 border-t border-slate-50 space-y-3">
@@ -184,14 +186,14 @@ const LessonCard: React.FC<{
                 <h5 className="text-xs font-bold text-roboki-600 uppercase mb-2 flex items-center gap-1.5"><Sparkles size={14}/> Lý thuyết</h5>
                 <MathRender content={lesson.theory} className="text-sm text-slate-700 leading-relaxed"/>
              </div>
-             
+
              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
                 <h5 className="text-xs font-bold text-slate-600 uppercase mb-2 flex items-center gap-1.5"><Zap size={14}/> Công thức</h5>
                 <MathRender content={lesson.formulas} className="text-sm text-slate-800 font-bold font-mono whitespace-pre-line"/>
              </div>
 
              <div className="flex justify-end pt-2">
-                <button 
+                <button
                   onClick={(e) => {
                     e.stopPropagation();
                     const txt = generateRobokiPrompt(lesson.topic, lesson.title, "Lý thuyết", `${lesson.theory}\n\nCông thức chính: ${lesson.formulas}`, undefined, 'LESSON');
@@ -351,8 +353,8 @@ const AuthScreen: React.FC<{ onLoginSuccess: (user: UserProfile) => void }> = ({
 };
 
 // 1. HOME SCREEN
-const ContentScreen: React.FC<{ 
-  onCopy: (txt: string) => void, 
+const ContentScreen: React.FC<{
+  onCopy: (txt: string) => void,
   onNavToPractice: () => void,
   onNavToGames: () => void,
   onNavToChallenge: () => void,
@@ -365,13 +367,13 @@ const ContentScreen: React.FC<{
   expandedLessonIds: string[],
   toggleLesson: (id: string) => void,
   lessons: Lesson[] // <--- NHẬN DATA TỪ FIREBASE
-}> = ({ 
-  onCopy, onNavToPractice, onNavToGames, onNavToChallenge, 
+}> = ({
+  onCopy, onNavToPractice, onNavToGames, onNavToChallenge,
   onNavToLeaderboard, onNavToProfile, onNavToChat, user,
   selectedTopic, setSelectedTopic, expandedLessonIds, toggleLesson,
   lessons
 }) => {
-  
+
   const TOPICS = [
     { id: 't1', label: 'VẬT LÍ NHIỆT', icon: Thermometer },
     { id: 't2', label: 'KHÍ LÍ TƯỞNG', icon: Wind },
@@ -383,7 +385,7 @@ const ContentScreen: React.FC<{
     const topicLabelForData = selectedTopic.label === 'HẠT NHÂN & PHÓNG XẠ' ? 'VẬT LÍ HẠT NHÂN & PHÓNG XẠ' : selectedTopic.label;
     // Lọc bài học từ props.lessons thay vì biến cứng
     const topicLessons = lessons.filter(l => l.topic === topicLabelForData);
-    
+
     return (
       <div className="pb-24 pt-2 px-4 space-y-4 bg-slate-50 min-h-full">
          <div className="flex items-center gap-3 pt-4 pb-2 sticky top-0 bg-slate-50/95 backdrop-blur z-10">
@@ -394,10 +396,10 @@ const ContentScreen: React.FC<{
          <div className="space-y-4">
             {topicLessons.length > 0 ? (
               topicLessons.map(lesson => (
-                <LessonCard 
-                  key={lesson.id} 
-                  lesson={lesson} 
-                  onCopy={onCopy} 
+                <LessonCard
+                  key={lesson.id}
+                  lesson={lesson}
+                  onCopy={onCopy}
                   isExpanded={expandedLessonIds.includes(lesson.id)}
                   onToggle={() => toggleLesson(lesson.id)}
                 />
@@ -484,16 +486,16 @@ const ContentScreen: React.FC<{
 };
 
 // 2. PRACTICE SCREEN
-const PracticeScreen: React.FC<{ 
-  onCopy: (txt: string) => void, 
+const PracticeScreen: React.FC<{
+  onCopy: (txt: string) => void,
   onScore: (pts: number) => void,
   sessionData: PracticeSessionData,
   setSessionData: React.Dispatch<React.SetStateAction<PracticeSessionData>>,
   questions: Question[] // <--- DATA
 }> = ({ onCopy, onScore, sessionData, setSessionData, questions }) => {
-  const { 
+  const {
     configMode, selectedTopic, selectedLevel, selectedType, errorMsg,
-    quizQuestions, currentQIndex, selectedOpt, isSubmitted 
+    quizQuestions, currentQIndex, selectedOpt, isSubmitted
   } = sessionData;
 
   const updateSession = (updates: Partial<PracticeSessionData>) => setSessionData(prev => ({ ...prev, ...updates }));
@@ -535,9 +537,9 @@ const PracticeScreen: React.FC<{
             <div className="grid grid-cols-2 gap-2">
               <button onClick={() => updateSession({ selectedTopic: 'TẤT CẢ' })} className={`p-3 rounded-xl text-left text-xs font-bold border transition-all ${selectedTopic === 'TẤT CẢ' ? 'bg-roboki-500 text-white border-roboki-500 shadow-md shadow-roboki-200' : 'bg-white text-slate-500 border-slate-100 hover:border-roboki-200'}`}>Tất cả</button>
               {Array.from(new Set(questions.map(q => q.topic))).map(t => (
-                  <button 
-                    key={t as string} 
-                    onClick={() => updateSession({ selectedTopic: t as string })} 
+                  <button
+                    key={t as string}
+                    onClick={() => updateSession({ selectedTopic: t as string })}
                     className={`p-3 rounded-xl text-left text-xs font-bold border transition-all truncate ${selectedTopic === t ? 'bg-roboki-500 text-white border-roboki-500 shadow-md shadow-roboki-200' : 'bg-white text-slate-500 border-slate-100 hover:border-roboki-200'}`}
                   >
                     {t as string}
@@ -582,7 +584,21 @@ const PracticeScreen: React.FC<{
       <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex-1 overflow-y-auto relative">
          <div className="absolute top-0 right-0 bg-slate-100 text-slate-500 text-[9px] font-black px-3 py-1.5 rounded-bl-2xl rounded-tr-2xl uppercase tracking-wider">{currentQ.level}</div>
          <div className="mb-2 text-[10px] font-black uppercase text-roboki-500 tracking-widest">{currentQ.topic}</div>
-         <div className="mb-8 font-bold text-slate-800 text-base leading-relaxed"><MathRender content={currentQ.promptText}/></div>
+
+         {/* 👈 THAY ĐỔI: THÊM HIỂN THỊ ẢNH CHO PHẦN LUYỆN TẬP */}
+         <div className="mb-8">
+            {currentQ.imageUrl && (
+              <div className="mb-4 flex justify-center bg-white rounded-xl border border-slate-100 p-2">
+                <img
+                  src={currentQ.imageUrl}
+                  alt="Hình minh họa"
+                  className="rounded-lg max-h-64 object-contain w-full"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                />
+              </div>
+            )}
+            <div className="font-bold text-slate-800 text-base leading-relaxed"><MathRender content={currentQ.promptText}/></div>
+         </div>
          
          <div className="space-y-3">
             {currentQ.type === 'Short' ? (
@@ -611,15 +627,15 @@ const PracticeScreen: React.FC<{
 };
 
 // 3. GAME SCREEN
-const GameScreen: React.FC<{ 
-  onCopy: (txt: string) => void, 
+const GameScreen: React.FC<{
+  onCopy: (txt: string) => void,
   onScore: (pts: number) => void,
   sessionData: GameSessionData,
   setSessionData: React.Dispatch<React.SetStateAction<GameSessionData>>,
   questions: Question[] // <--- DATA
 }> = ({ onCopy, onScore, sessionData, setSessionData, questions }) => {
-  const { 
-    gameType, mode, score, timeLeft, currentQ, isCorrect, 
+  const {
+    gameType, mode, score, timeLeft, currentQ, isCorrect,
     wheelRotation, isSpinning, pendingPoints, showWheelQuestion,
     selectedSpeedOpt, correctCount, totalAnswered
   } = sessionData;
@@ -651,7 +667,7 @@ const GameScreen: React.FC<{
 
   const spinWheel = () => {
     if (isSpinning) return;
-    const extraSpins = 1800 + Math.random() * 1800; 
+    const extraSpins = 1800 + Math.random() * 1800;
     const newRotation = wheelRotation + extraSpins;
     setSessionData(prev => ({ ...prev, isSpinning: true, wheelRotation: newRotation }));
 
@@ -663,9 +679,9 @@ const GameScreen: React.FC<{
        const winningSegment = WHEEL_SEGMENTS[safeIndex];
 
        if (winningSegment.value > 0) {
-         setSessionData(prev => ({ 
-             ...prev, 
-             isSpinning: false, 
+         setSessionData(prev => ({
+             ...prev,
+             isSpinning: false,
              pendingPoints: winningSegment.value,
              showWheelQuestion: true,
              currentQ: questions[Math.floor(Math.random() * questions.length)],
@@ -678,12 +694,12 @@ const GameScreen: React.FC<{
   };
 
   const startSpeedGame = () => {
-    setSessionData({ 
+    setSessionData({
       ...INITIAL_GAME_STATE,
       gameType: 'SPEED',
-      mode: 'PLAYING', 
-      score: 0, 
-      timeLeft: 60, 
+      mode: 'PLAYING',
+      score: 0,
+      timeLeft: 60,
       currentQ: questions[Math.floor(Math.random() * questions.length)],
       isCorrect: null,
       selectedSpeedOpt: null,
@@ -787,9 +803,17 @@ const GameScreen: React.FC<{
            {currentQ && (
              <div className="flex-1 flex flex-col min-h-0">
                 <div className="bg-white p-5 rounded-3xl shadow-lg border border-slate-100 flex-1 flex flex-col animate-fade-in relative mb-4 overflow-y-auto">
-                     <button onClick={() => onCopy(generateRobokiPrompt(currentQ.topic, `Câu hỏi tốc độ`, currentQ.level, currentQ.promptText, currentQ.options))} className="absolute top-4 right-4 text-slate-300 hover:text-roboki-500 transition-colors z-10"><Copy size={18} /></button>
-                     <div className="shrink-0 mb-4 text-center"><span className="bg-slate-100 text-slate-500 text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-wider">{currentQ.level}</span></div>
-                     <div className="font-black text-lg text-slate-800 text-center leading-relaxed my-auto"><MathRender content={currentQ.promptText}/></div>
+                      <button onClick={() => onCopy(generateRobokiPrompt(currentQ.topic, `Câu hỏi tốc độ`, currentQ.level, currentQ.promptText, currentQ.options))} className="absolute top-4 right-4 text-slate-300 hover:text-roboki-500 transition-colors z-10"><Copy size={18} /></button>
+                      <div className="shrink-0 mb-4 text-center"><span className="bg-slate-100 text-slate-500 text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-wider">{currentQ.level}</span></div>
+                      
+                      {/* 👈 THAY ĐỔI: HIỂN THỊ ẢNH TRONG GAME TỐC ĐỘ */}
+                      <div className="my-auto flex flex-col items-center">
+                          {currentQ.imageUrl && (
+                            <img src={currentQ.imageUrl} alt="Question Image" className="w-full h-auto rounded-xl mb-4 border border-slate-200 object-contain max-h-48" />
+                          )}
+                          <div className="font-black text-lg text-slate-800 text-center leading-relaxed"><MathRender content={currentQ.promptText}/></div>
+                      </div>
+
                 </div>
                 <div className="shrink-0 mb-4">
                     {isCorrect !== null && (<div className={`absolute inset-0 z-20 flex items-center justify-center bg-black/10 backdrop-blur-[1px] rounded-3xl transition-all`}><div className={`transform scale-125 p-4 rounded-full shadow-xl ${isCorrect ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'}`}>{isCorrect ? <CheckCircle size={40} /> : <XCircle size={40} />}</div></div>)}
@@ -842,7 +866,17 @@ const GameScreen: React.FC<{
                    <div className="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl relative">
                        <div className="text-center mb-4"><div className="text-xs font-black uppercase text-slate-400">Cơ hội nhận</div><div className="text-4xl font-black text-rose-500 drop-shadow-sm">+{pendingPoints}</div><div className="text-xs font-bold text-rose-300">điểm</div></div>
                        <button onClick={() => onCopy(generateRobokiPrompt(currentQ.topic, `Câu hỏi may mắn`, currentQ.level, currentQ.promptText, currentQ.options))} className="absolute top-4 right-4 text-slate-300 hover:text-roboki-500 transition-colors bg-slate-50 p-2 rounded-full"><Copy size={18} /></button>
-                       <div className="font-bold text-slate-800 mb-6 text-center leading-relaxed"><MathRender content={currentQ.promptText}/></div>
+                       
+                       {/* 👈 THAY ĐỔI: HIỂN THỊ ẢNH TRONG GAME VÒNG QUAY */}
+                       <div className="mb-6">
+                           {currentQ.imageUrl && (
+                             <div className="mb-4 flex justify-center p-2">
+                               <img src={currentQ.imageUrl} alt="Hình minh họa" className="rounded-lg max-h-48 object-contain w-full" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}/>
+                             </div>
+                           )}
+                           <div className="font-bold text-slate-800 text-center leading-relaxed"><MathRender content={currentQ.promptText}/></div>
+                       </div>
+
                        <div className="space-y-2">{currentQ.options?.map((opt, i) => (<button key={i} disabled={isCorrect !== null} onClick={() => handleWheelAnswer(opt)} className={`w-full p-4 rounded-xl border-2 font-bold text-sm transition-all ${isCorrect === true && opt === currentQ.answerKey ? 'bg-emerald-50 border-emerald-500 text-white' : isCorrect === false ? 'bg-white border-slate-100 opacity-50' : 'bg-white border-slate-100 hover:bg-slate-50 hover:border-roboki-200'}`}><MathRender content={opt}/></button>))}</div>
                        {isCorrect === true && <div className="mt-4 text-center text-emerald-600 font-black animate-bounce-short">Chính xác! +{pendingPoints} điểm</div>}
                        {isCorrect === false && <div className="mt-4 text-center text-rose-600 font-black">Sai rồi! Rất tiếc.</div>}
@@ -916,27 +950,32 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
   );
 };
 
-// 5. CHALLENGE SCREEN
-const ChallengeScreen: React.FC<{ 
-  onBack: () => void, 
+// 5. CHALLENGE SCREEN (Đã sửa lỗi hiển thị ô nhập liệu)
+const ChallengeScreen: React.FC<{
+  onBack: () => void,
   session: ChallengeSessionData,
   setSession: React.Dispatch<React.SetStateAction<ChallengeSessionData>>,
   onScore: (pts: number) => void,
-  questions: Question[] // <--- DATA
+  questions: Question[]
 }> = ({ onBack, session, setSession, onScore, questions }) => {
     
-    // Init Daily Question
+    // State lưu nội dung thầy nhập vào
+    const [textInput, setTextInput] = useState('');
+
     useEffect(() => {
+        // Nếu chưa có câu hỏi hôm nay thì random 1 câu
         if (!session.todayQ && questions.length > 0) {
             const randomQ = questions[Math.floor(Math.random() * questions.length)];
             setSession(prev => ({ ...prev, todayQ: randomQ }));
         }
     }, [questions]);
 
-    const handleSubmit = (opt: string) => {
+    const handleSubmit = (answer: string) => {
         if (!session.todayQ) return;
-        const isCorrect = opt === session.todayQ.answerKey;
-        setSession(prev => ({ ...prev, selectedOpt: opt, isSubmitted: true, isCorrect }));
+        // So sánh đáp án (không phân biệt hoa thường)
+        const isCorrect = answer.trim().toLowerCase() === session.todayQ.answerKey.trim().toLowerCase();
+        
+        setSession(prev => ({ ...prev, selectedOpt: answer, isSubmitted: true, isCorrect }));
         if (isCorrect) onScore(20, 'challenge');
     };
 
@@ -953,21 +992,62 @@ const ChallengeScreen: React.FC<{
                     <div className="bg-sky-50 text-sky-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">Daily Quest</div>
                     <div className="text-right"><div className="font-black text-2xl text-slate-800">+20</div><div className="text-[10px] text-slate-400 font-bold uppercase">Điểm thưởng</div></div>
                  </div>
-                 <div className="mb-8 font-bold text-slate-800 text-lg leading-relaxed"><MathRender content={session.todayQ.promptText}/></div>
-                 <div className="space-y-3">
-                    {session.todayQ.options?.map((opt, i) => (
-                       <button key={i} disabled={session.isSubmitted} onClick={() => handleSubmit(opt)} className={`w-full p-4 rounded-2xl border-2 text-left text-sm font-bold transition-all ${session.isSubmitted && opt === session.todayQ?.answerKey ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : session.isSubmitted && session.selectedOpt === opt ? 'bg-rose-50 border-rose-500 text-rose-700' : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-600'}`}><MathRender content={opt}/></button>
-                    ))}
+                 
+                 {/* 👈 THAY ĐỔI: HIỂN THỊ ẢNH TRONG THỬ THÁCH */}
+                 <div className="mb-8">
+                    {session.todayQ.imageUrl && (
+                      <div className="mb-4 flex justify-center bg-white rounded-xl border border-slate-100 p-2">
+                         <img src={session.todayQ.imageUrl} alt="Hình minh họa" className="rounded-lg max-h-64 object-contain w-full" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                      </div>
+                    )}
+                    <div className="font-bold text-slate-800 text-lg leading-relaxed"><MathRender content={session.todayQ.promptText}/></div>
                  </div>
+                 
+                 {/* --- PHẦN ĐIỀU CHỈNH: Tự động nhận diện loại câu hỏi --- */}
+                 <div className="space-y-3">
+                    {session.todayQ.type === 'Short' ? (
+                        // Nếu là câu hỏi điền từ -> Hiện ô nhập
+                        <div className="space-y-4 animate-fade-in">
+                            <input
+                                type="text"
+                                disabled={session.isSubmitted}
+                                value={textInput}
+                                onChange={(e) => setTextInput(e.target.value)}
+                                placeholder="Nhập đáp án của bạn..."
+                                className="w-full p-4 rounded-2xl border-2 border-slate-200 font-bold focus:border-sky-500 focus:ring-4 focus:ring-sky-100 outline-none text-center text-lg text-slate-700 placeholder:text-slate-300 transition-all"
+                            />
+                            {!session.isSubmitted && (
+                                <button
+                                    disabled={!textInput}
+                                    onClick={() => handleSubmit(textInput)}
+                                    className="w-full bg-sky-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-sky-200 active:scale-95 transition-all disabled:opacity-50 disabled:shadow-none flex items-center justify-center gap-2"
+                                >
+                                    <Target size={18}/> Chốt đáp án
+                                </button>
+                            )}
+                            {session.isSubmitted && (
+                                <div className="text-center font-medium bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                    <div className="text-xs text-slate-400 uppercase font-bold mb-1">Đáp án đúng là</div>
+                                    <div className="text-xl font-black text-emerald-600">{session.todayQ.answerKey}</div>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        // Nếu là trắc nghiệm -> Hiện nút bấm (Giữ nguyên cũ)
+                        session.todayQ.options?.map((opt, i) => (
+                           <button key={i} disabled={session.isSubmitted} onClick={() => handleSubmit(opt)} className={`w-full p-4 rounded-2xl border-2 text-left text-sm font-bold transition-all ${session.isSubmitted && opt === session.todayQ?.answerKey ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : session.isSubmitted && session.selectedOpt === opt ? 'bg-rose-50 border-rose-500 text-rose-700' : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-600'}`}><MathRender content={opt}/></button>
+                        ))
+                    )}
+                 </div>
+                 
                  {session.isSubmitted && (<div className={`mt-8 text-center font-black text-lg ${session.isCorrect ? 'text-emerald-600' : 'text-slate-400'}`}>{session.isCorrect ? 'Tuyệt vời! Bạn đã hoàn thành nhiệm vụ.' : 'Rất tiếc, hãy thử lại vào ngày mai!'}</div>)}
               </div>
            ) : (
-             <div className="flex-1 flex items-center justify-center text-slate-400">Đang tải câu hỏi...</div>
+             <div className="flex-1 flex items-center justify-center text-slate-400 font-medium animate-pulse">Đang tải câu hỏi...</div>
            )}
         </div>
     );
 };
-
 // 6. CHAT SCREEN
 const ChatScreen: React.FC<{ onBack: () => void, initialPrompt: string }> = ({ onBack, initialPrompt }) => {
     const [showCopyOverlay, setShowCopyOverlay] = useState(!!initialPrompt);
@@ -1055,6 +1135,35 @@ const App: React.FC = () => {
     fetchContent();
   }, []);
 
+  // --- HÀM NẠP DỮ LIỆU TỪ FILE data.ts ---
+  const handleNapDuLieu = async () => {
+    if (!confirm("Thầy có chắc chắn muốn NẠP TOÀN BỘ dữ liệu từ file data.ts lên Firebase không?")) return;
+    
+    setToastMsg("⏳ Đang xử lý...");
+    try {
+      let lCount = 0;
+      let qCount = 0;
+
+      // 1. Nạp Bài Học
+      for (const les of PHYSICS_LESSONS) {
+        await setDoc(doc(db, 'lessons', les.id), les);
+        lCount++;
+      }
+
+      // 2. Nạp Câu Hỏi
+      for (const ques of QUESTION_BANK) {
+        await setDoc(doc(db, 'questions', ques.id), ques);
+        qCount++;
+      }
+
+      setToastMsg(`✅ Xong! Đã nạp ${lCount} bài học & ${qCount} câu hỏi.`);
+      setTimeout(() => window.location.reload(), 1500); // Tự tải lại trang
+    } catch (e: any) {
+      console.error(e);
+      setToastMsg("❌ Lỗi: " + e.message);
+    }
+  };
+
   const handleLogin = (u: UserProfile) => {
     setUser(u);
     setScreen('HOME');
@@ -1066,7 +1175,7 @@ const App: React.FC = () => {
       ...user,
       totalScore: user.totalScore + pts,
       practiceScore: source === 'practice'  ? user.practiceScore + pts  : user.practiceScore,
-      gameScore:       source === 'game'       ? user.gameScore + pts       : user.gameScore,
+      gameScore:        source === 'game'        ? user.gameScore + pts        : user.gameScore,
       challengeScore: source === 'challenge' ? user.challengeScore + pts : user.challengeScore,
     };
     setUser(updatedUser);
@@ -1131,16 +1240,26 @@ const App: React.FC = () => {
 
   return (
     <div className="max-w-md mx-auto h-[100dvh] bg-white shadow-2xl overflow-hidden relative font-sans text-slate-800 flex flex-col">
+       
+        {/* NÚT NẠP DỮ LIỆU TỪ FILE DATA.TS */}
+        <button
+          onClick={handleNapDuLieu}
+          className="fixed bottom-24 right-4 z-50 bg-indigo-600 text-white font-bold py-3 px-4 rounded-full shadow-2xl border-2 border-white hover:scale-105 active:scale-95 transition-all text-[10px] uppercase tracking-wider flex items-center gap-2"
+        >
+          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          Nạp Data từ File
+        </button>
+
         <div className="flex-1 overflow-y-auto overflow-x-hidden w-full relative pb-24">
             {screen === 'HOME' && (
-                <ContentScreen 
+                <ContentScreen
                     user={user}
                     onCopy={handleCopy}
                     onNavToPractice={() => setScreen('PRACTICE')}
                     onNavToGames={() => setScreen('GAME')}
                     onNavToChallenge={() => setScreen('CHALLENGE')}
                     onNavToLeaderboard={() => setScreen('LEADERBOARD')}
-                    onNavToProfile={() => {}} 
+                    onNavToProfile={() => {}}
                     onNavToChat={() => { setCopyText(''); setScreen('CHAT'); }}
                     selectedTopic={selectedTopic}
                     setSelectedTopic={setSelectedTopic}
@@ -1151,27 +1270,27 @@ const App: React.FC = () => {
             )}
 
             {screen === 'PRACTICE' && (
-              <PracticeScreen 
-                onCopy={handleCopy} 
+              <PracticeScreen
+                onCopy={handleCopy}
                 onScore={(pts) => handleScore(pts, 'practice')}
-                sessionData={practiceSession} 
+                sessionData={practiceSession}
                 setSessionData={setPracticeSession}
                 questions={questions} // Truyền data động vào
               />
             )}
 
             {screen === 'GAME' && (
-              <GameScreen 
-                onCopy={handleCopy} 
+              <GameScreen
+                onCopy={handleCopy}
                 onScore={(pts) => handleScore(pts, 'game')}
-                sessionData={gameSession} 
+                sessionData={gameSession}
                 setSessionData={setGameSession}
                 questions={questions} // Truyền data động vào
               />
             )}
 
             {screen === 'CHALLENGE' && (
-              <ChallengeScreen 
+              <ChallengeScreen
                 onBack={() => setScreen('HOME')}
                 session={challengeSession}
                 setSession={setChallengeSession}
