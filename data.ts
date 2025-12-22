@@ -20,10 +20,17 @@ export const PHYSICS_LESSONS: Lesson[] = [
     id: 'l1.1',
     topic: 'VẬT LÍ NHIỆT',
     title: '1.1 Sự chuyển thể',
+    // Thêm dấu $ vào các ký hiệu toán học trong phần theory
     theory: '- Chuyển thể là sự biến đổi trạng thái của chất (rắn–lỏng–khí).\n- Các quá trình: nóng chảy, đông đặc, bay hơi, ngưng tụ, thăng hoa.\n- Trong quá trình chuyển thể (ở áp suất không đổi), nhiệt độ thường không đổi.\n- Nhiệt lượng cung cấp dùng để phá vỡ/liên kết phân tử (ẩn nhiệt).',
-    formulas: 'Q = \\lambda m\nQ = Lm',
-    examples: ['Tính nhiệt lượng cần cung cấp để làm nóng chảy hoàn toàn 100g nước đá ở 0°C. Biết \\lambda = 3.34 \\cdot 10^5 J/kg.']
-  },
+    
+    // Bao quanh công thức bằng dấu $
+    // Dùng 2 dấu gạch chéo \\ để mã code không bị lỗi
+    formulas: '$Q = \\lambda m$\n$Q = Lm$',
+    
+    // Phần ví dụ cũng nên kẹp dấu $ cho các con số và ký hiệu
+    examples: ['Tính nhiệt lượng cần cung cấp để làm nóng chảy hoàn toàn 100g nước đá ở $0^\\circ C$. Biết $\\lambda = 3.34 \\cdot 10^5$ J/kg.']
+  },    
+  
   {
     id: 'l1.2',
     topic: 'VẬT LÍ NHIỆT',

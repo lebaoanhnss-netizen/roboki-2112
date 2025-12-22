@@ -1,18 +1,17 @@
+// file: src/components/MathRender.tsx
 import React from 'react';
+// Import CSS của KaTeX để hiển thị phông chữ toán học đẹp
+import 'katex/dist/katex.min.css'; 
+import Latex from 'react-latex-next';
 
-interface MathRenderProps {
-  content: string;
-  block?: boolean;
-  className?: string;
-}
+const MathRender: React.FC<{ content: string; className?: string }> = ({ content, className }) => {
+  if (!content) return null;
 
-const MathRender: React.FC<MathRenderProps> = ({ content, block = false, className = '' }) => {
-  const Tag = block ? 'div' : 'span';
-  // whitespace-pre-wrap ensures that \n in the data strings are rendered as line breaks
   return (
-    <Tag className={`${className} whitespace-pre-wrap`}>
-      {content}
-    </Tag>
+    <div className={className}>
+      {/* strict={false} giúp nó không bị lỗi nếu công thức viết hơi sai cú pháp */}
+      <Latex strict={false}>{content}</Latex>
+    </div>
   );
 };
 
