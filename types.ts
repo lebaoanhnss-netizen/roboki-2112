@@ -5,7 +5,7 @@ export interface UserProfile {
   name: string;
   email: string;
   class: string;
-  school: string; // 👈 MỚI: Thêm trường Trường học
+  school: string; 
   totalScore: number;
   practiceScore: number;
   gameScore: number;
@@ -48,6 +48,10 @@ export interface Lesson {
   title: string;
   topic: string;
   theory: string;
+  
+  // 👇 THÊM DÒNG NÀY ĐỂ HỖ TRỢ ẢNH LÝ THUYẾT
+  theoryImages?: string[]; 
+
   formulas: string;
   examples: string[];
 }

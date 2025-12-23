@@ -1,3 +1,4 @@
+// src/data.ts
 import { Lesson, Question, UserProfile } from './types';
 
 // Mock User (Main user)
@@ -21,8 +22,13 @@ export const PHYSICS_LESSONS: Lesson[] = [
     id: 'l1.1',
     topic: 'VẬT LÍ NHIỆT',
     title: '1.1 Sự chuyển thể',
-    theory: '...', 
-    formulas: '$Q = \\lambda m$\n$Q = Lm$', 
+    theory: '- Sự chuyển thể là quá trình chất chuyển từ trạng thái này sang trạng thái khác (rắn – lỏng – khí) khi có sự trao đổi nhiệt.\n- Quá trình này không làm thay đổi bản chất hóa học của chất.\n- Các dạng chuyển thể thường gặp:\n  + Nóng chảy: rắn → lỏng (thu nhiệt).\n  + Đông đặc: lỏng → rắn (tỏa nhiệt).\n  + Bay hơi: lỏng → khí (xảy ra ở mọi nhiệt độ).\n  + Sôi: lỏng → khí (xảy ra ở nhiệt độ xác định).\n  + Ngưng tụ: khí → lỏng (tỏa nhiệt).\n  + Thăng hoa: rắn → khí (không qua lỏng).\n- Trong quá trình chuyển thể:\n  + Nhiệt độ của chất không đổi.\n  + Nhiệt lượng dùng để phá vỡ hoặc hình thành liên kết giữa các phân tử.',
+    // 👇 THÊM DÒNG NÀY: Link ảnh minh họa (có thể để nhiều ảnh trong dấu [])
+    theoryImages: [
+        'https://i.postimg.cc/Y2VtbMn1/Please-make-the-202512140930.jpg', // Ảnh sơ đồ chuyển thể (Ví dụ)
+        // Thầy có thể thêm nhiều ảnh khác vào đây, cách nhau bằng dấu phẩy
+    ],
+    formulas: '$Q = \\lambda m$\n$Q = Lm$',
     examples: ['...']
   },
   {

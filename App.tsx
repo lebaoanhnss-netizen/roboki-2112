@@ -36,7 +36,8 @@ import {
   Dna, Calendar, Star, Award, Menu, LogOut, ArrowRight, Lock, Mail,
   Disc, HelpCircle, Gift, SwatchBook, Frown, Sparkles, Bot, StopCircle,
   ThumbsUp, Percent, Activity, Send, Home, Globe, KeyRound, X, Loader2,
-  FileText, ClipboardList, School, Edit3, Save, MapPin, ShieldAlert
+  FileText, ClipboardList, School, Edit3, Save, MapPin, ShieldAlert,
+  Lightbulb // 👈 Thêm icon bóng đèn cho ví dụ
 } from 'lucide-react';
 
 // --- UTILS ---
@@ -97,7 +98,7 @@ const INITIAL_PRACTICE_STATE: PracticeSessionData = {
   quizQuestions: [],
   currentQIndex: 0,
   selectedOpt: null,
-  subAnswers: {}, 
+  subAnswers: {},
   isSubmitted: false,
   showExplanation: false,
 };
@@ -110,7 +111,7 @@ interface MockTestSessionData {
   countShort: number;
   quizQuestions: Question[];
   currentQIndex: number;
-  userAnswers: { [qId: string]: any }; 
+  userAnswers: { [qId: string]: any };
   score: number;
   startTime: number;
   errorMsg: string;
@@ -207,14 +208,48 @@ const LessonCard: React.FC<{
       {isExpanded && (
         <div className="px-4 pb-4 animate-fade-in">
           <div className="pt-2 border-t border-slate-50 space-y-3">
+             {/* PHẦN LÝ THUYẾT */}
              <div className="bg-roboki-50/50 p-4 rounded-xl border border-roboki-100">
                 <h5 className="text-xs font-bold text-roboki-600 uppercase mb-2 flex items-center gap-1.5"><Sparkles size={14}/> Lý thuyết</h5>
-                <MathRender content={lesson.theory} className="text-sm text-slate-700 leading-relaxed"/>
+                <MathRender content={lesson.theory} className="text-sm text-slate-700 leading-relaxed whitespace-pre-line"/>
+                
+                {/* HIỂN THỊ ẢNH LÝ THUYẾT */}
+                {lesson.theoryImages && lesson.theoryImages.length > 0 && (
+                  <div className="mt-4 space-y-3">
+                    {lesson.theoryImages.map((imgUrl, index) => (
+                      <img 
+                        key={index} 
+                        src={imgUrl} 
+                        alt={`Minh họa lý thuyết ${index + 1}`}
+                        className="rounded-xl border border-roboki-100 w-full object-contain max-h-80 bg-white shadow-sm"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                      />
+                    ))}
+                  </div>
+                )}
              </div>
+
+             {/* PHẦN CÔNG THỨC */}
              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
                 <h5 className="text-xs font-bold text-slate-600 uppercase mb-2 flex items-center gap-1.5"><Zap size={14}/> Công thức</h5>
                 <MathRender content={lesson.formulas} className="text-sm text-slate-800 font-bold font-mono whitespace-pre-line"/>
              </div>
+
+             {/* 👇 MỚI: PHẦN VÍ DỤ MINH HỌA (HIỂN THỊ NẾU CÓ DỮ LIỆU) */}
+             {lesson.examples && lesson.examples.length > 0 && (
+                <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-100">
+                    <h5 className="text-xs font-bold text-yellow-700 uppercase mb-2 flex items-center gap-1.5"><Lightbulb size={14}/> Ví dụ minh họa</h5>
+                    <ul className="list-disc list-outside ml-4 space-y-2">
+                        {lesson.examples.map((ex, idx) => (
+                            <li key={idx} className="text-sm text-slate-700 leading-relaxed">
+                                <MathRender content={ex} />
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+             )}
+             {/* 👆 HẾT PHẦN MỚI */}
+
              <div className="flex justify-end pt-2">
                 <button onClick={(e) => { e.stopPropagation(); const txt = generateRobokiPrompt(lesson.topic, lesson.title, "Lý thuyết", `${lesson.theory}\n\nCông thức chính: ${lesson.formulas}`, undefined, 'LESSON'); onCopy(txt); }} className="text-xs bg-white text-roboki-600 px-4 py-2.5 rounded-full font-bold shadow-sm border border-roboki-100 flex items-center gap-2 hover:bg-roboki-50 transition-colors">
                   <MessageCircle size={16} /> Hỏi Roboki bài này
@@ -294,6 +329,7 @@ const AuthScreen: React.FC<{ onLoginSuccess: (user: UserProfile) => void }> = ({
               <button type="submit" disabled={loading} className="w-full bg-roboki-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-roboki-200 hover:bg-roboki-700 active:scale-95 transition-all mt-2">{loading ? 'Đang xử lý...' : (isRegistering ? 'Đăng ký' : 'Đăng nhập')}</button>
            </form>
         </div>
+        <p className="text-center text-xs text-slate-400 mt-6 font-bold">Dữ liệu được lưu trữ an toàn trên Firebase.</p>
       </div>
     </div>
   );
@@ -668,7 +704,7 @@ const PracticeScreen: React.FC<{
                   <input disabled={isSubmitted} type="text" placeholder="Nhập câu trả lời..." className="w-full p-4 rounded-2xl border-2 border-slate-100 font-bold focus:border-roboki-500 focus:outline-none" onChange={(e) => updateSession({ selectedOpt: e.target.value })}/>
                ) : (
                   currentQ.options?.map((opt, i) => (
-                    <button key={i} disabled={isSubmitted} onClick={() => updateSession({ selectedOpt: opt })} className={`w-full p-4 rounded-2xl border-2 text-left text-sm font-bold transition-all ${isSubmitted && opt === currentQ.answerKey ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : isSubmitted && selectedOpt === opt ? 'bg-rose-50 border-rose-500 text-rose-700' : 'bg-white border-slate-50 hover:bg-slate-50 text-slate-600'}`}><MathRender content={opt}/></button>
+                    <button key={i} disabled={isSubmitted} onClick={() => updateSession({ selectedOpt: opt })} className={`w-full p-4 rounded-2xl border-2 text-left text-sm font-bold transition-all ${isSubmitted && opt === currentQ.answerKey ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : isSubmitted && selectedOpt === opt ? 'bg-rose-50 border-rose-500 text-rose-700' : selectedOpt === opt ? 'bg-roboki-50 border-roboki-500 text-roboki-700' : 'bg-white border-slate-50 hover:bg-slate-50 text-slate-600'}`}><MathRender content={opt}/></button>
                   ))
                )
             )}
@@ -995,7 +1031,7 @@ const MockTestScreen: React.FC<{
   );
 };
 
-// 3. GAME SCREEN (Đã phục hồi đầy đủ)
+// 3. GAME SCREEN
 const GameScreen: React.FC<{
   onCopy: (txt: string) => void,
   onScore: (pts: number) => void,
