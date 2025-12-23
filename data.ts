@@ -1311,10 +1311,10 @@ export const QUESTION_BANK: Question[] = [
     answerKey: '75', explanationText: 'Sau 2T còn lại 1/4 (25g). Vậy bị phân rã 100 - 25 = 75g.'
   },
  // =================================================================
+  // =================================================================
   // PHẦN CÂU HỎI ĐÚNG/SAI (TRUE/FALSE) - CẤU TRÚC 4 Ý (2 BIẾT - 1 HIỂU - 1 VẬN DỤNG)
   // =================================================================
 
-  // --- I1.1: CẤU TRÚC CỦA CHẤT & SỰ CHUYỂN THỂ ---
   // --- I1.1: CẤU TRÚC CỦA CHẤT & SỰ CHUYỂN THỂ ---
   {
     id: 'tf1.1-1',
@@ -1364,12 +1364,12 @@ export const QUESTION_BANK: Question[] = [
     promptText: 'Một lượng khí lí tưởng được đựng trong xilanh kín. Người ta thực hiện công A = 100 J để nén khí, đồng thời khí truyền nhiệt lượng Q = 20 J ra môi trường bên ngoài.',
     imageUrl: '',
     subQuestions: [
-      { id: 'sq1', content: 'Nội năng của khí là tổng động năng và thế năng của các phân tử cấu tạo nên khí.', isCorrect: true, explanation: 'Đây là định nghĩa nội năng.' }, // Biết
-      { id: 'sq2', content: 'Theo quy ước dấu của định luật I, khí truyền nhiệt thì Q > 0.', isCorrect: false, explanation: 'Hệ truyền nhiệt (tỏa nhiệt) thì Q < 0.' }, // Biết
-      { id: 'sq3', content: 'Trong quá trình nén khí này, khoảng cách trung bình giữa các phân tử giảm đi.', isCorrect: true, explanation: 'Nén khí -> Thể tích giảm -> Mật độ tăng -> Khoảng cách giảm.' }, // Hiểu
-      { id: 'sq4', content: 'Độ biến thiên nội năng của lượng khí này là 120 J.', isCorrect: false, explanation: 'A = +100J (nhận công), Q = -20J (tỏa nhiệt). ΔU = A + Q = 100 - 20 = 80 J.' } // Vận dụng
+      { id: 'sq1', content: 'Nội năng của khí là tổng động năng và thế năng của các phân tử cấu tạo nên khí.', isCorrect: true, explanation: 'Đây là định nghĩa nội năng.' },
+      { id: 'sq2', content: 'Theo quy ước dấu của định luật I, khí truyền nhiệt thì Q > 0.', isCorrect: false, explanation: 'Hệ truyền nhiệt (tỏa nhiệt) thì $Q < 0$.' },
+      { id: 'sq3', content: 'Trong quá trình nén khí này, khoảng cách trung bình giữa các phân tử giảm đi.', isCorrect: true, explanation: 'Nén khí -> Thể tích giảm -> Mật độ tăng -> Khoảng cách giảm.' },
+      { id: 'sq4', content: 'Độ biến thiên nội năng của lượng khí này là 120 J.', isCorrect: false, explanation: 'A = +100J (nhận công), Q = -20J (tỏa nhiệt). $\\Delta U = A + Q = 100 - 20 = 80 J$.' }
     ],
-    answerKey: '', explanationText: 'Áp dụng ΔU = A + Q với quy ước dấu.'
+    answerKey: '', explanationText: 'Áp dụng $\\Delta U = A + Q$ với quy ước dấu.'
   },
 
   // --- I1.3: NHIỆT ĐỘ ---
@@ -1382,10 +1382,10 @@ export const QUESTION_BANK: Question[] = [
     promptText: 'Xét hai vật A và B tiếp xúc nhau. Vật A có nhiệt độ 25°C, vật B có nhiệt độ 300 K.',
     imageUrl: '',
     subQuestions: [
-      { id: 'sq1', content: 'Nhiệt độ là đại lượng đặc trưng cho độ nóng lạnh của vật.', isCorrect: true, explanation: 'Khái niệm cơ bản về nhiệt độ.' }, // Biết
-      { id: 'sq2', content: 'Trong thang Kelvin, độ không tuyệt đối có giá trị bằng -273 K.', isCorrect: false, explanation: 'Độ không tuyệt đối là 0 K (tương ứng -273°C).' }, // Biết
-      { id: 'sq3', content: 'Nhiệt lượng sẽ tự truyền từ vật A sang vật B.', isCorrect: false, explanation: 'Đổi A ra K: 25 + 273 = 298 K. Vật B (300 K) nóng hơn vật A (298 K), nên nhiệt truyền từ B sang A.' }, // Hiểu
-      { id: 'sq4', content: 'Độ chênh lệch nhiệt độ giữa hai vật là 2 K.', isCorrect: true, explanation: 'ΔT = |300 - 298| = 2 K.' } // Vận dụng
+      { id: 'sq1', content: 'Nhiệt độ là đại lượng đặc trưng cho độ nóng lạnh của vật.', isCorrect: true, explanation: 'Khái niệm cơ bản về nhiệt độ.' },
+      { id: 'sq2', content: 'Trong thang Kelvin, độ không tuyệt đối có giá trị bằng -273 K.', isCorrect: false, explanation: 'Độ không tuyệt đối là 0 K (tương ứng -273°C).' },
+      { id: 'sq3', content: 'Nhiệt lượng sẽ tự truyền từ vật A sang vật B.', isCorrect: false, explanation: 'Đổi A ra K: $25 + 273 = 298 K$. Vật B (300 K) nóng hơn vật A (298 K), nên nhiệt truyền từ B sang A.' },
+      { id: 'sq4', content: 'Độ chênh lệch nhiệt độ giữa hai vật là 2 K.', isCorrect: true, explanation: '$\\Delta T = |300 - 298| = 2 K$.' }
     ],
     answerKey: '', explanationText: 'So sánh nhiệt độ cần đưa về cùng một thang đo.'
   },
@@ -1400,12 +1400,12 @@ export const QUESTION_BANK: Question[] = [
     promptText: 'Để đun sôi 2 lít nước (khối lượng 2kg) từ 20°C, người ta cung cấp nhiệt lượng. Biết nhiệt dung riêng của nước là c = 4200 J/kg.K.',
     imageUrl: '',
     subQuestions: [
-      { id: 'sq1', content: 'Nhiệt dung riêng của một chất cho biết nhiệt lượng cần thiết để làm tăng nhiệt độ của 1kg chất đó thêm 1 độ.', isCorrect: true, explanation: 'Định nghĩa nhiệt dung riêng.' }, // Biết
-      { id: 'sq2', content: 'Đơn vị của nhiệt dung riêng là J/kg.', isCorrect: false, explanation: 'Đơn vị đúng là J/kg.K.' }, // Biết
-      { id: 'sq3', content: 'Nước có nhiệt dung riêng lớn nên nó nóng lên rất nhanh và nguội đi rất nhanh so với các chất khác.', isCorrect: false, explanation: 'Nhiệt dung riêng lớn nghĩa là khó nóng và khó nguội (điều hòa nhiệt tốt).' }, // Hiểu
-      { id: 'sq4', content: 'Nhiệt lượng cần cung cấp để nước sôi (100°C) là 672 kJ.', isCorrect: true, explanation: 'Q = mcΔt = 2 * 4200 * (100 - 20) = 672,000 J = 672 kJ.' } // Vận dụng
+      { id: 'sq1', content: 'Nhiệt dung riêng của một chất cho biết nhiệt lượng cần thiết để làm tăng nhiệt độ của 1kg chất đó thêm 1 độ.', isCorrect: true, explanation: 'Định nghĩa nhiệt dung riêng.' },
+      { id: 'sq2', content: 'Đơn vị của nhiệt dung riêng là J/kg.', isCorrect: false, explanation: 'Đơn vị đúng là J/kg.K.' },
+      { id: 'sq3', content: 'Nước có nhiệt dung riêng lớn nên nó nóng lên rất nhanh và nguội đi rất nhanh so với các chất khác.', isCorrect: false, explanation: 'Nhiệt dung riêng lớn nghĩa là khó nóng và khó nguội (điều hòa nhiệt tốt).' },
+      { id: 'sq4', content: 'Nhiệt lượng cần cung cấp để nước sôi (100°C) là 672 kJ.', isCorrect: true, explanation: '$Q = mc\\Delta t = 2 . 4200 . (100 - 20) = 672,000 J = 672 kJ$.' }
     ],
-    answerKey: '', explanationText: 'Tính toán nhiệt lượng Q = mcΔt.'
+    answerKey: '', explanationText: 'Tính toán nhiệt lượng $Q = mc\\Delta t$.'
   },
 
   // --- I2.1: MÔ HÌNH ĐỘNG HỌC PHÂN TỬ ---
@@ -1418,10 +1418,10 @@ export const QUESTION_BANK: Question[] = [
     promptText: 'Xét một lượng khí chứa trong bình kín. Theo thuyết động học phân tử chất khí:',
     imageUrl: '',
     subQuestions: [
-      { id: 'sq1', content: 'Các phân tử khí chuyển động hỗn loạn không ngừng.', isCorrect: true, explanation: 'Tính chất cơ bản của chuyển động nhiệt.' }, // Biết
-      { id: 'sq2', content: 'Các phân tử khí sắp xếp một cách trật tự và chặt chẽ.', isCorrect: false, explanation: 'Đó là cấu trúc chất rắn. Chất khí hỗn loạn.' }, // Biết
-      { id: 'sq3', content: 'Khi nhiệt độ tăng, tốc độ chuyển động trung bình của các phân tử khí tăng lên.', isCorrect: true, explanation: 'Nhiệt độ tỉ lệ thuận với động năng trung bình.' }, // Hiểu
-      { id: 'sq4', content: 'Nếu bình chứa 1 mol khí ở điều kiện tiêu chuẩn thì số lượng phân tử khí trong bình là 6,02.10^23 hạt.', isCorrect: true, explanation: '1 mol chứa NA hạt.' } // Vận dụng (nhớ số liệu)
+      { id: 'sq1', content: 'Các phân tử khí chuyển động hỗn loạn không ngừng.', isCorrect: true, explanation: 'Tính chất cơ bản của chuyển động nhiệt.' },
+      { id: 'sq2', content: 'Các phân tử khí sắp xếp một cách trật tự và chặt chẽ.', isCorrect: false, explanation: 'Đó là cấu trúc chất rắn. Chất khí hỗn loạn.' },
+      { id: 'sq3', content: 'Khi nhiệt độ tăng, tốc độ chuyển động trung bình của các phân tử khí tăng lên.', isCorrect: true, explanation: 'Nhiệt độ tỉ lệ thuận với động năng trung bình.' },
+      { id: 'sq4', content: 'Nếu bình chứa 1 mol khí ở điều kiện tiêu chuẩn thì số lượng phân tử khí trong bình là $6,02.10^{23}$ hạt.', isCorrect: true, explanation: '1 mol chứa $N_A$ hạt.' }
     ],
     answerKey: '', explanationText: 'Các nội dung cơ bản của thuyết động học phân tử.'
   },
@@ -1433,15 +1433,61 @@ export const QUESTION_BANK: Question[] = [
     lessonId: 'l2.2',
     level: 'Vận dụng',
     type: 'TrueFalse',
-    promptText: 'Một lượng khí được nén đẳng nhiệt từ thể tích V1 = 6 lít, áp suất p1 = 1 atm đến thể tích V2 = 3 lít.',
+    // 👇 ĐÃ SỬA: Thêm $...$ cho V1, p1, V2
+    promptText: 'Một lượng khí được nén đẳng nhiệt từ thể tích $V_1 = 6$ lít, áp suất $p_1 = 1$ atm đến thể tích $V_2 = 3$ lít.',
     imageUrl: '',
     subQuestions: [
-      { id: 'sq1', content: 'Quá trình đẳng nhiệt là quá trình biến đổi trạng thái trong đó nhiệt độ được giữ không đổi.', isCorrect: true, explanation: 'Định nghĩa quá trình đẳng nhiệt.' }, // Biết
-      { id: 'sq2', content: 'Đường biểu diễn quá trình đẳng nhiệt trong hệ tọa độ (p,V) là đường thẳng.', isCorrect: false, explanation: 'Là đường hypebol.' }, // Biết
-      { id: 'sq3', content: 'Khi thể tích giảm đi một nửa thì mật độ phân tử khí tăng gấp đôi.', isCorrect: true, explanation: 'n = N/V. V giảm 2 thì n tăng 2.' }, // Hiểu
-      { id: 'sq4', content: 'Áp suất của khí ở trạng thái (2) là 3 atm.', isCorrect: false, explanation: 'p1V1 = p2V2 => 1*6 = p2*3 => p2 = 2 atm.' } // Vận dụng
+      { id: 'sq1', content: 'Quá trình đẳng nhiệt là quá trình biến đổi trạng thái trong đó nhiệt độ được giữ không đổi.', isCorrect: true, explanation: 'Định nghĩa quá trình đẳng nhiệt.' },
+      { id: 'sq2', content: 'Đường biểu diễn quá trình đẳng nhiệt trong hệ tọa độ $(p,V)$ là đường thẳng.', isCorrect: false, explanation: 'Là đường hypebol.' },
+      { id: 'sq3', content: 'Khi thể tích giảm đi một nửa thì mật độ phân tử khí tăng gấp đôi.', isCorrect: true, explanation: '$n = \\frac{N}{V}$. V giảm 2 thì n tăng 2.' },
+      { 
+        id: 'sq4', 
+        content: 'Áp suất của khí ở trạng thái (2) là 3 atm.', 
+        isCorrect: false, 
+        // 👇 ĐÃ SỬA: p1, V1 thành p_1, V_1 và sửa dấu nhân * thành .
+        explanation: '$p_1V_1 = p_2V_2 \\Rightarrow 1.6 = p_2.3 \\Rightarrow p_2 = 2$ atm.' 
+      }
     ],
-    answerKey: '', explanationText: 'Áp dụng định luật Boyle.'
+    answerKey: '', explanationText: 'Áp dụng định luật Boyle: $p_1V_1 = p_2V_2$.'
+  },
+  {
+    id: 'tf2.2-2',
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Vận dụng',
+    type: 'TrueFalse',
+    promptText: 'Câu 2: Một khối khí khi đặt ở điều kiện tiêu chuẩn (trạng thái A). Nén khí và giữ nhiệt độ không đổi đến trạng thái B. Đồ thị áp suất theo thể tích được biểu diễn như hình vẽ.',
+    imageUrl: 'https://i.postimg.cc/2yy9gGGy/do-thi-2.png',
+    subQuestions: [
+      {
+        id: 'sq1',
+        content: 'Số mol của khối khí ở điều kiện tiêu chuẩn là 0,1 mol.',
+        isCorrect: true,
+        // 👇 ĐÃ SỬA: VA thành V_A
+        explanation: 'Ở điều kiện tiêu chuẩn ($0^oC, 1 atm$), 1 mol khí có thể tích 22,4 lít. Dựa vào đồ thị, $V_A = 2,24$ lít nên $n = \\frac{2,24}{22,4} = 0,1$ mol.'
+      },
+      {
+        id: 'sq2',
+        content: 'Thể tích khí ở trạng thái B là 1,12 lít.',
+        isCorrect: true,
+        // 👇 ĐÃ SỬA: pA, VA thành p_A, V_A
+        explanation: 'Tích $p.V$ không đổi. $p_AV_A = 1.2,24 = 2,24$. Tại B, nếu áp suất tăng gấp đôi ($p_B=2atm$) thì $V_B = \\frac{2,24}{2} = 1,12$ lít.'
+      },
+      {
+        id: 'sq3',
+        content: 'Đường biểu diễn quá trình nén đẳng nhiệt là một cung hypebol AB.',
+        isCorrect: true,
+        explanation: 'Trong hệ tọa độ $(p, V)$, đường đẳng nhiệt ($p \\sim \\frac{1}{V}$) có dạng là đường Hypebol.'
+      },
+      {
+        id: 'sq4',
+        content: 'Khi thể tích của khối khí là 1,4 lít thì áp suất là 1,5 atm.',
+        isCorrect: false,
+        explanation: 'Ta có hằng số $p.V = 2,24$. Khi $V = 1,4$ lít thì $p = \\frac{2,24}{1,4} = 1,6$ atm.\n=> Mệnh đề Sai (vì $1,6 \\neq 1,5$).'
+      }
+    ],
+    answerKey: '',
+    explanationText: 'Áp dụng định luật Boyle cho quá trình đẳng nhiệt: $p_1V_1 = p_2V_2 = const$.'
   },
 
   // --- I2.3: ÁP SUẤT KHÍ ---
@@ -1454,12 +1500,12 @@ export const QUESTION_BANK: Question[] = [
     promptText: 'Xét áp suất của một lượng khí lí tưởng tác dụng lên thành bình chứa.',
     imageUrl: '',
     subQuestions: [
-      { id: 'sq1', content: 'Áp suất khí gây ra do các phân tử khí va chạm vào thành bình.', isCorrect: true, explanation: 'Nguyên nhân gây ra áp suất.' }, // Biết
-      { id: 'sq2', content: 'Đơn vị của áp suất trong hệ SI là Newton (N).', isCorrect: false, explanation: 'Đơn vị là Pascal (Pa) hoặc N/m^2.' }, // Biết
-      { id: 'sq3', content: 'Nếu giữ nguyên nhiệt độ và giảm thể tích bình chứa, áp suất khí sẽ giảm.', isCorrect: false, explanation: 'V giảm -> mật độ tăng -> số va chạm tăng -> áp suất TĂNG.' }, // Hiểu
-      { id: 'sq4', content: 'Nếu mật độ phân tử là 3.10^25 hạt/m^3 và động năng trung bình là 5.10^-21 J thì áp suất khí là 10^5 Pa.', isCorrect: true, explanation: 'p = 2/3 * n * Ed = 2/3 * 3e25 * 5e-21 = 100,000 Pa.' } // Vận dụng
+      { id: 'sq1', content: 'Áp suất khí gây ra do các phân tử khí va chạm vào thành bình.', isCorrect: true, explanation: 'Nguyên nhân gây ra áp suất.' },
+      { id: 'sq2', content: 'Đơn vị của áp suất trong hệ SI là Newton (N).', isCorrect: false, explanation: 'Đơn vị là Pascal (Pa) hoặc $N/m^2$.' },
+      { id: 'sq3', content: 'Nếu giữ nguyên nhiệt độ và giảm thể tích bình chứa, áp suất khí sẽ giảm.', isCorrect: false, explanation: 'V giảm -> mật độ tăng -> số va chạm tăng -> áp suất TĂNG.' },
+      { id: 'sq4', content: 'Nếu mật độ phân tử là $3.10^{25}$ hạt/$m^3$ và động năng trung bình là $5.10^{-21}$ J thì áp suất khí là $10^5$ Pa.', isCorrect: true, explanation: '$p = \\frac{2}{3} n E_d = \\frac{2}{3} . 3.10^{25} . 5.10^{-21} = 100,000$ Pa.' }
     ],
-    answerKey: '', explanationText: 'Công thức p = 2/3 n Ed.'
+    answerKey: '', explanationText: 'Công thức $p = \\frac{2}{3} n E_d$.'
   },
 
   // --- I2.4: ĐỘNG NĂNG PHÂN TỬ ---
@@ -1472,12 +1518,12 @@ export const QUESTION_BANK: Question[] = [
     promptText: 'Cho hai bình khí: Bình A chứa khí Hêli, Bình B chứa khí Oxi. Cả hai bình có cùng nhiệt độ T.',
     imageUrl: '',
     subQuestions: [
-      { id: 'sq1', content: 'Động năng trung bình của phân tử phụ thuộc vào bản chất của chất khí.', isCorrect: false, explanation: 'Chỉ phụ thuộc nhiệt độ T.' }, // Biết
-      { id: 'sq2', content: 'Nhiệt độ tuyệt đối T càng cao thì động năng phân tử càng lớn.', isCorrect: true, explanation: 'Tỉ lệ thuận.' }, // Biết
-      { id: 'sq3', content: 'Động năng trung bình của phân tử khí ở bình A và bình B là bằng nhau.', isCorrect: true, explanation: 'Cùng T thì cùng Ed.' }, // Hiểu
-      { id: 'sq4', content: 'Nếu nhiệt độ T = 300K, động năng trung bình xấp xỉ 6,21.10^-21 J.', isCorrect: true, explanation: 'Ed = 1.5 * k * T = 1.5 * 1.38e-23 * 300 = 6.21e-21 J.' } // Vận dụng
+      { id: 'sq1', content: 'Động năng trung bình của phân tử phụ thuộc vào bản chất của chất khí.', isCorrect: false, explanation: 'Chỉ phụ thuộc nhiệt độ T.' },
+      { id: 'sq2', content: 'Nhiệt độ tuyệt đối T càng cao thì động năng phân tử càng lớn.', isCorrect: true, explanation: 'Tỉ lệ thuận.' },
+      { id: 'sq3', content: 'Động năng trung bình của phân tử khí ở bình A và bình B là bằng nhau.', isCorrect: true, explanation: 'Cùng T thì cùng $E_d$.' },
+      { id: 'sq4', content: 'Nếu nhiệt độ T = 300K, động năng trung bình xấp xỉ $6,21.10^{-21}$ J.', isCorrect: true, explanation: '$E_d = \\frac{3}{2} k T = 1.5 . 1.38.10^{-23} . 300 = 6.21.10^{-21} J$.' }
     ],
-    answerKey: '', explanationText: 'Ed = 3/2 kT.'
+    answerKey: '', explanationText: '$E_d = \\frac{3}{2} kT$.'
   },
 
   // --- I3.1: KHÁI NIỆM TỪ TRƯỜNG ---
@@ -1490,10 +1536,10 @@ export const QUESTION_BANK: Question[] = [
     promptText: 'Đặt một kim nam châm nhỏ ở trạng thái tự do tại một điểm trong vùng không gian có từ trường.',
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/VFPt_cylindrical_magnet_thumb.svg/1200px-VFPt_cylindrical_magnet_thumb.svg.png',
     subQuestions: [
-      { id: 'sq1', content: 'Từ trường là môi trường vật chất tồn tại xung quanh hạt mang điện đứng yên.', isCorrect: false, explanation: 'Xung quanh hạt mang điện chuyển động (dòng điện) hoặc nam châm.' }, // Biết
-      { id: 'sq2', content: 'Đại lượng đặc trưng cho từ trường về mặt tác dụng lực là cảm ứng từ.', isCorrect: true, explanation: 'Định nghĩa cảm ứng từ B.' }, // Biết
-      { id: 'sq3', content: 'Hướng của kim nam châm khi cân bằng trùng với hướng của đường sức từ tại điểm đó.', isCorrect: true, explanation: 'Tính chất định hướng của từ trường.' }, // Hiểu
-      { id: 'sq4', content: 'Nếu tại điểm đó có cảm ứng từ B = 0,02 T và dây dẫn dài 1m mang dòng điện 5A đặt vuông góc với từ trường thì lực từ tác dụng lên dây là 0,1N.', isCorrect: true, explanation: 'F = BIL = 0.02 * 5 * 1 = 0.1 N.' } // Vận dụng
+      { id: 'sq1', content: 'Từ trường là môi trường vật chất tồn tại xung quanh hạt mang điện đứng yên.', isCorrect: false, explanation: 'Xung quanh hạt mang điện chuyển động (dòng điện) hoặc nam châm.' },
+      { id: 'sq2', content: 'Đại lượng đặc trưng cho từ trường về mặt tác dụng lực là cảm ứng từ.', isCorrect: true, explanation: 'Định nghĩa cảm ứng từ B.' },
+      { id: 'sq3', content: 'Hướng của kim nam châm khi cân bằng trùng với hướng của đường sức từ tại điểm đó.', isCorrect: true, explanation: 'Tính chất định hướng của từ trường.' },
+      { id: 'sq4', content: 'Nếu tại điểm đó có cảm ứng từ $B = 0,02 T$ và dây dẫn dài 1m mang dòng điện 5A đặt vuông góc với từ trường thì lực từ tác dụng lên dây là 0,1N.', isCorrect: true, explanation: '$F = BIL = 0.02 . 5 . 1 = 0.1 N$.' }
     ],
     answerKey: '', explanationText: 'Khái niệm từ trường và công thức lực từ cơ bản.'
   },
@@ -1505,15 +1551,15 @@ export const QUESTION_BANK: Question[] = [
     lessonId: 'l3.2',
     level: 'Vận dụng',
     type: 'TrueFalse',
-    promptText: 'Một đoạn dây dẫn thẳng dài L = 20 cm mang dòng điện I = 5 A đặt trong từ trường đều B = 0,5 T. Góc hợp bởi dây dẫn và vectơ cảm ứng từ là 30 độ.',
+    promptText: 'Một đoạn dây dẫn thẳng dài $L = 20$ cm mang dòng điện $I = 5$ A đặt trong từ trường đều $B = 0,5$ T. Góc hợp bởi dây dẫn và vectơ cảm ứng từ là 30 độ.',
     imageUrl: '',
     subQuestions: [
-      { id: 'sq1', content: 'Lực từ tác dụng lên dây dẫn có phương vuông góc với mặt phẳng chứa dây dẫn và vectơ cảm ứng từ.', isCorrect: true, explanation: 'Đặc điểm phương của lực từ.' }, // Biết
-      { id: 'sq2', content: 'Chiều của lực từ được xác định bằng quy tắc nắm tay phải.', isCorrect: false, explanation: 'Quy tắc bàn tay trái.' }, // Biết
-      { id: 'sq3', content: 'Nếu quay dây dẫn để góc hợp bởi dây và từ trường tăng lên 90 độ thì lực từ sẽ tăng lên.', isCorrect: true, explanation: 'sin(30) = 0.5 < sin(90) = 1. F tỉ lệ với sinα.' }, // Hiểu
-      { id: 'sq4', content: 'Độ lớn lực từ tác dụng lên đoạn dây ban đầu là 0,5 N.', isCorrect: false, explanation: 'F = BILsinα = 0.5 * 5 * 0.2 * sin(30) = 0.5 * 0.5 = 0.25 N.' } // Vận dụng
+      { id: 'sq1', content: 'Lực từ tác dụng lên dây dẫn có phương vuông góc với mặt phẳng chứa dây dẫn và vectơ cảm ứng từ.', isCorrect: true, explanation: 'Đặc điểm phương của lực từ.' },
+      { id: 'sq2', content: 'Chiều của lực từ được xác định bằng quy tắc nắm tay phải.', isCorrect: false, explanation: 'Quy tắc bàn tay trái.' },
+      { id: 'sq3', content: 'Nếu quay dây dẫn để góc hợp bởi dây và từ trường tăng lên 90 độ thì lực từ sẽ tăng lên.', isCorrect: true, explanation: '$\\sin(30) = 0.5 < \\sin(90) = 1$. F tỉ lệ với $\\sin\\alpha$.' },
+      { id: 'sq4', content: 'Độ lớn lực từ tác dụng lên đoạn dây ban đầu là 0,5 N.', isCorrect: false, explanation: '$F = BIL\\sin\\alpha = 0.5 . 5 . 0.2 . \\sin(30) = 0.5 . 0.5 = 0.25 N$.' }
     ],
-    answerKey: '', explanationText: 'Tính toán lực từ F = BILsinα.'
+    answerKey: '', explanationText: 'Tính toán lực từ $F = BIL\\sin\\alpha$.'
   },
 
   // --- I3.3: TỪ THÔNG & CẢM ỨNG ĐIỆN TỪ ---
@@ -1526,10 +1572,10 @@ export const QUESTION_BANK: Question[] = [
     promptText: 'Một khung dây dẫn phẳng, kín, diện tích S đặt trong từ trường đều B. Cho từ trường biến thiên.',
     imageUrl: '',
     subQuestions: [
-      { id: 'sq1', content: 'Từ thông qua khung dây là đại lượng vô hướng.', isCorrect: true, explanation: 'Từ thông là đại lượng đại số.' }, // Biết
-      { id: 'sq2', content: 'Hiện tượng cảm ứng điện từ chỉ xảy ra khi khung dây chuyển động.', isCorrect: false, explanation: 'Xảy ra khi từ thông biến thiên (có thể do B thay đổi, S thay đổi...).' }, // Biết
-      { id: 'sq3', content: 'Dòng điện cảm ứng sinh ra từ trường chống lại sự biến thiên từ thông ban đầu.', isCorrect: true, explanation: 'Định luật Len-xơ.' }, // Hiểu
-      { id: 'sq4', content: 'Nếu từ thông giảm đều từ 0,5 Wb về 0 trong 0,1 giây thì suất điện động cảm ứng có độ lớn 5V.', isCorrect: true, explanation: 'ec = |ΔΦ/Δt| = |0 - 0.5| / 0.1 = 5 V.' } // Vận dụng
+      { id: 'sq1', content: 'Từ thông qua khung dây là đại lượng vô hướng.', isCorrect: true, explanation: 'Từ thông là đại lượng đại số.' },
+      { id: 'sq2', content: 'Hiện tượng cảm ứng điện từ chỉ xảy ra khi khung dây chuyển động.', isCorrect: false, explanation: 'Xảy ra khi từ thông biến thiên (có thể do B thay đổi, S thay đổi...).' },
+      { id: 'sq3', content: 'Dòng điện cảm ứng sinh ra từ trường chống lại sự biến thiên từ thông ban đầu.', isCorrect: true, explanation: 'Định luật Len-xơ.' },
+      { id: 'sq4', content: 'Nếu từ thông giảm đều từ 0,5 Wb về 0 trong 0,1 giây thì suất điện động cảm ứng có độ lớn 5V.', isCorrect: true, explanation: '$e_c = |\\frac{\\Delta \\Phi}{\\Delta t}| = |\\frac{0 - 0.5}{0.1}| = 5 V$.' }
     ],
     answerKey: '', explanationText: 'Định luật Fa-ra-đây về cảm ứng điện từ.'
   },
@@ -1544,10 +1590,10 @@ export const QUESTION_BANK: Question[] = [
     promptText: 'Xét hạt nhân Hêli ($^4_2He$) có khối lượng 4,0015u. Biết khối lượng proton $m_p=1,0073u$, nơtron $m_n=1,0087u$ và $1u=931,5 MeV/c^2$.',
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Binding_energy_curve_-_common_isotopes.svg/800px-Binding_energy_curve_-_common_isotopes.svg.png',
     subQuestions: [
-      { id: 'sq1', content: 'Hạt nhân Hêli có 2 proton và 2 nơtron.', isCorrect: true, explanation: 'Z=2, N=A-Z=4-2=2.' }, // Biết
-      { id: 'sq2', content: 'Độ hụt khối của hạt nhân luôn có giá trị dương.', isCorrect: true, explanation: 'Khối lượng các nuclôn luôn lớn hơn khối lượng hạt nhân.' }, // Biết
-      { id: 'sq3', content: 'Năng lượng liên kết càng lớn thì hạt nhân càng bền vững.', isCorrect: false, explanation: 'Năng lượng liên kết RIÊNG mới quyết định độ bền vững.' }, // Hiểu
-      { id: 'sq4', content: 'Năng lượng liên kết của hạt nhân Hêli xấp xỉ 28,4 MeV.', isCorrect: true, explanation: 'Δm = 2*1.0073 + 2*1.0087 - 4.0015 = 0.0305u. Wlk = 0.0305 * 931.5 ≈ 28.4 MeV.' } // Vận dụng
+      { id: 'sq1', content: 'Hạt nhân Hêli có 2 proton và 2 nơtron.', isCorrect: true, explanation: 'Z=2, N=A-Z=4-2=2.' },
+      { id: 'sq2', content: 'Độ hụt khối của hạt nhân luôn có giá trị dương.', isCorrect: true, explanation: 'Khối lượng các nuclôn luôn lớn hơn khối lượng hạt nhân.' },
+      { id: 'sq3', content: 'Năng lượng liên kết càng lớn thì hạt nhân càng bền vững.', isCorrect: false, explanation: 'Năng lượng liên kết RIÊNG mới quyết định độ bền vững.' },
+      { id: 'sq4', content: 'Năng lượng liên kết của hạt nhân Hêli xấp xỉ 28,4 MeV.', isCorrect: true, explanation: '$\\Delta m = 2.1,0073 + 2.1,0087 - 4,0015 = 0,0305u$. $W_{lk} = 0,0305 . 931,5 \\approx 28,4 MeV$.' }
     ],
     answerKey: '', explanationText: 'Tính độ hụt khối và năng lượng liên kết.'
   },
@@ -1559,13 +1605,13 @@ export const QUESTION_BANK: Question[] = [
     lessonId: 'l4.3',
     level: 'Vận dụng',
     type: 'TrueFalse',
-    promptText: 'Pôlôni ($^{210}_{84}Po$) là chất phóng xạ alpha có chu kì bán rã T = 138 ngày.',
+    promptText: 'Pôlôni ($^{210}_{84}Po$) là chất phóng xạ alpha có chu kì bán rã $T = 138$ ngày.',
     imageUrl: 'https://i.postimg.cc/Y2PR4n4t/phong-xa-la-gi-2.png',
     subQuestions: [
-      { id: 'sq1', content: 'Tia alpha là dòng các hạt nhân nguyên tử Hiđrô.', isCorrect: false, explanation: 'Tia alpha là dòng hạt nhân Hêli (He-4).' }, // Biết
-      { id: 'sq2', content: 'Quá trình phóng xạ không chịu ảnh hưởng của các yếu tố môi trường như nhiệt độ, áp suất.', isCorrect: true, explanation: 'Đặc tính của phóng xạ.' }, // Biết
-      { id: 'sq3', content: 'Sau 138 ngày, một nửa số hạt nhân Po ban đầu đã bị phân rã.', isCorrect: true, explanation: 'Sau 1 chu kì bán rã, 50% bị phân rã.' }, // Hiểu
-      { id: 'sq4', content: 'Nếu ban đầu có 100g Po thì sau 276 ngày, khối lượng Po còn lại là 25g.', isCorrect: true, explanation: 't = 276 = 2T. Còn lại m = m0 / 2^2 = 100/4 = 25g.' } // Vận dụng
+      { id: 'sq1', content: 'Tia alpha là dòng các hạt nhân nguyên tử Hiđrô.', isCorrect: false, explanation: 'Tia alpha là dòng hạt nhân Hêli (He-4).' },
+      { id: 'sq2', content: 'Quá trình phóng xạ không chịu ảnh hưởng của các yếu tố môi trường như nhiệt độ, áp suất.', isCorrect: true, explanation: 'Đặc tính của phóng xạ.' },
+      { id: 'sq3', content: 'Sau 138 ngày, một nửa số hạt nhân Po ban đầu đã bị phân rã.', isCorrect: true, explanation: 'Sau 1 chu kì bán rã, 50% bị phân rã.' },
+      { id: 'sq4', content: 'Nếu ban đầu có 100g Po thì sau 276 ngày, khối lượng Po còn lại là 25g.', isCorrect: true, explanation: '$t = 276 = 2T$. Còn lại $m = \\frac{m_0}{2^2} = \\frac{100}{4} = 25g$.' }
     ],
     answerKey: '', explanationText: 'Định luật phóng xạ.'
   },

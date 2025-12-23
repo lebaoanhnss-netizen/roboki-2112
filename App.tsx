@@ -694,7 +694,7 @@ const PracticeScreen: React.FC<{
                                 {isSubmitted && (
                                     <div className={`mt-2 text-[10px] font-bold ${isRight ? 'text-emerald-600' : 'text-rose-600'}`}>
                                         {isRight ? '✓ Chính xác' : `✕ Sai rồi. Đáp án là: ${sq.isCorrect ? 'Đúng' : 'Sai'}`}
-                                        {sq.explanation && <div className="mt-1 font-normal text-slate-500">{sq.explanation}</div>}
+                                        {sq.explanation && <MathRender content={sq.explanation} className="mt-1 font-normal text-slate-500"/>}
                                     </div>
                                 )}
                             </div>
