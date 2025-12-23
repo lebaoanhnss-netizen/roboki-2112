@@ -22,56 +22,136 @@ export const PHYSICS_LESSONS: Lesson[] = [
     id: 'l1.1',
     topic: 'VẬT LÍ NHIỆT',
     title: '1.1 Sự chuyển thể',
-    theory: '- Sự chuyển thể là quá trình chất chuyển từ trạng thái này sang trạng thái khác (rắn – lỏng – khí) khi có sự trao đổi nhiệt.\n- Quá trình này không làm thay đổi bản chất hóa học của chất.\n- Các dạng chuyển thể thường gặp:\n  + Nóng chảy: rắn → lỏng (thu nhiệt).\n  + Đông đặc: lỏng → rắn (tỏa nhiệt).\n  + Bay hơi: lỏng → khí (xảy ra ở mọi nhiệt độ).\n  + Sôi: lỏng → khí (xảy ra ở nhiệt độ xác định).\n  + Ngưng tụ: khí → lỏng (tỏa nhiệt).\n  + Thăng hoa: rắn → khí (không qua lỏng).\n- Trong quá trình chuyển thể:\n  + Nhiệt độ của chất không đổi.\n  + Nhiệt lượng dùng để phá vỡ hoặc hình thành liên kết giữa các phân tử.',
+    theory: '- Sự chuyển thể là quá trình chất chuyển từ trạng thái này sang trạng thái khác (rắn – lỏng – khí) khi có sự trao đổi nhiệt.\n- Quá trình này không làm thay đổi bản chất hóa học của chất.',
     // 👇 THÊM DÒNG NÀY: Link ảnh minh họa (có thể để nhiều ảnh trong dấu [])
     theoryImages: [
-        'https://i.postimg.cc/Y2VtbMn1/Please-make-the-202512140930.jpg', // Ảnh sơ đồ chuyển thể (Ví dụ)
+        'https://i.postimg.cc/YqmsSv79/cac-qua-trinh.png', // Ảnh sơ đồ chuyển thể (Ví dụ)
         // Thầy có thể thêm nhiều ảnh khác vào đây, cách nhau bằng dấu phẩy
     ],
-    formulas: '$Q = \\lambda m$\n$Q = Lm$',
-    examples: ['...']
+    formulas: `- Nhiệt nóng chảy: $$Q = \\lambda m$$
+              - Nhiệt hóa hơi: $$Q = Lm$$
+\n**Trong đó:**
+- $Q$: Nhiệt lượng ($J$)
+- $m$: Khối lượng chất ($kg$)
+- $\\lambda$: Nhiệt nóng chảy riêng ($J/kg$)
+- $L$: Nhiệt hóa hơi riêng ($J/kg$)`,
+        
+    examples: ['Nước đá ở 0°C đang tan chảy: nhiệt lượng cung cấp dùng để phá vỡ liên kết giữa các phân tử nước đá.',
+    'Khi đun nước đến 100°C, nhiệt độ không tăng nhưng nước vẫn sôi do nhiệt dùng để hoá hơi.',
+    'Cồn bay hơi nhanh hơn nước vì có nhiệt hoá hơi riêng nhỏ hơn.']
   },
   {
     id: 'l1.2',
     topic: 'VẬT LÍ NHIỆT',
     title: '1.2 Nội năng – Định luật I nhiệt động lực học',
-    theory: '- Nội năng là năng lượng bên trong vật (liên quan chuyển động và tương tác phân tử).\n- Nội năng thay đổi do truyền nhiệt hoặc do thực hiện công.\n- Định luật I: bảo toàn năng lượng cho quá trình nhiệt.\n- Quy ước: A là công của ngoại lực tác dụng lên hệ (có thể dương/âm tùy quy ước).',
-    formulas: '$\\Delta U = Q + A$',
-    examples: ['Người ta thực hiện công 100 J để nén khí trong xilanh. Khí truyền ra môi trường nhiệt lượng 20 J. Tính độ biến thiên nội năng?']
+    theory: '- Nội năng ($U$): Là tổng động năng và thế năng tương tác của các phân tử cấu tạo nên vật. Nội năng phụ thuộc vào nhiệt độ ($T$) và thể tích ($V$).\n- Cách làm thay đổi nội năng:\n  + Thực hiện công (ví dụ: cọ xát, nén khí).\n  + Truyền nhiệt (ví dụ: hơ nóng, làm lạnh).\n- Định luật I: Độ biến thiên nội năng của hệ bằng tổng công và nhiệt lượng mà hệ nhận được.\n- Quy ước dấu quan trọng:',
+    theoryImages: [
+      'https://i.postimg.cc/FRy0qQXh/Screenshot-23.png'    ],
+    formulas: `$$\\Delta U = A + Q$$
+\n**Trong đó:**
+- $\\Delta U$: Độ biến thiên nội năng ($J$)
+- $A$: Công ($J$)`,
+    examples: [
+      'Nén khí trong xilanh: Khí nhận công ($A > 0$) làm nội năng tăng.',
+      'Đun nóng khí trong bình kín: Khí nhận nhiệt ($Q > 0$) làm nội năng tăng.',
+      'Khí dãn nở đẩy pit-tông: Khí thực hiện công ($A < 0$).'
+    ]
   },
   {
     id: 'l1.3',
     topic: 'VẬT LÍ NHIỆT',
     title: '1.3 Thang nhiệt độ – Nhiệt kế',
-    theory: '- Nhiệt độ đặc trưng mức độ chuyển động nhiệt của các phân tử.\n- Kelvin (K) là thang nhiệt độ tuyệt đối, thường dùng trong phương trình khí lí tưởng.\n- Nhiệt kế dựa vào sự phụ thuộc của một đại lượng vật lí vào nhiệt độ.\n- Khi đổi thang cần chú ý mốc 0 K ứng với -273°C.',
-    formulas: '$T(K) = t(^oC) + 273$',
-    examples: ['Nhiệt độ phòng là 27°C. Tính nhiệt độ này theo thang Kelvin.']
+    theory: `- Nhiệt độ là đại lượng vật lí đặc trưng cho mức độ nóng, lạnh của một vật.
+- Tính chất truyền nhiệt: Nhiệt năng truyền từ vật có nhiệt độ cao hơn sang vật có nhiệt độ thấp hơn.
+- Cân bằng nhiệt: Khi hai vật tiếp xúc nhau có cùng nhiệt độ thì không có sự truyền nhiệt năng giữa chúng.
+- Các thang nhiệt độ phổ biến:
+  + Thang Celsius (độ C): Chọn mốc 0 độ C là nhiệt độ nước đá đang tan và 100 độ C là nhiệt độ nước đang sôi (ở áp suất 1 atm).
+  + Thang Kelvin (K): Là thang nhiệt độ tuyệt đối. 0 K là độ không tuyệt đối (nhiệt độ thấp nhất mà vật có thể có). Một độ chia trong thang Kelvin bằng một độ chia trong thang Celsius.
+  + Thang Fahrenheit (độ F): Chọn mốc 32 độ F là nhiệt độ nước đá đang tan và 212 độ F là nhiệt độ nước đang sôi.
+- Nhiệt kế: Là thiết bị đo nhiệt độ, hoạt động dựa trên sự thay đổi tính chất vật lí của chất theo nhiệt độ (sự nở vì nhiệt của chất lỏng/rắn/khí, thay đổi điện trở, bức xạ nhiệt...).`,
+    theoryImages: [
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Thermometer_scales.svg/569px-Thermometer_scales.svg.png'
+    ],
+    formulas: '$$ T(K) = t(^oC) + 273 $$\n$$ t(^oF) = 1,8t(^oC) + 32 $$',
+    examples: [
+      'Đổi nhiệt độ phòng 27 độ C ra thang Kelvin: $$T = 27 + 273 = 300 K$$',
+      'Nhiệt độ cơ thể người bình thường là 37 độ C, đổi sang độ F: $$t(^oF) = 1,8 . 37 + 32 = 98,6 ^oF$$',
+      'Độ không tuyệt đối (0 K) tương ứng với -273 độ C.'
+    ]
   },
   {
     id: 'l1.4',
     topic: 'VẬT LÍ NHIỆT',
-    title: '1.4 Nhiệt dung riêng – Nhiệt lượng',
-    theory: '- Nhiệt dung riêng c cho biết để tăng 1 kg chất thêm 1°C cần bao nhiêu nhiệt lượng.\n- Khi vật thay đổi nhiệt độ: dùng Q = mc\\Delta t.\n- Khi chuyển thể: dùng ẩn nhiệt nóng chảy/hoá hơi.\n- Bài toán thực tế thường kết hợp cả hai quá trình (tăng nhiệt + chuyển thể).',
-    formulas: '$Q = mc\\Delta t$\n$Q = \\lambda m$\n$Q = Lm$',
-    examples: ['Tính nhiệt lượng để đun sôi 2 lít nước từ 20°C. Cho c = 4200 J/kg.K.']
+    title: '1.4 Nhiệt dung riêng - Nhiệt nóng chảy riêng - Nhiệt hoá hơi riêng',
+    theory: `- Nhiệt dung riêng (c): Là nhiệt lượng cần truyền cho 1 kg chất đó để làm cho nhiệt độ của nó tăng thêm 1 độ C (hoặc 1 K). Đơn vị là J/kg.K.
+- Nhiệt nóng chảy riêng ($\\lambda$): Là nhiệt lượng cần thiết để làm cho 1 kg chất rắn nóng chảy hoàn toàn ở nhiệt độ nóng chảy mà không làm thay đổi nhiệt độ. Đơn vị là J/kg.
+- Nhiệt hoá hơi riêng (L): Là nhiệt lượng cần thiết để làm cho 1 kg chất lỏng hoá hơi hoàn toàn ở nhiệt độ xác định. Đơn vị là J/kg.
+- Các đại lượng này phụ thuộc vào bản chất của chất làm vật.`,
+    theoryImages: [
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Heating_Curve_of_Water.png/640px-Heating_Curve_of_Water.png'
+    ],
+    // 👇 ĐÃ BỔ SUNG CHÚ THÍCH CÁC ĐẠI LƯỢNG
+    formulas: `$$ Q = mc\\Delta t $$ \n $$ Q = \\lambda m $$ \n $$ Q = Lm $$
+\n**Trong đó:**
+- $Q$: Nhiệt lượng ($J$)
+- $m$: Khối lượng ($kg$)
+- $\\Delta t$: Độ biến thiên nhiệt độ ($^oC$ hoặc $K$)
+- $c$: Nhiệt dung riêng ($J/kg.K$)
+- $\\lambda$: Nhiệt nóng chảy riêng ($J/kg$)
+- $L$: Nhiệt hoá hơi riêng ($J/kg$)`,
+    examples: [
+      'Để đun nóng 1 kg nước tăng thêm 1 độ C cần nhiệt lượng là 4200 J (vì nhiệt dung riêng của nước là 4200 J/kg.K).',
+      'Nhiệt lượng làm nóng chảy hoàn toàn 0,5 kg nước đá ở 0 độ C: $$Q = 3,34.10^5 \\times 0,5 = 167000 J$$',
+      'Nhiệt lượng cần cung cấp để 10 kg nước hóa hơi hoàn toàn ở 100 độ C: $$Q = 2,3.10^6 \\times 10 = 23.10^6 J$$'
+    ]
   },
 
   // --- TOPIC 2: KHÍ LÍ TƯỞNG ---
-  {
+ {
     id: 'l2.1',
     topic: 'KHÍ LÍ TƯỞNG',
     title: '2.1 Mô hình động học phân tử chất khí',
-    theory: '- Chất khí gồm các phân tử chuyển động hỗn loạn không ngừng.\n- Áp suất do phân tử va chạm lên thành bình.\n- Nhiệt độ càng cao → vận tốc phân tử trung bình càng lớn.\n- Mô hình khí lí tưởng bỏ qua lực tương tác và thể tích riêng của phân tử (xấp xỉ).',
-    formulas: '$\\overline{E_k} = \\frac{3}{2}kT$',
-    examples: ['So sánh động năng trung bình của phân tử khí Heli và khí Hydro ở cùng nhiệt độ.']
+    theory: `- Chất khí được cấu tạo từ các phân tử có kích thước rất nhỏ so với khoảng cách giữa chúng (được coi là chất điểm).
+- Các phân tử khí chuyển động hỗn loạn không ngừng; chuyển động này càng nhanh thì nhiệt độ chất khí càng cao.
+- Khi chuyển động hỗn loạn, các phân tử khí va chạm vào thành bình gây ra áp suất lên thành bình.
+- Khí lí tưởng: Là khí mà các phân tử chỉ tương tác với nhau khi va chạm và va chạm là hoàn toàn đàn hồi.`,
+    theoryImages: [
+      'https://i.postimg.cc/B6yHDJFJ/l.png'
+    ],
+    formulas: '',
+    examples: [
+      'Chuyển động Brown: Hạt khói chuyển động ziczac do va chạm với các phân tử khí.',
+      'Ở điều kiện tiêu chuẩn, các phân tử khí chuyển động với tốc độ trung bình khoảng 400 m/s.',
+      'Khi đun nóng khí trong bình kín, các phân tử chuyển động nhanh hơn, va chạm vào thành bình mạnh hơn làm áp suất tăng.'
+    ]
   },
   {
     id: 'l2.2',
     topic: 'KHÍ LÍ TƯỞNG',
     title: '2.2 Phương trình trạng thái khí lí tưởng',
-    theory: '- Trạng thái của một lượng khí xác định bởi (p, V, T).\n- Với lượng khí không đổi, các trạng thái liên hệ bởi phương trình khí lí tưởng.\n- Dùng Kelvin cho nhiệt độ tuyệt đối.\n- Áp dụng tốt khi khí loãng, nhiệt độ không quá thấp.',
-    formulas: '$pV = nRT$\n$\\frac{p_1V_1}{T_1} = \\frac{p_2V_2}{T_2}$',
-    examples: ['Một lượng khí ở 27°C có áp suất 1 atm. Nếu nén thể tích giảm một nửa và giữ nhiệt độ không đổi thì áp suất là bao nhiêu?']
+    theory: `- Trạng thái của một lượng khí được xác định bởi 3 thông số: Áp suất ($p$), Thể tích ($V$), Nhiệt độ tuyệt đối ($T$).
+- *Phương trình trạng thái* biểu diễn mối liên hệ giữa các thông số này.
+- Có 2 dạng phương trình thường gặp: Dạng cho quá trình biến đổi trạng thái (định luật Bô-i-lơ và Sác-lơ tổng quát) và Dạng cho một trạng thái xác định (Phương trình Clapeyron).`,
+    theoryImages: [
+      'https://i.postimg.cc/vBDSbHMs/1529720872321-phuong-trinh-trang-thai-cua-khi-li-tuong.png',
+      'https://i.postimg.cc/HnRqf8yj/bai-toan-do-thi-sm.png'
+    ],
+    formulas: `*1. Cho 2 trạng thái (Lượng khí không đổi):*
+$$ \\frac{p_1V_1}{T_1} = \\frac{p_2V_2}{T_2} $$
+\n*2. Cho 1 trạng thái (Phương trình Clapeyron):*
+$$ pV = nRT = \\frac{m}{M}RT $$
+\n*Trong đó:*
+- $p$: Áp suất ($Pa$ hoặc $atm$)
+- $V$: Thể tích ($m^3$ hoặc $lít$)
+- $T$: Nhiệt độ tuyệt đối ($T(K) = t^oC + 273$)
+- $n = \\frac{m}{M}$: Số mol khí
+- $R$: Hằng số khí lí tưởng
+  + Nếu $p(Pa), V(m^3) thì \\approx 8,31 \\, J/mol.K$
+  + Nếu $p(atm), V(lít) thì R \\approx 0,082 \\, atm.l/mol.K$`,
+    examples: [
+      'Bài toán biến đổi trạng thái: Một lượng khí trong xilanh có $V_1, p_1, T_1$. Khi nén nhanh, $V$ giảm, $T$ tăng, tính $p_2$ dùng $\\frac{p_1V_1}{T_1} = \\frac{p_2V_2}{T_2}$.',
+      'Bài toán tính lượng khí: Tính khối lượng khí Oxi trong bình dung tích 10 lít, áp suất 10 atm ở 27°C dùng $pV=nRT$.'
+    ]
   },
   {
     id: 'l2.3',
