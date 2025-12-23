@@ -136,18 +136,16 @@ export const PHYSICS_LESSONS: Lesson[] = [
       'https://i.postimg.cc/vBDSbHMs/1529720872321-phuong-trinh-trang-thai-cua-khi-li-tuong.png',
       'https://i.postimg.cc/HnRqf8yj/bai-toan-do-thi-sm.png'
     ],
-    formulas: `*1. Cho 2 trạng thái (Lượng khí không đổi):*
+    formulas: `*1. Cho 2 trạng thái (Lượng khí không đổi):
 $$ \\frac{p_1V_1}{T_1} = \\frac{p_2V_2}{T_2} $$
-\n*2. Cho 1 trạng thái (Phương trình Clapeyron):*
+\n*2. Cho 1 trạng thái (Phương trình Clapeyron):
 $$ pV = nRT = \\frac{m}{M}RT $$
 \n*Trong đó:*
 - $p$: Áp suất ($Pa$ hoặc $atm$)
 - $V$: Thể tích ($m^3$ hoặc $lít$)
 - $T$: Nhiệt độ tuyệt đối ($T(K) = t^oC + 273$)
 - $n = \\frac{m}{M}$: Số mol khí
-- $R$: Hằng số khí lí tưởng
-  + Nếu $p(Pa), V(m^3) thì \\approx 8,31 \\, J/mol.K$
-  + Nếu $p(atm), V(lít) thì R \\approx 0,082 \\, atm.l/mol.K$`,
+- $R$: Hằng số khí lí tưởng`,
     examples: [
       'Bài toán biến đổi trạng thái: Một lượng khí trong xilanh có $V_1, p_1, T_1$. Khi nén nhanh, $V$ giảm, $T$ tăng, tính $p_2$ dùng $\\frac{p_1V_1}{T_1} = \\frac{p_2V_2}{T_2}$.',
       'Bài toán tính lượng khí: Tính khối lượng khí Oxi trong bình dung tích 10 lít, áp suất 10 atm ở 27°C dùng $pV=nRT$.'
@@ -157,77 +155,219 @@ $$ pV = nRT = \\frac{m}{M}RT $$
     id: 'l2.3',
     topic: 'KHÍ LÍ TƯỞNG',
     title: '2.3 Áp suất khí theo mô hình động học phân tử',
-    theory: '- Áp suất tỉ lệ với mật độ phân tử và bình phương vận tốc hiệu dụng.\n- Khi tăng nhiệt độ (giữ V không đổi), vận tốc phân tử tăng → áp suất tăng.\n- Khi tăng mật độ phân tử (tăng n), áp suất tăng nếu T không đổi.\n- Công thức mô tả bản chất vi mô của áp suất.',
-    formulas: '$p = \\frac{1}{3}nm\\overline{v^2}$',
-    examples: []
+    theory: `- **Nguyên nhân tạo ra áp suất:** Các phân tử khí chuyển động hỗn loạn không ngừng, va chạm vào thành bình và truyền động lượng cho thành bình. Lực tác dụng của các phân tử lên một đơn vị diện tích thành bình tạo nên áp suất.
+- **Đặc điểm:**
+  + Áp suất khí tỉ lệ thuận với mật độ phân tử khí ($\\mu$).
+  + Áp suất khí tỉ lệ thuận với động năng trung bình của các phân tử ($\\overline{E_d}$) (tức là tỉ lệ với nhiệt độ).
+  + Áp suất khí tỉ lệ thuận với khối lượng riêng ($\\rho$) và trung bình bình phương tốc độ ($\\overline{v^2}$).`,
+    theoryImages: [
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Kinetic_theory_of_gases_pressure.svg/440px-Kinetic_theory_of_gases_pressure.svg.png'
+    ],
+    formulas: `$$ p = \\frac{1}{3} \\mu m \\overline{v^2} = \\frac{1}{3} \\rho \\overline{v^2} $$
+$$ p = \\frac{2}{3} \\mu \\overline{E_d} $$
+\n**Trong đó:**
+- $p$: Áp suất chất khí ($Pa$)
+- $\\mu = \\frac{N}{V}$: Mật độ phân tử ($phân tử/m^3$) 
+- $m$: Khối lượng một phân tử khí ($kg$)
+- $\\overline{v^2}$: Trung bình của bình phương tốc độ phân tử ($m^2/s^2$) 
+- $\\rho$: Khối lượng riêng của chất khí ($kg/m^3$) 
+- $\\overline{E_d}$: Động năng tịnh tiến trung bình của phân tử ($J$) `,
+    examples: [
+      'Nếu mật độ phân tử khí tăng gấp đôi (nhiệt độ không đổi), số va chạm lên thành bình tăng gấp đôi $\\rightarrow$ Áp suất tăng gấp đôi.',
+      'Khi đun nóng khí (thể tích không đổi), các phân tử chuyển động nhanh hơn ($\\overline{E_d}$ tăng) $\\rightarrow$ Áp suất tăng.',
+          ]
   },
   {
     id: 'l2.4',
     topic: 'KHÍ LÍ TƯỞNG',
     title: '2.4 Động năng phân tử',
-    theory: '- Động năng trung bình của phân tử khí chỉ phụ thuộc vào nhiệt độ tuyệt đối.\n- Ở cùng nhiệt độ, các khí khác nhau có E_k như nhau.\n- Nhiệt độ tăng → E_k tăng tỉ lệ thuận.\n- Liên hệ với thuyết động học phân tử và phương trình khí lí tưởng.',
-    formulas: '$\\overline{E_k} = \\frac{3}{2}kT$',
-    examples: ['Tính động năng tịnh tiến trung bình của phân tử khí ở 27°C.']
+    theory: `- Động năng trung bình của phân tử được xác định bằng hệ thức phụ thuộc vào nhiệt độ tuyệt đối.
+- Động năng trung bình của phân tử tỉ lệ thuận với nhiệt độ tuyệt đối.
+- Các khí có bản chất khác nhau, khối lượng khác nhau nhưng nhiệt độ như nhau thì động năng trung bình của các phân tử bằng nhau.
+- Động năng trung bình của phân tử khí càng lớn thì nhiệt độ của khí càng cao.
+- Nhiệt độ tuyệt đối là số đo động năng trung bình của phân tử theo một đơn vị khác.`,
+    theoryImages: [
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Translational_motion.gif/300px-Translational_motion.gif'
+    ],
+    formulas: `$$ \\overline{E_d} = \\frac{3}{2}kT $$
+\n**Trong đó:**
+- $\\overline{E_d}$: Động năng trung bình của phân tử ($J$) 
+- $k$: Hằng số Boltzmann ($1,38.10^{-23} \\, J/K$) 
+- $T$: Nhiệt độ tuyệt đối ($K$) `,
+    examples: [
+      'So sánh: Ở cùng nhiệt độ, phân tử khí Oxi và khí Nitơ có động năng trung bình bằng nhau.',
+      'Tính toán: Động năng trung bình của phân tử khí ở 25°C (298K) là: $$\\overline{E_d} = \\frac{3}{2} \\cdot 1,38.10^{-23} \\cdot 298 \\approx 6,17.10^{-21} J$$',
+      'Liên hệ: Khi nhiệt độ tuyệt đối tăng gấp 4 lần thì động năng trung bình tăng gấp 4 lần.'
+    ]
   },
 
   // --- TOPIC 3: TỪ TRƯỜNG ---
-  {
+ {
     id: 'l3.1',
     topic: 'TỪ TRƯỜNG',
     title: '3.1 Khái niệm từ trường',
-    theory: '- Từ trường tồn tại xung quanh nam châm và dòng điện.\n- Từ trường tác dụng lực lên điện tích chuyển động và dòng điện.\n- Đại lượng đặc trưng là vectơ cảm ứng từ B.\n- Chiều B trùng với chiều đường sức từ tại điểm xét.',
-    formulas: '$\\vec{F} = q\\vec{v} \\times \\vec{B}$',
-    examples: []
+    theory: `- **Định nghĩa:** Từ trường là trường lực gây ra bởi dòng điện hoặc nam châm, là một dạng của vật chất tồn tại xung quanh dòng điện hoặc nam châm.
+- **Biểu hiện cụ thể:** Sự xuất hiện của **lực từ** tác dụng lên một dòng điện hay một nam châm khác đặt trong nó.
+- **Tính chất:**
+  + Gây ra lực từ tác dụng lên kim nam châm hoặc dòng điện đặt trong nó.
+  + Phương của từ trường tại một điểm là phương Nam - Bắc của kim nam châm nhỏ nằm cân bằng tại điểm đó.
+- **Đường sức từ:**
+  + Là những đường vẽ trong không gian có từ trường sao cho tiếp tuyến tại mỗi điểm có phương trùng với phương của từ trường tại điểm đó.
+  + Thực nghiệm: Có thể tạo ra hình ảnh các đường sức từ bằng cách rắc mạt sắt lên tấm nhựa đặt trên nam châm (từ phổ).`,
+    theoryImages: [
+      'https://i.postimg.cc/bYn8MMfR/ly-thuyet-bai-14-tu-truong-229486.png'
+    ],
+    formulas: '', // Chưa đề cập đến công thức tính lực
+    examples: [
+      'Thí nghiệm Ơ-xte: Dòng điện chạy qua dây dẫn làm lệch kim nam châm đặt gần nó -> Dòng điện sinh ra từ trường.',
+      'Dùng mạt sắt để quan sát từ phổ của thanh nam châm thẳng hoặc nam châm hình chữ U.'
+    ]
   },
   {
     id: 'l3.2',
     topic: 'TỪ TRƯỜNG',
     title: '3.2 Lực từ tác dụng lên đoạn dây dẫn mang dòng điện',
-    theory: '- Dây dẫn có dòng điện đặt trong từ trường chịu lực từ.\n- Độ lớn lực phụ thuộc B, I, chiều dài đoạn dây và góc với B.\n- Quy tắc bàn tay trái dùng xác định chiều lực từ.\n- Ứng dụng: động cơ điện, loa, nam châm điện.',
-    formulas: '$F = BIl\\sin\\alpha$',
-    examples: ['Dây dẫn dài 20cm, I=5A đặt vuông góc trong từ trường đều B=0.1T. Tính lực từ?']
+    theory: `- **Định luật Am-pe (Ampère):** Lực từ tác dụng lên một đoạn dây dẫn mang dòng điện đặt trong từ trường đều có:
+  + **Điểm đặt:** Tại trung điểm của đoạn dây.
+  + **Phương:** Vuông góc với mặt phẳng chứa đoạn dây và vectơ cảm ứng từ.
+  + **Chiều:** Xác định theo quy tắc bàn tay trái.
+  + **Độ lớn:** Tỉ lệ thuận với cường độ dòng điện, chiều dài đoạn dây, độ lớn cảm ứng từ và sin của góc hợp bởi đoạn dây và đường sức từ.
+- **Quy tắc bàn tay trái:** Đặt bàn tay trái sao cho các đường sức từ hướng vào lòng bàn tay, chiều từ cổ tay đến ngón tay giữa hướng theo chiều dòng điện thì ngón cái choãi ra 90 độ chỉ chiều của lực từ.`,
+    theoryImages: [
+      'https://i.postimg.cc/pd34JWrv/luc-tu-tac-dung-len-doan-day-dan-thang-4.pngg'
+    ],
+    formulas: `$$ F = B.I.L.\\sin\\alpha $$
+\n**Trong đó:**
+- $F$: Lực từ tác dụng lên đoạn dây ($N$)
+- $B$: Cảm ứng từ ($T$)
+- $I$: Cường độ dòng điện ($A$)
+- $L$: Chiều dài đoạn dây trong từ trường ($m$)
+- $\\alpha$: Góc hợp bởi vectơ dòng điện $\\vec{I}$ và vectơ cảm ứng từ $\\vec{B}$`,
+    examples: [
+      'Dây dẫn song song với đường sức từ ($\\alpha = 0^o$ hoặc $180^o$) thì lực từ bằng 0.',
+      'Dây dẫn vuông góc với đường sức từ ($\\alpha = 90^o$) thì lực từ cực đại: $F_{max} = BIL$.',
+          ]
   },
   {
     id: 'l3.3',
     topic: 'TỪ TRƯỜNG',
     title: '3.3 Từ thông; Cảm ứng điện từ',
-    theory: '- Từ thông qua diện tích S phụ thuộc B, S và góc giữa B và pháp tuyến mặt phẳng.\n- Khi từ thông biến thiên theo thời gian → xuất hiện suất điện động cảm ứng.\n- Dấu “-” thể hiện định luật Len-xơ (chống lại nguyên nhân sinh ra nó).\n- Ứng dụng: máy phát điện, biến áp, sạc không dây.',
-    formulas: '$\\Phi = BS\\cos\\alpha$\n$e = -\\frac{d\\Phi}{dt}$',
-    examples: ['Từ thông qua một khung dây giảm đều từ 1.2Wb về 0 trong 0.2s. Tính suất điện động cảm ứng.']
+    theory: `- **Từ thông ($\\Phi$):** Là đại lượng đặc trưng cho số lượng đường sức từ xuyên qua diện tích S của một khung dây kín. Từ thông là một đại lượng vô hướng, có thể âm, dương hoặc bằng 0.
+- **Hiện tượng cảm ứng điện từ:** Khi từ thông qua một mạch kín biến thiên thì trong mạch kín đó xuất hiện một dòng điện, gọi là dòng điện cảm ứng.
+- **Định luật Fa-ra-đây (Faraday):** Độ lớn của suất điện động cảm ứng xuất hiện trong mạch kín tỉ lệ với tốc độ biến thiên từ thông qua mạch kín đó.
+- **Định luật Len-xơ (Lenz):** Dòng điện cảm ứng xuất hiện trong mạch kín có chiều sao cho từ trường cảm ứng có tác dụng chống lại sự biến thiên của từ thông ban đầu qua mạch kín.`,
+    theoryImages: [
+      'https://i.postimg.cc/Gpz94fmv/download.jpg',
+      'https://i.postimg.cc/L8KJwfWL/c4d8-tu-thong-10.jpg'
+      
+    ],
+    formulas: `$$ \\Phi = N \\cdot B \\cdot S \\cdot \\cos\\alpha $$
+$$ e_{cu} = -\\frac{\\Delta \\Phi}{\\Delta t} $$
+$$ |e_{cu}| = \\left| \\frac{\\Delta \\Phi}{\\Delta t} \\right| $$
+\n**Trong đó:**
+- $\\Phi$: Từ thông (Wb - Vêbe)
+- $N$: Số vòng dây
+- $B$: Cảm ứng từ (T)
+- $S$: Diện tích mặt phẳng khung dây ($m^2$)
+- $\\alpha$: Góc hợp bởi vectơ pháp tuyến $\\vec{n}$ của mặt phẳng khung dây và vectơ cảm ứng từ $\vec{B}$
+- $e_{cu}$: Suất điện động cảm ứng (V)
+- $\\Delta \\Phi$: Độ biến thiên từ thông (Wb)
+- $\\Delta t$: Thời gian biến thiên từ thông (s)`,
+    examples: [
+      'Khi nam châm tiến lại gần vòng dây kín, số đường sức từ xuyên qua vòng dây tăng lên ($\\Phi$ tăng), trong vòng dây xuất hiện dòng điện cảm ứng.',
+      
+    ]
   },
 
   // --- TOPIC 4: HẠT NHÂN & PHÓNG XẠ ---
+
   {
     id: 'l4.1',
     topic: 'HẠT NHÂN & PHÓNG XẠ',
     title: '4.1 Cấu trúc hạt nhân',
-    theory: '- Hạt nhân gồm proton (p) và nơtron (n), gọi chung là nuclon.\n- Số proton Z xác định nguyên tố; số khối A là tổng số nuclon.\n- Kí hiệu hạt nhân: ^A_Z X.\n- N = A - Z là số nơtron.',
-    formulas: '$A = Z + N$\n$N = A - Z$',
-    examples: ['Xác định số proton và nơtron trong hạt nhân Urani-235.']
+    theory: `- Cấu tạo hạt nhân: Hạt nhân được cấu tạo từ các hạt sơ cấp gọi là nuclôn. Có 2 loại nuclôn:
+  + roton ($p$): Mang điện tích nguyên tố dương $+e$.
+  + Nơtron ($n$): Không mang điện.
+- Kí hiệu hạt nhân: Hạt nhân của nguyên tố $X$ được kí hiệu: $$ ^{A}_{Z}X $$
+- Đồng vị: Là các hạt nhân có cùng số proton $Z$ nhưng khác số nơtron $N$, dẫn đến khác số khối $A$.
+- Đơn vị khối lượng nguyên tử $u$: Có giá trị bằng $1/12$ khối lượng nguyên tử của đồng vị các-bon $^{12}_{6}C$.
+  + $1u \\approx 1,66055.10^{-27} kg \\approx 931,5 MeV/c^2$.`,
+    theoryImages: [
+      'https://i.postimg.cc/m2bLHwKn/ss.png'
+    ],
+    formulas: `$$ A = Z + N $$
+\nTrong đó:
+- $Z$: Số hiệu nguyên tử (số proton). Cũng là số thứ tự trong bảng tuần hoàn.
+- $A$: Số khối (tổng số nuclôn).
+- $N$: Số nơtron $N = A - Z$.
+- Điện tích hạt nhân: $q = +Ze$.
+- Kích thước hạt nhân: \\n$$R \\approx 1,2.10^{-15}.A^{1/3} (m)$$.`,
+    examples: [
+      'Hạt nhân Nhôm $^{27}_{13}Al$ có: $Z=13$ proton và $N = 27 - 13 = 14$ nơtron.',
+      'Hiđrô có 3 đồng vị phổ biến: Hiđrô thường ($^{1}_{1}H$), Đơteri ($^{2}_{1}H$ hay $D$), Triti ($^{3}_{1}H$ hay $T$).',
+      'Hạt nhân có kích thước rất nhỏ cỡ $10^{-15}m$ so với kích thước nguyên tử cỡ $10^{-10}m$.'
+    ]
   },
   {
     id: 'l4.2',
     topic: 'HẠT NHÂN & PHÓNG XẠ',
     title: '4.2 Độ hụt khối và năng lượng liên kết hạt nhân',
-    theory: '- Khối lượng hạt nhân nhỏ hơn tổng khối lượng các nuclon rời rạc → độ hụt khối.\n- Độ hụt khối tương ứng năng lượng liên kết (theo E = \\Delta mc^2).\n- Năng lượng liên kết riêng (chia cho A) cho biết độ bền vững hạt nhân.\n- Hạt nhân bền thường có năng lượng liên kết riêng lớn.',
-    formulas: '$\\Delta m = Zm_p + Nm_n - m_{hn}$\n$E = \\Delta mc^2$\n$E_{lk\\_rieng} = \\frac{E}{A}$',
-    examples: ['Tính năng lượng liên kết của hạt nhân He-4.']
+    theory: `- Độ hụt khối ($\\Delta m$): Khối lượng của một hạt nhân luôn *nhỏ hơn* tổng khối lượng của các nuclôn tạo thành nó. Độ chênh lệch đó gọi là độ hụt khối.
+- Năng lượng liên kết ($W_{lk}$): Là năng lượng tỏa ra khi các nuclôn liên kết với nhau tạo thành hạt nhân (hoặc năng lượng tối thiểu cần thiết để phá vỡ hạt nhân thành các nuclôn riêng biệt).
+- Năng lượng liên kết riêng ($W_{lkr}$): Là năng lượng liên kết tính trung bình cho một nuclôn.
+  + Ý nghĩa: Đặc trưng cho *độ bền vững* của hạt nhân. Hạt nhân có năng lượng liên kết riêng càng lớn thì càng bền vững.
+  + Các hạt nhân có số khối trong khoảng $50 < A < 95$ là bền vững nhất.`,
+    theoryImages: [
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Binding_energy_curve_-_common_isotopes.svg/800px-Binding_energy_curve_-_common_isotopes.svg.png'
+    ],
+    formulas: `$$ \\Delta m = Z.m_p + (A-Z).m_n - m_X $$
+$$ W_{lk} = \\Delta m \\cdot c^2 $$ \n  $$W_{lkr} = \\frac{W_{lk}}{A}$$.
+\nTrong đó:
+- $m_p \\approx 1,00728u$: Khối lượng proton
+- $m_n \\approx 1,00866u$: Khối lượng nơtron
+- $m_X$: Khối lượng hạt nhân
+- Đổi đơn vị năng lượng: $1u \\cdot c^2 \\approx 931,5 \\text{ MeV}$`,
+    examples: [
+      'Tính độ hụt khối của hạt nhân Hêli ($^{4}_{2}He$) biết $m_{He}=4,0015u$. Ta có: $\\Delta m = 2 \\cdot 1,00728 + 2 \\cdot 1,00866 - 4,0015 = 0,03038u$.',
+      'Năng lượng liên kết của Hêli: $W_{lk} = 0,03038 \\cdot 931,5 \\approx 28,3 \\text{ MeV}$.',
+      'Hạt nhân Sắt $^{56}Fe$ nằm trong khoảng số khối trung bình nên bền vững hơn hạt nhân Urani $^{235}U$ (số khối quá lớn) và Hiđrô (số khối quá nhỏ).'
+    ]
   },
   {
     id: 'l4.3',
     topic: 'HẠT NHÂN & PHÓNG XẠ',
     title: '4.3 Sự phóng xạ và chu kì bán rã',
-    theory: '- Phóng xạ là quá trình hạt nhân không bền tự phân rã (ngẫu nhiên).\n- Chu kì bán rã T: thời gian để số hạt nhân còn lại giảm còn một nửa.\n- Số hạt và hoạt độ giảm theo hàm mũ theo thời gian.\n- Dùng mô hình N(t) để dự đoán phần còn lại sau thời gian t.',
-    formulas: '$N = N_0 \\cdot 2^{-t/T}$\n$N = N_0 e^{-\\lambda t}$\n$\\lambda = \\frac{\\ln 2}{T}$',
-    examples: ['Chất phóng xạ Iốt-131 có chu kì bán rã 8 ngày. Sau 16 ngày, lượng chất còn lại bao nhiêu phần trăm?']
-  }
+    theory: `- Phóng xạ: Là quá trình phân hủy *tự phát* của một hạt nhân không bền vững (hạt nhân mẹ), phát ra các tia phóng xạ và biến đổi thành hạt nhân khác (hạt nhân con).
+- Các loại tia phóng xạ chính:
+  + Tia $\\alpha$ (dòng hạt nhân $^4_2He$).
+  + Tia $\\beta$ (gồm $\\beta^-$ là electron và $\\beta^+$ là pôzitron).
+  + Tia $\\gamma$ (sóng điện từ có bước sóng rất ngắn, thường đi kèm các tia $\\alpha, \\beta$).
+- Đặc tính: Quá trình phóng xạ là ngẫu nhiên, không điều khiển được và không phụ thuộc vào các yếu tố bên ngoài (nhiệt độ, áp suất...).
+- Chu kì bán rã ($T$): Là khoảng thời gian để một nửa số lượng hạt nhân phóng xạ ban đầu bị phân rã.`,
+    theoryImages: [
+      'https://i.postimg.cc/Y2PR4n4t/phong-xa-la-gi-2.png'
+    ],
+    formulas: `$$ N = N_0 \\cdot 2^{-\\frac{t}{T}} = N_0 \\cdot e^{-\\lambda t} $$
+$$ m = m_0 \\cdot 2^{-\\frac{t}{T}} = m_0 \\cdot e^{-\\lambda t} $$
+$$ \\lambda = \\frac{\\ln 2}{T} \\approx \\frac{0,693}{T} $$
+\nTrong đó:
+- $N, m$: Số hạt nhân và khối lượng chất phóng xạ còn lại sau thời gian $t$.
+- $N_0, m_0$: Số hạt nhân và khối lượng ban đầu.
+- $T$: Chu kì bán rã (giây, ngày, năm...).
+- $\\lambda$: Hằng số phóng xạ.`,
+    examples: [
+      'Sau một chu kì bán rã $t=T$, số hạt nhân còn lại là $50\\%$. Sau 2 chu kì $t=2T$, còn lại $25\\%$.',
+      'Đồng vị I-ốt $^{131}I$ có chu kì bán rã là 8 ngày. Sau 16 ngày 2 chu kì, lượng I-ốt ban đầu sẽ giảm đi 4 lần.',
+      'Cacbon-14 $^{14}C$ có chu kì bán rã 5730 năm, thường được dùng để xác định tuổi của các mẫu vật cổ, khảo cổ học.'
+    ]
+  },
 ];
 
 // ================= QUESTION BANK – VẬT LÍ 12 =================
 export const QUESTION_BANK: Question[] = [
 
 /* ============================================================
-   CHƯƠNG 1 – VẬT LÍ NHIỆT (10 CÂU)
+   CHƯƠNG 1 – VẬT LÍ NHIỆT 
 ============================================================ */
 
   {
@@ -237,7 +377,7 @@ export const QUESTION_BANK: Question[] = [
     level: 'Vận dụng',
     type: 'MCQ',
     promptText: 'Câu 3: Quan sát đồ thị nóng chảy của nước đá (hình bên). Đoạn nằm ngang ứng với quá trình nào?',
-    imageUrl: 'https://i.postimg.cc/Y2VtbMn1/Please-make-the-202512140930.jpg', // Link ảnh mẫu
+    imageUrl: '', // Link ảnh mẫu
     options: ['Tăng nhiệt độ', 'Nóng chảy', 'Sôi', 'Ngưng tụ'],
     answerKey: 'Nóng chảy',
     explanationText: 'Đoạn nằm ngang nhiệt độ không đổi là quá trình chuyển thể.'

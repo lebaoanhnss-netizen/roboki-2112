@@ -211,7 +211,8 @@ const LessonCard: React.FC<{
              {/* PHẦN LÝ THUYẾT */}
              <div className="bg-roboki-50/50 p-4 rounded-xl border border-roboki-100">
                 <h5 className="text-xs font-bold text-roboki-600 uppercase mb-2 flex items-center gap-1.5"><Sparkles size={14}/> Lý thuyết</h5>
-                <MathRender content={lesson.theory} className="text-sm text-slate-700 leading-relaxed whitespace-pre-line"/>
+                {/* 👇 ĐÃ THÊM CLASS text-justify TẠI ĐÂY 👇 */}
+                <MathRender content={lesson.theory} className="text-sm text-slate-700 leading-relaxed whitespace-pre-line text-justify"/>
                 
                 {/* HIỂN THỊ ẢNH LÝ THUYẾT */}
                 {lesson.theoryImages && lesson.theoryImages.length > 0 && (
