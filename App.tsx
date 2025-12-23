@@ -37,7 +37,7 @@ import {
   Disc, HelpCircle, Gift, SwatchBook, Frown, Sparkles, Bot, StopCircle,
   ThumbsUp, Percent, Activity, Send, Home, Globe, KeyRound, X, Loader2,
   FileText, ClipboardList, School, Edit3, Save, MapPin, ShieldAlert,
-  Lightbulb // 👈 Thêm icon bóng đèn cho ví dụ
+  Lightbulb 
 } from 'lucide-react';
 
 // --- UTILS ---
@@ -103,9 +103,10 @@ const INITIAL_PRACTICE_STATE: PracticeSessionData = {
   showExplanation: false,
 };
 
+// 👇 CẬP NHẬT: Interface cho MockTest (selectedTopics là mảng)
 interface MockTestSessionData {
   mode: 'CONFIG' | 'DOING' | 'RESULT';
-  selectedTopic: string;
+  selectedTopics: string[]; // Đã sửa thành mảng string[]
   countMCQ: number;
   countTF: number;
   countShort: number;
@@ -117,9 +118,10 @@ interface MockTestSessionData {
   errorMsg: string;
 }
 
+// 👇 CẬP NHẬT: Initial State cho MockTest
 const INITIAL_MOCK_TEST_STATE: MockTestSessionData = {
   mode: 'CONFIG',
-  selectedTopic: 'TẤT CẢ',
+  selectedTopics: ['TẤT CẢ'], // Mặc định là mảng chứa 'TẤT CẢ'
   countMCQ: 10,
   countTF: 4,
   countShort: 2,
@@ -211,7 +213,6 @@ const LessonCard: React.FC<{
              {/* PHẦN LÝ THUYẾT */}
              <div className="bg-roboki-50/50 p-4 rounded-xl border border-roboki-100">
                 <h5 className="text-xs font-bold text-roboki-600 uppercase mb-2 flex items-center gap-1.5"><Sparkles size={14}/> Lý thuyết</h5>
-                {/* 👇 ĐÃ THÊM CLASS text-justify TẠI ĐÂY 👇 */}
                 <MathRender content={lesson.theory} className="text-sm text-slate-700 leading-relaxed whitespace-pre-line text-justify"/>
                 
                 {/* HIỂN THỊ ẢNH LÝ THUYẾT */}
@@ -236,7 +237,7 @@ const LessonCard: React.FC<{
                 <MathRender content={lesson.formulas} className="text-sm text-slate-800 font-bold font-mono whitespace-pre-line"/>
              </div>
 
-             {/* 👇 MỚI: PHẦN VÍ DỤ MINH HỌA (HIỂN THỊ NẾU CÓ DỮ LIỆU) */}
+             {/* PHẦN VÍ DỤ MINH HỌA */}
              {lesson.examples && lesson.examples.length > 0 && (
                 <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-100">
                     <h5 className="text-xs font-bold text-yellow-700 uppercase mb-2 flex items-center gap-1.5"><Lightbulb size={14}/> Ví dụ minh họa</h5>
@@ -249,7 +250,6 @@ const LessonCard: React.FC<{
                     </ul>
                 </div>
              )}
-             {/* 👆 HẾT PHẦN MỚI */}
 
              <div className="flex justify-end pt-2">
                 <button onClick={(e) => { e.stopPropagation(); const txt = generateRobokiPrompt(lesson.topic, lesson.title, "Lý thuyết", `${lesson.theory}\n\nCông thức chính: ${lesson.formulas}`, undefined, 'LESSON'); onCopy(txt); }} className="text-xs bg-white text-roboki-600 px-4 py-2.5 rounded-full font-bold shadow-sm border border-roboki-100 flex items-center gap-2 hover:bg-roboki-50 transition-colors">
@@ -483,7 +483,8 @@ const ContentScreen: React.FC<{
            <span className="text-xl font-black text-slate-800">{user.name} 👋</span>
         </div>
         <div className="flex items-center gap-3">
-           <div className="bg-roboki-50 text-roboki-700 text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm border border-roboki-100">{user.class} | {user.school ? user.school.slice(0,8) + '...' : 'THPT'}</div>
+           <div className="bg-roboki-50 text-roboki-700 text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm border border-roboki-100 max-w-[200px] truncate">
+  {user.class} - {user.school || 'THPT'}</div>
            <button onClick={onNavToProfile} className="w-10 h-10 rounded-full bg-slate-200 p-0.5 shadow-sm active:scale-95 transition-transform">
              <div className="w-full h-full rounded-full bg-gradient-to-tr from-roboki-400 to-orange-500 flex items-center justify-center text-white text-sm font-bold">{user.name.charAt(0)}</div>
            </button>
@@ -744,13 +745,53 @@ const MockTestScreen: React.FC<{
   onScore: (pts: number) => void,
   onCopy: (txt: string) => void 
 }> = ({ onBack, session, setSession, questions, onScore, onCopy }) => {
-  const { mode, selectedTopic, countMCQ, countTF, countShort, quizQuestions, currentQIndex, userAnswers, score, errorMsg } = session;
+  // 👇 Lưu ý destructuring selectedTopics (số nhiều)
+  const { mode, selectedTopics, countMCQ, countTF, countShort, quizQuestions, currentQIndex, userAnswers, score, errorMsg } = session;
 
   const updateSession = (updates: Partial<MockTestSessionData>) => setSession(prev => ({ ...prev, ...updates }));
 
-  // Hàm sinh đề tự động theo tỉ lệ 40-30-30
+  // --- HÀM XỬ LÝ CHỌN CHỦ ĐỀ (TOGGLE) ---
+  const toggleTopic = (topic: string) => {
+    let newTopics = [...selectedTopics];
+    
+    if (topic === 'TẤT CẢ') {
+      // Nếu chọn TẤT CẢ -> Xóa hết các cái khác, chỉ giữ TẤT CẢ
+      newTopics = ['TẤT CẢ'];
+    } else {
+      // Nếu đang chọn TẤT CẢ mà chọn cái khác -> Bỏ TẤT CẢ đi
+      if (newTopics.includes('TẤT CẢ')) {
+        newTopics = [];
+      }
+
+      // Logic Bật/Tắt
+      if (newTopics.includes(topic)) {
+        newTopics = newTopics.filter(t => t !== topic);
+      } else {
+        newTopics.push(topic);
+      }
+
+      // Nếu bỏ chọn hết -> Tự động quay về TẤT CẢ (để tránh lỗi không chọn gì)
+      if (newTopics.length === 0) {
+        newTopics = ['TẤT CẢ'];
+      }
+    }
+    updateSession({ selectedTopics: newTopics });
+  };
+
+  // --- HÀM SINH ĐỀ TỰ ĐỘNG ---
   const generateExam = () => {
-    let source = selectedTopic === 'TẤT CẢ' ? questions : questions.filter(q => q.topic.toUpperCase() === selectedTopic.toUpperCase());
+    // 👇 LOGIC LỌC MỚI: Lấy câu hỏi nếu Topic nằm trong danh sách đã chọn
+    let source: Question[] = [];
+    
+    if (selectedTopics.includes('TẤT CẢ')) {
+      source = questions;
+    } else {
+      // Lọc các câu hỏi có topic nằm trong danh sách selectedTopics
+      // (So sánh chữ hoa để tránh lỗi định dạng)
+      source = questions.filter(q => 
+        selectedTopics.some(selected => selected.toUpperCase() === q.topic.trim().toUpperCase())
+      );
+    }
     
     // Hàm lấy câu hỏi theo loại và phân phối mức độ (Biết: 40%, Hiểu: 30%, Vận dụng: 30%)
     const pickQuestions = (type: string, count: number) => {
@@ -764,14 +805,14 @@ const MockTestScreen: React.FC<{
         const qHieu = typeQs.filter(q => q.level === 'Hiểu').sort(() => Math.random() - 0.5);
         const qVD = typeQs.filter(q => q.level === 'Vận dụng').sort(() => Math.random() - 0.5);
 
-        // Lấy câu hỏi (nếu thiếu mức độ này thì lấy bù mức độ khác cho đủ số lượng)
+        // Lấy câu hỏi
         let picked = [
             ...qBiet.slice(0, targetBiet),
             ...qHieu.slice(0, targetHieu),
             ...qVD.slice(0, targetVD)
         ];
 
-        // Nếu thiếu số lượng (do kho câu hỏi ít), lấp đầy bằng các câu còn lại bất kỳ
+        // Nếu thiếu số lượng, lấp đầy bằng các câu còn lại bất kỳ
         if (picked.length < count) {
             const remaining = typeQs.filter(q => !picked.includes(q)).sort(() => Math.random() - 0.5);
             picked = [...picked, ...remaining.slice(0, count - picked.length)];
@@ -786,7 +827,7 @@ const MockTestScreen: React.FC<{
     const finalExam = [...qsMCQ, ...qsTF, ...qsShort];
 
     if (finalExam.length === 0) {
-        updateSession({ errorMsg: 'Không đủ câu hỏi trong kho để tạo đề. Vui lòng giảm số lượng hoặc chọn chủ đề khác.' });
+        updateSession({ errorMsg: 'Không tìm thấy câu hỏi phù hợp với các chủ đề đã chọn. Vui lòng kiểm tra lại.' });
         return;
     }
 
@@ -795,14 +836,12 @@ const MockTestScreen: React.FC<{
 
   const currentQ = quizQuestions[currentQIndex];
   
-  // Xử lý nộp bài từng câu (chưa chấm điểm ngay, chỉ lưu lại)
+  // Xử lý nộp bài từng câu
   const handleSelectAnswer = (val: any, subId?: string) => {
       if (subId) {
-          // Dạng chùm
           const currentAns = userAnswers[currentQ.id] || {};
           updateSession({ userAnswers: { ...userAnswers, [currentQ.id]: { ...currentAns, [subId]: val } } });
       } else {
-          // Dạng thường
           updateSession({ userAnswers: { ...userAnswers, [currentQ.id]: val } });
       }
   };
@@ -818,21 +857,18 @@ const MockTestScreen: React.FC<{
               q.subQuestions.forEach(sq => {
                   if (uAns[sq.id] === sq.isCorrect) correctSub++;
               });
-              // Cơ chế điểm: 1 ý: 0.1, 2 ý: 0.25, 3 ý: 0.5, 4 ý: 1.0 (Giả lập) -> Ở đây em cho 0.25đ mỗi ý cho dễ tính
               totalScore += correctSub * 0.25; 
           } else if (q.type === 'Short') {
-              if (uAns.trim().toLowerCase() === q.answerKey.trim().toLowerCase()) totalScore += 1; // 1 điểm
+              if (uAns.trim().toLowerCase() === q.answerKey.trim().toLowerCase()) totalScore += 1; 
           } else {
-              if (uAns === q.answerKey) totalScore += 1; // 1 điểm
+              if (uAns === q.answerKey) totalScore += 1; 
           }
       });
-      // Quy đổi thang 10 (Ví dụ) hoặc cộng dồn. Ở đây em cộng thẳng vào điểm tích lũy.
-      const finalPoints = Math.round(totalScore * 10); // Nhân 10 cho đẹp
+      const finalPoints = Math.round(totalScore * 10);
       onScore(finalPoints);
       updateSession({ mode: 'RESULT', score: finalPoints });
   };
 
-  // --- HÀM TẠO NỘI DUNG COPY CHO ROBOKI ---
   const copyQuestionContent = (q: Question) => {
       let content = q.promptText;
       if (q.subQuestions) {
@@ -843,6 +879,7 @@ const MockTestScreen: React.FC<{
       onCopy(prompt);
   };
 
+  // --- UI CẤU HÌNH ---
   if (mode === 'CONFIG') {
       return (
         <div className="pb-24 pt-4 px-5 h-full flex flex-col bg-slate-50">
@@ -852,12 +889,30 @@ const MockTestScreen: React.FC<{
             </div>
             <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-6 flex-1 overflow-y-auto">
                 <div>
-                    <h3 className="font-bold text-slate-700 text-sm mb-3">1. Chọn Chủ đề</h3>
+                    <h3 className="font-bold text-slate-700 text-sm mb-3">1. Chọn Chủ đề (Có thể chọn nhiều)</h3>
                     <div className="grid grid-cols-2 gap-2">
-                        <button onClick={() => updateSession({ selectedTopic: 'TẤT CẢ' })} className={`p-3 rounded-xl text-left text-xs font-bold border transition-all ${selectedTopic === 'TẤT CẢ' ? 'bg-purple-600 text-white shadow-md' : 'bg-white text-slate-500 border-slate-100'}`}>TẤT CẢ</button>
-                        {['VẬT LÍ NHIỆT', 'KHÍ LÍ TƯỞNG', 'TỪ TRƯỜNG', 'HẠT NHÂN & PHÓNG XẠ'].map(t => (
-                            <button key={t} onClick={() => updateSession({ selectedTopic: t })} className={`p-3 rounded-xl text-left font-bold border transition-all truncate ${selectedTopic === t ? 'bg-purple-600 text-white shadow-md' : 'bg-white text-slate-500 border-slate-100'} ${t.length > 15 ? 'col-span-2 text-xs' : 'text-xs'}`}>{t}</button>
-                        ))}
+                        {/* NÚT TẤT CẢ */}
+                        <button 
+                          onClick={() => toggleTopic('TẤT CẢ')} 
+                          className={`p-3 rounded-xl text-left text-xs font-bold border transition-all ${selectedTopics.includes('TẤT CẢ') ? 'bg-purple-600 text-white shadow-md' : 'bg-white text-slate-500 border-slate-100'}`}
+                        >
+                          TẤT CẢ
+                        </button>
+                        
+                        {/* CÁC CHỦ ĐỀ KHÁC */}
+                        {['VẬT LÍ NHIỆT', 'KHÍ LÍ TƯỞNG', 'TỪ TRƯỜNG', 'HẠT NHÂN & PHÓNG XẠ'].map(t => {
+                           const isSelected = selectedTopics.includes(t);
+                           return (
+                            <button 
+                              key={t} 
+                              onClick={() => toggleTopic(t)} 
+                              className={`p-3 rounded-xl text-left font-bold border transition-all truncate ${isSelected ? 'bg-purple-600 text-white shadow-md ring-2 ring-purple-200' : 'bg-white text-slate-500 border-slate-100'} ${t.length > 15 ? 'col-span-2 text-xs' : 'text-xs'}`}
+                            >
+                              {isSelected && <CheckCircle size={14} className="inline mr-1 mb-0.5"/>}
+                              {t}
+                            </button>
+                           )
+                        })}
                     </div>
                 </div>
                 <div>
@@ -885,7 +940,7 @@ const MockTestScreen: React.FC<{
       );
   }
 
-  // --- MÀN HÌNH KẾT QUẢ & XEM LẠI ---
+  // --- MÀN HÌNH KẾT QUẢ & LÀM BÀI (GIỮ NGUYÊN NHƯ CŨ) ---
   if (mode === 'RESULT') {
       return (
         <div className="pb-24 pt-4 px-5 h-full flex flex-col bg-slate-50">
@@ -1379,67 +1434,67 @@ const ChallengeScreen: React.FC<{
 
     return (
         <div className="pb-24 pt-4 px-4 h-full flex flex-col bg-slate-50">
-           <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-6">
               <button onClick={onBack} className="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center border border-slate-100"><ChevronLeft size={20} className="text-slate-600"/></button>
               <h2 className="text-xl font-black text-slate-800">Thử thách hàng ngày</h2>
-           </div>
+            </div>
 
-           {session.todayQ ? (
-              <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex-1 overflow-y-auto">
-                 <div className="flex justify-between items-start mb-6">
-                    <div className="bg-sky-50 text-sky-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">Daily Quest</div>
-                    <div className="text-right"><div className="font-black text-2xl text-slate-800">+20</div><div className="text-[10px] text-slate-400 font-bold uppercase">Điểm thưởng</div></div>
-                 </div>
-                 
-                 {/* HIỂN THỊ ẢNH TRONG THỬ THÁCH */}
-                 <div className="mb-8">
-                    {session.todayQ.imageUrl && (
-                      <div className="mb-4 flex justify-center bg-white rounded-xl border border-slate-100 p-2">
-                         <img src={session.todayQ.imageUrl} alt="Hình minh họa" className="rounded-lg max-h-64 object-contain w-full" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                      </div>
-                    )}
-                    <div className="font-bold text-slate-800 text-lg leading-relaxed"><MathRender content={session.todayQ.promptText}/></div>
-                 </div>
-                 
-                 <div className="space-y-3">
-                    {session.todayQ.type === 'Short' ? (
-                        <div className="space-y-4 animate-fade-in">
-                            <input
-                                type="text"
-                                disabled={session.isSubmitted}
-                                value={textInput}
-                                onChange={(e) => setTextInput(e.target.value)}
-                                placeholder="Nhập đáp án của bạn..."
-                                className="w-full p-4 rounded-2xl border-2 border-slate-200 font-bold focus:border-sky-500 focus:ring-4 focus:ring-sky-100 outline-none text-center text-lg text-slate-700 placeholder:text-slate-300 transition-all"
-                            />
-                            {!session.isSubmitted && (
-                                <button
-                                    disabled={!textInput}
-                                    onClick={() => handleSubmit(textInput)}
-                                    className="w-full bg-sky-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-sky-200 active:scale-95 transition-all disabled:opacity-50 disabled:shadow-none flex items-center justify-center gap-2"
-                                >
-                                    <Target size={18}/> Chốt đáp án
-                                </button>
-                            )}
-                            {session.isSubmitted && (
-                                <div className="text-center font-medium bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                                    <div className="text-xs text-slate-400 uppercase font-bold mb-1">Đáp án đúng là</div>
-                                    <div className="text-xl font-black text-emerald-600">{session.todayQ.answerKey}</div>
-                                </div>
-                            )}
-                        </div>
-                    ) : (
-                        session.todayQ.options?.map((opt, i) => (
-                           <button key={i} disabled={session.isSubmitted} onClick={() => handleSubmit(opt)} className={`w-full p-4 rounded-2xl border-2 text-left text-sm font-bold transition-all ${session.isSubmitted && opt === session.todayQ?.answerKey ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : session.isSubmitted && session.selectedOpt === opt ? 'bg-rose-50 border-rose-500 text-rose-700' : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-600'}`}><MathRender content={opt}/></button>
-                        ))
-                    )}
-                 </div>
-                 
-                 {session.isSubmitted && (<div className={`mt-8 text-center font-black text-lg ${session.isCorrect ? 'text-emerald-600' : 'text-slate-400'}`}>{session.isCorrect ? 'Tuyệt vời! Bạn đã hoàn thành nhiệm vụ.' : 'Rất tiếc, hãy thử lại vào ngày mai!'}</div>)}
-              </div>
-           ) : (
-             <div className="flex-1 flex items-center justify-center text-slate-400 font-medium animate-pulse">Đang tải câu hỏi...</div>
-           )}
+            {session.todayQ ? (
+               <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex-1 overflow-y-auto">
+                  <div className="flex justify-between items-start mb-6">
+                     <div className="bg-sky-50 text-sky-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">Daily Quest</div>
+                     <div className="text-right"><div className="font-black text-2xl text-slate-800">+20</div><div className="text-[10px] text-slate-400 font-bold uppercase">Điểm thưởng</div></div>
+                  </div>
+                  
+                  {/* HIỂN THỊ ẢNH TRONG THỬ THÁCH */}
+                  <div className="mb-8">
+                     {session.todayQ.imageUrl && (
+                       <div className="mb-4 flex justify-center bg-white rounded-xl border border-slate-100 p-2">
+                          <img src={session.todayQ.imageUrl} alt="Hình minh họa" className="rounded-lg max-h-64 object-contain w-full" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                       </div>
+                     )}
+                     <div className="font-bold text-slate-800 text-lg leading-relaxed"><MathRender content={session.todayQ.promptText}/></div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                     {session.todayQ.type === 'Short' ? (
+                         <div className="space-y-4 animate-fade-in">
+                             <input
+                                 type="text"
+                                 disabled={session.isSubmitted}
+                                 value={textInput}
+                                 onChange={(e) => setTextInput(e.target.value)}
+                                 placeholder="Nhập đáp án của bạn..."
+                                 className="w-full p-4 rounded-2xl border-2 border-slate-200 font-bold focus:border-sky-500 focus:ring-4 focus:ring-sky-100 outline-none text-center text-lg text-slate-700 placeholder:text-slate-300 transition-all"
+                             />
+                             {!session.isSubmitted && (
+                                 <button
+                                     disabled={!textInput}
+                                     onClick={() => handleSubmit(textInput)}
+                                     className="w-full bg-sky-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-sky-200 active:scale-95 transition-all disabled:opacity-50 disabled:shadow-none flex items-center justify-center gap-2"
+                                 >
+                                     <Target size={18}/> Chốt đáp án
+                                 </button>
+                             )}
+                             {session.isSubmitted && (
+                                 <div className="text-center font-medium bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                     <div className="text-xs text-slate-400 uppercase font-bold mb-1">Đáp án đúng là</div>
+                                     <div className="text-xl font-black text-emerald-600">{session.todayQ.answerKey}</div>
+                                 </div>
+                             )}
+                         </div>
+                     ) : (
+                         session.todayQ.options?.map((opt, i) => (
+                            <button key={i} disabled={session.isSubmitted} onClick={() => handleSubmit(opt)} className={`w-full p-4 rounded-2xl border-2 text-left text-sm font-bold transition-all ${session.isSubmitted && opt === session.todayQ?.answerKey ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : session.isSubmitted && session.selectedOpt === opt ? 'bg-rose-50 border-rose-500 text-rose-700' : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-600'}`}><MathRender content={opt}/></button>
+                         ))
+                     )}
+                  </div>
+                  
+                  {session.isSubmitted && (<div className={`mt-8 text-center font-black text-lg ${session.isCorrect ? 'text-emerald-600' : 'text-slate-400'}`}>{session.isCorrect ? 'Tuyệt vời! Bạn đã hoàn thành nhiệm vụ.' : 'Rất tiếc, hãy thử lại vào ngày mai!'}</div>)}
+               </div>
+            ) : (
+              <div className="flex-1 flex items-center justify-center text-slate-400 font-medium animate-pulse">Đang tải câu hỏi...</div>
+            )}
         </div>
     );
 };
@@ -1513,7 +1568,7 @@ const App: React.FC = () => {
         {/* CHỈ HIỆN NÚT NẠP DATA NẾU EMAIL LÀ ADMIN */}
         {user.email === 'lebaoanhnss@gmail.com' && (
           <button onClick={handleNap} className="fixed bottom-24 right-4 z-50 bg-indigo-600 text-white p-3 rounded-full text-xs font-bold shadow-xl border-2 border-white flex items-center gap-2 hover:bg-indigo-700 transition-colors">
-             <ShieldAlert size={16} className="animate-pulse"/> Nạp Data (Admin)
+              <ShieldAlert size={16} className="animate-pulse"/> Nạp Data (Admin)
           </button>
         )}
 
