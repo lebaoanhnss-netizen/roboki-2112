@@ -953,6 +953,113 @@ const RAW_DATA: QuestionInput[] = [
     topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.3', level: 'Vận dụng', type: 'Short',
     promptText: 'Ban đầu 100g. Sau 2 chu kì bán rã, khối lượng bị phân rã là bao nhiêu gam?',
     imageUrl: '', answerKey: '75', explanationText: 'Còn 25g -> Mất 75g.'
+  },
+  //-------------------------------
+    // --- l1.1: Sự chuyển thể ---
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Biết', type: 'MCQ',
+    promptText: 'Điều nào sau đây là **sai** khi nói về sự đông đặc?',
+    imageUrl: '',
+    options: [
+      'Sự đông đặc là quá trình chuyển từ thể lỏng sang thể rắn.',
+      'Với một chất rắn, nhiệt độ đông đặc luôn nhỏ hơn nhiệt độ nóng chảy.',
+      'Trong suốt quá trình đông đặc, nhiệt độ của vật không thay đổi.',
+      'Nhiệt độ đông đặc của các chất thay đổi theo áp suất bên ngoài.'
+    ],
+    answerKey: 'Với một chất rắn, nhiệt độ đông đặc luôn nhỏ hơn nhiệt độ nóng chảy.',
+    explanationText: 'Đối với một chất kết tinh, nhiệt độ đông đặc bằng nhiệt độ nóng chảy ở cùng một áp suất.'
+  },
+
+  // --- l1.2: Nội năng – Định luật I nhiệt động lực học ---
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.2', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Biểu thức diễn tả đúng quá trình chất khí vừa nhận nhiệt vừa nhận công là:',
+    imageUrl: '',
+    options: [
+      '$\\Delta U = A + Q$; $Q > 0$; $A < 0$.',
+      '$\\Delta U = Q$; $Q > 0$.',
+      '$\\Delta U = Q + A$; $Q < 0$; $A > 0$.',
+      '$\\Delta U = Q + A$; $Q > 0$; $A > 0$.'
+    ],
+    answerKey: '$\\Delta U = Q + A$; $Q > 0$; $A > 0$.',
+    explanationText: 'Quy ước dấu: Nhận nhiệt $Q>0$, Nhận công $A>0$.'
+  },
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.2', level: 'Vận dụng', type: 'Short',
+    promptText: 'Người ta thực hiện công $120 J$ để nén khí trong một xilanh. Tính độ biến thiên nội năng của khí theo đơn vị Jun, biết khí truyền ra môi trường xung quanh nhiệt lượng $80 J$.',
+    imageUrl: '',
+    answerKey: '40',
+    explanationText: '$\\Delta U = A + Q = 120 + (-80) = 40 J$.'
+  },
+
+  // --- l1.3: Thang nhiệt độ – Nhiệt kế ---
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.3', level: 'Vận dụng', type: 'MCQ',
+    promptText: 'Đổi đơn vị $32^oC$ ra đơn vị độ K?',
+    imageUrl: '',
+    options: [
+      '$350K$',
+      '$305K$',
+      '$35K$',
+      '$530K$'
+    ],
+    answerKey: '$305K$',
+    explanationText: '$T(K) = 32 + 273 = 305 K$.'
+  },
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.3', level: 'Hiểu', type: 'TrueFalse',
+    promptText: 'Nhúng bàn tay trái vào nước lạnh, bàn tay phải vào nước nóng và sau đó nhúng cả 2 tay vào nước ấm thì:',
+    imageUrl: '',
+    subQuestions: [
+      { id: 'sq1', content: 'Bàn tay trái thấy lạnh, bàn tay phải thấy nóng.', isCorrect: false, explanation: 'Tay trái (đang lạnh) gặp nước ấm sẽ thấy nóng. Tay phải (đang nóng) gặp nước ấm sẽ thấy lạnh.' },
+      { id: 'sq2', content: 'Có sự truyền nhiệt xảy ra giữa tay và nước.', isCorrect: true, explanation: 'Do có chênh lệch nhiệt độ.' },
+      { id: 'sq3', content: 'Nhiệt lượng được truyền từ bàn tay trái sang nước ấm.', isCorrect: false, explanation: 'Tay trái lạnh hơn nước ấm nên nhiệt truyền từ nước sang tay.' },
+      { id: 'sq4', content: 'Nhiệt lượng được truyền từ nước ấm sang tay phải.', isCorrect: false, explanation: 'Tay phải nóng hơn nước ấm nên nhiệt truyền từ tay sang nước.' }
+    ],
+    answerKey: '',
+    explanationText: 'Nguyên lý truyền nhiệt: từ vật nóng sang vật lạnh.'
+  },
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.3', level: 'Vận dụng', type: 'Short',
+    promptText: 'Chuyển đổi nhiệt độ không khí trong phòng là $27^oC$ sang nhiệt độ Kelvin.',
+    imageUrl: '',
+    answerKey: '300',
+    explanationText: '$T = 27 + 273 = 300 K$.'
+  },
+
+  // --- l1.4: Nhiệt dung riêng ---
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.4', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Nhiệt dung riêng của đồng nhỏ hơn nhôm. Vì vậy để tăng nhiệt độ của 1kg đồng và 1kg nhôm thêm $10^oC$ thì:',
+    imageUrl: '',
+    options: [
+      'Khối nhôm cần nhiều nhiệt lượng hơn khối đồng.',
+      'Khối đồng cần nhiều nhiệt lượng hơn khối nhôm.',
+      'Hai khối đều cần nhiệt lượng như nhau.',
+      'Không khẳng định được.'
+    ],
+    answerKey: 'Khối nhôm cần nhiều nhiệt lượng hơn khối đồng.',
+    explanationText: '$Q = mc\\Delta t$. Cùng $m, \\Delta t$, chất có $c$ lớn hơn (nhôm) thì cần $Q$ lớn hơn.'
+  },
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.4', level: 'Vận dụng', type: 'TrueFalse',
+    promptText: 'Một ấm đun nước bằng nhôm có $m = 350g$, chứa $2,75kg$ nước được đun trên bếp. Khi nhận được nhiệt lượng $650 kJ$ thì ấm đạt đến nhiệt độ $60^oC$. Biết $c_{Al} = 880 J/kg.K$, $c_{H2O} = 4190 J/kg.K$.',
+    imageUrl: '',
+    subQuestions: [
+      { id: 'sq1', content: 'Đổi $350g = 0,35kg$.', isCorrect: true, explanation: 'Đúng đơn vị chuẩn.' },
+      { id: 'sq2', content: 'Cả ấm nhôm và nước đều nhận nhiệt lượng để nóng lên.', isCorrect: true, explanation: 'Cả 2 vật đều tăng nhiệt độ.' },
+      { id: 'sq3', content: 'Nhiệt độ ban đầu của ấm là $5^oC$.', isCorrect: true, explanation: 'Giải phương trình: $Q = (m_1c_1 + m_2c_2)(60 - t_1) \\Rightarrow 650000 = (0.35*880 + 2.75*4190)(60 - t_1) \\Rightarrow t_1 \\approx 5,1^oC$.' },
+      { id: 'sq4', content: 'Nếu thay ấm nhôm bằng ấm đồng thì thời gian đun lượng nước trên như nhau.', isCorrect: false, explanation: 'Nhiệt dung riêng của đồng khác nhôm nên nhiệt lượng cần cung cấp khác nhau, dẫn đến thời gian khác nhau.' }
+    ],
+    answerKey: '',
+    explanationText: 'Bài toán cân bằng nhiệt có nguồn cung cấp nhiệt.'
+  },
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.4', level: 'Vận dụng', type: 'Short',
+    promptText: 'Người ta thả một miếng nhôm khối lượng $500g$ vào $500g$ nước. Miếng nhôm nguội đi từ $80^oC$ xuống $20^oC$. Hỏi nước nhận một lượng nhiệt bằng bao nhiêu kJ? Cho $c_{Al} = 880 J/kg.K$.',
+    imageUrl: '',
+    answerKey: '26.4',
+    explanationText: '$Q_{thu} = Q_{toa} = m_{Al}.c_{Al}.\\Delta t = 0,5 . 880 . (80 - 20) = 26400 J = 26,4 kJ$.'
   }
 ];
 
