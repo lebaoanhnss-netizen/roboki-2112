@@ -1,3 +1,4 @@
+// src/data.ts
 import { Lesson, Question, UserProfile } from './types';
 
 // Mock User (Main user)
@@ -11,8 +12,13 @@ export const MOCK_USER: UserProfile = {
   practiceScore: 500,
   gameScore: 450,
   challengeScore: 300,
+  
+  examScore: 0, // 👈 THẦY BỔ SUNG DÒNG NÀY VÀO LÀ HẾT LỖI Ạ
+  
   rank: 12
 };
+
+// ... (Các phần dưới giữ nguyên)
 
 // =================================================================
 // DANH SÁCH BÀI HỌC (PHYSICS_LESSONS) - ĐÃ CẬP NHẬT CHÚ THÍCH ĐẦY ĐỦ

@@ -38,7 +38,7 @@ import {
   Disc, HelpCircle, Gift, SwatchBook, Frown, Sparkles, Bot, StopCircle,
   ThumbsUp, Percent, Activity, Send, Home, Globe, KeyRound, X, Loader2,
   FileText, ClipboardList, School, Edit3, Save, MapPin, ShieldAlert,
-  Lightbulb, GraduationCap, Clock, Phone, Info // 👈 Đã có Info icon
+  Lightbulb, GraduationCap, Clock, Phone, Info, StopCircle as StopIcon
 } from 'lucide-react';
 
 // --- UTILS ---
@@ -159,6 +159,7 @@ interface GameSessionData {
   isSpinning: boolean;
   pendingPoints: number;
   showWheelQuestion: boolean;
+  spinsLeft: number;
 }
 
 const INITIAL_GAME_STATE: GameSessionData = {
@@ -174,7 +175,8 @@ const INITIAL_GAME_STATE: GameSessionData = {
   wheelRotation: 0,
   isSpinning: false,
   pendingPoints: 0,
-  showWheelQuestion: false
+  showWheelQuestion: false,
+  spinsLeft: 5
 };
 
 interface ChallengeSessionData {
@@ -182,7 +184,6 @@ interface ChallengeSessionData {
   selectedOpt: string | null;
   isSubmitted: boolean;
   isCorrect: boolean;
-  history: { date: string; status: 'Đúng' | 'Sai' | 'Chưa làm'; score: number }[];
 }
 
 const INITIAL_CHALLENGE_STATE: ChallengeSessionData = {
@@ -190,11 +191,6 @@ const INITIAL_CHALLENGE_STATE: ChallengeSessionData = {
   selectedOpt: null,
   isSubmitted: false,
   isCorrect: false,
-  history: [
-    { date: 'Hôm qua', status: 'Đúng', score: 20 },
-    { date: '25/05', status: 'Sai', score: 0 },
-    { date: '24/05', status: 'Đúng', score: 20 },
-  ]
 };
 
 // --- SUB COMPONENTS ---
@@ -279,10 +275,11 @@ const AuthScreen: React.FC<{ onLoginSuccess: (user: UserProfile) => void }> = ({
       if (isRegistering) {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
         await updateProfile(cred.user, { displayName: name });
+        // Khởi tạo user với đầy đủ các trường điểm
         const newUser: UserProfile = { 
             uid: cred.user.uid, name, email, 
             class: className, school: school || 'THPT Tự do', 
-            totalScore: 0, practiceScore: 0, gameScore: 0, challengeScore: 0, rank: 999 
+            totalScore: 0, practiceScore: 0, gameScore: 0, challengeScore: 0, examScore: 0, rank: 999 
         };
         await setDoc(doc(db, 'users', cred.user.uid), newUser);
         onLoginSuccess(newUser);
@@ -291,7 +288,7 @@ const AuthScreen: React.FC<{ onLoginSuccess: (user: UserProfile) => void }> = ({
         const docSnap = await getDoc(doc(db, 'users', cred.user.uid));
         if (docSnap.exists()) onLoginSuccess(docSnap.data() as UserProfile);
         else {
-           const fallback: UserProfile = { uid: cred.user.uid, name: cred.user.displayName || 'Học sinh', email: cred.user.email || '', class: '12', school: 'THPT Tự do', totalScore: 0, practiceScore: 0, gameScore: 0, challengeScore: 0, rank: 999 };
+           const fallback: UserProfile = { uid: cred.user.uid, name: cred.user.displayName || 'Học sinh', email: cred.user.email || '', class: '12', school: 'THPT Tự do', totalScore: 0, practiceScore: 0, gameScore: 0, challengeScore: 0, examScore: 0, rank: 999 };
            await setDoc(doc(db, 'users', cred.user.uid), fallback);
            onLoginSuccess(fallback);
         }
@@ -620,12 +617,12 @@ const PracticeScreen: React.FC<{
     if (currentQ.subQuestions && currentQ.subQuestions.length > 0) {
         let correctCount = 0;
         currentQ.subQuestions.forEach(sq => { if (subAnswers && subAnswers[sq.id] === sq.isCorrect) correctCount++; });
-        if(correctCount > 0) onScore(correctCount * 2.5);
+        if(correctCount > 0) onScore(correctCount * 2.5, 'practice');
     } else {
         let isCorrect = false;
         if (currentQ.type === 'Short') { isCorrect = selectedOpt?.trim().toLowerCase() === currentQ.answerKey.trim().toLowerCase(); }
         else { isCorrect = selectedOpt === currentQ.answerKey; }
-        if (isCorrect) onScore(10);
+        if (isCorrect) onScore(10, 'practice');
     }
   };
 
@@ -936,7 +933,7 @@ const ExamScreen: React.FC<{
   session: ExamSessionData;
   setSession: React.Dispatch<React.SetStateAction<ExamSessionData>>;
   questions: Question[];
-  onScore: (pts: number) => void;
+  onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge') => void;
 }> = ({ onBack, session, setSession, questions, onScore }) => {
   const { mode, examType, title, timeLeft, quizQuestions, currentQIndex, userAnswers, score, details } = session;
 
@@ -1075,7 +1072,7 @@ const ExamScreen: React.FC<{
       score: finalScore,
       details: { mcq: scoreMCQ, tf: scoreTF, short: scoreShort }
     }));
-    onScore(Math.round(finalScore * 10)); // Quy đổi ra điểm tích lũy (x10)
+    onScore(Math.round(finalScore * 10), 'exam'); // Quy đổi ra điểm tích lũy (x10)
   };
 
   if (mode === 'MENU') {
@@ -1227,7 +1224,7 @@ const ExamScreen: React.FC<{
 // 5. GAME SCREEN
 const GameScreen: React.FC<{
   onCopy: (txt: string) => void,
-  onScore: (pts: number) => void,
+  onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge') => void,
   sessionData: GameSessionData,
   setSessionData: React.Dispatch<React.SetStateAction<GameSessionData>>,
   questions: Question[]
@@ -1235,8 +1232,11 @@ const GameScreen: React.FC<{
   const {
     gameType, mode, score, timeLeft, currentQ, isCorrect,
     wheelRotation, isSpinning, pendingPoints, showWheelQuestion,
-    selectedSpeedOpt, correctCount, totalAnswered
+    selectedSpeedOpt, correctCount, totalAnswered, spinsLeft
   } = sessionData;
+
+  // State tạm để lưu câu trả lời nhập tay trong vòng quay
+  const [wheelInput, setWheelInput] = useState('');
 
   useEffect(() => {
     let timer: any;
@@ -1246,28 +1246,34 @@ const GameScreen: React.FC<{
       }, 1000);
     } else if (gameType === 'SPEED' && timeLeft === 0 && mode === 'PLAYING') {
       setSessionData(prev => ({ ...prev, mode: 'RESULT' }));
-      if(score > 0) onScore(score);
+      if(score > 0) onScore(score, 'game');
     }
     return () => clearInterval(timer);
   }, [gameType, mode, timeLeft]);
 
+  // CẤU HÌNH CÁC Ô TRÊN VÒNG QUAY
   const WHEEL_SEGMENTS = [
-    { value: 10, label: '10', color: '#3b82f6', text: 'white' },
-    { value: 50, label: '50', color: '#ef4444', text: 'white' },
-    { value: 20, label: '20', color: '#10b981', text: 'white' },
-    { value: 80, label: '80', color: '#f59e0b', text: 'white' },
-    { value: 10, label: '10', color: '#3b82f6', text: 'white' },
-    { value: 100, label: '100', color: '#8b5cf6', text: 'white' },
-    { value: 20, label: '20', color: '#10b981', text: 'white' },
-    { value: 0, label: 'Mất lượt', color: '#64748b', text: 'white' },
+    { type: 'POINT', value: 100, label: '100', color: '#3b82f6', text: 'white' }, // Xanh dương
+    { type: 'MINUS', value: 50, label: '-50', color: '#ef4444', text: 'white' },   // Đỏ (Trừ điểm)
+    { type: 'POINT', value: 20, label: '20', color: '#10b981', text: 'white' },    // Xanh lá
+    { type: 'TURN', value: 1, label: '+1 Lượt', color: '#f59e0b', text: 'white' }, // Vàng (Thêm lượt)
+    { type: 'POINT', value: 50, label: '50', color: '#8b5cf6', text: 'white' },    // Tím
+    { type: 'MISS', value: 0, label: 'Mất lượt', color: '#64748b', text: 'white' },// Xám
+    { type: 'POINT', value: 10, label: '10', color: '#06b6d4', text: 'white' },    // Cyan
+    { type: 'POINT', value: 200, label: '200', color: '#ec4899', text: 'white' },   // Hồng (Jackpot)
   ];
   const SEGMENT_ANGLE = 360 / WHEEL_SEGMENTS.length;
 
   const spinWheel = () => {
-    if (isSpinning) return;
-    const extraSpins = 1800 + Math.random() * 1800;
+    if (isSpinning || spinsLeft <= 0) return;
+    
+    // Trừ lượt quay ngay khi bắt đầu
+    setSessionData(prev => ({ ...prev, spinsLeft: prev.spinsLeft - 1, isSpinning: true }));
+
+    const extraSpins = 1800 + Math.random() * 1800; // Quay ít nhất 5 vòng
     const newRotation = wheelRotation + extraSpins;
-    setSessionData(prev => ({ ...prev, isSpinning: true, wheelRotation: newRotation }));
+    
+    setSessionData(prev => ({ ...prev, wheelRotation: newRotation }));
 
     setTimeout(() => {
        const actualAngle = newRotation % 360;
@@ -1276,7 +1282,10 @@ const GameScreen: React.FC<{
        const safeIndex = winningIndex >= WHEEL_SEGMENTS.length ? 0 : winningIndex;
        const winningSegment = WHEEL_SEGMENTS[safeIndex];
 
-       if (winningSegment.value > 0) {
+       // Xử lý kết quả quay
+       if (winningSegment.type === 'POINT') {
+         // Nếu trúng điểm -> Hiện câu hỏi
+         setWheelInput(''); // Reset input
          setSessionData(prev => ({
              ...prev,
              isSpinning: false,
@@ -1285,9 +1294,25 @@ const GameScreen: React.FC<{
              currentQ: questions[Math.floor(Math.random() * questions.length)],
              isCorrect: null
          }));
+       } else if (winningSegment.type === 'TURN') {
+         // Thêm lượt
+         setSessionData(prev => ({ ...prev, isSpinning: false, spinsLeft: prev.spinsLeft + 1 }));
+         alert("Chúc mừng! Bạn nhận được thêm 1 lượt quay! 🎉");
+       } else if (winningSegment.type === 'MINUS') {
+         // Trừ điểm
+         setSessionData(prev => ({ ...prev, isSpinning: false, score: Math.max(0, prev.score - winningSegment.value) }));
+         alert(`Ôi không! Bạn bị trừ ${winningSegment.value} điểm 😭`);
        } else {
-         setSessionData(prev => ({ ...prev, isSpinning: false, pendingPoints: 0 }));
+         // Mất lượt
+         setSessionData(prev => ({ ...prev, isSpinning: false }));
+         alert("Rất tiếc! Bạn bị mất lượt quay này 😅");
        }
+       
+       // Nếu hết lượt và không phải ô câu hỏi -> Kết thúc
+       if (spinsLeft - 1 <= 0 && winningSegment.type !== 'POINT') {
+          setTimeout(() => setSessionData(prev => ({ ...prev, mode: 'RESULT' })), 1000);
+       }
+
     }, 3000);
   };
 
@@ -1307,7 +1332,7 @@ const GameScreen: React.FC<{
   };
 
   const startWheelGame = () => {
-    setSessionData({ ...INITIAL_GAME_STATE, gameType: 'WHEEL', mode: 'PLAYING', wheelRotation: 0 });
+    setSessionData({ ...INITIAL_GAME_STATE, gameType: 'WHEEL', mode: 'PLAYING', wheelRotation: 0, spinsLeft: 5, score: 0 });
   };
 
   const submitSpeedAnswer = () => {
@@ -1341,15 +1366,35 @@ const GameScreen: React.FC<{
 
   const handleWheelAnswer = (opt: string) => {
      if (!currentQ) return;
-     const correct = opt === currentQ.answerKey;
-     if (correct) {
+     const userAns = opt.trim().toLowerCase();
+     const correctAns = currentQ.answerKey.trim().toLowerCase();
+     
+     let isRight = false;
+     if (currentQ.type === 'Short') {
+        isRight = userAns === correctAns;
+     } else {
+        isRight = opt === currentQ.answerKey;
+     }
+
+     if (isRight) {
         const points = pendingPoints;
         onScore(points, 'game');
         setSessionData(prev => ({ ...prev, isCorrect: true, score: prev.score + points }));
-        setTimeout(() => setSessionData(prev => ({ ...prev, showWheelQuestion: false, isCorrect: null, currentQ: null })), 1000);
+        setTimeout(() => {
+            setSessionData(prev => {
+                // Nếu hết lượt quay thì sang màn hình kết quả
+                if (prev.spinsLeft <= 0) return { ...prev, showWheelQuestion: false, isCorrect: null, currentQ: null, mode: 'RESULT' };
+                return { ...prev, showWheelQuestion: false, isCorrect: null, currentQ: null };
+            });
+        }, 1000);
      } else {
         setSessionData(prev => ({ ...prev, isCorrect: false }));
-        setTimeout(() => setSessionData(prev => ({ ...prev, showWheelQuestion: false, isCorrect: null, currentQ: null, mode: 'RESULT' })), 1500);
+        setTimeout(() => {
+            setSessionData(prev => {
+                if (prev.spinsLeft <= 0) return { ...prev, showWheelQuestion: false, isCorrect: null, currentQ: null, mode: 'RESULT' };
+                return { ...prev, showWheelQuestion: false, isCorrect: null, currentQ: null };
+            });
+        }, 1500);
      }
   };
 
@@ -1397,6 +1442,8 @@ const GameScreen: React.FC<{
            <div className="flex items-center justify-between mb-4 shrink-0">
              <div className="bg-white px-4 py-2 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-2"><Timer size={18} className="text-rose-500"/><span className={`font-black text-xl ${timeLeft < 10 ? 'text-rose-500' : 'text-slate-700'}`}>{timeLeft}s</span></div>
              <div className="bg-white px-4 py-2 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-2"><Star size={18} className="text-yellow-400 fill-yellow-400"/><span className="font-black text-xl text-slate-700">{score}</span></div>
+             {/* 🛑 Nút kết thúc sớm */}
+             <button onClick={() => setSessionData(prev => ({...prev, mode: 'RESULT'}))} className="bg-rose-500 text-white p-2 rounded-full shadow-md active:scale-95"><StopIcon size={20} fill="currentColor"/></button>
            </div>
            {currentQ && (
              <div className="flex-1 flex flex-col min-h-0">
@@ -1404,7 +1451,6 @@ const GameScreen: React.FC<{
                       <button onClick={() => onCopy(generateRobokiPrompt(currentQ.topic, `Câu hỏi tốc độ`, currentQ.level, currentQ.promptText, currentQ.options))} className="absolute top-4 right-4 text-slate-300 hover:text-roboki-500 transition-colors z-10"><Copy size={18} /></button>
                       <div className="shrink-0 mb-4 text-center"><span className="bg-slate-100 text-slate-500 text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-wider">{currentQ.level}</span></div>
                       
-                      {/* HIỂN THỊ ẢNH TRONG GAME TỐC ĐỘ */}
                       <div className="my-auto flex flex-col items-center">
                           {currentQ.imageUrl && (
                             <img src={currentQ.imageUrl} alt="Question Image" className="w-full h-auto rounded-xl mb-4 border border-slate-200 object-contain max-h-48" />
@@ -1444,8 +1490,14 @@ const GameScreen: React.FC<{
         <div className="pb-24 pt-4 px-4 h-full flex flex-col bg-slate-50 relative overflow-hidden">
            <div className="flex justify-between items-center z-10">
              <button onClick={() => setSessionData(prev => ({...prev, mode: 'MENU'}))} className="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center border border-slate-100"><ChevronLeft size={20}/></button>
-             <div className="bg-white px-4 py-2 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-2"><Star size={18} className="text-yellow-400 fill-yellow-400"/><span className="font-black text-xl text-slate-700">{score}</span></div>
+             <div className="flex gap-2">
+                 <div className="bg-white px-3 py-1.5 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-1"><RotateCcw size={16} className="text-indigo-500"/><span className="font-black text-slate-700">{spinsLeft}</span></div>
+                 <div className="bg-white px-3 py-1.5 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-1"><Star size={16} className="text-yellow-400 fill-yellow-400"/><span className="font-black text-slate-700">{score}</span></div>
+                 {/* 🛑 Nút kết thúc sớm cho Vòng quay */}
+                 <button onClick={() => setSessionData(prev => ({...prev, mode: 'RESULT'}))} className="bg-rose-50 text-rose-500 p-1.5 rounded-full shadow-sm border border-rose-100 active:scale-95"><StopIcon size={18} fill="currentColor"/></button>
+             </div>
            </div>
+           
            <div className="flex-1 flex flex-col items-center justify-center relative">
                <div className="relative w-80 h-80">
                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20"><div className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[30px] border-t-slate-800 drop-shadow-md"></div></div>
@@ -1457,8 +1509,10 @@ const GameScreen: React.FC<{
                    </div>
                </div>
                {!isSpinning && pendingPoints === 0 && !showWheelQuestion && wheelRotation > 0 && (<div className="mt-8 text-slate-500 font-bold animate-bounce-short flex items-center gap-2"><Frown /> Tiếc quá, mất lượt rồi!</div>)}
-               <button onClick={spinWheel} disabled={isSpinning || showWheelQuestion} className="mt-10 bg-slate-800 text-white px-10 py-4 rounded-full font-black shadow-lg active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 text-base tracking-wide flex items-center gap-2 hover:bg-slate-900">{isSpinning ? <RotateCcw className="animate-spin" size={20}/> : <Play fill="currentColor" size={20}/>}{isSpinning ? 'ĐANG QUAY...' : 'QUAY NGAY'}</button>
+               <button onClick={spinWheel} disabled={isSpinning || showWheelQuestion} className="mt-10 bg-slate-800 text-white px-10 py-4 rounded-full font-black shadow-lg active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 text-base tracking-wide flex items-center gap-2 hover:bg-slate-900">{isSpinning ? <RotateCcw className="animate-spin" size={20}/> : <Play fill="currentColor" size={20}/>}{isSpinning ? 'ĐANG QUAY...' : `QUAY NGAY (${spinsLeft})`}</button>
            </div>
+           
+           {/* QUESTION MODAL */}
            {showWheelQuestion && currentQ && (
                <div className="absolute inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
                    <div className="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl relative">
@@ -1475,7 +1529,18 @@ const GameScreen: React.FC<{
                            <div className="font-bold text-slate-800 text-center leading-relaxed"><MathRender content={currentQ.promptText}/></div>
                        </div>
 
-                       <div className="space-y-2">{currentQ.options?.map((opt, i) => (<button key={i} disabled={isCorrect !== null} onClick={() => handleWheelAnswer(opt)} className={`w-full p-4 rounded-xl border-2 font-bold text-sm transition-all ${isCorrect === true && opt === currentQ.answerKey ? 'bg-emerald-50 border-emerald-500 text-white' : isCorrect === false ? 'bg-white border-slate-100 opacity-50' : 'bg-white border-slate-100 hover:bg-slate-50 hover:border-roboki-200'}`}><MathRender content={opt}/></button>))}</div>
+                       <div className="space-y-3">
+                           {/* XỬ LÝ KHUNG TRẢ LỜI NGẮN (SHORT ANSWER) */}
+                           {currentQ.type === 'Short' ? (
+                               <div className="flex flex-col gap-2">
+                                   <input type="text" value={wheelInput} onChange={(e) => setWheelInput(e.target.value)} placeholder="Nhập đáp án..." className="w-full p-4 rounded-xl border-2 border-indigo-200 text-center font-bold text-lg focus:border-indigo-500 outline-none text-slate-700"/>
+                                   <button disabled={isCorrect !== null} onClick={() => handleWheelAnswer(wheelInput)} className="w-full bg-indigo-500 text-white py-3 rounded-xl font-bold shadow-md active:scale-95">Trả lời</button>
+                               </div>
+                           ) : (
+                               currentQ.options?.map((opt, i) => (<button key={i} disabled={isCorrect !== null} onClick={() => handleWheelAnswer(opt)} className={`w-full p-4 rounded-xl border-2 font-bold text-sm transition-all ${isCorrect === true && opt === currentQ.answerKey ? 'bg-emerald-50 border-emerald-500 text-white' : isCorrect === false ? 'bg-white border-slate-100 opacity-50' : 'bg-white border-slate-100 hover:bg-slate-50 hover:border-roboki-200'}`}><MathRender content={opt}/></button>))
+                           )}
+                       </div>
+                       
                        {isCorrect === true && <div className="mt-4 text-center text-emerald-600 font-black animate-bounce-short">Chính xác! +{pendingPoints} điểm</div>}
                        {isCorrect === false && <div className="mt-4 text-center text-rose-600 font-black">Sai rồi! Rất tiếc.</div>}
                    </div>
@@ -1487,9 +1552,11 @@ const GameScreen: React.FC<{
   return null;
 };
 
-// 7. LEADERBOARD SCREEN (CẬP NHẬT: THÊM LỌC THEO TRƯỜNG/LỚP)
+// 7. LEADERBOARD SCREEN (CẬP NHẬT: THÊM LỌC THEO CATEGORY)
 const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile }> = ({ onBack, currentUser }) => {
-  const [filter, setFilter] = useState<'CLASS' | 'SCHOOL' | 'ALL'>('CLASS'); // 👈 State lọc
+  const [filter, setFilter] = useState<'CLASS' | 'SCHOOL' | 'ALL'>('CLASS');
+  // 👇 THÊM BỘ LỌC CATEGORY
+  const [category, setCategory] = useState<'TOTAL' | 'PRACTICE' | 'EXAM' | 'GAME'>('TOTAL');
   const [loading, setLoading] = useState(true);
   const [players, setPlayers] = useState<UserProfile[]>([]);
 
@@ -1497,15 +1564,18 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
     const fetchLeaderboard = async () => {
       try {
         setLoading(true);
-        // 👈 Logic truy vấn thay đổi theo filter
+        let orderByField = 'totalScore';
+        if (category === 'PRACTICE') orderByField = 'practiceScore';
+        if (category === 'EXAM') orderByField = 'examScore';
+        if (category === 'GAME') orderByField = 'gameScore';
+
         let q;
         if (filter === 'CLASS') {
-            q = query(collection(db, 'users'), where('class', '==', currentUser.class), orderBy('totalScore', 'desc'), limit(50));
+            q = query(collection(db, 'users'), where('class', '==', currentUser.class), orderBy(orderByField, 'desc'), limit(50));
         } else if (filter === 'SCHOOL') {
-            q = query(collection(db, 'users'), where('school', '==', currentUser.school), orderBy('totalScore', 'desc'), limit(50));
+            q = query(collection(db, 'users'), where('school', '==', currentUser.school), orderBy(orderByField, 'desc'), limit(50));
         } else {
-            // Lọc toàn bộ hệ thống
-            q = query(collection(db, 'users'), orderBy('totalScore', 'desc'), limit(50));
+            q = query(collection(db, 'users'), orderBy(orderByField, 'desc'), limit(50));
         }
         
         const snap = await getDocs(q);
@@ -1515,25 +1585,50 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
       } catch (err) { console.error(err); } finally { setLoading(false); }
     };
     fetchLeaderboard();
-  }, [filter, currentUser]); // Chạy lại khi filter đổi
+  }, [filter, category, currentUser]);
 
   return (
     <div className="pb-24 pt-4 px-4 h-full flex flex-col bg-slate-50">
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex items-center gap-3 mb-4">
         <button onClick={onBack} className="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center border border-slate-100"><ChevronLeft size={20}/></button>
         <div><h2 className="text-xl font-black text-slate-800">Bảng xếp hạng</h2></div>
       </div>
       
-      {/* 👈 TAB CHUYỂN ĐỔI LỚP / TRƯỜNG */}
-      <div className="flex bg-white p-1 rounded-2xl shadow-sm border border-slate-100 mb-4">
-          <button onClick={() => setFilter('CLASS')} className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${filter === 'CLASS' ? 'bg-indigo-500 text-white shadow-md' : 'text-slate-400'}`}>Lớp</button>
-          <button onClick={() => setFilter('SCHOOL')} className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${filter === 'SCHOOL' ? 'bg-purple-500 text-white shadow-md' : 'text-slate-400'}`}>Trường</button>
-          <button onClick={() => setFilter('ALL')} className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${filter === 'ALL' ? 'bg-rose-500 text-white shadow-md' : 'text-slate-400'}`}>Toàn quốc</button>
+      {/* FILTER SCOPE */}
+      <div className="flex bg-white p-1 rounded-2xl shadow-sm border border-slate-100 mb-3">
+          <button onClick={() => setFilter('CLASS')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${filter === 'CLASS' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-400'}`}>Lớp</button>
+          <button onClick={() => setFilter('SCHOOL')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${filter === 'SCHOOL' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-400'}`}>Trường</button>
+          <button onClick={() => setFilter('ALL')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${filter === 'ALL' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-400'}`}>Toàn quốc</button>
+      </div>
+
+      {/* FILTER CATEGORY */}
+      <div className="flex overflow-x-auto gap-2 pb-2 mb-2 no-scrollbar">
+          <button onClick={() => setCategory('TOTAL')} className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition-all ${category === 'TOTAL' ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'bg-white border-slate-200 text-slate-500'}`}>Tổng hợp</button>
+          <button onClick={() => setCategory('EXAM')} className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition-all ${category === 'EXAM' ? 'bg-red-50 border-red-500 text-red-700' : 'bg-white border-slate-200 text-slate-500'}`}>Thi thử</button>
+          <button onClick={() => setCategory('PRACTICE')} className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition-all ${category === 'PRACTICE' ? 'bg-orange-50 border-orange-500 text-orange-700' : 'bg-white border-slate-200 text-slate-500'}`}>Luyện tập</button>
+          <button onClick={() => setCategory('GAME')} className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition-all ${category === 'GAME' ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : 'bg-white border-slate-200 text-slate-500'}`}>Trò chơi</button>
       </div>
 
       <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 flex-1 overflow-y-auto">
         {loading ? <div className="text-center py-4 text-slate-400"><Loader2 className="animate-spin inline mr-2"/> Đang tải...</div> : (
-          <div className="space-y-3">{players.map((u, i) => (<div key={u.uid} className="flex items-center justify-between p-4 rounded-2xl border"><div className="flex items-center gap-4"><div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-black">{i+1}</div><div><div className="font-bold text-sm">{u.name}</div><div className="text-[10px] text-slate-400">{u.class} - {u.school}</div></div></div><div className="font-black">{u.totalScore}</div></div>))}</div>
+          <div className="space-y-3">{players.map((u, i) => {
+             // Chọn điểm hiển thị
+             let displayScore = 0;
+             if (category === 'TOTAL') displayScore = u.totalScore;
+             if (category === 'PRACTICE') displayScore = u.practiceScore;
+             if (category === 'EXAM') displayScore = u.examScore || 0;
+             if (category === 'GAME') displayScore = u.gameScore;
+
+             return (
+               <div key={u.uid} className="flex items-center justify-between p-4 rounded-2xl border border-slate-100 hover:border-slate-300 transition-colors">
+                  <div className="flex items-center gap-4">
+                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black ${i===0?'bg-yellow-100 text-yellow-600':i===1?'bg-slate-200 text-slate-600':i===2?'bg-orange-100 text-orange-600':'bg-slate-50 text-slate-400'}`}>{i+1}</div>
+                     <div><div className="font-bold text-sm text-slate-800">{u.name}</div><div className="text-[10px] text-slate-400">{u.class} - {u.school}</div></div>
+                  </div>
+                  <div className="font-black text-slate-800">{displayScore}</div>
+               </div>
+             )
+          })}</div>
         )}
       </div>
     </div>
@@ -1545,7 +1640,7 @@ const ChallengeScreen: React.FC<{
   onBack: () => void,
   session: ChallengeSessionData,
   setSession: React.Dispatch<React.SetStateAction<ChallengeSessionData>>,
-  onScore: (pts: number) => void,
+  onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge') => void,
   questions: Question[]
 }> = ({ onBack, session, setSession, onScore, questions }) => {
     
@@ -1566,14 +1661,18 @@ const ChallengeScreen: React.FC<{
         const isCorrect = answer.trim().toLowerCase() === session.todayQ.answerKey.trim().toLowerCase();
         
         setSession(prev => ({ ...prev, selectedOpt: answer, isSubmitted: true, isCorrect }));
-        if (isCorrect) onScore(20, 'challenge');
+        if (isCorrect) onScore(20, 'challenge'); // Challenge tính vào gameScore
     };
 
     return (
         <div className="pb-24 pt-4 px-4 h-full flex flex-col bg-slate-50">
-            <div className="flex items-center gap-3 mb-6">
-              <button onClick={onBack} className="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center border border-slate-100"><ChevronLeft size={20} className="text-slate-600"/></button>
-              <h2 className="text-xl font-black text-slate-800">Thử thách hàng ngày</h2>
+            <div className="flex items-center justify-between mb-6">
+               <div className="flex items-center gap-3">
+                  <button onClick={onBack} className="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center border border-slate-100"><ChevronLeft size={20} className="text-slate-600"/></button>
+                  <h2 className="text-xl font-black text-slate-800">Thử thách</h2>
+               </div>
+               {/* 🛑 Nút kết thúc sớm */}
+               <button onClick={onBack} className="bg-rose-50 text-rose-500 p-2 rounded-full"><X size={20}/></button>
             </div>
 
             {session.todayQ ? (
@@ -1766,7 +1865,37 @@ const App: React.FC = () => {
     }
   };
 
-  const handleScore = async (pts: number) => { if(!user) return; const u = { ...user, totalScore: user.totalScore + pts }; setUser(u); setToastMsg(`+${pts} điểm`); await updateDoc(doc(db,'users',user.uid), { totalScore: increment(pts) }); };
+  // --- LOGIC TÍNH ĐIỂM (UPDATED) ---
+  const handleScore = async (pts: number, type: 'game'|'practice'|'exam'|'challenge' = 'game') => { 
+      if(!user) return; 
+      
+      let updates: any = {};
+      
+      if (type === 'game' || type === 'challenge') {
+          updates.gameScore = (user.gameScore || 0) + pts;
+          // Game không cộng vào totalScore
+      } else if (type === 'practice') {
+          updates.practiceScore = (user.practiceScore || 0) + pts;
+          updates.totalScore = (user.totalScore || 0) + pts;
+      } else if (type === 'exam') {
+          updates.examScore = (user.examScore || 0) + pts;
+          updates.totalScore = (user.totalScore || 0) + pts;
+      }
+
+      const u = { ...user, ...updates }; 
+      setUser(u); 
+      setToastMsg(`+${pts} điểm`); 
+      
+      // Update Firestore
+      let firestoreUpdates: any = {};
+      if (updates.gameScore) firestoreUpdates.gameScore = increment(pts);
+      if (updates.practiceScore) firestoreUpdates.practiceScore = increment(pts);
+      if (updates.examScore) firestoreUpdates.examScore = increment(pts);
+      if (updates.totalScore) firestoreUpdates.totalScore = increment(pts);
+
+      await updateDoc(doc(db,'users',user.uid), firestoreUpdates); 
+  };
+
   const handleCopy = (txt: string) => { navigator.clipboard.writeText(txt); setCopyText(txt); setScreen('CHAT'); };
   const handleToggleLesson = (id: string) => { setExpandedLessonIds(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]); };
 
