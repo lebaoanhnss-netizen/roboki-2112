@@ -38,7 +38,8 @@ import {
   Disc, HelpCircle, Gift, SwatchBook, Frown, Sparkles, Bot, StopCircle,
   ThumbsUp, Percent, Activity, Send, Home, Globe, KeyRound, X, Loader2,
   FileText, ClipboardList, School, Edit3, Save, MapPin, ShieldAlert,
-  Lightbulb, GraduationCap, Clock, Phone, Info, StopCircle as StopIcon
+  Lightbulb, GraduationCap, Clock, Phone, Info, StopCircle as StopIcon,
+  Coins, PhoneCall, HelpCircle as HelpIcon, ArrowBigRight
 } from 'lucide-react';
 
 // --- UTILS ---
@@ -146,7 +147,7 @@ const INITIAL_EXAM_STATE: ExamSessionData = {
 };
 
 interface GameSessionData {
-  gameType: 'NONE' | 'SPEED' | 'WHEEL';
+  gameType: 'NONE' | 'SPEED' | 'WHEEL' | 'MILLIONAIRE'; 
   mode: 'MENU' | 'PLAYING' | 'RESULT';
   score: number;
   timeLeft: number;
@@ -155,11 +156,19 @@ interface GameSessionData {
   selectedSpeedOpt: string | null;
   correctCount: number;
   totalAnswered: number;
+  
+  // Wheel State
   wheelRotation: number;
   isSpinning: boolean;
   pendingPoints: number;
   showWheelQuestion: boolean;
   spinsLeft: number;
+
+  // Millionaire State
+  millionaireQuestions: Question[];
+  currentMilLevel: number; // 0 -> 14
+  milHiddenOptions: string[]; // Dùng cho 50:50
+  lifelines: { fifty: boolean; hint: boolean; skip: boolean };
 }
 
 const INITIAL_GAME_STATE: GameSessionData = {
@@ -172,11 +181,17 @@ const INITIAL_GAME_STATE: GameSessionData = {
   selectedSpeedOpt: null,
   correctCount: 0,
   totalAnswered: 0,
+  
   wheelRotation: 0,
   isSpinning: false,
   pendingPoints: 0,
   showWheelQuestion: false,
-  spinsLeft: 5
+  spinsLeft: 5,
+
+  millionaireQuestions: [],
+  currentMilLevel: 0,
+  milHiddenOptions: [],
+  lifelines: { fifty: true, hint: true, skip: true }
 };
 
 interface ChallengeSessionData {
@@ -184,6 +199,7 @@ interface ChallengeSessionData {
   selectedOpt: string | null;
   isSubmitted: boolean;
   isCorrect: boolean;
+  history: { date: string; status: 'Đúng' | 'Sai' | 'Chưa làm'; score: number }[];
 }
 
 const INITIAL_CHALLENGE_STATE: ChallengeSessionData = {
@@ -191,7 +207,15 @@ const INITIAL_CHALLENGE_STATE: ChallengeSessionData = {
   selectedOpt: null,
   isSubmitted: false,
   isCorrect: false,
+  history: []
 };
+
+// --- CONSTANTS ---
+const MILLIONAIRE_LADDER = [
+    1, 2, 3, 4, 5,   
+    6, 7, 8, 9, 10, 
+    11, 12, 13, 14, 15 
+];
 
 // --- SUB COMPONENTS ---
 
@@ -275,7 +299,6 @@ const AuthScreen: React.FC<{ onLoginSuccess: (user: UserProfile) => void }> = ({
       if (isRegistering) {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
         await updateProfile(cred.user, { displayName: name });
-        // Khởi tạo user với đầy đủ các trường điểm
         const newUser: UserProfile = { 
             uid: cred.user.uid, name, email, 
             class: className, school: school || 'THPT Tự do', 
@@ -334,7 +357,7 @@ const AuthScreen: React.FC<{ onLoginSuccess: (user: UserProfile) => void }> = ({
   );
 };
 
-// --- AUTHOR INFO SCREEN (THÔNG TIN TÁC GIẢ) ---
+// --- AUTHOR INFO SCREEN ---
 const AuthorScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     return (
       <div className="pb-24 pt-4 px-5 h-full flex flex-col bg-slate-50">
@@ -395,7 +418,8 @@ const ProfileScreen: React.FC<{
     user: UserProfile; 
     onBack: () => void; 
     onUpdate: (updatedUser: UserProfile) => void;
-}> = ({ user, onBack, onUpdate }) => {
+    onNavToAuthor: () => void;
+}> = ({ user, onBack, onUpdate, onNavToAuthor }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState(user);
     const [loading, setLoading] = useState(false);
@@ -919,7 +943,7 @@ const MockTestScreen: React.FC<{
           <div className="absolute top-0 right-0 bg-slate-100 text-slate-500 text-[9px] font-black px-3 py-1.5 rounded-bl-2xl rounded-tr-2xl uppercase tracking-wider">{currentQ.level}</div><div className="mb-2 text-[10px] font-black uppercase text-purple-500 tracking-widest">{currentQ.topic}</div>
           <div className="mb-6">{currentQ.imageUrl && (<div className="mb-4 flex justify-center bg-white rounded-xl border border-slate-100 p-2"><img src={currentQ.imageUrl} className="rounded-lg max-h-48 object-contain w-full" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} /></div>)}<div className="font-bold text-slate-800 text-base leading-relaxed"><MathRender content={currentQ.promptText}/></div></div>
           <div className="space-y-4">
-             {currentQ.subQuestions ? (<div className="space-y-3">{currentQ.subQuestions.map(sq => { const choice = userAns ? userAns[sq.id] : undefined; return (<div key={sq.id} className="p-4 rounded-xl border border-slate-100 bg-slate-50"><div className="text-sm font-bold text-slate-700 mb-2"><MathRender content={sq.content}/></div><div className="flex gap-2"><button onClick={() => handleSelectAnswer(true, sq.id)} className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${choice === true ? 'bg-blue-500 text-white shadow-md' : 'bg-white text-slate-400 border border-slate-200'}`}>Đúng</button><button onClick={() => handleSelectAnswer(false, sq.id)} className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${choice === false ? 'bg-slate-700 text-white shadow-md' : 'bg-white text-slate-400 border border-slate-200'}`}>Sai</button></div></div>) })}</div>) : currentQ.type === 'Short' ? (<input type="text" value={userAns || ''} onChange={(e) => handleSelectAnswer(e.target.value)} placeholder="Nhập câu trả lời..." className="w-full p-4 rounded-2xl border-2 border-purple-100 font-bold focus:border-purple-500 focus:outline-none"/>) : (currentQ.options?.map((opt, i) => (<button key={i} onClick={() => handleSelectAnswer(opt)} className={`w-full p-4 rounded-2xl border-2 text-left text-sm font-bold transition-all ${userAns === opt ? 'bg-purple-50 border-purple-500 text-purple-700' : 'bg-white border-slate-50 hover:bg-slate-50 text-slate-600'}`}><MathRender content={opt}/></button>)))}
+             {currentQ.subQuestions ? (<div className="space-y-3">{currentQ.subQuestions.map(sq => { const choice = userAns ? userAns[sq.id] : undefined; return (<div key={sq.id} className="p-4 rounded-xl border border-slate-100 bg-slate-50"><div className="text-sm font-bold text-slate-700 mb-2"><MathRender content={sq.content}/></div><div className="flex gap-2"><button onClick={() => handleSelectAnswer(true, sq.id)} className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${choice === true ? 'bg-blue-500 text-white shadow-md' : 'bg-white text-slate-400 border border-slate-200'}`}>Đúng</button><button onClick={() => handleSelectAnswer(false, sq.id)} className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${choice === false ? 'bg-slate-700 text-white shadow-md' : 'bg-white text-slate-400 border border-slate-200'}`}>Sai</button></div></div>) })}</div>) : currentQ.type === 'Short' ? (<input type="text" value={userAns || ''} onChange={(e) => handleSelectAnswer(e.target.value)} placeholder="Nhập câu trả lời..." className="w-full p-4 rounded-xl border-2 border-purple-100 font-bold focus:border-purple-500 focus:outline-none"/>) : (currentQ.options?.map((opt, i) => (<button key={i} onClick={() => handleSelectAnswer(opt)} className={`w-full p-4 rounded-2xl border-2 text-left text-sm font-bold transition-all ${userAns === opt ? 'bg-purple-50 border-purple-500 text-purple-700' : 'bg-white border-slate-50 hover:bg-slate-50 text-slate-600'}`}><MathRender content={opt}/></button>)))}
           </div>
        </div>
        <div className="mt-4 flex gap-3"><button disabled={currentQIndex === 0} onClick={() => updateSession({ currentQIndex: currentQIndex - 1 })} className="flex-1 bg-white text-slate-600 py-3 rounded-2xl font-bold border border-slate-200 disabled:opacity-50">Quay lại</button>{currentQIndex < quizQuestions.length - 1 ? (<button onClick={() => updateSession({ currentQIndex: currentQIndex + 1 })} className="flex-[2] bg-purple-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-purple-200">Câu tiếp theo</button>) : (<button onClick={finishExam} className="flex-[2] bg-emerald-500 text-white py-3 rounded-2xl font-bold shadow-lg shadow-emerald-200">Nộp bài</button>)}</div>
@@ -1221,7 +1245,7 @@ const ExamScreen: React.FC<{
   return null;
 };
 
-// 5. GAME SCREEN
+// 5. GAME SCREEN (ĐÃ CẬP NHẬT: AI LÀ TRIỆU PHÚ + VÒNG QUAY NÂNG CẤP)
 const GameScreen: React.FC<{
   onCopy: (txt: string) => void,
   onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge') => void,
@@ -1232,12 +1256,14 @@ const GameScreen: React.FC<{
   const {
     gameType, mode, score, timeLeft, currentQ, isCorrect,
     wheelRotation, isSpinning, pendingPoints, showWheelQuestion,
-    selectedSpeedOpt, correctCount, totalAnswered, spinsLeft
+    selectedSpeedOpt, correctCount, totalAnswered, spinsLeft,
+    millionaireQuestions, currentMilLevel, milHiddenOptions, lifelines
   } = sessionData;
 
-  // State tạm để lưu câu trả lời nhập tay trong vòng quay
   const [wheelInput, setWheelInput] = useState('');
+  const [milInput, setMilInput] = useState('');
 
+  // --- TIMER CHO SPEED GAME ---
   useEffect(() => {
     let timer: any;
     if (gameType === 'SPEED' && mode === 'PLAYING' && timeLeft > 0) {
@@ -1251,181 +1277,346 @@ const GameScreen: React.FC<{
     return () => clearInterval(timer);
   }, [gameType, mode, timeLeft]);
 
-  // CẤU HÌNH CÁC Ô TRÊN VÒNG QUAY
+  // --- HÀM CHO AI LÀ TRIỆU PHÚ ---
+  const startMillionaireGame = () => {
+    // 1. Lọc và lấy câu hỏi theo cấp độ
+    // Chỉ lấy MCQ và Short, KHÔNG lấy TrueFalse
+    const validQuestions = questions.filter(q => q.type !== 'TrueFalse');
+
+    const getQs = (level: string, count: number) => {
+        const pool = validQuestions.filter(q => q.level === level);
+        return pool.sort(() => Math.random() - 0.5).slice(0, count);
+    };
+
+    const easy = getQs('Biết', 5);
+    const medium = getQs('Hiểu', 5);
+    const hard = getQs('Vận dụng', 5);
+    
+    if (easy.length < 5 || medium.length < 5 || hard.length < 5) {
+        alert("Chưa đủ dữ liệu câu hỏi để tạo game (Cần 5 câu mỗi mức độ).");
+        return;
+    }
+
+    const gameQs = [...easy, ...medium, ...hard];
+
+    setSessionData({
+      ...INITIAL_GAME_STATE,
+      gameType: 'MILLIONAIRE',
+      mode: 'PLAYING',
+      millionaireQuestions: gameQs,
+      currentMilLevel: 0,
+      score: 0,
+      milHiddenOptions: [],
+      lifelines: { fifty: true, hint: true, skip: true }
+    });
+  };
+
+  const handleMillionaireAnswer = (ans: string) => {
+      const currentQ = millionaireQuestions[currentMilLevel];
+      const isRight = currentQ.type === 'Short' 
+          ? ans.trim().toLowerCase() === currentQ.answerKey.trim().toLowerCase()
+          : ans === currentQ.answerKey;
+
+      if (isRight) {
+          const points = MILLIONAIRE_LADDER[currentMilLevel];
+          
+          if (currentMilLevel === 14) {
+              // Thắng cuộc
+              setSessionData(prev => ({ ...prev, mode: 'RESULT', score: points, isCorrect: true }));
+              onScore(points, 'game');
+          } else {
+              // Câu tiếp theo
+              setSessionData(prev => ({ 
+                  ...prev, 
+                  currentMilLevel: prev.currentMilLevel + 1, 
+                  score: points,
+                  milHiddenOptions: [], // Reset 50:50
+                  isCorrect: true,
+                  // Reset input
+              }));
+              setMilInput(''); 
+              // Reset trạng thái sau 1s
+              setTimeout(() => setSessionData(prev => ({ ...prev, isCorrect: null })), 1000);
+          }
+      } else {
+          // Sai -> Game Over -> Về mức an toàn
+          let safeScore = 0;
+          if (currentMilLevel >= 10) safeScore = MILLIONAIRE_LADDER[9];
+          else if (currentMilLevel >= 5) safeScore = MILLIONAIRE_LADDER[4];
+          
+          setSessionData(prev => ({ ...prev, mode: 'RESULT', score: safeScore, isCorrect: false }));
+          if(safeScore > 0) onScore(safeScore, 'game');
+      }
+  };
+
+  // --- QUYỀN TRỢ GIÚP ---
+  const useFiftyFifty = () => {
+      if (!lifelines.fifty) return;
+      const currentQ = millionaireQuestions[currentMilLevel];
+      if (currentQ.type !== 'MCQ' || !currentQ.options) return;
+
+      const wrongOptions = currentQ.options.filter(o => o !== currentQ.answerKey);
+      const hidden = wrongOptions.sort(() => Math.random() - 0.5).slice(0, 2);
+      
+      setSessionData(prev => ({ 
+          ...prev, 
+          milHiddenOptions: hidden, 
+          lifelines: { ...prev.lifelines, fifty: false } 
+      }));
+  };
+
+  const useHint = () => {
+      if (!lifelines.hint) return;
+      const currentQ = millionaireQuestions[currentMilLevel];
+      alert(`💡 Tổ tư vấn gợi ý đáp án đúng là: ${currentQ.answerKey}`);
+      setSessionData(prev => ({ ...prev, lifelines: { ...prev.lifelines, hint: false } }));
+  };
+
+  const useSkip = () => {
+      if (!lifelines.skip) return;
+      // Qua câu mới, giữ nguyên điểm hiện tại, không cộng điểm câu này
+      if (currentMilLevel === 14) {
+          // Nếu là câu cuối mà bỏ qua thì thắng luôn với điểm hiện tại
+          setSessionData(prev => ({ ...prev, mode: 'RESULT', isCorrect: true }));
+          onScore(score, 'game');
+      } else {
+          setSessionData(prev => ({ 
+              ...prev, 
+              currentMilLevel: prev.currentMilLevel + 1,
+              milHiddenOptions: [],
+              lifelines: { ...prev.lifelines, skip: false }
+          }));
+      }
+  };
+
+  const stopMillionaire = () => {
+      const finalScore = score;
+      setSessionData(prev => ({ ...prev, mode: 'RESULT', isCorrect: true })); // Coi như thắng để hiện màu xanh
+      if(finalScore > 0) onScore(finalScore, 'game');
+  }
+
+  // --- HÀM CHO VÒNG QUAY ---
   const WHEEL_SEGMENTS = [
-    { type: 'POINT', value: 100, label: '100', color: '#3b82f6', text: 'white' }, // Xanh dương
-    { type: 'MINUS', value: 50, label: '-50', color: '#ef4444', text: 'white' },   // Đỏ (Trừ điểm)
-    { type: 'POINT', value: 20, label: '20', color: '#10b981', text: 'white' },    // Xanh lá
-    { type: 'TURN', value: 1, label: '+1 Lượt', color: '#f59e0b', text: 'white' }, // Vàng (Thêm lượt)
-    { type: 'POINT', value: 50, label: '50', color: '#8b5cf6', text: 'white' },    // Tím
-    { type: 'MISS', value: 0, label: 'Mất lượt', color: '#64748b', text: 'white' },// Xám
-    { type: 'POINT', value: 10, label: '10', color: '#06b6d4', text: 'white' },    // Cyan
-    { type: 'POINT', value: 200, label: '200', color: '#ec4899', text: 'white' },   // Hồng (Jackpot)
+    { type: 'POINT', value: 10, label: '10', color: '#3b82f6', text: 'white' },
+    { type: 'MINUS', value: 5, label: '-5', color: '#ef4444', text: 'white' },
+    { type: 'POINT', value: 2, label: '2', color: '#10b981', text: 'white' },
+    { type: 'TURN', value: 1, label: '+1 Lượt', color: '#f59e0b', text: 'white' },
+    { type: 'POINT', value: 3, label: '3', color: '#8b5cf6', text: 'white' },
+    { type: 'MISS', value: 0, label: 'Mất lượt', color: '#64748b', text: 'white' },
+    { type: 'POINT', value: 4, label: '4', color: '#06b6d4', text: 'white' },
+    { type: 'POINT', value: 6, label: '6', color: '#ec4899', text: 'white' },
   ];
   const SEGMENT_ANGLE = 360 / WHEEL_SEGMENTS.length;
 
   const spinWheel = () => {
     if (isSpinning || spinsLeft <= 0) return;
-    
-    // Trừ lượt quay ngay khi bắt đầu
     setSessionData(prev => ({ ...prev, spinsLeft: prev.spinsLeft - 1, isSpinning: true }));
-
-    const extraSpins = 1800 + Math.random() * 1800; // Quay ít nhất 5 vòng
+    const extraSpins = 1800 + Math.random() * 1800;
     const newRotation = wheelRotation + extraSpins;
-    
     setSessionData(prev => ({ ...prev, wheelRotation: newRotation }));
 
     setTimeout(() => {
        const actualAngle = newRotation % 360;
        const degreesUnderPointer = (360 - actualAngle) % 360;
-       const winningIndex = Math.floor(degreesUnderPointer / SEGMENT_ANGLE);
-       const safeIndex = winningIndex >= WHEEL_SEGMENTS.length ? 0 : winningIndex;
-       const winningSegment = WHEEL_SEGMENTS[safeIndex];
+       const index = Math.floor(degreesUnderPointer / SEGMENT_ANGLE);
+       const segment = WHEEL_SEGMENTS[index >= WHEEL_SEGMENTS.length ? 0 : index];
 
-       // Xử lý kết quả quay
-       if (winningSegment.type === 'POINT') {
-         // Nếu trúng điểm -> Hiện câu hỏi
-         setWheelInput(''); // Reset input
-         setSessionData(prev => ({
-             ...prev,
-             isSpinning: false,
-             pendingPoints: winningSegment.value,
-             showWheelQuestion: true,
-             currentQ: questions[Math.floor(Math.random() * questions.length)],
-             isCorrect: null
-         }));
-       } else if (winningSegment.type === 'TURN') {
-         // Thêm lượt
+       if (segment.type === 'POINT') {
+         // Lấy câu hỏi ngẫu nhiên KHÔNG PHẢI TrueFalse
+         const validQs = questions.filter(q => q.type !== 'TrueFalse');
+         const randomQ = validQs[Math.floor(Math.random() * validQs.length)];
+         
+         setWheelInput(''); 
+         setSessionData(prev => ({ ...prev, isSpinning: false, pendingPoints: segment.value, showWheelQuestion: true, currentQ: randomQ, isCorrect: null }));
+       } else if (segment.type === 'TURN') {
          setSessionData(prev => ({ ...prev, isSpinning: false, spinsLeft: prev.spinsLeft + 1 }));
-         alert("Chúc mừng! Bạn nhận được thêm 1 lượt quay! 🎉");
-       } else if (winningSegment.type === 'MINUS') {
-         // Trừ điểm
-         setSessionData(prev => ({ ...prev, isSpinning: false, score: Math.max(0, prev.score - winningSegment.value) }));
-         alert(`Ôi không! Bạn bị trừ ${winningSegment.value} điểm 😭`);
+         alert("Chúc mừng! +1 lượt quay! 🎉");
+       } else if (segment.type === 'MINUS') {
+         setSessionData(prev => ({ ...prev, isSpinning: false, score: Math.max(0, prev.score - segment.value) }));
+         alert(`Bị trừ ${segment.value} điểm 😭`);
        } else {
-         // Mất lượt
          setSessionData(prev => ({ ...prev, isSpinning: false }));
-         alert("Rất tiếc! Bạn bị mất lượt quay này 😅");
+         alert("Mất lượt 😅");
        }
        
-       // Nếu hết lượt và không phải ô câu hỏi -> Kết thúc
-       if (spinsLeft - 1 <= 0 && winningSegment.type !== 'POINT') {
-          setTimeout(() => setSessionData(prev => ({ ...prev, mode: 'RESULT' })), 1000);
-       }
-
+       if (spinsLeft - 1 <= 0 && segment.type !== 'POINT') { setTimeout(() => setSessionData(prev => ({ ...prev, mode: 'RESULT' })), 1000); }
     }, 3000);
   };
 
   const startSpeedGame = () => {
-    setSessionData({
-      ...INITIAL_GAME_STATE,
-      gameType: 'SPEED',
-      mode: 'PLAYING',
-      score: 0,
-      timeLeft: 60,
-      currentQ: questions[Math.floor(Math.random() * questions.length)],
-      isCorrect: null,
-      selectedSpeedOpt: null,
-      correctCount: 0,
-      totalAnswered: 0
-    });
+    const validQs = questions.filter(q => q.type !== 'TrueFalse');
+    setSessionData({ ...INITIAL_GAME_STATE, gameType: 'SPEED', mode: 'PLAYING', score: 0, timeLeft: 60, currentQ: validQs[Math.floor(Math.random() * validQs.length)] });
   };
-
   const startWheelGame = () => {
     setSessionData({ ...INITIAL_GAME_STATE, gameType: 'WHEEL', mode: 'PLAYING', wheelRotation: 0, spinsLeft: 5, score: 0 });
   };
-
-  const submitSpeedAnswer = () => {
+  const submitSpeedAnswer = () => { 
     if (!currentQ || !selectedSpeedOpt) return;
-    const userAns = selectedSpeedOpt.trim().toLowerCase();
-    const correctAns = currentQ.answerKey.trim().toLowerCase();
-    let isRight = false;
-    if (currentQ.type === 'Short') {
-        isRight = userAns === correctAns;
-    } else {
-        isRight = selectedSpeedOpt === currentQ.answerKey;
-    }
-
-    setSessionData(prev => ({
-        ...prev,
-        score: isRight ? prev.score + 10 : Math.max(0, prev.score - 5),
-        correctCount: isRight ? prev.correctCount + 1 : prev.correctCount,
-        totalAnswered: prev.totalAnswered + 1,
-        isCorrect: isRight
-    }));
-    if (isRight) onScore(10, 'game');
-    setTimeout(() => {
-        setSessionData(prev => ({
-            ...prev,
-            currentQ: questions[Math.floor(Math.random() * questions.length)],
-            isCorrect: null,
-            selectedSpeedOpt: null
-        }));
-    }, 800);
+    const isRight = currentQ.type==='Short' ? selectedSpeedOpt.trim().toLowerCase()===currentQ.answerKey.trim().toLowerCase() : selectedSpeedOpt===currentQ.answerKey;
+    setSessionData(prev => ({ ...prev, score: isRight ? prev.score + 10 : Math.max(0, prev.score - 5), correctCount: isRight ? prev.correctCount + 1 : prev.correctCount, totalAnswered: prev.totalAnswered + 1, isCorrect: isRight }));
+    if (isRight) onScore(1, 'game');
+    
+    // Next question (No TrueFalse)
+    const validQs = questions.filter(q => q.type !== 'TrueFalse');
+    setTimeout(() => { setSessionData(prev => ({ ...prev, currentQ: validQs[Math.floor(Math.random() * validQs.length)], isCorrect: null, selectedSpeedOpt: null })); }, 800);
   };
-
   const handleWheelAnswer = (opt: string) => {
      if (!currentQ) return;
-     const userAns = opt.trim().toLowerCase();
-     const correctAns = currentQ.answerKey.trim().toLowerCase();
-     
-     let isRight = false;
-     if (currentQ.type === 'Short') {
-        isRight = userAns === correctAns;
-     } else {
-        isRight = opt === currentQ.answerKey;
-     }
-
+     const isRight = currentQ.type==='Short' ? opt.trim().toLowerCase()===currentQ.answerKey.trim().toLowerCase() : opt===currentQ.answerKey;
      if (isRight) {
-        const points = pendingPoints;
-        onScore(points, 'game');
-        setSessionData(prev => ({ ...prev, isCorrect: true, score: prev.score + points }));
-        setTimeout(() => {
-            setSessionData(prev => {
-                // Nếu hết lượt quay thì sang màn hình kết quả
-                if (prev.spinsLeft <= 0) return { ...prev, showWheelQuestion: false, isCorrect: null, currentQ: null, mode: 'RESULT' };
-                return { ...prev, showWheelQuestion: false, isCorrect: null, currentQ: null };
-            });
-        }, 1000);
+        onScore(1, 'game');
+        setSessionData(prev => ({ ...prev, isCorrect: true, score: prev.score + pendingPoints }));
+        setTimeout(() => { setSessionData(prev => { if (prev.spinsLeft <= 0) return { ...prev, showWheelQuestion: false, isCorrect: null, currentQ: null, mode: 'RESULT' }; return { ...prev, showWheelQuestion: false, isCorrect: null, currentQ: null }; }); }, 1000);
      } else {
         setSessionData(prev => ({ ...prev, isCorrect: false }));
-        setTimeout(() => {
-            setSessionData(prev => {
-                if (prev.spinsLeft <= 0) return { ...prev, showWheelQuestion: false, isCorrect: null, currentQ: null, mode: 'RESULT' };
-                return { ...prev, showWheelQuestion: false, isCorrect: null, currentQ: null };
-            });
-        }, 1500);
+        setTimeout(() => { setSessionData(prev => { if (prev.spinsLeft <= 0) return { ...prev, showWheelQuestion: false, isCorrect: null, currentQ: null, mode: 'RESULT' }; return { ...prev, showWheelQuestion: false, isCorrect: null, currentQ: null }; }); }, 1500);
      }
   };
 
+  // --- RENDER MENU ---
   if (mode === 'MENU') {
     return (
       <div className="p-6 h-full flex flex-col justify-start pt-4 space-y-6">
          <div className="text-center mb-2"><h2 className="text-2xl font-black text-slate-800">Chọn trò chơi</h2></div>
          <div className="space-y-4">
+             {/* SPEED */}
              <button onClick={startSpeedGame} className="w-full bg-gradient-to-br from-indigo-500 to-violet-600 text-white p-6 rounded-3xl shadow-lg shadow-indigo-200 active:scale-95 transition-all flex items-center gap-5 relative overflow-hidden group border border-indigo-400/30">
                 <div className="w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/20 shadow-inner shrink-0"><Timer size={36} className="text-indigo-100" /></div>
                 <div className="text-left flex-1 min-w-0"><div className="font-black text-xl mb-1 truncate">Thử thách Tốc độ</div><div className="text-indigo-100 text-sm font-medium">60 giây trả lời cực nhanh</div></div>
              </button>
+             {/* WHEEL */}
              <button onClick={startWheelGame} className="w-full bg-gradient-to-br from-rose-500 to-pink-600 text-white p-6 rounded-3xl shadow-lg shadow-rose-200 active:scale-95 transition-all flex items-center gap-5 relative overflow-hidden group border border-rose-400/30">
                 <div className="w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/20 shadow-inner shrink-0"><Target size={36} className="text-rose-100" /></div>
                 <div className="text-left flex-1 min-w-0"><div className="font-black text-xl mb-1 truncate">Vòng quay May mắn</div><div className="text-rose-100 text-sm font-medium">Quay số nhận câu hỏi</div></div>
+             </button>
+             {/* MILLIONAIRE (MỚI) */}
+             <button onClick={startMillionaireGame} className="w-full bg-gradient-to-br from-amber-400 to-orange-500 text-white p-6 rounded-3xl shadow-lg shadow-amber-200 active:scale-95 transition-all flex items-center gap-5 relative overflow-hidden group border border-amber-400/30">
+                <div className="w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/20 shadow-inner shrink-0"><Coins size={36} className="text-amber-100" /></div>
+                <div className="text-left flex-1 min-w-0"><div className="font-black text-xl mb-1 truncate">Ai Là Triệu Phú</div><div className="text-amber-100 text-sm font-medium">15 câu hỏi - Điểm thưởng lớn</div></div>
              </button>
          </div>
       </div>
     );
   }
 
+  // --- RENDER MILLIONAIRE GAME ---
+  if (gameType === 'MILLIONAIRE') {
+      if (mode === 'RESULT') {
+          return (
+             <div className="p-6 h-full flex flex-col overflow-y-auto pb-24 bg-slate-900 text-white">
+                 <div className="flex flex-col items-center justify-center text-center space-y-6 pt-10">
+                     <div className="w-32 h-32 bg-amber-500/20 rounded-full flex items-center justify-center border-4 border-amber-500 shadow-[0_0_30px_rgba(245,158,11,0.5)]">
+                         <Trophy size={64} className="text-amber-400" />
+                     </div>
+                     <div>
+                         <h2 className="text-3xl font-black text-amber-400 mb-2">{isCorrect ? 'CHÚC MỪNG!' : 'DỪNG CUỘC CHƠI'}</h2>
+                         <p className="text-slate-300 text-sm">Bạn ra về với số điểm</p>
+                     </div>
+                     <div className="text-6xl font-black text-white drop-shadow-md">{score}</div>
+                 </div>
+                 <div className="mt-10 space-y-3">
+                     <button onClick={startMillionaireGame} className="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 py-4 rounded-2xl font-black shadow-lg shadow-amber-500/20 transition-all">CHƠI LẠI</button>
+                     <button onClick={() => setSessionData(prev => ({...prev, mode: 'MENU'}))} className="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 py-4 rounded-2xl font-bold border border-slate-700 transition-all">MENU CHÍNH</button>
+                 </div>
+             </div>
+          )
+      }
+
+      // Millionaire Playing UI
+      const currentQ = millionaireQuestions[currentMilLevel];
+      return (
+          <div className="h-full flex flex-col bg-slate-900 text-white relative overflow-hidden">
+              {/* Background Effect */}
+              <div className="absolute inset-0 opacity-10 pointer-events-none" style={{backgroundImage: 'radial-gradient(circle at 50% 50%, #f59e0b 0%, transparent 50%)'}}></div>
+
+              {/* Header */}
+              <div className="p-4 flex justify-between items-center z-10 border-b border-white/10 bg-slate-900/50 backdrop-blur-md">
+                  <button onClick={() => { if(confirm("Bạn muốn dừng cuộc chơi và bảo toàn điểm số?")) stopMillionaire(); }} className="flex items-center gap-2 bg-rose-500/20 text-rose-400 px-3 py-1.5 rounded-full text-xs font-bold border border-rose-500/30 hover:bg-rose-500/30"><StopIcon size={14}/> Dừng cuộc chơi</button>
+                  <div className="flex items-center gap-1 text-amber-400 font-black"><Coins size={16}/> {score}</div>
+              </div>
+
+              {/* Game Area */}
+              <div className="flex-1 flex flex-col p-4 z-10 overflow-y-auto">
+                  {/* Ladder Indicator (Simplified) */}
+                  <div className="flex justify-center gap-1 mb-6">
+                      {MILLIONAIRE_LADDER.map((pts, i) => (
+                          <div key={i} className={`h-1.5 rounded-full transition-all ${i < currentMilLevel ? 'w-2 bg-emerald-500' : i === currentMilLevel ? 'w-6 bg-amber-500 shadow-[0_0_10px_#f59e0b]' : 'w-2 bg-slate-700'}`}></div>
+                      ))}
+                  </div>
+
+                  {/* Question Box */}
+                  <div className="bg-slate-800 border-2 border-amber-500/50 rounded-3xl p-6 text-center shadow-[0_0_20px_rgba(245,158,11,0.1)] mb-6 relative">
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-900 text-amber-400 text-xs font-black px-4 py-1 rounded-full border border-amber-500/50">CÂU {currentMilLevel + 1}</div>
+                      <div className="text-lg font-bold leading-relaxed"><MathRender content={currentQ.promptText}/></div>
+                  </div>
+
+                  {/* Options */}
+                  <div className="space-y-3 flex-1">
+                      {currentQ.type === 'MCQ' ? (
+                          currentQ.options?.map((opt, i) => {
+                             const isHidden = milHiddenOptions.includes(opt);
+                             return (
+                                 <button 
+                                    key={i} 
+                                    disabled={isHidden || isCorrect !== null}
+                                    onClick={() => handleMillionaireAnswer(opt)}
+                                    className={`w-full p-4 rounded-xl border border-white/10 text-left font-bold transition-all relative overflow-hidden group ${isHidden ? 'opacity-0 pointer-events-none' : isCorrect === true && opt === currentQ.answerKey ? 'bg-emerald-600 border-emerald-400' : isCorrect === false && opt === currentQ.answerKey ? 'bg-emerald-600 border-emerald-400 animate-pulse' : 'bg-slate-800 hover:bg-slate-700'}`}
+                                 >
+                                     <span className="text-amber-500 mr-2">{String.fromCharCode(65+i)}:</span>
+                                     <MathRender content={opt}/>
+                                     {/* Hover effect */}
+                                     <div className="absolute inset-0 bg-gradient-to-r from-amber-500/0 via-amber-500/10 to-amber-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                                 </button>
+                             )
+                          })
+                      ) : (
+                          <div className="flex flex-col gap-3">
+                              <input type="text" value={milInput} onChange={(e) => setMilInput(e.target.value)} placeholder="Nhập đáp án..." className="w-full p-4 rounded-xl bg-slate-800 border border-white/20 text-center font-bold text-lg text-white focus:border-amber-500 outline-none"/>
+                              <button onClick={() => handleMillionaireAnswer(milInput)} className="w-full bg-amber-500 text-slate-900 font-black py-3 rounded-xl shadow-lg hover:bg-amber-400 transition-colors">CHỐT ĐÁP ÁN</button>
+                          </div>
+                      )}
+                  </div>
+              </div>
+
+              {/* Lifelines Footer */}
+              <div className="p-4 border-t border-white/10 flex justify-center gap-4 bg-slate-900/80 backdrop-blur-md">
+                  <button 
+                      onClick={useFiftyFifty}
+                      disabled={!lifelines.fifty || currentQ.type !== 'MCQ'}
+                      className={`flex flex-col items-center gap-1 ${!lifelines.fifty ? 'opacity-30 grayscale' : 'hover:scale-105 transition-transform'}`}
+                  >
+                      <div className="w-12 h-12 rounded-full border-2 border-white/20 flex items-center justify-center font-black text-xs bg-slate-800">50:50</div>
+                      <span className="text-[10px] text-slate-400 font-bold">Bỏ 2 sai</span>
+                  </button>
+                  <button 
+                      onClick={useHint}
+                      disabled={!lifelines.hint}
+                      className={`flex flex-col items-center gap-1 ${!lifelines.hint ? 'opacity-30 grayscale' : 'hover:scale-105 transition-transform'}`}
+                  >
+                      <div className="w-12 h-12 rounded-full border-2 border-white/20 flex items-center justify-center font-black text-xs bg-slate-800"><PhoneCall size={18}/></div>
+                      <span className="text-[10px] text-slate-400 font-bold">Gợi ý</span>
+                  </button>
+                  <button 
+                      onClick={useSkip}
+                      disabled={!lifelines.skip}
+                      className={`flex flex-col items-center gap-1 ${!lifelines.skip ? 'opacity-30 grayscale' : 'hover:scale-105 transition-transform'}`}
+                  >
+                      <div className="w-12 h-12 rounded-full border-2 border-white/20 flex items-center justify-center font-black text-xs bg-slate-800"><ArrowBigRight size={20}/></div>
+                      <span className="text-[10px] text-slate-400 font-bold">Qua câu</span>
+                  </button>
+              </div>
+          </div>
+      );
+  }
+
+  // --- RENDER CÁC GAME KHÁC (GIỮ NGUYÊN) ---
   if (gameType === 'SPEED') {
     if (mode === 'RESULT') {
         const accuracy = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
         return (
           <div className="p-6 h-full flex flex-col overflow-y-auto pb-24 bg-slate-50">
              <div className="flex flex-col items-center justify-center text-center space-y-4 animate-fade-in mb-8 pt-4">
-                <div className="relative">
-                    <Trophy size={80} className="text-yellow-400 fill-yellow-400 animate-bounce-short" />
-                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] font-black px-2 py-0.5 rounded-full whitespace-nowrap">Hết giờ!</div>
-                </div>
+                <div className="relative"><Trophy size={80} className="text-yellow-400 fill-yellow-400 animate-bounce-short" /><div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] font-black px-2 py-0.5 rounded-full whitespace-nowrap">Hết giờ!</div></div>
                 <div><h2 className="text-6xl font-black text-slate-800 my-1">{score}</h2><p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Tổng điểm đạt được</p></div>
              </div>
              <div className="grid grid-cols-2 gap-3 mb-8">
@@ -1462,7 +1653,7 @@ const GameScreen: React.FC<{
                 <div className="shrink-0 mb-4">
                     {isCorrect !== null && (<div className={`absolute inset-0 z-20 flex items-center justify-center bg-black/10 backdrop-blur-[1px] rounded-3xl transition-all`}><div className={`transform scale-125 p-4 rounded-full shadow-xl ${isCorrect ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'}`}>{isCorrect ? <CheckCircle size={40} /> : <XCircle size={40} />}</div></div>)}
                     {currentQ.type === 'MCQ' && (<div className="grid grid-cols-2 gap-3">{currentQ.options?.map((opt, i) => (<button key={i} onClick={() => setSessionData(prev => ({ ...prev, selectedSpeedOpt: opt }))} className={`p-4 rounded-2xl font-bold text-sm transition-all border-2 active:scale-95 ${selectedSpeedOpt === opt ? 'bg-indigo-50 border-indigo-500 text-indigo-700 shadow-md' : 'bg-white border-slate-100 hover:border-indigo-200 text-slate-600'}`}><MathRender content={opt}/></button>))}</div>)}
-                    {currentQ.type === 'TrueFalse' && (<div className="flex gap-4 h-24">{currentQ.options?.map((opt, i) => (<button key={i} onClick={() => setSessionData(prev => ({ ...prev, selectedSpeedOpt: opt }))} className={`flex-1 rounded-3xl font-black text-xl transition-all border-4 shadow-sm active:scale-95 ${selectedSpeedOpt === opt ? (opt === 'Đúng' ? 'bg-emerald-50 border-emerald-500 text-emerald-600' : 'bg-rose-50 border-rose-500 text-rose-600') : 'bg-white border-slate-100 text-slate-400 hover:border-slate-200'}`}>{opt}</button>))}</div>)}
+                    {currentQ.type === 'TrueFalse' && <div className="text-center text-slate-400 font-bold">Loại câu hỏi này không hỗ trợ trong game.</div>}
                     {currentQ.type === 'Short' && (<div className="relative"><input type="text" autoFocus value={selectedSpeedOpt || ''} onChange={(e) => setSessionData(prev => ({ ...prev, selectedSpeedOpt: e.target.value }))} placeholder="Nhập đáp án..." className="w-full p-5 rounded-3xl border-2 border-slate-200 text-center font-bold text-xl focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 outline-none text-slate-800"/><div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none"><Type size={20}/></div></div>)}
                 </div>
                 <button onClick={submitSpeedAnswer} disabled={!selectedSpeedOpt || isCorrect !== null} className="w-full bg-slate-800 text-white py-4 rounded-3xl font-bold shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:shadow-none disabled:transform-none shrink-0">{isCorrect !== null ? (isCorrect ? 'Chính xác!' : 'Sai rồi!') : 'Nộp bài ngay'} <ArrowRight size={20}/></button>
@@ -1497,7 +1688,6 @@ const GameScreen: React.FC<{
                  <button onClick={() => setSessionData(prev => ({...prev, mode: 'RESULT'}))} className="bg-rose-50 text-rose-500 p-1.5 rounded-full shadow-sm border border-rose-100 active:scale-95"><StopIcon size={18} fill="currentColor"/></button>
              </div>
            </div>
-           
            <div className="flex-1 flex flex-col items-center justify-center relative">
                <div className="relative w-80 h-80">
                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20"><div className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[30px] border-t-slate-800 drop-shadow-md"></div></div>
@@ -1511,36 +1701,15 @@ const GameScreen: React.FC<{
                {!isSpinning && pendingPoints === 0 && !showWheelQuestion && wheelRotation > 0 && (<div className="mt-8 text-slate-500 font-bold animate-bounce-short flex items-center gap-2"><Frown /> Tiếc quá, mất lượt rồi!</div>)}
                <button onClick={spinWheel} disabled={isSpinning || showWheelQuestion} className="mt-10 bg-slate-800 text-white px-10 py-4 rounded-full font-black shadow-lg active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 text-base tracking-wide flex items-center gap-2 hover:bg-slate-900">{isSpinning ? <RotateCcw className="animate-spin" size={20}/> : <Play fill="currentColor" size={20}/>}{isSpinning ? 'ĐANG QUAY...' : `QUAY NGAY (${spinsLeft})`}</button>
            </div>
-           
-           {/* QUESTION MODAL */}
            {showWheelQuestion && currentQ && (
                <div className="absolute inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
                    <div className="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl relative">
                        <div className="text-center mb-4"><div className="text-xs font-black uppercase text-slate-400">Cơ hội nhận</div><div className="text-4xl font-black text-rose-500 drop-shadow-sm">+{pendingPoints}</div><div className="text-xs font-bold text-rose-300">điểm</div></div>
                        <button onClick={() => onCopy(generateRobokiPrompt(currentQ.topic, `Câu hỏi may mắn`, currentQ.level, currentQ.promptText, currentQ.options))} className="absolute top-4 right-4 text-slate-300 hover:text-roboki-500 transition-colors bg-slate-50 p-2 rounded-full"><Copy size={18} /></button>
-                       
-                       {/* HIỂN THỊ ẢNH TRONG GAME VÒNG QUAY */}
-                       <div className="mb-6">
-                           {currentQ.imageUrl && (
-                             <div className="mb-4 flex justify-center p-2">
-                               <img src={currentQ.imageUrl} alt="Hình minh họa" className="rounded-lg max-h-48 object-contain w-full" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}/>
-                             </div>
-                           )}
-                           <div className="font-bold text-slate-800 text-center leading-relaxed"><MathRender content={currentQ.promptText}/></div>
-                       </div>
-
+                       <div className="mb-6">{currentQ.imageUrl && (<div className="mb-4 flex justify-center p-2"><img src={currentQ.imageUrl} alt="Hình minh họa" className="rounded-lg max-h-48 object-contain w-full" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}/></div>)}<div className="font-bold text-slate-800 text-center leading-relaxed"><MathRender content={currentQ.promptText}/></div></div>
                        <div className="space-y-3">
-                           {/* XỬ LÝ KHUNG TRẢ LỜI NGẮN (SHORT ANSWER) */}
-                           {currentQ.type === 'Short' ? (
-                               <div className="flex flex-col gap-2">
-                                   <input type="text" value={wheelInput} onChange={(e) => setWheelInput(e.target.value)} placeholder="Nhập đáp án..." className="w-full p-4 rounded-xl border-2 border-indigo-200 text-center font-bold text-lg focus:border-indigo-500 outline-none text-slate-700"/>
-                                   <button disabled={isCorrect !== null} onClick={() => handleWheelAnswer(wheelInput)} className="w-full bg-indigo-500 text-white py-3 rounded-xl font-bold shadow-md active:scale-95">Trả lời</button>
-                               </div>
-                           ) : (
-                               currentQ.options?.map((opt, i) => (<button key={i} disabled={isCorrect !== null} onClick={() => handleWheelAnswer(opt)} className={`w-full p-4 rounded-xl border-2 font-bold text-sm transition-all ${isCorrect === true && opt === currentQ.answerKey ? 'bg-emerald-50 border-emerald-500 text-white' : isCorrect === false ? 'bg-white border-slate-100 opacity-50' : 'bg-white border-slate-100 hover:bg-slate-50 hover:border-roboki-200'}`}><MathRender content={opt}/></button>))
-                           )}
+                           {currentQ.type === 'Short' ? (<div className="flex flex-col gap-2"><input type="text" value={wheelInput} onChange={(e) => setWheelInput(e.target.value)} placeholder="Nhập đáp án..." className="w-full p-4 rounded-xl border-2 border-indigo-200 text-center font-bold text-lg focus:border-indigo-500 outline-none text-slate-700"/><button disabled={isCorrect !== null} onClick={() => handleWheelAnswer(wheelInput)} className="w-full bg-indigo-500 text-white py-3 rounded-xl font-bold shadow-md active:scale-95">Trả lời</button></div>) : (currentQ.options?.map((opt, i) => (<button key={i} disabled={isCorrect !== null} onClick={() => handleWheelAnswer(opt)} className={`w-full p-4 rounded-xl border-2 font-bold text-sm transition-all ${isCorrect === true && opt === currentQ.answerKey ? 'bg-emerald-50 border-emerald-500 text-white' : isCorrect === false ? 'bg-white border-slate-100 opacity-50' : 'bg-white border-slate-100 hover:bg-slate-50 hover:border-roboki-200'}`}><MathRender content={opt}/></button>)))}
                        </div>
-                       
                        {isCorrect === true && <div className="mt-4 text-center text-emerald-600 font-black animate-bounce-short">Chính xác! +{pendingPoints} điểm</div>}
                        {isCorrect === false && <div className="mt-4 text-center text-rose-600 font-black">Sai rồi! Rất tiếc.</div>}
                    </div>
@@ -1661,7 +1830,7 @@ const ChallengeScreen: React.FC<{
         const isCorrect = answer.trim().toLowerCase() === session.todayQ.answerKey.trim().toLowerCase();
         
         setSession(prev => ({ ...prev, selectedOpt: answer, isSubmitted: true, isCorrect }));
-        if (isCorrect) onScore(20, 'challenge'); // Challenge tính vào gameScore
+        if (isCorrect) onScore(1, 'challenge'); // Challenge tính vào gameScore
     };
 
     return (
@@ -1679,7 +1848,7 @@ const ChallengeScreen: React.FC<{
                <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex-1 overflow-y-auto">
                   <div className="flex justify-between items-start mb-6">
                      <div className="bg-sky-50 text-sky-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">Daily Quest</div>
-                     <div className="text-right"><div className="font-black text-2xl text-slate-800">+20</div><div className="text-[10px] text-slate-400 font-bold uppercase">Điểm thưởng</div></div>
+                     <div className="text-right"><div className="font-black text-2xl text-slate-800">+1</div><div className="text-[10px] text-slate-400 font-bold uppercase">Điểm thưởng</div></div>
                   </div>
                   
                   {/* HIỂN THỊ ẢNH TRONG THỬ THÁCH */}
