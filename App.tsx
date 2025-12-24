@@ -25,7 +25,7 @@ import {
   where,
   orderBy,
   limit,
-  writeBatch // 👈 Bổ sung writeBatch để nạp dữ liệu nhanh hơn
+  writeBatch
 } from './firebase';
 import {
   BookOpen, MessageCircle, User, Copy,
@@ -38,7 +38,7 @@ import {
   Disc, HelpCircle, Gift, SwatchBook, Frown, Sparkles, Bot, StopCircle,
   ThumbsUp, Percent, Activity, Send, Home, Globe, KeyRound, X, Loader2,
   FileText, ClipboardList, School, Edit3, Save, MapPin, ShieldAlert,
-  Lightbulb, GraduationCap, Clock
+  Lightbulb, GraduationCap, Clock, Phone, Info // 👈 Đã có Info icon
 } from 'lucide-react';
 
 // --- UTILS ---
@@ -58,18 +58,7 @@ const generateRobokiPrompt = (
     mainContent += `\n\nCÁC LỰA CHỌN:\n${formattedOptions}`;
   }
 
-  return `[ÔN TẬP VẬT LÍ 12 – ROBOKI]
-Chủ đề: ${topic}
-Bài/Câu: ${title}
-Mức độ: ${level}
-ĐỀ BÀI:
-${mainContent}
-
-YÊU CẦU ROBOKI:
-1) Giải thích ngắn gọn, đúng bản chất vật lí.
-2) Trình bày công thức liên quan và ý nghĩa các đại lượng.
-3) Giải từng bước (nếu là bài tính).
-4) Cho 1 mẹo tránh sai lầm thường gặp.`;
+  return `[ÔN TẬP VẬT LÍ 12 – ROBOKI]\nChủ đề: ${topic}\nBài/Câu: ${title}\nMức độ: ${level}\nĐỀ BÀI:\n${mainContent}\n\nYÊU CẦU ROBOKI:\n1) Giải thích ngắn gọn, đúng bản chất vật lí.\n2) Trình bày công thức liên quan và ý nghĩa các đại lượng.\n3) Giải từng bước (nếu là bài tính).\n4) Cho 1 mẹo tránh sai lầm thường gặp.`;
 };
 
 // --- TYPES FOR STATE MANAGEMENT ---
@@ -132,7 +121,6 @@ const INITIAL_MOCK_TEST_STATE: MockTestSessionData = {
   errorMsg: ''
 };
 
-// --- NEW: EXAM SESSION DATA ---
 interface ExamSessionData {
   mode: 'MENU' | 'DOING' | 'RESULT';
   examType: 'GK1' | 'CK1' | 'GK2' | 'CK2' | 'THPT' | null;
@@ -142,7 +130,7 @@ interface ExamSessionData {
   currentQIndex: number;
   userAnswers: { [qId: string]: any };
   score: number;
-  details: { mcq: number, tf: number, short: number }; // Điểm thành phần
+  details: { mcq: number, tf: number, short: number };
 }
 
 const INITIAL_EXAM_STATE: ExamSessionData = {
@@ -234,34 +222,21 @@ const LessonCard: React.FC<{
       {isExpanded && (
         <div className="px-4 pb-4 animate-fade-in">
           <div className="pt-2 border-t border-slate-50 space-y-3">
-             {/* PHẦN LÝ THUYẾT */}
              <div className="bg-roboki-50/50 p-4 rounded-xl border border-roboki-100">
                 <h5 className="text-xs font-bold text-roboki-600 uppercase mb-2 flex items-center gap-1.5"><Sparkles size={14}/> Lý thuyết</h5>
                 <MathRender content={lesson.theory} className="text-sm text-slate-700 leading-relaxed whitespace-pre-line text-justify"/>
-                
-                {/* HIỂN THỊ ẢNH LÝ THUYẾT */}
                 {lesson.theoryImages && lesson.theoryImages.length > 0 && (
                   <div className="mt-4 space-y-3">
                     {lesson.theoryImages.map((imgUrl, index) => (
-                      <img 
-                        key={index} 
-                        src={imgUrl} 
-                        alt={`Minh họa lý thuyết ${index + 1}`}
-                        className="rounded-xl border border-roboki-100 w-full object-contain max-h-80 bg-white shadow-sm"
-                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                      />
+                      <img key={index} src={imgUrl} alt={`Minh họa ${index + 1}`} className="rounded-xl border border-roboki-100 w-full object-contain max-h-80 bg-white shadow-sm" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}/>
                     ))}
                   </div>
                 )}
              </div>
-
-             {/* PHẦN CÔNG THỨC */}
              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
                 <h5 className="text-xs font-bold text-slate-600 uppercase mb-2 flex items-center gap-1.5"><Zap size={14}/> Công thức</h5>
                 <MathRender content={lesson.formulas} className="text-sm text-slate-800 font-bold font-mono whitespace-pre-line"/>
              </div>
-
-             {/* PHẦN VÍ DỤ MINH HỌA */}
              {lesson.examples && lesson.examples.length > 0 && (
                 <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-100">
                     <h5 className="text-xs font-bold text-yellow-700 uppercase mb-2 flex items-center gap-1.5"><Lightbulb size={14}/> Ví dụ minh họa</h5>
@@ -274,7 +249,6 @@ const LessonCard: React.FC<{
                     </ul>
                 </div>
              )}
-
              <div className="flex justify-end pt-2">
                 <button onClick={(e) => { e.stopPropagation(); const txt = generateRobokiPrompt(lesson.topic, lesson.title, "Lý thuyết", `${lesson.theory}\n\nCông thức chính: ${lesson.formulas}`, undefined, 'LESSON'); onCopy(txt); }} className="text-xs bg-white text-roboki-600 px-4 py-2.5 rounded-full font-bold shadow-sm border border-roboki-100 flex items-center gap-2 hover:bg-roboki-50 transition-colors">
                   <MessageCircle size={16} /> Hỏi Roboki bài này
@@ -336,17 +310,9 @@ const AuthScreen: React.FC<{ onLoginSuccess: (user: UserProfile) => void }> = ({
           <p className="text-slate-500 font-medium mt-1">Ôn tập Vật lí & Trợ lý ảo AI</p>
         </div>
         <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-100">
-           
-           {/* 👇 LOGO INNEDU HIỂN THỊ LỚN HƠN (h-32) 👇 */}
            <div className="flex justify-center mb-6">
-                <img 
-                  src="/logo-robok.png" 
-                  alt="Logo Innedu" 
-                  className="h-32 w-auto object-contain" 
-                />
+                <img src="/logo-robok.png" alt="Logo Innedu" className="h-32 w-auto object-contain" />
            </div>
-           {/* 👆 KẾT THÚC PHẦN LOGO 👆 */}
-
            <div className="flex bg-slate-100 p-1 rounded-2xl mb-6">
              <button onClick={() => { setIsRegistering(false); setError(''); }} className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all ${!isRegistering ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400'}`}>Đăng nhập</button>
              <button onClick={() => { setIsRegistering(true); setError(''); }} className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all ${isRegistering ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400'}`}>Đăng ký</button>
@@ -371,11 +337,67 @@ const AuthScreen: React.FC<{ onLoginSuccess: (user: UserProfile) => void }> = ({
   );
 };
 
+// --- AUTHOR INFO SCREEN (THÔNG TIN TÁC GIẢ) ---
+const AuthorScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+    return (
+      <div className="pb-24 pt-4 px-5 h-full flex flex-col bg-slate-50">
+         <div className="flex items-center gap-3 mb-6">
+            <button onClick={onBack} className="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center border border-slate-100"><ChevronLeft size={20} className="text-slate-600"/></button>
+            <h2 className="text-xl font-black text-slate-800">Thông tin tác giả</h2>
+         </div>
+         <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col items-center gap-6 animate-fade-in">
+            <div className="w-28 h-28 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-200 mb-2">
+               <User size={64} className="text-white" />
+            </div>
+            <div className="text-center space-y-1">
+               <h3 className="text-2xl font-black text-slate-800">Lê Bảo Anh</h3>
+               <div className="inline-block bg-indigo-50 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Tác giả</div>
+            </div>
+            <div className="w-full space-y-4">
+               <div className="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-indigo-500 shrink-0"><School size={20}/></div>
+                  <div>
+                     <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Đơn vị công tác</div>
+                     <div className="text-sm font-bold text-slate-800">Trường THPT Nguyễn Sinh Sắc</div>
+                     <div className="text-xs text-slate-500 mt-0.5">Phường Tân Châu, Tỉnh An Giang</div>
+                  </div>
+               </div>
+               <div className="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-purple-500 shrink-0"><Award size={20}/></div>
+                  <div>
+                     <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Chức vụ</div>
+                     <div className="text-sm font-bold text-slate-800">Tổ trưởng Tổ Vật lí - CNCN</div>
+                  </div>
+               </div>
+               <div className="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-emerald-500 shrink-0"><Phone size={20}/></div>
+                  <div>
+                     <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Điện thoại</div>
+                     <div className="text-sm font-bold text-slate-800">0916700177</div>
+                  </div>
+               </div>
+               <div className="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-rose-500 shrink-0"><Mail size={20}/></div>
+                  <div>
+                     <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Email liên hệ</div>
+                     <div className="text-sm font-bold text-slate-800 break-all">lebaoanhnss@gmail.com</div>
+                  </div>
+               </div>
+            </div>
+            <button onClick={onBack} className="w-full mt-2 bg-slate-800 text-white py-4 rounded-2xl font-bold shadow-xl">Về trang chủ</button>
+            <div className="text-center text-[10px] text-slate-400 font-medium pt-2 w-full">
+               © 2025 Roboki Physics. All rights reserved.
+            </div>
+         </div>
+      </div>
+    );
+}
+
 // --- PROFILE SCREEN ---
 const ProfileScreen: React.FC<{ 
     user: UserProfile; 
     onBack: () => void; 
-    onUpdate: (updatedUser: UserProfile) => void 
+    onUpdate: (updatedUser: UserProfile) => void;
 }> = ({ user, onBack, onUpdate }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState(user);
@@ -401,11 +423,7 @@ const ProfileScreen: React.FC<{
     };
 
     const handleLogout = async () => {
-        try {
-            await signOut(auth);
-        } catch (error) {
-            console.error("Lỗi đăng xuất", error);
-        }
+        try { await signOut(auth); } catch (error) { console.error(error); }
     };
 
     return (
@@ -478,7 +496,7 @@ const ProfileScreen: React.FC<{
 // 1. HOME SCREEN
 const ContentScreen: React.FC<{
   onCopy: (txt: string) => void; onNavToPractice: () => void; onNavToMockTest: () => void;
-  onNavToExam: () => void; // Thêm hàm điều hướng Thi Thử
+  onNavToExam: () => void;
   onNavToGames: () => void; onNavToChallenge: () => void; onNavToLeaderboard: () => void;
   onNavToProfile: () => void; onNavToChat: () => void; user: UserProfile;
   selectedTopic: { id: string, label: string } | null; setSelectedTopic: (topic: { id: string, label: string } | null) => void;
@@ -538,7 +556,6 @@ const ContentScreen: React.FC<{
                 <div><div className="font-bold text-roboki-900 text-sm group-hover:text-roboki-600 transition-colors">LUYỆN TẬP</div><div className="text-[10px] text-roboki-600/70">Luyện theo bài</div></div>
              </div>
              
-             {/* 👇 NÚT THI THỬ (MỚI) */}
              <div onClick={onNavToExam} className="bg-red-50 p-3 rounded-3xl border border-red-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group">
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-red-600 shadow-sm"><GraduationCap size={20} /></div>
                 <div><div className="font-bold text-red-900 text-sm group-hover:text-red-600 transition-colors">THI THỬ</div><div className="text-[10px] text-red-600/70">Đề chuẩn 2025</div></div>
@@ -546,7 +563,7 @@ const ContentScreen: React.FC<{
 
              <div onClick={onNavToMockTest} className="bg-purple-50 p-3 rounded-3xl border border-purple-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group">
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-purple-600 shadow-sm"><ClipboardList size={20} /></div>
-                <div><div className="font-bold text-purple-900 text-sm group-hover:text-purple-600 transition-colors">LUYỆN TẬP</div><div className="text-[10px] text-purple-600/70">Tự cấu hình</div></div>
+                <div><div className="font-bold text-purple-900 text-sm group-hover:text-purple-600 transition-colors">TỰ TẠO ĐỀ</div><div className="text-[10px] text-purple-600/70">Tự cấu hình đề</div></div>
              </div>
 
              <div onClick={onNavToGames} className="bg-emerald-50 p-3 rounded-3xl border border-emerald-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group">
@@ -980,6 +997,7 @@ const ExamScreen: React.FC<{
       const listHieu = qs.filter(q => q.level === 'Hiểu').sort(() => Math.random() - 0.5).slice(0, nHieu);
       const listVD = qs.filter(q => q.level === 'Vận dụng').sort(() => Math.random() - 0.5).slice(0, nVanDung);
       
+      // Nếu thiếu thì lấy bù từ các mức độ khác
       let final = [...listBiet, ...listHieu, ...listVD];
       if (final.length < count) {
         const remaining = qs.filter(q => !final.includes(q)).sort(() => Math.random() - 0.5);
@@ -1033,6 +1051,7 @@ const ExamScreen: React.FC<{
         if (uAns.toString().trim().toLowerCase() === q.answerKey.trim().toLowerCase()) { rawScore += 0.25; scoreShort += 0.25; }
       }
       else if (q.type === 'TrueFalse') {
+        // Chấm điểm Đ/S theo số ý đúng (0.1 -> 0.25 -> 0.5 -> 1.0)
         let correctCount = 0;
         q.subQuestions?.forEach(sq => {
           if (uAns[sq.id] === sq.isCorrect) correctCount++;
@@ -1468,7 +1487,7 @@ const GameScreen: React.FC<{
   return null;
 };
 
-// 4. LEADERBOARD SCREEN (CẬP NHẬT: THÊM LỌC THEO TRƯỜNG/LỚP)
+// 7. LEADERBOARD SCREEN (CẬP NHẬT: THÊM LỌC THEO TRƯỜNG/LỚP)
 const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile }> = ({ onBack, currentUser }) => {
   const [filter, setFilter] = useState<'CLASS' | 'SCHOOL' | 'ALL'>('CLASS'); // 👈 State lọc
   const [loading, setLoading] = useState(true);
@@ -1521,7 +1540,7 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
   );
 };
 
-// 5. CHALLENGE SCREEN (Đã phục hồi)
+// 8. CHALLENGE SCREEN (Đã phục hồi)
 const ChallengeScreen: React.FC<{
   onBack: () => void,
   session: ChallengeSessionData,
@@ -1617,7 +1636,7 @@ const ChallengeScreen: React.FC<{
     );
 };
 
-// 6. CHAT SCREEN (Đã phục hồi)
+// 9. CHAT SCREEN (Đã phục hồi)
 const ChatScreen: React.FC<{ onBack: () => void, initialPrompt: string }> = ({ onBack, initialPrompt }) => {
     const [showCopyOverlay, setShowCopyOverlay] = useState(!!initialPrompt);
     useEffect(() => {
@@ -1647,8 +1666,7 @@ const ChatScreen: React.FC<{ onBack: () => void, initialPrompt: string }> = ({ o
 const App: React.FC = () => {
   const [isClient, setIsClient] = useState(false); useEffect(() => setIsClient(true), []);
   const [user, setUser] = useState<UserProfile | null>(null);
-  // 👇 THÊM 'EXAM' VÀO STATE MÀN HÌNH
-  const [screen, setScreen] = useState<'AUTH' | 'HOME' | 'PRACTICE' | 'MOCK_TEST' | 'EXAM' | 'GAME' | 'CHALLENGE' | 'LEADERBOARD' | 'CHAT' | 'PROFILE'>('AUTH');
+  const [screen, setScreen] = useState<'AUTH' | 'HOME' | 'PRACTICE' | 'MOCK_TEST' | 'EXAM' | 'GAME' | 'CHALLENGE' | 'LEADERBOARD' | 'CHAT' | 'PROFILE' | 'AUTHOR'>('AUTH');
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [copyText, setCopyText] = useState('');
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -1667,7 +1685,12 @@ const App: React.FC = () => {
   const [selectedTopic, setSelectedTopic] = useState<{id: string, label: string} | null>(null);
   const [expandedLessonIds, setExpandedLessonIds] = useState<string[]>([]);
 
-  useEffect(() => { const u = onAuthStateChanged(auth, (firebaseUser)=>{ if (!firebaseUser) { setUser(null); setScreen('AUTH'); } }); return () => u(); }, []);
+  useEffect(() => { const u = onAuthStateChanged(auth, (firebaseUser)=>{
+    if (!firebaseUser) {
+        setUser(null);
+        setScreen('AUTH');
+    }
+  }); return () => u(); }, []);
   
   useEffect(() => { const f = async () => { try { setLoadingData(true); 
     const lS = await getDocs(collection(db, 'lessons')); const lL: Lesson[] = []; lS.forEach(d => lL.push(d.data() as Lesson)); setLessons(lL);
@@ -1772,7 +1795,12 @@ const App: React.FC = () => {
             {screen === 'CHALLENGE' && <ChallengeScreen onBack={()=>setScreen('HOME')} session={challengeSession} setSession={setChallengeSession} onScore={handleScore} questions={questions}/>}
             {screen === 'LEADERBOARD' && <LeaderboardScreen onBack={()=>setScreen('HOME')} currentUser={user}/>}
             {screen === 'CHAT' && <ChatScreen onBack={()=>{setScreen('HOME');setCopyText('')}} initialPrompt={copyText}/>}
-            {screen === 'PROFILE' && <ProfileScreen user={user} onBack={()=>setScreen('HOME')} onUpdate={setUser}/>}
+            
+            {/* 👇 MÀN HÌNH PROFILE ĐÃ UPDATE NÚT THÔNG TIN TÁC GIẢ */}
+            {screen === 'PROFILE' && <ProfileScreen user={user} onBack={()=>setScreen('HOME')} onUpdate={setUser} onNavToAuthor={()=>setScreen('AUTHOR')} />}
+            
+            {/* 👇 MÀN HÌNH THÔNG TIN TÁC GIẢ MỚI */}
+            {screen === 'AUTHOR' && <AuthorScreen onBack={()=>setScreen('PROFILE')} />}
         </div>
         {screen !== 'CHAT' && (
             <div className="absolute bottom-0 w-full bg-white border-t p-3 pb-6 flex justify-around items-end z-50">
@@ -1780,7 +1808,9 @@ const App: React.FC = () => {
                 <button onClick={()=>setScreen('PRACTICE')} className={`flex flex-col items-center ${screen==='PRACTICE'?'text-roboki-600':'text-slate-400'}`}><SwatchBook size={24}/><span className="text-[10px] font-bold">Luyện tập</span></button>
                 <button onClick={()=>setScreen('CHAT')} className="-top-6 relative"><div className="w-16 h-16 bg-gradient-to-tr from-roboki-500 to-orange-500 rounded-full flex items-center justify-center text-white shadow-xl"><Bot size={32}/></div></button>
                 <button onClick={()=>setScreen('GAME')} className={`flex flex-col items-center ${screen==='GAME'?'text-roboki-600':'text-slate-400'}`}><Gamepad2 size={24}/><span className="text-[10px] font-bold">Giải trí</span></button>
-                <button onClick={()=>setScreen('LEADERBOARD')} className={`flex flex-col items-center ${screen==='LEADERBOARD'?'text-roboki-600':'text-slate-400'}`}><Trophy size={24}/><span className="text-[10px] font-bold">Xếp hạng</span></button>
+                
+                {/* 👇 THAY THẾ NÚT LEADERBOARD BẰNG NÚT TÁC GIẢ (INFO) */}
+                <button onClick={()=>setScreen('AUTHOR')} className={`flex flex-col items-center ${screen==='AUTHOR'?'text-roboki-600':'text-slate-400'}`}><Info size={24}/><span className="text-[10px] font-bold">Tác giả</span></button>
             </div>
         )}
         {toastMsg && <Toast message={toastMsg} onClose={()=>setToastMsg(null)}/>}
