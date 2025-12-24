@@ -24,7 +24,8 @@ import {
   query,
   where,
   orderBy,
-  limit
+  limit,
+  writeBatch // 👈 Bổ sung writeBatch để nạp dữ liệu nhanh hơn
 } from './firebase';
 import {
   BookOpen, MessageCircle, User, Copy,
@@ -103,10 +104,9 @@ const INITIAL_PRACTICE_STATE: PracticeSessionData = {
   showExplanation: false,
 };
 
-// 👇 CẬP NHẬT: Interface cho MockTest (selectedTopics là mảng)
 interface MockTestSessionData {
   mode: 'CONFIG' | 'DOING' | 'RESULT';
-  selectedTopics: string[]; // Đã sửa thành mảng string[]
+  selectedTopics: string[]; 
   countMCQ: number;
   countTF: number;
   countShort: number;
@@ -118,10 +118,9 @@ interface MockTestSessionData {
   errorMsg: string;
 }
 
-// 👇 CẬP NHẬT: Initial State cho MockTest
 const INITIAL_MOCK_TEST_STATE: MockTestSessionData = {
   mode: 'CONFIG',
-  selectedTopics: ['TẤT CẢ'], // Mặc định là mảng chứa 'TẤT CẢ'
+  selectedTopics: ['TẤT CẢ'], 
   countMCQ: 10,
   countTF: 4,
   countShort: 2,
@@ -313,7 +312,7 @@ const AuthScreen: React.FC<{ onLoginSuccess: (user: UserProfile) => void }> = ({
         </div>
         <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-100">
            
-           {/* 👇 PHẦN LOGO INNEDU ĐÃ SỬA ĐÚNG TÊN FILE 👇 */}
+           {/* 👇 LOGO INNEDU HIỂN THỊ LỚN HƠN (h-32) 👇 */}
            <div className="flex justify-center mb-6">
                 <img 
                   src="/logo-robok.png" 
@@ -1566,7 +1565,75 @@ const App: React.FC = () => {
     const qS = await getDocs(collection(db, 'questions')); const lQ: Question[] = []; qS.forEach(d => lQ.push(d.data() as Question)); setQuestions(lQ);
   } catch (e) { setToastMsg("Lỗi tải data"); } finally { setLoadingData(false); } }; f(); }, []);
 
-  const handleNap = async () => { if(!confirm("Nạp data?")) return; setToastMsg("Đang nạp..."); try { for(const l of PHYSICS_LESSONS) await setDoc(doc(db,'lessons',l.id),l); for(const q of QUESTION_BANK) await setDoc(doc(db,'questions',q.id),q); setToastMsg("Xong!"); setTimeout(()=>window.location.reload(),1000); } catch(e:any){ setToastMsg(e.message); } };
+  // --- HÀM NẠP DATA THÔNG MINH (CHỈ NẠP CÂU MỚI) ---
+  const handleNap = async () => {
+    if (!user || user.email !== 'lebaoanhnss@gmail.com') return;
+    
+    // 1. Tính toán sự chênh lệch (Chỉ lấy những cái chưa có trên DB)
+    const questionsToUpload = QUESTION_BANK.filter(localQ => 
+      !questions.some(dbQ => dbQ.id === localQ.id)
+    );
+
+    const lessonsToUpload = PHYSICS_LESSONS.filter(localL => 
+      !lessons.some(dbL => dbL.id === localL.id)
+    );
+
+    const totalNew = questionsToUpload.length + lessonsToUpload.length;
+
+    // 2. Hỏi ý kiến người dùng
+    let mode = 'NEW_ONLY'; // Mặc định chỉ nạp mới
+    
+    if (totalNew === 0) {
+      if (!confirm("Hệ thống không tìm thấy câu hỏi/bài học mới nào (dựa trên ID).\n\nThầy có muốn NẠP LẠI TOÀN BỘ dữ liệu để cập nhật các sửa đổi nội dung không? (Sẽ lâu hơn)")) return;
+      mode = 'ALL';
+    } else {
+      if (!confirm(`Phát hiện:\n- ${questionsToUpload.length} câu hỏi mới\n- ${lessonsToUpload.length} bài học mới.\n\nThầy có muốn NẠP NHANH các mục này không?`)) return;
+    }
+
+    setToastMsg("Đang xử lý...");
+    setLoadingData(true);
+
+    try {
+      const batchSize = 400; 
+      let batchCount = 0;
+      
+      const targetLessons = mode === 'NEW_ONLY' ? lessonsToUpload : PHYSICS_LESSONS;
+      const targetQuestions = mode === 'NEW_ONLY' ? questionsToUpload : QUESTION_BANK;
+
+      // 3. THỰC HIỆN NẠP (BATCH WRITE)
+      // -- Nạp Bài học --
+      if (targetLessons.length > 0) {
+        for (let i = 0; i < targetLessons.length; i += batchSize) {
+          const chunk = targetLessons.slice(i, i + batchSize);
+          const batch = writeBatch(db);
+          chunk.forEach(l => batch.set(doc(db, 'lessons', l.id), l));
+          await batch.commit();
+        }
+      }
+
+      // -- Nạp Câu hỏi --
+      if (targetQuestions.length > 0) {
+        for (let i = 0; i < targetQuestions.length; i += batchSize) {
+          const chunk = targetQuestions.slice(i, i + batchSize);
+          const batch = writeBatch(db);
+          chunk.forEach(q => batch.set(doc(db, 'questions', q.id), q));
+          await batch.commit();
+          batchCount++;
+          if(mode === 'ALL') setToastMsg(`Đang nạp gói ${batchCount}...`);
+        }
+      }
+
+      setToastMsg(`✅ Đã nạp thành công ${targetQuestions.length} câu hỏi và ${targetLessons.length} bài học!`);
+      setTimeout(() => window.location.reload(), 1500);
+
+    } catch (e: any) {
+      console.error(e);
+      setToastMsg(`❌ Lỗi: ${e.message}`);
+    } finally {
+      setLoadingData(false);
+    }
+  };
+
   const handleScore = async (pts: number) => { if(!user) return; const u = { ...user, totalScore: user.totalScore + pts }; setUser(u); setToastMsg(`+${pts} điểm`); await updateDoc(doc(db,'users',user.uid), { totalScore: increment(pts) }); };
   const handleCopy = (txt: string) => { navigator.clipboard.writeText(txt); setCopyText(txt); setScreen('CHAT'); };
   const handleToggleLesson = (id: string) => { setExpandedLessonIds(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]); };
