@@ -965,9 +965,9 @@ const generateQuestionBank = (data: QuestionInput[]): Question[] => {
 
     // Tạo tiền tố (Prefix)
     let prefix = '';
-    if (q.type === 'MCQ') prefix = 'c';       // c1.1-1
-    if (q.type === 'TrueFalse') prefix = 'tf'; // tf1.1-1
-    if (q.type === 'Short') prefix = 's';     // s1.1-1
+    if (q.type === 'MCQ') prefix = 'MCQ';       // c1.1-1
+    if (q.type === 'TrueFalse') prefix = 'TF'; // tf1.1-1
+    if (q.type === 'Short') prefix = 'S';     // s1.1-1
 
     // Lấy phần số của lessonId (VD: l1.1 -> 1.1)
     const lessonNum = q.lessonId.replace('l', '');
