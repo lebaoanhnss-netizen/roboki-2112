@@ -312,6 +312,17 @@ const AuthScreen: React.FC<{ onLoginSuccess: (user: UserProfile) => void }> = ({
           <p className="text-slate-500 font-medium mt-1">Ôn tập Vật lí & Trợ lý ảo AI</p>
         </div>
         <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-100">
+           
+           {/* 👇 PHẦN LOGO INNEDU ĐÃ SỬA ĐÚNG TÊN FILE 👇 */}
+           <div className="flex justify-center mb-6">
+                <img 
+                  src="/logo-robok.png" 
+                  alt="Logo Innedu" 
+                  className="h-32 w-auto object-contain" 
+                />
+           </div>
+           {/* 👆 KẾT THÚC PHẦN LOGO 👆 */}
+
            <div className="flex bg-slate-100 p-1 rounded-2xl mb-6">
              <button onClick={() => { setIsRegistering(false); setError(''); }} className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all ${!isRegistering ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400'}`}>Đăng nhập</button>
              <button onClick={() => { setIsRegistering(true); setError(''); }} className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all ${isRegistering ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400'}`}>Đăng ký</button>
@@ -1061,6 +1072,7 @@ const MockTestScreen: React.FC<{
                                      <button onClick={() => handleSelectAnswer(true, sq.id)} className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${choice === true ? 'bg-blue-500 text-white shadow-md' : 'bg-white text-slate-400 border border-slate-200'}`}>Đúng</button>
                                      <button onClick={() => handleSelectAnswer(false, sq.id)} className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${choice === false ? 'bg-slate-700 text-white shadow-md' : 'bg-white text-slate-400 border border-slate-200'}`}>Sai</button>
                                  </div>
+                                 {session.mode === 'RESULT' && sq.explanation && <MathRender content={sq.explanation} className="mt-1 font-normal text-slate-500"/>}
                              </div>
                          )
                      })}
