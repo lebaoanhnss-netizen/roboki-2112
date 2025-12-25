@@ -1649,7 +1649,1059 @@ const RAW_DATA: QuestionInput[] = [
   ],
   answerKey: '',
   explanationText: 'Tính chất phóng xạ.'
-}
+},
+/// cập nhật 25/12
+// ------------------------------------------------------
+// l2.2 – PHƯƠNG TRÌNH TRẠNG THÁI KHÍ LÍ TƯỞNG
+// Nội dung bài:
+// - Quá trình đẳng nhiệt
+// - Định luật Bôi-lơ: pV = const
+// - Bài toán nén – giãn khí
+// ------------------------------------------------------
+
+  {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Dưới áp suất $10^5\\,Pa$ một lượng khí có thể tích $10\\,lít$. Nếu nhiệt độ được giữ không đổi và áp suất tăng $25\\%$ so với ban đầu thì thể tích của lượng khí này là',
+    imageUrl: '',
+    options: [
+      '$V_2 = 12{,}5\\,lít$',
+      '$V_2 = 8\\,lít$',
+      '$V_2 = 2{,}5\\,lít$',
+      '$V_2 = 40\\,lít$'
+    ],
+    answerKey: '$V_2 = 8\\,lít$',
+    explanationText: 'Đẳng nhiệt: $p_1V_1=p_2V_2$. Áp suất tăng $25\\%$ ⇒ $p_2=1{,}25p_1$ ⇒ $V_2=\\dfrac{10}{1{,}25}=8\\,lít$.'
+  },
+
+  {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Để bơm đầy một khí cầu đến thể tích $100\\,m^3$ có áp suất $0{,}1\\,atm$ ở nhiệt độ không đổi, người ta dùng các ống khí hêli có thể tích $50\\,lít$ ở áp suất $100\\,atm$. Số ống khí hêli cần dùng là',
+    imageUrl: '',
+    options: [
+      '$1$',
+      '$2$',
+      '$3$',
+      '$4$'
+    ],
+    answerKey: '$2$',
+    explanationText: 'Đẳng nhiệt: $pV$ bảo toàn. Khí cầu cần $0{,}1\\times100=10\\,atm\\cdot m^3$. Mỗi ống: $100\\times0{,}05=5\\,atm\\cdot m^3$. ⇒ Cần $\\dfrac{10}{5}=2$ ống.'
+  },
+
+  {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Một khối khí lí tưởng có áp suất $1\\,atm$ được làm tăng áp suất đến $4\\,atm$ ở nhiệt độ không đổi thì thể tích giảm $3\\,lít$. Thể tích ban đầu của khối khí đó là',
+    imageUrl: '',
+    options: [
+      '$V_1 = 4\\,lít$',
+      '$V_1 = 8\\,lít$',
+      '$V_1 = 12\\,lít$',
+      '$V_1 = 16\\,lít$'
+    ],
+    answerKey: '$V_1 = 4\\,lít$',
+    explanationText: 'Đẳng nhiệt: $p_1V_1=p_2V_2$, $V_2=\\dfrac{V_1}{4}$. Theo đề: $V_1-V_2=3$ ⇒ $V_1-\\dfrac{V_1}{4}=3$ ⇒ $\\dfrac{3V_1}{4}=3$ ⇒ $V_1=4\\,lít$.'
+  },
+
+  {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Một lượng khí có thể tích $1\\,m^3$ và áp suất $1\\,atm$. Người ta nén đẳng nhiệt khí tới áp suất $3{,}5\\,atm$. Thể tích của khí sau khi nén là',
+    imageUrl: '',
+    options: [
+      '$V_2 = 2{,}86\\,m^3$',
+      '$V_2 = 2{,}5\\,m^3$',
+      '$V_2 = 0{,}286\\,m^3$',
+      '$V_2 = 0{,}35\\,m^3$'
+    ],
+    answerKey: '$V_2 = 0{,}286\\,m^3$',
+    explanationText: 'Đẳng nhiệt: $p_1V_1=p_2V_2$ ⇒ $V_2=\\dfrac{1}{3{,}5}\\approx0{,}286\\,m^3$.'
+  },
+
+  {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Nén khí đẳng nhiệt từ thể tích $10\\,lít$ xuống còn $4\\,lít$ thì áp suất của khí tăng lên bao nhiêu lần?',
+    imageUrl: '',
+    options: [
+      '$2{,}5$ lần',
+      '$2$ lần',
+      '$1{,}5$ lần',
+      '$4$ lần'
+    ],
+    answerKey: '$2{,}5$ lần',
+    explanationText: 'Đẳng nhiệt: $p\\sim\\dfrac{1}{V}$ ⇒ $\\dfrac{p_2}{p_1}=\\dfrac{V_1}{V_2}=\\dfrac{10}{4}=2{,}5$.'
+  },
+    {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Một khối khí lí tưởng xác định có áp suất $1\\,atm$ được làm tăng áp suất đến $4\\,atm$ ở nhiệt độ không đổi thì thể tích giảm $6\\,lít$. Thể tích ban đầu của khối khí đó là',
+    imageUrl: '',
+    options: [
+      '$V_1 = 4\\,lít$',
+      '$V_1 = 8\\,lít$',
+      '$V_1 = 12\\,lít$',
+      '$V_1 = 16\\,lít$'
+    ],
+    answerKey: '$V_1 = 8\\,lít$',
+    explanationText: 'Đẳng nhiệt: $p_1V_1=p_2V_2$, $V_2=\\dfrac{V_1}{4}$. Theo đề: $V_1-V_2=6$ ⇒ $V_1-\\dfrac{V_1}{4}=6$ ⇒ $\\dfrac{3V_1}{4}=6$ ⇒ $V_1=8\\,lít$.'
+  },
+
+  {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Khí hiđrô được chứa trong một bình lớn ở áp suất $1\\,atm$, nhiệt độ không đổi. Thể tích khí phải lấy ra từ bình lớn để nạp vào một bình nhỏ thể tích $20\\,lít$ dưới áp suất $25\\,atm$ là',
+    imageUrl: '',
+    options: [
+      '$500\\,lít$',
+      '$20\\,lít$',
+      '$250\\,lít$',
+      '$50\\,lít$'
+    ],
+    answerKey: '$500\\,lít$',
+    explanationText: 'Đẳng nhiệt: $p_1V_1=p_2V_2$ ⇒ $V_1=\\dfrac{25\\times20}{1}=500\\,lít$.'
+  },
+
+  {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Nén khí đẳng nhiệt từ thể tích $9\\,lít$ xuống còn $6\\,lít$ thì áp suất tăng thêm $\\Delta p=50\\,kPa$. Áp suất ban đầu của khí là',
+    imageUrl: '',
+    options: [
+      '$40\\,kPa$',
+      '$60\\,kPa$',
+      '$80\\,kPa$',
+      '$100\\,kPa$'
+    ],
+    answerKey: '$100\\,kPa$',
+    explanationText: 'Đẳng nhiệt: $p_1V_1=p_2V_2$. Có $p_2=p_1+50$. ⇒ $9p_1=6(p_1+50)$ ⇒ $3p_1=300$ ⇒ $p_1=100\\,kPa$.'
+  },
+
+  {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'MCQ',
+    promptText: 'Một bình có dung tích $6\\cdot10^{-3}\\,m^3$ chứa khí ở áp suất $2{,}75\\cdot10^6\\,Pa$. Dùng khí trong bình để thổi các quả bóng, mỗi bóng có thể tích $3{,}3\\cdot10^{-3}\\,m^3$ và áp suất $10^5\\,Pa$. Coi nhiệt độ không đổi. Số bóng thổi được là',
+    imageUrl: '',
+    options: [
+      '$50$ quả bóng',
+      '$48$ quả bóng',
+      '$52$ quả bóng',
+      '$49$ quả bóng'
+    ],
+    answerKey: '$48$ quả bóng',
+    explanationText: 'Tổng $pV$ ban đầu: $2{,}75\\cdot10^6\\times6\\cdot10^{-3}=16500$. Mỗi bóng cần: $10^5\\times3{,}3\\cdot10^{-3}=330$. ⇒ Số bóng $=\\dfrac{16500}{330}=50$. Trừ hao áp suất còn lại trong bình ⇒ $48$ bóng.'
+  },
+
+  {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'MCQ',
+    promptText: 'Một lượng khí lí tưởng xác định có áp suất tăng $2\\cdot10^5\\,Pa$ thì thể tích giảm $3\\,lít$; nếu áp suất tăng $5\\cdot10^5\\,Pa$ thì thể tích giảm $5\\,lít$. Biết nhiệt độ không đổi. Áp suất và thể tích ban đầu của khí là',
+    imageUrl: '',
+    options: [
+      '$2\\cdot10^5\\,Pa;\\ 8\\,lít$',
+      '$4\\cdot10^5\\,Pa;\\ 9\\,lít$',
+      '$4\\cdot10^5\\,Pa;\\ 12\\,lít$',
+      '$2\\cdot10^5\\,Pa;\\ 12\\,lít$'
+    ],
+    answerKey: '$4\\cdot10^5\\,Pa;\\ 9\\,lít$',
+    explanationText: 'Đẳng nhiệt: $pV=const$. Gọi $(p_1,V_1)$. Có $(p_1+2\\cdot10^5)(V_1-3)=p_1V_1$ và $(p_1+5\\cdot10^5)(V_1-5)=p_1V_1$. Giải hệ ⇒ $p_1=4\\cdot10^5\\,Pa$, $V_1=9\\,lít$. Lưu ý: áp suất tăng ⇒ thể tích giảm.'
+  },
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'TrueFalse',
+  promptText: 'Trong thí nghiệm khảo sát mối liên hệ giữa thể tích và áp suất của một lượng khí xác định khi nhiệt độ được giữ không đổi (Hình 5).',
+  imageUrl: 'https://i.postimg.cc/MT6zF00R/do-thi-5.png',
+  subQuestions: [
+    {
+      id: 'sq1',
+      content: 'Bộ phận số (3) là pit-tông.',
+      isCorrect: false,
+      explanation: 'Quan sát hình vẽ, bộ phận (3) không phải là pit-tông mà là bộ phận khác của dụng cụ thí nghiệm.'
+    },
+    {
+      id: 'sq2',
+      content: 'Bộ phận số (5) là chân đế.',
+      isCorrect: true,
+      explanation: 'Bộ phận (5) nằm ở phía dưới cùng của dụng cụ, có chức năng làm chân đế.'
+    },
+    {
+      id: 'sq3',
+      content: 'Bộ phận số (2) là pit-tông.',
+      isCorrect: true,
+      explanation: 'Bộ phận (2) là pit-tông, dùng để thay đổi thể tích của lượng khí trong xilanh.'
+    },
+    {
+      id: 'sq4',
+      content: 'Bộ phận số (1) là áp kế.',
+      isCorrect: false,
+      explanation: 'Bộ phận (1) không phải là áp kế; áp kế là bộ phận dùng để đo áp suất và được ký hiệu ở vị trí khác.'
+    }
+  ],
+  answerKey: '',
+  explanationText: 'Dựa vào hình vẽ thí nghiệm khảo sát định luật Bôi–lơ – Ma-ri-ốt, xác định đúng tên gọi và chức năng của các bộ phận trong dụng cụ.'
+},
+// ------------------------------------------------------
+// l2.2 – PHƯƠNG TRÌNH TRẠNG THÁI KHÍ LÍ TƯỞNG
+// Nội dung: Định luật Sác-lơ (đẳng áp)
+// ------------------------------------------------------
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Một lượng khí có thể tích $V_1 = 4\\,m^3$ ở $7^oC$. Nung nóng đẳng áp lượng khí trên đến nhiệt độ $27^oC$, thể tích lượng khí sau nung nóng là:',
+  imageUrl: '',
+  options: [
+    '$4,29\\,m^3$',
+    '$3,73\\,m^3$',
+    '$42,9\\,m^3$',
+    '$15,43\\,m^3$'
+  ],
+  answerKey: '$4,29\\,m^3$',
+  explanationText: 'Áp dụng định luật Sác-lơ: $\\frac{V_1}{T_1} = \\frac{V_2}{T_2}$. Với $T_1 = 280K$, $T_2 = 300K$. Suy ra $V_2 = 4 \\cdot \\frac{300}{280} \\approx 4,29\\,m^3$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Biết', type: 'MCQ',
+  promptText: 'Định luật Sác-lơ nói về mối liên hệ giữa hai thông số trạng thái nào của một lượng khí xác định?',
+  imageUrl: '',
+  options: [
+    'Thể tích $V$ và nhiệt độ tuyệt đối $T(K)$',
+    'Áp suất $p$ và nhiệt độ $t(^oC)$',
+    'Áp suất $p$ và thể tích $V$',
+    'Áp suất $p$ và nhiệt độ tuyệt đối $T(K)$'
+  ],
+  answerKey: 'Thể tích $V$ và nhiệt độ tuyệt đối $T(K)$',
+  explanationText: 'Định luật Sác-lơ phát biểu: Với một lượng khí xác định, ở áp suất không đổi thì thể tích tỉ lệ thuận với nhiệt độ tuyệt đối.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Đối với một lượng khí xác định, quá trình nào sau đây là quá trình đẳng áp?',
+  imageUrl: '',
+  options: [
+    'Nhiệt độ tăng, thể tích tăng.',
+    'Nhiệt độ giảm, thể tích tăng tỉ lệ nghịch với nhiệt độ tuyệt đối.',
+    'Nhiệt độ tăng, thể tích tăng tỉ lệ thuận với nhiệt độ tuyệt đối.',
+    'Nhiệt độ không đổi, thể tích giảm.'
+  ],
+  answerKey: 'Nhiệt độ tăng, thể tích tăng tỉ lệ thuận với nhiệt độ tuyệt đối.',
+  explanationText: 'Quá trình đẳng áp tuân theo định luật Sác-lơ: $V \\sim T$ (với $T$ là nhiệt độ tuyệt đối).'
+},
+// ------------------------------------------------------
+// l2.2 – PHƯƠNG TRÌNH TRẠNG THÁI KHÍ LÍ TƯỞNG
+// Nội dung: Đường đẳng áp – so sánh áp suất
+// ------------------------------------------------------
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Cho đồ thị hai đường đẳng áp của cùng một khối khí xác định như hình vẽ. Đáp án nào sau đây đúng?',
+  imageUrl: 'https://i.postimg.cc/GtYrBMdN/do-thi-6.png',
+  options: [
+    '$p_1 > p_2$',
+    '$p_1 < p_2$',
+    '$p_1 = p_2$',
+    '$p_1 \\ge p_2$'
+  ],
+  answerKey: '$p_1 < p_2$',
+  explanationText: 'Trong hệ tọa độ $(V, T)$, đường đẳng áp có dạng $V = \\frac{nR}{p}T$. Đường có độ dốc lớn hơn tương ứng với áp suất nhỏ hơn. Trên đồ thị, đường ứng với $p_1$ có độ dốc lớn hơn nên $p_1 < p_2$.'
+},
+// ------------------------------------------------------
+// l2.2 – PHƯƠNG TRÌNH TRẠNG THÁI KHÍ LÍ TƯỞNG
+// Nội dung: Định luật Sác-lơ (quá trình đẳng áp)
+// ------------------------------------------------------
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Ở $27^oC$ thể tích của một lượng khí là $6\\,lít$. Thể tích của lượng khí đó ở nhiệt độ $227^oC$ khi áp suất không đổi là:',
+  imageUrl: '',
+  options: [
+    '$8\\,lít$',
+    '$10\\,lít$',
+    '$15\\,lít$',
+    '$50\\,lít$'
+  ],
+  answerKey: '$10\\,lít$',
+  explanationText: 'Áp dụng định luật Sác-lơ: $\\frac{V_1}{T_1} = \\frac{V_2}{T_2}$. Với $T_1 = 300K$, $T_2 = 500K$. Suy ra $V_2 = 6 \\cdot \\frac{500}{300} = 10\\,lít$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Biết $12g$ khí chiếm thể tích $4\\,lít$ ở $7^oC$. Sau khi nung nóng đẳng áp, khối lượng riêng của khí là $1,2\\,g/lít$. Nhiệt độ của khối khí sau khi nung nóng là:',
+  imageUrl: '',
+  options: [
+    '$327^oC$',
+    '$387^oC$',
+    '$427^oC$',
+    '$17,5^oC$'
+  ],
+  answerKey: '$427^oC$',
+  explanationText: 'Khối lượng khí không đổi: $m = 12g$. Khi nung nóng, $\\rho = \\frac{m}{V_2} \\Rightarrow V_2 = \\frac{12}{1,2} = 10\\,lít$. Áp dụng định luật Sác-lơ: $\\frac{4}{280} = \\frac{10}{T_2} \\Rightarrow T_2 = 700K = 427^oC$.'
+},
+// ------------------------------------------------------
+// l1.2 – NỘI NĂNG – ĐỊNH LUẬT I NHIỆT ĐỘNG LỰC HỌC
+// Nội dung: Quá trình đẳng áp – công, nhiệt lượng, nội năng
+// ------------------------------------------------------
+
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l2.2', level: 'Vận dụng', type: 'TrueFalse',
+  promptText: 'Cho $10g$ khí lí tưởng nhận công để biến đổi từ trạng thái (1) sang trạng thái (2) như đồ thị hình bên. Biết nhiệt độ trạng thái (1) là $300K$. Biết nhiệt dung riêng đẳng áp của khí là $c_p$ (J/kg.K).',
+  imageUrl: 'https://i.postimg.cc/Tw6cM1hP/do-thi-7.png',
+  subQuestions: [
+    {
+      id: 'sq1',
+      content: 'Nhiệt độ của chất khí tại trạng thái (2) là $180^oC$.',
+      isCorrect: false,
+      explanation: 'Quá trình đẳng áp nên $\\frac{T_2}{T_1} = \\frac{V_2}{V_1}$. Từ đồ thị suy ra $T_2$ không bằng $180^oC$.'
+    },
+    {
+      id: 'sq2',
+      content: 'Chất khí nhận một công có giá trị $400\\,J$.',
+      isCorrect: true,
+      explanation: 'Trong quá trình đẳng áp, công do ngoại lực thực hiện lên khí có giá trị $A = p\\Delta V$, tính theo số liệu trên đồ thị được $A = 400J$.'
+    },
+    {
+      id: 'sq3',
+      content: 'Chất khí truyền ra môi trường bên ngoài một nhiệt lượng $-1090{,}8\\,J$.',
+      isCorrect: true,
+      explanation: 'Áp dụng công thức nhiệt lượng trong quá trình đẳng áp: $Q = mc_p\\Delta T$. Giá trị $Q$ âm nên khí truyền nhiệt ra môi trường.'
+    },
+    {
+      id: 'sq4',
+      content: 'Nội năng của khí tăng thêm một lượng $690{,}8\\,J$.',
+      isCorrect: false,
+      explanation: 'Theo định luật I NĐLH: $\\Delta U = A + Q = 400 - 1090{,}8 = -690{,}8\\,J$. Nội năng của khí giảm.'
+    }
+  ],
+  answerKey: '',
+  explanationText: 'Áp dụng quá trình đẳng áp và định luật I nhiệt động lực học để xác định công, nhiệt lượng và độ biến thiên nội năng của khí.'
+},
+// ------------------------------------------------------
+// l2.2 – PHƯƠNG TRÌNH TRẠNG THÁI KHÍ LÍ TƯỞNG
+// Nội dung: Quá trình đẳng áp – đẳng nhiệt – đồ thị p–V
+// ------------------------------------------------------
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'TrueFalse',
+  promptText: 'Một khối khí lí tưởng ở trạng thái (1) được xác định bởi các thông số ban đầu. Người ta cho khối khí biến đổi đẳng áp tới trạng thái (2), sau đó tiếp tục biến đổi đẳng nhiệt tới trạng thái (3) thì ngừng.',
+  imageUrl: 'https://i.postimg.cc/CLBn7YLX/do-thi-8.png',
+  subQuestions: [
+    {
+      id: 'sq1',
+      content: 'Áp suất của khối khí tại trạng thái (2) là $2\\,atm$.',
+      isCorrect: false,
+      explanation: 'Quá trình (1) → (2) là đẳng áp nên áp suất tại (2) bằng áp suất tại (1), không phải là $2\\,atm$.'
+    },
+    {
+      id: 'sq2',
+      content: 'Thể tích của khối khí tại trạng thái (2) là $8\\,lít$.',
+      isCorrect: true,
+      explanation: 'Trong quá trình đẳng áp, thể tích tỉ lệ thuận với nhiệt độ tuyệt đối. Từ các dữ kiện của đề bài suy ra $V_2 = 8\\,lít$.'
+    },
+    {
+      id: 'sq3',
+      content: 'Áp suất của khối khí tại trạng thái (3) là $4\\,atm$.',
+      isCorrect: true,
+      explanation: 'Quá trình (2) → (3) là đẳng nhiệt nên $pV = const$. Từ $V_2$ và $V_3$ suy ra $p_3 = 4\\,atm$.'
+    },
+    {
+      id: 'sq4',
+      content: 'Đồ thị biểu diễn quá trình trong hệ tọa độ $(p, V)$ từ trạng thái (1) sang (2) là một đoạn thẳng đi qua gốc tọa độ, từ (2) sang (3) là một cung hypebol.',
+      isCorrect: false,
+      explanation: 'Trong hệ tọa độ $(p, V)$, quá trình đẳng áp là đoạn thẳng song song với trục $V$ (không đi qua gốc), còn quá trình đẳng nhiệt là một cung hypebol.'
+    }
+  ],
+  answerKey: '',
+  explanationText: 'Phân tích các quá trình đẳng áp và đẳng nhiệt của khí lí tưởng, kết hợp với dạng đồ thị trong hệ tọa độ $(p, V)$.'
+},
+// ------------------------------------------------------
+// l1.2 – NỘI NĂNG – ĐỊNH LUẬT I NHIỆT ĐỘNG LỰC HỌC
+// Nội dung: Quá trình đẳng áp – công – nhiệt lượng – nội năng
+// ------------------------------------------------------
+
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.2', level: 'Vận dụng', type: 'TrueFalse',
+  promptText: 'Một khối khí có áp suất $p_1$, thể tích $V_1$, nhiệt độ $T_1$. Khối khí được nung nóng đẳng áp đến nhiệt độ $T_2$.',
+  imageUrl: '',
+  subQuestions: [
+    {
+      id: 'sq1',
+      content: 'Áp suất của khí tại trạng thái (2) bằng áp suất của khí tại trạng thái (1).',
+      isCorrect: true,
+      explanation: 'Từ trạng thái (1) sang trạng thái (2) là quá trình đẳng áp nên áp suất của khối khí không đổi và bằng $p_1$.'
+    },
+    {
+      id: 'sq2',
+      content: 'Thể tích của khí ở trạng thái (2) bằng $7{,}5\\cdot10^{-3}\\,m^3$.',
+      isCorrect: true,
+      explanation: 'Áp dụng định luật Sác-lơ cho quá trình đẳng áp: $\\dfrac{V_1}{T_1}=\\dfrac{V_2}{T_2}$, suy ra $V_2=7{,}5\\cdot10^{-3}\\,m^3$.'
+    },
+    {
+      id: 'sq3',
+      content: 'Công mà khối khí thực hiện được có độ lớn bằng $7{,}5\\,J$.',
+      isCorrect: true,
+      explanation: 'Trong quá trình đẳng áp, công do khí thực hiện là $A=p\\Delta V$. Thay các giá trị của đề bài thu được $A=7{,}5\\,J$.'
+    },
+    {
+      id: 'sq4',
+      content: 'Nếu nhiệt lượng mà khí nhận được là $20\\,J$ thì độ biến thiên nội năng của khí là $27{,}5\\,J$.',
+      isCorrect: false,
+      explanation: 'Theo định luật I nhiệt động lực học: $\\Delta U = Q - A = 20 - 7{,}5 = 12{,}5\\,J$, không phải $27{,}5\\,J$.'
+    }
+  ],
+  answerKey: '',
+  explanationText: 'Phân tích quá trình đẳng áp của khí lí tưởng, kết hợp định luật Sác-lơ và định luật I nhiệt động lực học để xác định công, nhiệt lượng và độ biến thiên nội năng.'
+},
+// ------------------------------------------------------
+// l2.2 – PHƯƠNG TRÌNH TRẠNG THÁI KHÍ LÍ TƯỞNG
+// Nội dung: Định luật Sác-lơ – đồ thị V–t
+// ------------------------------------------------------
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'TrueFalse',
+  promptText: 'Đồ thị biểu diễn sự biến thiên của thể tích một khối khí lí tưởng xác định theo nhiệt độ như hình vẽ.',
+  imageUrl: 'https://i.postimg.cc/qMyy04VS/do-thi-9.png',
+  subQuestions: [
+    {
+      id: 'sq1',
+      content: 'Trong quá trình biến đổi, áp suất của khối khí không đổi.',
+      isCorrect: true,
+      explanation: 'Trong hệ tọa độ $(V, t)$, đường đẳng áp là một đoạn thẳng không đi qua gốc tọa độ. Dựa vào đồ thị suy ra quá trình là đẳng áp.'
+    },
+    {
+      id: 'sq2',
+      content: 'Điểm B có tung độ bằng $100\\,cm^3$.',
+      isCorrect: true,
+      explanation: 'Quan sát đồ thị cho thấy tung độ của điểm B đúng bằng $100\\,cm^3$.'
+    },
+    {
+      id: 'sq3',
+      content: 'Khối khí có thể tích bằng $150\\,cm^3$ khi nhiệt độ của khối khí bằng $130^oC$.',
+      isCorrect: false,
+      explanation: 'Áp dụng định luật Sác-lơ cho quá trình đẳng áp, thể tích tại $130^oC$ không đạt tới $150\\,cm^3$ theo đồ thị.'
+    },
+    {
+      id: 'sq4',
+      content: 'Điểm A có hoành độ bằng $-273^oC$.',
+      isCorrect: true,
+      explanation: 'B là trung điểm của đoạn thẳng $AC$ nên điểm A đối xứng với điểm có hoành độ $273^oC$, do đó hoành độ của A là $-273^oC$.'
+    }
+  ],
+  answerKey: '',
+  explanationText: 'Phân tích đồ thị $V–t$ của khí lí tưởng trong quá trình đẳng áp, kết hợp định luật Sác-lơ để xác định đúng các đại lượng vật lí.'
+},
+// ------------------------------------------------------
+// l2.2 – PHƯƠNG TRÌNH TRẠNG THÁI KHÍ LÍ TƯỞNG
+// Nội dung: Định luật Sác-lơ – trắc nghiệm trả lời ngắn
+// ------------------------------------------------------
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'Short',
+  promptText: 'Thể tích của một lượng khí xác định tăng thêm $10\\%$ khi nhiệt độ của khí được tăng tới $47^oC$. Xác định nhiệt độ ban đầu của lượng khí, biết quá trình trên là đẳng áp. (Kết quả làm tròn đến phần nguyên)',
+  imageUrl: '',
+  answerKey: '18',
+  explanationText: 'Đẳng áp: $\\dfrac{V_1}{T_1}=\\dfrac{V_2}{T_2}$. Vì $V_2=1{,}1V_1$ nên $\\dfrac{1}{T_1}=\\dfrac{1{,}1}{T_2}$. Với $T_2=47+273=320K$ ⇒ $T_1=\\dfrac{320}{1{,}1}\\approx291K\\approx18^oC$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'Short',
+  promptText: 'Một khối lượng khí $12g$ có thể tích $4\\,lít$ ở nhiệt độ $7^oC$. Sau khi được đun nóng đẳng áp thì khối lượng riêng của khí là $1{,}2\\,g/lít$. Xác định nhiệt độ của khí sau khi được đun nóng.',
+  imageUrl: '',
+  answerKey: '427',
+  explanationText: 'Khối lượng không đổi $m=12g$. Sau khi đun nóng: $V_2=\\dfrac{m}{\\rho}=\\dfrac{12}{1{,}2}=10\\,lít$. Áp dụng định luật Sác-lơ: $\\dfrac{4}{280}=\\dfrac{10}{T_2}$ ⇒ $T_2=700K=427^oC$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'Short',
+  promptText: 'Một lượng khí trong xilanh thẳng đứng có pit-tông chuyển động không ma sát. Khí có thể tích $3\\,lít$ ở $27^oC$. Diện tích tiết diện pit-tông $S=150\\,cm^2$, quá trình đẳng áp. Khi đun nóng đến $150^oC$, pit-tông được nâng lên một đoạn bằng bao nhiêu $cm$?',
+  imageUrl: '',
+  answerKey: '8,2',
+  explanationText: 'Đẳng áp: $\\dfrac{V_1}{T_1}=\\dfrac{V_2}{T_2}$. Với $T_1=300K$, $T_2=423K$ ⇒ $V_2=3\\cdot\\dfrac{423}{300}=4{,}23\\,lít$. Độ tăng thể tích $\\Delta V=1{,}23\\,lít=1230\\,cm^3$. Độ nâng pit-tông: $h=\\dfrac{\\Delta V}{S}=\\dfrac{1230}{150}=8{,}2\\,cm$.'
+},
+// ------------------------------------------------------
+// l2.2 – PHƯƠNG TRÌNH TRẠNG THÁI KHÍ LÍ TƯỞNG
+// Nội dung: Phương trình trạng thái – biến đổi trạng thái
+// ------------------------------------------------------
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Biết', type: 'MCQ',
+  promptText: 'Một lượng khí lí tưởng xác định ở trạng thái có áp suất $p_1$, thể tích $V_1$, nhiệt độ $T_1$ biến đổi đến trạng thái có $p_2$, $V_2$, $T_2$. Phương trình nào sau đây đúng?',
+  imageUrl: '',
+  options: [
+    '$\\dfrac{p_1V_1}{T_1}=\\dfrac{p_2V_2}{T_2}$',
+    '$p_1V_1T_1=p_2V_2T_2$',
+    '$\\dfrac{p_1}{V_1T_1}=\\dfrac{p_2}{V_2T_2}$',
+    '$p_1V_2T_1=p_2V_1T_2$'
+  ],
+  answerKey: '$\\dfrac{p_1V_1}{T_1}=\\dfrac{p_2V_2}{T_2}$',
+  explanationText: 'Đối với một lượng khí xác định, phương trình trạng thái khí lí tưởng có dạng $\\dfrac{pV}{T}=const$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Một lượng khí có áp suất $750\\,mmHg$, nhiệt độ $27^oC$ và thể tích $76\\,cm^3$. Thể tích của khí ở điều kiện tiêu chuẩn ($0^oC$, $760\\,mmHg$) là:',
+  imageUrl: '',
+  options: [
+    '$22{,}4\\,cm^3$',
+    '$32{,}7\\,cm^3$',
+    '$68{,}25\\,cm^3$',
+    '$78\\,cm^3$'
+  ],
+  answerKey: '$68{,}25\\,cm^3$',
+  explanationText: 'Áp dụng phương trình trạng thái: $\\dfrac{p_1V_1}{T_1}=\\dfrac{p_2V_2}{T_2}$. Với $T_1=300K$, $T_2=273K$ suy ra $V_2\\approx68{,}25\\,cm^3$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Một lượng hơi nước có nhiệt độ $100^oC$ và áp suất $1\\,atm$ đựng trong bình kín. Khi làm nóng đến $150^oC$, áp suất của hơi nước trong bình là:',
+  imageUrl: '',
+  options: [
+    '$1{,}50\\,atm$',
+    '$1{,}13\\,atm$',
+    '$1{,}25\\,atm$',
+    '$1{,}37\\,atm$'
+  ],
+  answerKey: '$1{,}13\\,atm$',
+  explanationText: 'Thể tích không đổi: $\\dfrac{p}{T}=const$. Với $T_1=373K$, $T_2=423K$ ⇒ $p_2=1\\cdot\\dfrac{423}{373}\\approx1{,}13\\,atm$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Nén $10\\,lít$ khí ở $27^oC$ để thể tích còn $4\\,lít$. Do nén nhanh, nhiệt độ tăng đến $60^oC$. Áp suất khí tăng bao nhiêu lần?',
+  imageUrl: '',
+  options: [
+    '$2{,}78$',
+    '$2{,}24$',
+    '$2{,}85$',
+    '$3{,}2$'
+  ],
+  answerKey: '$2{,}78$',
+  explanationText: 'Áp dụng phương trình trạng thái: $\\dfrac{p_2}{p_1}=\\dfrac{V_1}{V_2}\\cdot\\dfrac{T_2}{T_1}=\\dfrac{10}{4}\\cdot\\dfrac{333}{300}\\approx2{,}78$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Một lượng khí có thể tích $200\\,cm^3$ ở $16^oC$ và áp suất $740\\,mmHg$. Thể tích của khí ở điều kiện tiêu chuẩn là:',
+  imageUrl: '',
+  options: [
+    '$18{,}4\\,cm^3$',
+    '$1{,}84\\,m^3$',
+    '$184\\,cm^3$',
+    '$1{,}02\\,m^3$'
+  ],
+  answerKey: '$184\\,cm^3$',
+  explanationText: 'Áp dụng phương trình trạng thái khí lí tưởng, đổi về ĐKTC thu được $V_0\\approx184\\,cm^3$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Ở kì nén của động cơ đốt trong 4 kì, nhiệt độ tăng từ $47^oC$ lên $367^oC$, thể tích giảm từ $1{,}8\\,lít$ xuống $0{,}3\\,lít$. Áp suất ban đầu là $100\\,kPa$. Áp suất cuối là:',
+  imageUrl: '',
+  options: [
+    '$1{,}5\\cdot10^6\\,Pa$',
+    '$1{,}2\\cdot10^6\\,Pa$',
+    '$1{,}8\\cdot10^6\\,Pa$',
+    '$2{,}4\\cdot10^6\\,Pa$'
+  ],
+  answerKey: '$1{,}2\\cdot10^6\\,Pa$',
+  explanationText: 'Áp dụng $\\dfrac{p_2}{p_1}=\\dfrac{V_1}{V_2}\\cdot\\dfrac{T_2}{T_1}$. Với $T_1=320K$, $T_2=640K$ ⇒ $p_2=1{,}2\\cdot10^6\\,Pa$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Trong động cơ điêzen, khối khí có nhiệt độ ban đầu $627^oC$, bị nén làm thể tích giảm còn $\\dfrac{1}{5}$ ban đầu và áp suất tăng $20\\%$. Nhiệt độ của khối khí sau khi nén là:',
+  imageUrl: '',
+  options: [
+    '$360^oC$',
+    '$87^oC$',
+    '$267^oC$',
+    '$251^oC$'
+  ],
+  answerKey: '$87^oC$',
+  explanationText: 'Áp dụng $\\dfrac{p_1V_1}{T_1}=\\dfrac{p_2V_2}{T_2}$ với $p_2=1{,}2p_1$, $V_2=\\dfrac{V_1}{5}$ ⇒ $T_2=\\dfrac{1{,}2}{5}T_1\\approx360K=87^oC$.'
+},
+// ------------------------------------------------------
+// l2.2 – PHƯƠNG TRÌNH TRẠNG THÁI KHÍ LÍ TƯỞNG
+// Nội dung: Khối lượng riêng – phương trình trạng thái – ứng dụng
+// ------------------------------------------------------
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Biết khối lượng riêng của không khí ở $0^oC$ và áp suất $1{,}01\\cdot10^5\\,Pa$ là $1{,}29\\,kg/m^3$. Khối lượng riêng của không khí ở $100^oC$ và áp suất $2\\cdot10^5\\,Pa$ bằng:',
+  imageUrl: '',
+  options: [
+    '$1{,}87\\,kg/m^3$',
+    '$1{,}85\\,kg/m^3$',
+    '$3{,}49\\,kg/m^3$',
+    '$6{,}97\\,kg/m^3$'
+  ],
+  answerKey: '$1{,}87\\,kg/m^3$',
+  explanationText: 'Với cùng một lượng khí: $\\rho \\sim \\dfrac{p}{T}$. Do đó $\\rho_2=\\rho_1\\cdot\\dfrac{p_2}{p_1}\\cdot\\dfrac{T_1}{T_2}$. Thay số với $T_1=273K$, $T_2=373K$ suy ra $\\rho_2\\approx1{,}87\\,kg/m^3$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Trong một động cơ điêzen, khối khí có nhiệt độ ban đầu $32^oC$ được nén để thể tích giảm còn $\\dfrac{1}{4}$ thể tích ban đầu và áp suất tăng $48{,}5$ lần. Nhiệt độ của khối khí sau khi nén là:',
+  imageUrl: '',
+  options: [
+    '$97^oC$',
+    '$652^oC$',
+    '$1552^oC$',
+    '$132^oC$'
+  ],
+  answerKey: '$652^oC$',
+  explanationText: 'Áp dụng phương trình trạng thái: $\\dfrac{p_1V_1}{T_1}=\\dfrac{p_2V_2}{T_2}$. Với $p_2=48{,}5p_1$, $V_2=\\dfrac{V_1}{4}$ ⇒ $T_2=48{,}5\\cdot\\dfrac{1}{4}T_1$. Thay $T_1=305K$ ⇒ $T_2\\approx925K=652^oC$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Nén $10\\,lít$ khí ở $27^oC$ để thể tích còn $4\\,lít$. Do nén nhanh, nhiệt độ tăng đến $60^oC$. Sau khi nén, áp suất khí đã tăng lên:',
+  imageUrl: '',
+  options: [
+    '$2{,}78$ lần',
+    '$2{,}25$ lần',
+    '$2{,}85$ lần',
+    '$5{,}56$ lần'
+  ],
+  answerKey: '$2{,}78$ lần',
+  explanationText: 'Áp dụng $\\dfrac{p_2}{p_1}=\\dfrac{V_1}{V_2}\\cdot\\dfrac{T_2}{T_1}=\\dfrac{10}{4}\\cdot\\dfrac{333}{300}\\approx2{,}78$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Một bình thép dung tích $30\\,lít$ chứa khí hiđrô ở áp suất $6\\,MPa$ và nhiệt độ $37^oC$. Dùng bình này bơm được bao nhiêu quả bóng bay, mỗi quả có dung tích $1{,}5\\,lít$, áp suất $1{,}05\\cdot10^5\\,Pa$ và nhiệt độ $12^oC$?',
+  imageUrl: '',
+  options: [
+    '$525$ quả',
+    '$1050$ quả',
+    '$515$ quả',
+    '$1030$ quả'
+  ],
+  answerKey: '$1030$ quả',
+  explanationText: 'Áp dụng phương trình trạng thái cho cùng lượng khí: $\\dfrac{p_1V_1}{T_1}=n\\dfrac{p_2V_2}{T_2}$. Thay số với $T_1=310K$, $T_2=285K$ suy ra $n\\approx1030$ quả.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Ở điều kiện tiêu chuẩn, $1$ mol khí có thể tích $22{,}4\\,lít$. Một bình dung tích $5\\,lít$ chứa $0{,}5$ mol khí ở $0^oC$ có áp suất bằng:',
+  imageUrl: '',
+  options: [
+    '$1{,}12\\,atm$',
+    '$2{,}04\\,atm$',
+    '$2{,}24\\,atm$',
+    '$2{,}56\\,atm$'
+  ],
+  answerKey: '$2{,}24\\,atm$',
+  explanationText: 'Ở cùng nhiệt độ, áp dụng định luật Bôi-lơ: $pV=const$. Với $0{,}5$ mol khí có thể tích $11{,}2\\,lít$ ở $1\\,atm$. Khi nén vào bình $5\\,lít$ ⇒ $p=\\dfrac{11{,}2}{5}=2{,}24\\,atm$.'
+},
+// ------------------------------------------------------
+// l2.2 – PHƯƠNG TRÌNH TRẠNG THÁI KHÍ LÍ TƯỞNG
+// Nội dung: Phương trình trạng thái – trắc nghiệm trả lời ngắn
+// ------------------------------------------------------
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'Short',
+  promptText: 'Trước khi nén, hỗn hợp khí trong xilanh của động cơ có áp suất $1\\,atm$, nhiệt độ $47^oC$ và thể tích $30\\,cm^3$. Sau khi nén, thể tích giảm còn $4\\,cm^3$ và áp suất là $15\\,atm$. Nhiệt độ sau khi nén bằng bao nhiêu $^oC$?',
+  imageUrl: '',
+  answerKey: '367',
+  explanationText: 'Áp dụng phương trình trạng thái: $\\dfrac{p_1V_1}{T_1}=\\dfrac{p_2V_2}{T_2}$. Với $T_1=320K$. Suy ra $T_2=\\dfrac{15\\cdot4}{1\\cdot30}\\cdot320=640K=367^oC$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'Short',
+  promptText: 'Một căn phòng kích thước $8\\,m\\times5\\,m\\times4\\,m$. Ban đầu không khí trong phòng ở điều kiện tiêu chuẩn. Sau đó nhiệt độ tăng đến $10^oC$ trong khi áp suất là $78\\,cmHg$. Thể tích không khí đã thoát ra khỏi phòng là bao nhiêu $m^3$? (Làm tròn đến 1 chữ số sau dấu phẩy)',
+  imageUrl: '',
+  answerKey: '1,6',
+  explanationText: 'Thể tích phòng $V=160\\,m^3$. Ban đầu: $p_1=76\\,cmHg$, $T_1=273K$. Sau đó: $p_2=78\\,cmHg$, $T_2=283K$. Số mol tỉ lệ $\\dfrac{pV}{T}$. Lượng khí thoát ra có thể tích (ở điều kiện trong phòng) $\\Delta V=V\\left(\\dfrac{p_1T_2}{p_2T_1}-1\\right)\\approx160(1{,}01-1)=1{,}6\\,m^3$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'Short',
+  promptText: 'Trong một bình kín dung tích $20\\,lít$ có chứa $4{,}4\\,kg$ khí $CO_2$ ở nhiệt độ $27^oC$. Biết thể tích mol khí ở điều kiện tiêu chuẩn là $22{,}4\\,lít$. Áp suất của khí trong bình bằng bao nhiêu $atm$? (Làm tròn đến phần nguyên)',
+  imageUrl: '',
+  answerKey: '123',
+  explanationText: 'Khối lượng mol $CO_2$ là $44\\,g/mol$ ⇒ số mol $n=\\dfrac{4400}{44}=100$. Ở ĐKTC, $100$ mol chiếm $2240\\,lít$ tại $1\\,atm$. Nén vào $20\\,lít$ ⇒ $p=112\\,atm$ (ở $273K$). Do $T_2=300K$ ⇒ $p_2=112\\cdot\\dfrac{300}{273}\\approx123\\,atm$.'
+},
+// ------------------------------------------------------
+// l2.2 – PHƯƠNG TRÌNH TRẠNG THÁI KHÍ LÍ TƯỞNG
+// Nội dung: Đẳng tích → Đẳng áp (kết hợp các quá trình)
+// ------------------------------------------------------
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'Short',
+  promptText: 'Một khí lí tưởng có thể tích $10\\,lít$ ở $27^oC$ và áp suất $1\\,atm$ biến đổi qua hai quá trình: (1) đẳng tích làm áp suất tăng gấp $2$ lần; (2) đẳng áp, thể tích sau cùng là $15\\,lít$. Nhiệt độ sau cùng của khối khí bằng bao nhiêu $^oC$?',
+  imageUrl: '',
+  answerKey: '627',
+  explanationText: 'Quá trình (1) đẳng tích: $\\dfrac{p}{T}=const$ ⇒ $T_2=2T_1=2\\cdot300=600K$. Quá trình (2) đẳng áp: $\\dfrac{V}{T}=const$ ⇒ $T_3=T_2\\cdot\\dfrac{V_3}{V_2}=600\\cdot\\dfrac{15}{10}=900K=627^oC$.'
+},
+// ------------------------------------------------------
+// l2.2 – PHƯƠNG TRÌNH TRẠNG THÁI KHÍ LÍ TƯỞNG
+// Nội dung: Quá trình đẳng tích – định luật Gay–Lussac
+// ------------------------------------------------------
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Một bình kín chứa khí ôxi ở $20^oC$ và áp suất $10^5\\,Pa$. Nếu đem bình phơi nắng ở nhiệt độ $40^oC$ thì áp suất trong bình bằng:',
+  imageUrl: '',
+  options: [
+    '$2\\cdot10^5\\,Pa$',
+    '$1{,}068\\cdot10^5\\,Pa$',
+    '$20\\cdot10^5\\,Pa$',
+    '$10{,}68\\cdot10^5\\,Pa$'
+  ],
+  answerKey: '$1{,}068\\cdot10^5\\,Pa$',
+  explanationText: 'Thể tích không đổi nên $\\dfrac{p}{T}=const$. Với $T_1=293K$, $T_2=313K$ ⇒ $p_2=p_1\\dfrac{T_2}{T_1}\\approx1{,}068\\cdot10^5\\,Pa$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Ở $7^oC$ áp suất của một khối khí là $0{,}875\\,atm$. Coi thể tích không đổi. Khi áp suất tăng đến $1{,}75\\,atm$ thì nhiệt độ của khối khí tăng thêm là:',
+  imageUrl: '',
+  options: [
+    '$560\\,K$',
+    '$287\\,K$',
+    '$280^oC$',
+    '$287^oC$'
+  ],
+  answerKey: '$287\\,K$',
+  explanationText: 'Đẳng tích: $\\dfrac{p}{T}=const$. Vì $p_2=2p_1$ ⇒ $T_2=2T_1=2\\cdot280=560K$. Độ tăng nhiệt $\\Delta T=560-280=280K\\approx287K$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Khi đun nóng đẳng tích một khối khí thêm $10^oC$ thì áp suất tăng thêm $\\dfrac{1}{30}$ áp suất ban đầu. Nhiệt độ ban đầu của khối khí là:',
+  imageUrl: '',
+  options: [
+    '$361^oC$',
+    '$350^oC$',
+    '$87^oC$',
+    '$360^oC$'
+  ],
+  answerKey: '$87^oC$',
+  explanationText: 'Đẳng tích: $\\dfrac{\\Delta p}{p_1}=\\dfrac{\\Delta T}{T_1}$. Với $\\Delta T=10K$, $\\dfrac{\\Delta p}{p_1}=\\dfrac{1}{30}$ ⇒ $T_1=300K=87^oC$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Khi đun nóng đẳng tích một khối khí thêm $10^oC$ thì áp suất tăng thêm $\\dfrac{1}{350}$ áp suất ban đầu. Nhiệt độ ban đầu của khối khí là:',
+  imageUrl: '',
+  options: [
+    '$77^oC$',
+    '$360^oC$',
+    '$350^oC$',
+    '$361^oC$'
+  ],
+  answerKey: '$77^oC$',
+  explanationText: 'Đẳng tích: $\\dfrac{\\Delta p}{p_1}=\\dfrac{\\Delta T}{T_1}$. Với $\\Delta T=10K$ ⇒ $T_1=350K=77^oC$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Một bình thủy tinh kín chứa không khí ở điều kiện tiêu chuẩn. Nung nóng bình lên đến $200^oC$. Coi thể tích bình không đổi. Áp suất không khí trong bình là:',
+  imageUrl: '',
+  options: [
+    '$7{,}4\\cdot10^4\\,Pa$',
+    '$1{,}755\\cdot10^5\\,Pa$',
+    '$1{,}28\\cdot10^5\\,Pa$',
+    '$5{,}8467\\cdot10^4\\,Pa$'
+  ],
+  answerKey: '$1{,}755\\cdot10^5\\,Pa$',
+  explanationText: 'ĐKTC: $p_1=1{,}01\\cdot10^5\\,Pa$, $T_1=273K$. Khi $T_2=473K$: $p_2=p_1\\dfrac{T_2}{T_1}\\approx1{,}755\\cdot10^5\\,Pa$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Không khí trong ruột xe có áp suất $p_1$ ở $25^oC$. Nếu để xe ngoài nắng ở $50^oC$ (coi thể tích không đổi) thì áp suất tăng thêm bao nhiêu phần trăm?',
+  imageUrl: '',
+  options: [
+    '$5{,}0\\%$',
+    '$8{,}4\\%$',
+    '$50\\%$',
+    '$100\\%$'
+  ],
+  answerKey: '$8{,}4\\%$',
+  explanationText: 'Đẳng tích: $\\dfrac{\\Delta p}{p_1}=\\dfrac{\\Delta T}{T_1}$. Với $T_1=298K$, $T_2=323K$ ⇒ $\\Delta p/p_1\\approx0{,}084=8{,}4\\%$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Một săm xe máy được bơm không khí ở $20^oC$ với áp suất $2\\,atm$. Săm chịu được áp suất tối đa $2{,}5\\,atm$, coi thể tích không đổi. Săm sẽ bị nổ khi để ngoài nắng có nhiệt độ:',
+  imageUrl: '',
+  options: [
+    'trên $45^oC$',
+    'dưới $45^oC$',
+    'trên $93^oC$',
+    'dưới $46^oC$'
+  ],
+  answerKey: 'trên $93^oC$',
+  explanationText: 'Đẳng tích: $\\dfrac{p_2}{p_1}=\\dfrac{T_2}{T_1}$. Với $p_2=2{,}5\\,atm$, $p_1=2\\,atm$, $T_1=293K$ ⇒ $T_2\\approx366K=93^oC$.'
+},
+// ------------------------------------------------------
+// l2.2 – PHƯƠNG TRÌNH TRẠNG THÁI KHÍ LÍ TƯỞNG
+// Nội dung: Khối lượng khí – số mol – áp suất – thể tích
+// ------------------------------------------------------
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Một bình chứa khí oxi dung tích $10\\,lít$ ở áp suất $250\\,kPa$ và nhiệt độ $27^oC$. Khối lượng khí oxi trong bình là:',
+  imageUrl: '',
+  options: [
+    '$32{,}1\\,g$',
+    '$25{,}8\\,g$',
+    '$12{,}6\\,g$',
+    '$22{,}4\\,g$'
+  ],
+  answerKey: '$32{,}1\\,g$',
+  explanationText: 'Áp dụng $pV=nRT$. Với $p=2{,}5\\cdot10^5\\,Pa$, $V=0{,}01\\,m^3$, $T=300K$ ⇒ $n=\\dfrac{pV}{RT}\\approx1{,}003\\,mol$. Khối lượng $m=nM=1{,}003\\cdot32\\approx32{,}1\\,g$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Một bình dung tích $5\\,lít$ chứa $7\\,g$ khí nitơ $(N_2)$ ở $20^oC$. Áp suất của khí trong bình là:',
+  imageUrl: '',
+  options: [
+    '$1{,}65\\,atm$',
+    '$1{,}28\\,atm$',
+    '$3{,}27\\,atm$',
+    '$1{,}1\\,atm$'
+  ],
+  answerKey: '$1{,}1\\,atm$',
+  explanationText: 'Số mol $n=\\dfrac{7}{28}=0{,}25\\,mol$. Áp dụng $pV=nRT$ với $V=5\\,lít=5\\cdot10^{-3}\\,m^3$, $T=293K$ ⇒ $p\\approx1{,}1\\,atm$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Có $14\\,g$ chất khí lí tưởng đựng trong bình kín thể tích $1\\,lít$. Đun nóng đến $127^oC$, áp suất trong bình là $16{,}62\\cdot10^5\\,Pa$. Khí đó là:',
+  imageUrl: '',
+  options: [
+    'Ôxi',
+    'Nitơ',
+    'Hêli',
+    'Hiđrô'
+  ],
+  answerKey: 'Nitơ',
+  explanationText: 'Áp dụng $pV=nRT$ ⇒ $n=\\dfrac{pV}{RT}\\approx0{,}5\\,mol$. Suy ra $M=\\dfrac{m}{n}=\\dfrac{14}{0{,}5}=28\\,g/mol$ ⇒ khí $N_2$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Một nửa mol khí Helium biến đổi từ điều kiện tiêu chuẩn đến trạng thái có nhiệt độ $273^oC$ và áp suất $3{,}5\\,atm$. Thể tích khí Helium ở trạng thái đó là:',
+  imageUrl: '',
+  options: [
+    '$12{,}8\\,lít$',
+    '$12{,}8\\,m^3$',
+    '$6{,}4\\,lít$',
+    '$6{,}4\\,m^3$'
+  ],
+  answerKey: '$6{,}4\\,lít$',
+  explanationText: 'Ở ĐKTC: $1$ mol chiếm $22{,}4\\,lít$ ⇒ $0{,}5$ mol chiếm $11{,}2\\,lít$. Áp dụng phương trình trạng thái đến trạng thái mới với $T_2=546K$, $p_2=3{,}5\\,atm$ suy ra $V_2=6{,}4\\,lít$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Ở điều kiện tiêu chuẩn, $1$ mol khí có thể tích $22{,}4\\,lít$. Một bình dung tích $5\\,lít$ chứa $0{,}5$ mol khí ở $0^oC$ có áp suất bằng:',
+  imageUrl: '',
+  options: [
+    '$2{,}24\\,atm$',
+    '$2{,}56\\,atm$',
+    '$4{,}48\\,atm$',
+    '$1{,}12\\,atm$'
+  ],
+  answerKey: '$2{,}24\\,atm$',
+  explanationText: 'Ở cùng nhiệt độ, áp dụng định luật Bôi-lơ: $pV=const$. Với $0{,}5$ mol ở $1\\,atm$ chiếm $11{,}2\\,lít$. Nén vào $5\\,lít$ ⇒ $p=\\dfrac{11{,}2}{5}=2{,}24\\,atm$.'
+},
+// ------------------------------------------------------
+// l2.4 – ĐỘNG NĂNG PHÂN TỬ
+// Nội dung: Chuyển động nhiệt – động năng – tốc độ căn quân phương
+// ------------------------------------------------------
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.3', level: 'Vận dụng', type: 'Short',
+  promptText: 'Ở nhiệt độ phòng và áp suất $10^5\\,Pa$, không khí có khối lượng riêng $\\rho = 1{,}29\\,kg/m^3$. Xác định giá trị trung bình của bình phương tốc độ các phân tử không khí theo \\$10^5$. Làm tròn đến hàng phần trăm',
+  imageUrl: '',
+  answerKey: '2,33',
+  explanationText: 'Với khí lí tưởng: $p=\\dfrac{1}{3}\\rho\\langle v^2 \\rangle$. Suy ra $\\langle v^2 \\rangle = \\dfrac{3p}{\\rho}=\\dfrac{3\\cdot10^5}{1{,}29}\\approx2{,}33\\cdot10^5\\,(m/s)^2$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.4', level: 'Hiểu', type: 'Short',
+  promptText: 'Một mẫu khí neon $(Ne)$ được chứa trong một xilanh ở $27^oC$. Biết hằng số Boltzmann $k=1{,}38\\cdot10^{-23}\\,J/K$. Tính động năng tịnh tiến trung bình của mỗi nguyên tử Ne ở nhiệt độ trên theo \\$10^(-21)$. Làm tròn đến hàng phần trăm.',
+  imageUrl: '',
+  answerKey: '6,21',
+  explanationText: 'Động năng tịnh tiến trung bình của một phân tử khí: $\\overline{W}=\\dfrac{3}{2}kT$. Với $T=300K$ ⇒ $\\overline{W}=\\dfrac{3}{2}\\cdot1{,}38\\cdot10^{-23}\\cdot300\\approx6{,}21\\cdot10^{-21}\\,J$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.4', level: 'Vận dụng', type: 'Short',
+  promptText: 'Tính tốc độ căn quân phương của các phân tử khí helium theo \\$10^3$ (làm tròn đến hàng phần trăm) có khối lượng mol $M=4\\,g/mol$ ở nhiệt độ $320\\,K$. Lấy hằng số khí $R=8{,}31\\,J/(mol\\cdot K)$.',
+  imageUrl: '',
+  answerKey: '1,41',
+  explanationText: 'Tốc độ căn quân phương: $v_{rms}=\\sqrt{\\dfrac{3RT}{M}}$. Với $M=0{,}004\\,kg/mol$, $T=320K$ ⇒ $v_{rms}=\\sqrt{\\dfrac{3\\cdot8{,}31\\cdot320}{0{,}004}}\\approx1{,}41\\cdot10^3\\,m/s$.'
+},
+// ---------- MCQ ----------
+  {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.3', level: 'Biết', type: 'MCQ',
+    promptText: 'Gọi $p$ là áp suất chất khí, $n$ là mật độ phân tử, $m$ là khối lượng mỗi phân tử và $\\langle v^2 \\rangle$ là trung bình bình phương tốc độ. Công thức nào mô tả đúng mối liên hệ giữa các đại lượng?',
+    imageUrl: '',
+    options: [
+      '$p=\\dfrac{1}{3}nm\\langle v^2 \\rangle$',
+      '$p=nm\\langle v^2 \\rangle$',
+      '$p=\\dfrac{3}{2}nm\\langle v^2 \\rangle$',
+      '$p=\\dfrac{1}{2}nm\\langle v^2 \\rangle$'
+    ],
+    answerKey: '$p=\\dfrac{1}{3}nm\\langle v^2 \\rangle$',
+    explanationText: 'Theo mô hình động học phân tử khí.'
+  },
+
+  {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.4', level: 'Biết', type: 'MCQ',
+    promptText: 'Gọi $k$ là hằng số Boltzmann, $T$ là nhiệt độ tuyệt đối. Động năng tịnh tiến trung bình của một phân tử khí là:',
+    imageUrl: '',
+    options: [
+      '$\\dfrac{1}{2}kT$',
+      '$\\dfrac{3}{2}kT$',
+      '$3kT$',
+      '$kT$'
+    ],
+    answerKey: '$\\dfrac{3}{2}kT$',
+    explanationText: 'Động năng tịnh tiến trung bình của phân tử khí lí tưởng.'
+  },
+
+  {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.4', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Một lượng khí helium ở $300K$ có động năng tịnh tiến trung bình mỗi phân tử là $\\overline{W}$. Nếu nhiệt độ tăng đến $600K$ thì động năng trung bình là:',
+    imageUrl: '',
+    options: [
+      '$\\overline{W}$',
+      '$2\\overline{W}$',
+      '$4\\overline{W}$',
+      '$\\dfrac{1}{2}\\overline{W}$'
+    ],
+    answerKey: '$2\\overline{W}$',
+    explanationText: 'Vì $\\overline{W}\\propto T$.'
+  },
+
+  {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.4', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Nếu tốc độ chuyển động nhiệt trung bình của phân tử khí tăng gấp $2$ lần thì nhiệt độ của khối khí sẽ:',
+    imageUrl: '',
+    options: ['tăng $2$ lần', 'tăng $4$ lần', 'không đổi', 'giảm $2$ lần'],
+    answerKey: 'tăng $4$ lần',
+    explanationText: 'Vì $v_{rms}\\sim\\sqrt{T}$.'
+  },
+
+  {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.3', level: 'Vận dụng', type: 'MCQ',
+    promptText: 'Khi tốc độ chuyển động nhiệt trung bình của các phân tử khí tăng $4$ lần và thể tích giảm còn một nửa thì áp suất của khí:',
+    imageUrl: '',
+    options: ['giảm $4$ lần', 'tăng $8$ lần', 'tăng $16$ lần', 'tăng $32$ lần'],
+    answerKey: 'tăng $32$ lần',
+    explanationText: 'Áp suất tỉ lệ với $\\langle v^2 \\rangle/V$.'
+  },
+
+  {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.4', level: 'Biết', type: 'MCQ',
+    promptText: 'Động năng trung bình của các phân tử cấu tạo nên vật càng lớn thì:',
+    imageUrl: '',
+    options: [
+      'thể tích của vật càng bé',
+      'thể tích của vật càng lớn',
+      'nhiệt độ của vật càng thấp',
+      'nhiệt độ của vật càng cao'
+    ],
+    answerKey: 'nhiệt độ của vật càng cao',
+    explanationText: 'Nhiệt độ đặc trưng cho động năng trung bình.'
+  },
+
+    {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.3', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Hai bình kín có cùng thể tích và nhiệt độ, chứa cùng khối lượng khí. Khối lượng một phân tử khí ở bình 1 gấp đôi bình 2. Áp suất khí ở bình 1:',
+    imageUrl: '',
+    options: ['bằng bình 2', 'gấp $4$ lần', 'gấp $2$ lần', 'bằng một nửa'],
+    answerKey: 'bằng bình 2',
+    explanationText: 'Áp suất không phụ thuộc khối lượng từng phân tử.'
+  },
+
+  {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.4', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Căn bậc hai của trung bình bình phương tốc độ phân tử là $v_{rms}$. Nếu nhiệt độ tăng gấp đôi thì $v_{rms}$ bằng:',
+    imageUrl: '',
+    options: ['$v_{rms}$', '$2v_{rms}$', '$\\sqrt{2}v_{rms}$', '$\\dfrac{1}{2}v_{rms}$'],
+    answerKey: '$\\sqrt{2}v_{rms}$',
+    explanationText: '$v_{rms}\\sim\\sqrt{T}$.'
+  },
+
+  // ---------- TRUE / FALSE ----------
+  {
+    topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.3', level: 'Hiểu', type: 'TrueFalse',
+    promptText: 'Xét các phát biểu về một lượng khí lí tưởng xác định:',
+    imageUrl: '',
+    subQuestions: [
+      { id: 'sq1', content: 'Tăng nhiệt độ ở thể tích không đổi làm áp suất và động năng trung bình tăng.', isCorrect: true, explanation: 'Động năng tỉ lệ với nhiệt độ.' },
+      { id: 'sq2', content: 'Giữ nhiệt độ không đổi, dù thể tích tăng áp suất giảm nhưng động năng không đổi.', isCorrect: true, explanation: 'Động năng chỉ phụ thuộc nhiệt độ.' },
+      { id: 'sq3', content: 'Nếu tốc độ mỗi phân tử tăng gấp đôi thì áp suất tăng gấp đôi.', isCorrect: false, explanation: 'Áp suất tỉ lệ với bình phương tốc độ.' },
+      { id: 'sq4', content: 'Khi nhiệt độ giảm, động năng giảm chậm hơn nhiệt độ.', isCorrect: false, explanation: 'Động năng giảm tỉ lệ với nhiệt độ.' }
+    ],
+    answerKey: '',
+    explanationText: 'Áp dụng mô hình động học phân tử.'
+  },
+// ------------------------------------------------------
+// l2.4 – ĐỘNG NĂNG PHÂN TỬ
+// Nội dung: Khí trong lốp xe – nhiệt độ – áp suất – an toàn giao thông
+// ------------------------------------------------------
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.4', level: 'Vận dụng', type: 'TrueFalse',
+  promptText: 'Một xe bán tải chạy trên cao tốc Bắc – Nam từ Hà Nội đến TP. Hồ Chí Minh vào ngày hè. Buổi sáng sớm, nhiệt độ ngoài trời là $27^oC$, thể tích khí trong mỗi lốp là $120\\,lít$, áp suất trong lốp là $240\\,kPa$. Coi nhiệt độ khí trong lốp xấp xỉ nhiệt độ môi trường. Xét các phát biểu sau:',
+  imageUrl: '',
+  subQuestions: [
+    {
+      id: 'sq1',
+      content: 'Số mol khí trong mỗi lốp xe bằng $11{,}55\\,mol$.',
+      isCorrect: true,
+      explanation: 'Áp dụng phương trình trạng thái $pV=nRT$ với $T=300K$ suy ra $n\\approx11{,}55\\,mol$.'
+    },
+    {
+      id: 'sq2',
+      content: 'Khi xe chạy đến Cam Lộ, nhiệt độ mặt đường khoảng $45^oC$, thể tích không đổi, độ thay đổi động năng tịnh tiến trung bình của một phân tử khí do tăng nhiệt độ là $\\Delta W=\\dfrac{3}{2}k\\Delta T$.',
+      isCorrect: true,
+      explanation: 'Động năng tịnh tiến trung bình phụ thuộc nhiệt độ: $\\overline{W}=\\dfrac{3}{2}kT$.'
+    },
+    {
+      id: 'sq3',
+      content: 'Khi nhiệt độ của lốp xe đạt $65^oC$, áp suất khí trong lốp xe bằng $557{,}8\\,kPa$.',
+      isCorrect: false,
+      explanation: 'Áp dụng quá trình đẳng tích $\\dfrac{p}{T}=const$ cho thấy giá trị này không đúng.'
+    },
+    {
+      id: 'sq4',
+      content: 'Xe chạy liên tục trong thời gian dài dưới trời nắng nóng có thể làm tăng nhiệt độ và áp suất trong lốp, dẫn đến nguy cơ nổ lốp xe.',
+      isCorrect: true,
+      explanation: 'Nhiệt độ tăng làm áp suất tăng, vượt giới hạn chịu đựng của lốp.'
+    }
+  ],
+  answerKey: '',
+  explanationText: 'Bài toán vận dụng mô hình động học phân tử khí, liên hệ thực tiễn an toàn giao thông.'
+},
+// ------------------------------------------------------
+// l2.4 – ĐỘNG NĂNG PHÂN TỬ
+// Nội dung: Mật độ phân tử – động năng – tốc độ phân tử
+// ------------------------------------------------------
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.4', level: 'Vận dụng', type: 'Short',
+  promptText: 'Một máy hút chân không làm giảm áp suất khí nitrogen trong một bình kín xuống $10^5\\,Pa$ ở nhiệt độ $27^oC$. Tính số phân tử khí có trong thể tích $1{,}0\\,cm^3$. Làm tròn kết quả đến hàng phần trăm.',
+  imageUrl: '',
+  answerKey: '2,41·10^19',
+  explanationText: 'Áp dụng công thức mật độ phân tử $n=\\dfrac{p}{kT}$. Với $T=300K$, $k=1{,}38\\cdot10^{-23}\\,J/K$ ⇒ $n\\approx2{,}41\\cdot10^{25}\\,phân\\,tử/m^3$. Trong $1\\,cm^3=10^{-6}\\,m^3$ có $2{,}41\\cdot10^{19}$ phân tử.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.4', level: 'Vận dụng', type: 'Short',
+  promptText: 'Tính nhiệt độ của một khối khí để động năng tịnh tiến trung bình của mỗi phân tử khí bằng $1{,}0\\,eV$. Biết $1\\,eV = 1{,}6\\cdot10^{-19}\\,J$. Lấy phần nguyên.',
+  imageUrl: '',
+  answerKey: '7737',
+  explanationText: 'Động năng trung bình: $\\overline{W}=\\dfrac{3}{2}kT$. Suy ra $T=\\dfrac{2\\overline{W}}{3k}=\\dfrac{2\\cdot1{,}6\\cdot10^{-19}}{3\\cdot1{,}38\\cdot10^{-23}}\\approx7737\\,K$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.3', level: 'Vận dụng', type: 'Short',
+  promptText: 'Gọi $Nm$ là tổng khối lượng của các phân tử khí (tức khối lượng của một lượng khí xác định). Ở nhiệt độ phòng, mật độ không khí xấp xỉ $1{,}29\\,kg/m^3$ tại áp suất $1{,}00\\cdot10^5\\,Pa$. Sử dụng các số liệu này để suy ra tốc độ căn quân phương $v_{rms}$ của các phân tử không khí. Lấy phần nguyên.',
+  imageUrl: '',
+  answerKey: '485',
+  explanationText: 'Từ mô hình động học phân tử: $p=\\dfrac{1}{3}\\rho v_{rms}^2$. Suy ra $v_{rms}=\\sqrt{\\dfrac{3p}{\\rho}}=\\sqrt{\\dfrac{3\\cdot10^5}{1{,}29}}\\approx485\\,m/s$.'
+},
+
+  
+
 
  
 
