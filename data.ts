@@ -939,11 +939,7 @@ const RAW_DATA: QuestionInput[] = [
     ],
     answerKey: '', explanationText: 'Định luật phóng xạ.'
   },
-  {
-    topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.3', level: 'Hiểu', type: 'Short',
-    promptText: 'Khoảng thời gian để số lượng hạt nhân phóng xạ giảm đi một nửa gọi là gì?',
-    imageUrl: '', answerKey: 'Chu kì bán rã', explanationText: 'Chu kì bán rã T.'
-  },
+  
   {
     topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.3', level: 'Vận dụng', type: 'Short',
     promptText: 'Chu kì bán rã là 2 giờ. Sau 6 giờ, số hạt nhân còn lại bằng bao nhiêu phần ban đầu? (Nhập phân số 1/x)',
@@ -1142,13 +1138,6 @@ const RAW_DATA: QuestionInput[] = [
   answerKey: '68000',
   explanationText: '$Q = m\\lambda = 0,2 . 3,4.10^5 = 6,8.10^4 J$.'
 },
-{
-  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Hiểu', type: 'Short',
-  promptText: 'Vì sao lau nhà bằng nước làm sàn nhà mát hơn?',
-  imageUrl: '',
-  answerKey: 'Do nước bay hơi thu nhiệt',
-  explanationText: 'Bay hơi thu nhiệt từ sàn.'
-},
 
 /* ================= l1.2 – NỘI NĂNG – ĐL I (10) ================= */
 
@@ -1280,13 +1269,7 @@ const RAW_DATA: QuestionInput[] = [
   answerKey: '',
   explanationText: 'Mô tả tính chất phân tử khí.'
 },
-{
-  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.1', level: 'Vận dụng', type: 'Short',
-  promptText: 'Vì sao khí dễ nén hơn chất lỏng và chất rắn?',
-  imageUrl: '',
-  answerKey: 'Khoảng cách phân tử lớn',
-  explanationText: 'Phân tử khí ở xa nhau nên dễ nén.'
-},
+
 
 /* ================= l2.2 – PHƯƠNG TRÌNH TRẠNG THÁI KHÍ LÍ TƯỞNG (10) ================= */
 
@@ -1347,9 +1330,9 @@ const RAW_DATA: QuestionInput[] = [
 },
 {
   topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.3', level: 'Vận dụng', type: 'Short',
-  promptText: 'Một khí có áp suất 3.10^5 Pa trong bình thể tích 0,01 m³. Khi nén đẳng nhiệt còn 0,005 m³, áp suất mới là bao nhiêu?',
+  promptText: 'Một khí có áp suất 3.10^5 Pa trong bình thể tích 0,01 m³. Khi nén đẳng nhiệt còn 0,005 m³, áp suất mới là bao nhiêu \\$10^5$?',
   imageUrl: '',
-  answerKey: '6e5',
+  answerKey: '6',
   explanationText: '$p_2 = p_1 \\frac{V_1}{V_2} = 3.10^5 . \\frac{0,01}{0,005} = 6.10^5 Pa$.'
 },
 
@@ -1373,9 +1356,9 @@ const RAW_DATA: QuestionInput[] = [
 },
 {
   topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.4', level: 'Vận dụng', type: 'Short',
-  promptText: 'Ở 300 K, động năng trung bình của phân tử khí là E. Ở 600 K, động năng trung bình là bao nhiêu?',
+  promptText: 'Ở 300 K, động năng trung bình của phân tử khí là E. Ở 600 K, động năng trung bình là bao nhiêu lần ( điền số)?',
   imageUrl: '',
-  answerKey: '2E',
+  answerKey: '2',
   explanationText: 'Động năng tỉ lệ với nhiệt độ tuyệt đối.'
 },
 // =======================
@@ -1420,13 +1403,7 @@ const RAW_DATA: QuestionInput[] = [
   answerKey: '',
   explanationText: 'Nhận biết các tính chất cơ bản của từ trường.'
 },
-{
-  topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Vận dụng', type: 'Short',
-  promptText: 'Vì sao nam châm có thể hút được các vật bằng sắt?',
-  imageUrl: '',
-  answerKey: 'Do từ trường của nam châm',
-  explanationText: 'Từ trường của nam châm tác dụng lực lên sắt.'
-},
+
 
 /* ================= l3.2 – LỰC TỪ – ĐỊNH LUẬT AMPE (10) ================= */
 
@@ -1573,13 +1550,6 @@ const RAW_DATA: QuestionInput[] = [
   answerKey: '',
   explanationText: 'Các đặc điểm cơ bản của hạt nhân.'
 },
-{
-  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.1', level: 'Vận dụng', type: 'Short',
-  promptText: 'Xác định số proton và neutron của hạt nhân $^{56}_{26}Fe$.',
-  imageUrl: '',
-  answerKey: 'Z = 26, N = 30',
-  explanationText: '$N = 56 - 26 = 30$.'
-},
 
 /* ================= l4.2 – NĂNG LƯỢNG LIÊN KẾT (10) ================= */
 
@@ -1666,13 +1636,7 @@ const RAW_DATA: QuestionInput[] = [
   answerKey: 'Số hạt nhân giảm một nửa',
   explanationText: 'Định nghĩa chu kì bán rã.'
 },
-{
-  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.3', level: 'Vận dụng', type: 'Short',
-  promptText: 'Một chất phóng xạ có chu kì bán rã 5 ngày. Sau 15 ngày, khối lượng còn lại bằng bao nhiêu phần ban đầu?',
-  imageUrl: '',
-  answerKey: '1/8',
-  explanationText: '15 ngày = 3 chu kì → (1/2)^3 = 1/8.'
-},
+
 {
   topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.3', level: 'Hiểu', type: 'TrueFalse',
   promptText: 'Xét các phát biểu sau về phóng xạ.',
