@@ -39,7 +39,7 @@ import {
   ThumbsUp, Percent, Activity, Send, Home, Globe, KeyRound, X, Loader2,
   FileText, ClipboardList, School, Edit3, Save, MapPin, ShieldAlert,
   Lightbulb, GraduationCap, Clock, Phone, Info, StopCircle as StopIcon,
-  Coins, PhoneCall, HelpCircle as HelpIcon, ArrowBigRight, Trash2
+  Coins, PhoneCall, HelpCircle as HelpIcon, ArrowBigRight, Trash2, SkipForward // 👈 THÊM CÁI NÀY VÀO
 } from 'lucide-react';
 
 // --- UTILS ---
@@ -1103,50 +1103,80 @@ const ExamScreen: React.FC<{
     </div>
   );
 
-  // --- GIAO DIỆN LÀM BÀI (DOING) - ĐẸP HƠN ---
+  // --- GIAO DIỆN LÀM BÀI (DOING) ---
   const q = quizQuestions[currentQIndex]; 
   const ans = userAnswers[q.id];
+  
+  // Tính toán phần trăm tiến độ
   const progress = ((currentQIndex + 1) / quizQuestions.length) * 100;
 
   return (
     <div className="flex flex-col h-full pb-20 pt-4 px-4 bg-slate-50">
+      
+      {/* 👇👇👇 SỬA PHẦN HEADER NÀY 👇👇👇 */}
       <div className="bg-white p-4 rounded-[1.5rem] shadow-sm border border-slate-100 mb-4 sticky top-4 z-20">
          <div className="flex justify-between items-center mb-3">
+            {/* Đồng hồ đếm ngược */}
             <div className={`flex items-center gap-2 font-black text-lg ${timeLeft < 300 ? 'text-rose-500 animate-pulse' : 'text-slate-700'}`}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${timeLeft<300?'bg-rose-100':'bg-slate-100'}`}><Clock size={16}/></div>
                 {formatTime(timeLeft)}
             </div>
-            <button onClick={() => {if(confirm("Bạn chắc chắn muốn nộp bài?")) finish()}} className="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-md transition-colors">NỘP BÀI</button>
+
+            <div className="flex gap-2">
+                {/* 🆕 NÚT QUA CÂU (ICON SKIP CHUYÊN NGHIỆP) */}
+            <button 
+                disabled={currentQIndex === quizQuestions.length - 1} 
+                onClick={() => update({ currentQIndex: currentQIndex + 1 })} 
+                className="w-10 h-10 flex items-center justify-center bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-xl transition-colors disabled:opacity-30 border border-indigo-100"
+                title="Câu tiếp theo"
+            >
+                <SkipForward size={20} fill="currentColor"/>
+            </button>
+
+                {/* Nút Nộp bài */}
+                <button onClick={() => {if(confirm("Bạn chắc chắn muốn nộp bài?")) finish()}} className="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-md transition-colors">
+                    NỘP BÀI
+                </button>
+            </div>
          </div>
+
+         {/* 🆕 THANH TIẾN TRÌNH (MỚI THÊM) */}
          <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-             <div className="h-full bg-indigo-500 transition-all duration-500 ease-out" style={{width: `${progress}%`}}></div>
+             <div 
+                className="h-full bg-indigo-500 transition-all duration-500 ease-out rounded-full" 
+                style={{width: `${progress}%`}}
+             ></div>
          </div>
-         <div className="flex justify-between mt-1"><span className="text-[10px] font-bold text-slate-400">Tiến độ</span><span className="text-[10px] font-bold text-indigo-600">{currentQIndex + 1}/{quizQuestions.length}</span></div>
+         <div className="flex justify-between mt-1">
+             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Tiến độ</span>
+             <span className="text-[10px] font-bold text-indigo-600">{currentQIndex + 1}/{quizQuestions.length}</span>
+         </div>
       </div>
+      {/* 👆👆👆 HẾT PHẦN SỬA HEADER 👆👆👆 */}
 
       <div className="flex-1 overflow-y-auto no-scrollbar">
           <div className="bg-white p-6 rounded-[2rem] shadow-lg shadow-slate-200/50 border border-slate-100 mb-20 animate-fade-in relative">
-             <div className="flex justify-between items-start mb-4">
-                 <span className={`text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider ${q.type==='MCQ'?'bg-blue-50 text-blue-600':q.type==='TrueFalse'?'bg-purple-50 text-purple-600':'bg-orange-50 text-orange-600'}`}>
-                     {q.type === 'MCQ' ? 'Trắc nghiệm' : q.type === 'TrueFalse' ? 'Đúng / Sai' : 'Trả lời ngắn'}
-                 </span>
-                 <span className="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-lg uppercase">{q.level}</span>
-             </div>
-             
-             <div className="mb-6">
-                 {q.imageUrl && <div className="mb-4 p-2 bg-slate-50 rounded-2xl border border-slate-100"><img src={q.imageUrl} className="w-full h-48 object-contain rounded-xl mix-blend-multiply"/></div>}
-                 <div className="font-bold text-slate-800 text-lg leading-relaxed"><MathRender content={q.promptText}/></div>
-             </div>
+              <div className="flex justify-between items-start mb-4">
+                  <span className={`text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider ${q.type==='MCQ'?'bg-blue-50 text-blue-600':q.type==='TrueFalse'?'bg-purple-50 text-purple-600':'bg-orange-50 text-orange-600'}`}>
+                      {q.type === 'MCQ' ? 'Trắc nghiệm' : q.type === 'TrueFalse' ? 'Đúng / Sai' : 'Trả lời ngắn'}
+                  </span>
+                  <span className="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-lg uppercase">{q.level}</span>
+              </div>
+              
+              <div className="mb-6">
+                  {q.imageUrl && <div className="mb-4 p-2 bg-slate-50 rounded-2xl border border-slate-100"><img src={q.imageUrl} className="w-full h-48 object-contain rounded-xl mix-blend-multiply"/></div>}
+                  <div className="font-bold text-slate-800 text-lg leading-relaxed"><MathRender content={q.promptText}/></div>
+              </div>
 
-             <div className="space-y-3">
-                {q.type === 'MCQ' ? q.options?.map((o: string, i: number) => (
+              <div className="space-y-3">
+                 {q.type === 'MCQ' ? q.options?.map((o: string, i: number) => (
                     <button key={i} onClick={() => handleA(o)} className={`w-full p-4 rounded-2xl border-2 text-left text-sm font-bold transition-all relative overflow-hidden group ${ans === o ? 'bg-indigo-50 border-indigo-500 text-indigo-700 shadow-md' : 'bg-white border-slate-100 text-slate-600 hover:border-indigo-200 hover:bg-slate-50'}`}>
                         <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${ans === o ? 'bg-indigo-500' : 'bg-transparent group-hover:bg-indigo-200'}`}></div>
                         <span className={`inline-flex w-6 h-6 items-center justify-center rounded-full text-xs mr-2 ${ans === o ? 'bg-indigo-500 text-white' : 'bg-slate-100 text-slate-400 group-hover:bg-white group-hover:shadow-sm'}`}>{String.fromCharCode(65 + i)}</span>
                         <MathRender content={o}/>
                     </button>
-                )) 
-                : q.type === 'TrueFalse' ? q.subQuestions?.map((sq: any) => (
+                 )) 
+                 : q.type === 'TrueFalse' ? q.subQuestions?.map((sq: any) => (
                     <div key={sq.id} className="p-4 border border-slate-100 rounded-2xl bg-slate-50/50">
                         <div className="text-sm font-bold text-slate-700 mb-3 leading-snug"><MathRender content={sq.content}/></div>
                         <div className="flex gap-2 bg-white p-1 rounded-xl shadow-sm border border-slate-100">
@@ -1154,19 +1184,19 @@ const ExamScreen: React.FC<{
                             <button onClick={() => handleA(false, sq.id)} className={`flex-1 py-2.5 rounded-lg text-xs font-black transition-all ${ans?.[sq.id] === false ? 'bg-rose-500 text-white shadow-md' : 'text-slate-400 hover:bg-slate-50'}`}>SAI</button>
                         </div>
                     </div>
-                )) 
-                : <div className="relative"><input value={ans || ''} onChange={e => handleA(e.target.value)} className="w-full p-5 rounded-2xl border-2 border-orange-100 font-bold text-center text-xl text-slate-700 focus:border-orange-500 focus:ring-4 focus:ring-orange-100 outline-none transition-all placeholder:text-slate-300" placeholder="Nhập đáp án..."/><div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300"><Type size={20}/></div></div>}
-             </div>
+                 )) 
+                 : <div className="relative"><input value={ans || ''} onChange={e => handleA(e.target.value)} className="w-full p-5 rounded-2xl border-2 border-orange-100 font-bold text-center text-xl text-slate-700 focus:border-orange-500 focus:ring-4 focus:ring-orange-100 outline-none transition-all placeholder:text-slate-300" placeholder="Nhập đáp án..."/><div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300"><Type size={20}/></div></div>}
+              </div>
           </div>
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-4 z-30 max-w-md mx-auto flex gap-3 pb-8">
           <button disabled={currentQIndex === 0} onClick={() => update({ currentQIndex: currentQIndex - 1 })} className="p-4 bg-slate-50 border border-slate-200 rounded-2xl text-slate-400 disabled:opacity-30 hover:bg-slate-100 hover:text-slate-600 transition-colors"><ChevronLeft/></button>
           <div className="flex-1 bg-slate-50 rounded-2xl border border-slate-200 p-2 flex gap-1.5 overflow-x-auto no-scrollbar items-center">
-             {quizQuestions.map((_, i) => {
-                 const isDone = userAnswers[quizQuestions[i].id];
-                 return <div key={i} onClick={() => update({ currentQIndex: i })} className={`w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-xl text-[10px] font-black cursor-pointer transition-all ${i === currentQIndex ? 'bg-slate-800 text-white scale-110 shadow-md' : isDone ? 'bg-indigo-100 text-indigo-600 border border-indigo-200' : 'bg-white text-slate-300 border border-slate-100'}`}>{i + 1}</div>
-             })}
+              {quizQuestions.map((_, i) => {
+                  const isDone = userAnswers[quizQuestions[i].id];
+                  return <div key={i} onClick={() => update({ currentQIndex: i })} className={`w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-xl text-[10px] font-black cursor-pointer transition-all ${i === currentQIndex ? 'bg-slate-800 text-white scale-110 shadow-md' : isDone ? 'bg-indigo-100 text-indigo-600 border border-indigo-200' : 'bg-white text-slate-300 border border-slate-100'}`}>{i + 1}</div>
+              })}
           </div>
           <button disabled={currentQIndex === quizQuestions.length-1} onClick={() => update({ currentQIndex: currentQIndex + 1 })} className="p-4 bg-slate-800 text-white rounded-2xl shadow-lg shadow-slate-300 disabled:opacity-50 disabled:shadow-none active:scale-95 transition-all"><ChevronRight/></button>
       </div>
