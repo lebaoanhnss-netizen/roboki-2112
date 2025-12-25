@@ -541,7 +541,7 @@ const RAW_DATA: QuestionInput[] = [
   },
   {
     topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.4', level: 'Vận dụng', type: 'Short',
-    promptText: 'Cung cấp $8400J$ cho $2kg$ chất lỏng thì tăng $2^oC$. Nhiệt dung riêng là bao nhiêu?',
+    promptText: 'Cung cấp $8400J$ cho $2kg$ chất lỏng thì tăng $2^oC$. Nhiệt dung riêng là bao nhiêu Jun?',
     imageUrl: '', answerKey: '2100', explanationText: '$8400 / (2.2) = 2100$.'
   },
 
@@ -1204,14 +1204,6 @@ const RAW_DATA: QuestionInput[] = [
   answerKey: '$T = t + 273$',
   explanationText: 'Chuẩn đổi nhiệt độ.'
 },
-{
-  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.3', level: 'Vận dụng', type: 'Short',
-  promptText: 'Nhiệt độ 27°C tương ứng bao nhiêu Kelvin?',
-  imageUrl: '',
-  answerKey: '300',
-  explanationText: '$T = 27 + 273 = 300 K$.'
-},
-
 /* ================= l1.4 – NHIỆT DUNG RIÊNG (10) ================= */
 
 {
