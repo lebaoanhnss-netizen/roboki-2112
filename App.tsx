@@ -255,7 +255,7 @@ const LessonCard: React.FC<{
              </div>
              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
                 <h5 className="text-xs font-bold text-slate-600 uppercase mb-2 flex items-center gap-1.5"><Zap size={14}/> Công thức</h5>
-                <MathRender content={lesson.formulas} className="text-sm text-slate-800 font-bold font-mono whitespace-pre-line"/>
+                <MathRender content={lesson.formulas} className="text-sm text-slate-800 font-medium font-mono whitespace-pre-line text-justify"/>
              </div>
              {lesson.examples && lesson.examples.length > 0 && (
                 <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-100">
