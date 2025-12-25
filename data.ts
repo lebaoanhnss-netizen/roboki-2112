@@ -954,7 +954,7 @@ const RAW_DATA: QuestionInput[] = [
     promptText: 'Ban đầu 100g. Sau 2 chu kì bán rã, khối lượng bị phân rã là bao nhiêu gam?',
     imageUrl: '', answerKey: '75', explanationText: 'Còn 25g -> Mất 75g.'
   },
-  //-------------------------------
+  //-------------------------------24/12---------------------------
     // --- l1.1: Sự chuyển thể ---
   {
     topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Biết', type: 'MCQ',
@@ -1060,7 +1060,635 @@ const RAW_DATA: QuestionInput[] = [
     imageUrl: '',
     answerKey: '26.4',
     explanationText: '$Q_{thu} = Q_{toa} = m_{Al}.c_{Al}.\\Delta t = 0,5 . 880 . (80 - 20) = 26400 J = 26,4 kJ$.'
-  }
+  },
+  
+// PHẦN 1 – VẬT LÍ NHIỆT
+// l1.1 → l1.4 (40 câu)
+// =======================
+
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Biết', type: 'MCQ',
+  promptText: 'Quá trình chuyển từ thể rắn sang thể lỏng của một chất gọi là gì?',
+  imageUrl: '',
+  options: ['Đông đặc', 'Hóa hơi', 'Nóng chảy', 'Ngưng tụ'],
+  answerKey: 'Nóng chảy',
+  explanationText: 'Nóng chảy là quá trình chuyển từ thể rắn sang thể lỏng.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Trong quá trình nóng chảy của chất rắn kết tinh, đại lượng nào không đổi?',
+  imageUrl: '',
+  options: ['Nhiệt độ', 'Thể tích', 'Nội năng', 'Khối lượng'],
+  answerKey: 'Nhiệt độ',
+  explanationText: 'Nhiệt lượng dùng để phá vỡ liên kết, không làm tăng nhiệt độ.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Sự bay hơi của chất lỏng xảy ra trong điều kiện nào?',
+  imageUrl: '',
+  options: ['Chỉ ở nhiệt độ sôi', 'Chỉ trong lòng chất lỏng', 'Ở mặt thoáng và mọi nhiệt độ', 'Chỉ khi đun nóng'],
+  answerKey: 'Ở mặt thoáng và mọi nhiệt độ',
+  explanationText: 'Bay hơi xảy ra ở mọi nhiệt độ và chỉ ở mặt thoáng.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Sự sôi khác sự bay hơi ở điểm nào?',
+  imageUrl: '',
+  options: ['Xảy ra nhanh hơn', 'Chỉ xảy ra ở mặt thoáng', 'Xảy ra ở nhiệt độ xác định', 'Không thu nhiệt'],
+  answerKey: 'Xảy ra ở nhiệt độ xác định',
+  explanationText: 'Sôi chỉ xảy ra ở nhiệt độ sôi xác định.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Hiểu', type: 'TrueFalse',
+  promptText: 'Xét các phát biểu sau về sự chuyển thể.',
+  imageUrl: '',
+  subQuestions: [
+    { id: 'sq1', content: 'Đông đặc là quá trình chuyển từ thể lỏng sang thể rắn.', isCorrect: true, explanation: 'Đúng định nghĩa.' },
+    { id: 'sq2', content: 'Trong quá trình đông đặc, nhiệt độ luôn tăng.', isCorrect: false, explanation: 'Nhiệt độ không đổi.' },
+    { id: 'sq3', content: 'Sự sôi xảy ra cả trong lòng và mặt thoáng.', isCorrect: true, explanation: 'Có bọt khí trong lòng.' },
+    { id: 'sq4', content: 'Bay hơi chỉ xảy ra khi đun nóng.', isCorrect: false, explanation: 'Bay hơi xảy ra ở mọi nhiệt độ.' }
+  ],
+  answerKey: '',
+  explanationText: 'Phân biệt các quá trình chuyển thể.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Khi nước đang sôi, tiếp tục cấp nhiệt thì nhiệt lượng dùng để',
+  imageUrl: '',
+  options: ['Tăng nhiệt độ nước', 'Giảm nội năng', 'Tăng động năng phân tử', 'Phá vỡ liên kết phân tử'],
+  answerKey: 'Phá vỡ liên kết phân tử',
+  explanationText: 'Nhiệt lượng dùng để tăng thế năng liên kết.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Chất rắn vô định hình có đặc điểm nào?',
+  imageUrl: '',
+  options: ['Có nhiệt độ nóng chảy xác định', 'Có cấu trúc tinh thể', 'Không có nhiệt độ nóng chảy xác định', 'Có tính dị hướng'],
+  answerKey: 'Không có nhiệt độ nóng chảy xác định',
+  explanationText: 'Không có cấu trúc tinh thể.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Hiện tượng nào là sự ngưng tụ?',
+  imageUrl: '',
+  options: ['Nước đá tan', 'Hơi nước đọng trên cốc lạnh', 'Nước sôi', 'Quần áo khô'],
+  answerKey: 'Hơi nước đọng trên cốc lạnh',
+  explanationText: 'Ngưng tụ là chuyển từ khí sang lỏng.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Vận dụng', type: 'Short',
+  promptText: 'Biết $\\lambda = 3,4.10^5 J/kg$. Tính nhiệt lượng để làm nóng chảy $0,2kg$ nước đá ở $0^oC$.',
+  imageUrl: '',
+  answerKey: '68000',
+  explanationText: '$Q = m\\lambda = 0,2 . 3,4.10^5 = 6,8.10^4 J$.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Hiểu', type: 'Short',
+  promptText: 'Vì sao lau nhà bằng nước làm sàn nhà mát hơn?',
+  imageUrl: '',
+  answerKey: 'Do nước bay hơi thu nhiệt',
+  explanationText: 'Bay hơi thu nhiệt từ sàn.'
+},
+
+/* ================= l1.2 – NỘI NĂNG – ĐL I (10) ================= */
+
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.2', level: 'Biết', type: 'MCQ',
+  promptText: 'Nội năng của một vật là',
+  imageUrl: '',
+  options: [
+    'Động năng của vật',
+    'Tổng động năng phân tử',
+    'Tổng động năng và thế năng phân tử',
+    'Thế năng của vật'
+  ],
+  answerKey: 'Tổng động năng và thế năng phân tử',
+  explanationText: 'Nội năng gồm động năng + thế năng tương tác.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Có thể làm thay đổi nội năng của vật bằng cách nào?',
+  imageUrl: '',
+  options: ['Thực hiện công', 'Truyền nhiệt', 'Cả hai cách', 'Không cách nào'],
+  answerKey: 'Cả hai cách',
+  explanationText: 'Định luật I nhiệt động lực học.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.2', level: 'Biết', type: 'MCQ',
+  promptText: 'Biểu thức của định luật I nhiệt động lực học là',
+  imageUrl: '',
+  options: ['$\\Delta U = Q + A$', '$\\Delta U = Q - A$', '$Q = A$', '$U = Q$'],
+  answerKey: '$\\Delta U = Q + A$',
+  explanationText: 'Quy ước vật nhận nhiệt, nhận công.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Khi khí nhận nhiệt và sinh công thì',
+  imageUrl: '',
+  options: ['Q > 0, A > 0', 'Q > 0, A < 0', 'Q < 0, A > 0', 'Q < 0, A < 0'],
+  answerKey: 'Q > 0, A < 0',
+  explanationText: 'Khí thực hiện công nên A < 0.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.2', level: 'Vận dụng', type: 'Short',
+  promptText: 'Một khí nhận nhiệt lượng 120 J, sinh công 80 J. Tính độ biến thiên nội năng.',
+  imageUrl: '',
+  answerKey: '40',
+  explanationText: '$\\Delta U = Q + A = 120 - 80 = 40 J$.'
+},
+
+/* ================= l1.3 – THANG NHIỆT ĐỘ – NHIỆT KẾ (10) ================= */
+
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.3', level: 'Biết', type: 'MCQ',
+  promptText: 'Nhiệt độ tuyệt đối được đo theo thang nào?',
+  imageUrl: '',
+  options: ['Celsius', 'Fahrenheit', 'Kelvin', 'Réaumur'],
+  answerKey: 'Kelvin',
+  explanationText: 'Thang Kelvin dùng trong vật lí.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.3', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Công thức đổi từ $^oC$ sang K là',
+  imageUrl: '',
+  options: ['$T = t - 273$', '$T = t + 273$', '$T = 2t$', '$T = t$'],
+  answerKey: '$T = t + 273$',
+  explanationText: 'Chuẩn đổi nhiệt độ.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.3', level: 'Vận dụng', type: 'Short',
+  promptText: 'Nhiệt độ 27°C tương ứng bao nhiêu Kelvin?',
+  imageUrl: '',
+  answerKey: '300',
+  explanationText: '$T = 27 + 273 = 300 K$.'
+},
+
+/* ================= l1.4 – NHIỆT DUNG RIÊNG (10) ================= */
+
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.4', level: 'Biết', type: 'MCQ',
+  promptText: 'Công thức tính nhiệt lượng là',
+  imageUrl: '',
+  options: ['$Q = mc\\Delta t$', '$Q = m\\lambda$', '$Q = Lm$', '$Q = pt$'],
+  answerKey: '$Q = mc\\Delta t$',
+  explanationText: 'Áp dụng khi nhiệt độ thay đổi.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.4', level: 'Vận dụng', type: 'Short',
+  promptText: 'Tính nhiệt lượng cần để đun $2kg$ nước tăng từ $20^oC$ lên $70^oC$. Biết $c = 4200 J/kg.K$.',
+  imageUrl: '',
+  answerKey: '420000',
+  explanationText: '$Q = 2 . 4200 . 50 = 4,2.10^5 J$.'
+},
+
+// =======================
+// PHẦN 2 – KHÍ LÍ TƯỞNG
+// l2.1 → l2.4 (40 câu)
+// =======================
+
+ {
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.1', level: 'Biết', type: 'MCQ',
+  promptText: 'Theo mô hình động học phân tử, các phân tử khí chuyển động như thế nào?',
+  imageUrl: '',
+  options: ['Dao động quanh vị trí cân bằng', 'Chuyển động hỗn loạn không ngừng', 'Đứng yên', 'Chuyển động theo quỹ đạo tròn'],
+  answerKey: 'Chuyển động hỗn loạn không ngừng',
+  explanationText: 'Các phân tử khí chuyển động hỗn loạn không ngừng.'
+},
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.1', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Khi nhiệt độ khí tăng thì',
+  imageUrl: '',
+  options: [
+    'Khoảng cách phân tử giảm',
+    'Vận tốc phân tử tăng',
+    'Khối lượng phân tử tăng',
+    'Số phân tử tăng'
+  ],
+  answerKey: 'Vận tốc phân tử tăng',
+  explanationText: 'Nhiệt độ tỉ lệ với động năng phân tử.'
+},
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.1', level: 'Hiểu', type: 'TrueFalse',
+  promptText: 'Xét các phát biểu về phân tử khí.',
+  imageUrl: '',
+  subQuestions: [
+    { id: 'sq1', content: 'Phân tử khí chuyển động không ngừng.', isCorrect: true, explanation: 'Luôn chuyển động hỗn loạn.' },
+    { id: 'sq2', content: 'Vận tốc phân tử không phụ thuộc nhiệt độ.', isCorrect: false, explanation: 'Phụ thuộc nhiệt độ.' },
+    { id: 'sq3', content: 'Giữa các phân tử khí có lực tương tác.', isCorrect: true, explanation: 'Có lực hút – đẩy rất yếu.' },
+    { id: 'sq4', content: 'Ở thể khí, khoảng cách phân tử rất nhỏ.', isCorrect: false, explanation: 'Khoảng cách rất lớn.' }
+  ],
+  answerKey: '',
+  explanationText: 'Mô tả tính chất phân tử khí.'
+},
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.1', level: 'Vận dụng', type: 'Short',
+  promptText: 'Vì sao khí dễ nén hơn chất lỏng và chất rắn?',
+  imageUrl: '',
+  answerKey: 'Khoảng cách phân tử lớn',
+  explanationText: 'Phân tử khí ở xa nhau nên dễ nén.'
+},
+
+/* ================= l2.2 – PHƯƠNG TRÌNH TRẠNG THÁI KHÍ LÍ TƯỞNG (10) ================= */
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Biết', type: 'MCQ',
+  promptText: 'Phương trình trạng thái khí lí tưởng là',
+  imageUrl: '',
+  options: ['pV = nRT', 'pV = RT', 'p = nRT', 'V = nRT'],
+  answerKey: 'pV = nRT',
+  explanationText: 'Phương trình cơ bản của khí lí tưởng.'
+},
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Trong phương trình pV = nRT, đại lượng R là',
+  imageUrl: '',
+  options: ['Hằng số Boltzmann', 'Hằng số khí lí tưởng', 'Nhiệt dung riêng', 'Áp suất chuẩn'],
+  answerKey: 'Hằng số khí lí tưởng',
+  explanationText: 'R = 8,31 J/mol.K.'
+},
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Vận dụng', type: 'Short',
+  promptText: 'Một lượng khí có p = 2.10^5 Pa, V = 0,02 m³, T = 300 K. Tính số mol khí. Biết R = 8,31.',
+  imageUrl: '',
+  answerKey: '1.6',
+  explanationText: '$n = \\frac{pV}{RT} = \\frac{2.10^5 . 0,02}{8,31 . 300} ≈ 1,6 mol$.'
+},
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Nếu tăng nhiệt độ của khí trong bình kín thì áp suất khí sẽ',
+  imageUrl: '',
+  options: ['Giảm', 'Không đổi', 'Tăng', 'Bằng 0'],
+  answerKey: 'Tăng',
+  explanationText: 'Áp suất tỉ lệ với nhiệt độ tuyệt đối.'
+},
+
+/* ================= l2.3 – ÁP SUẤT KHÍ THEO MÔ HÌNH ĐỘNG HỌC (10) ================= */
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.3', level: 'Biết', type: 'MCQ',
+  promptText: 'Nguyên nhân gây ra áp suất của khí lên thành bình là',
+  imageUrl: '',
+  options: [
+    'Lực hút giữa các phân tử',
+    'Va chạm của phân tử vào thành bình',
+    'Trọng lực của khí',
+    'Nhiệt lượng của khí'
+  ],
+  answerKey: 'Va chạm của phân tử vào thành bình',
+  explanationText: 'Áp suất do va chạm phân tử.'
+},
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.3', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Khi tăng thể tích khí mà giữ nguyên nhiệt độ thì áp suất',
+  imageUrl: '',
+  options: ['Tăng', 'Giảm', 'Không đổi', 'Tăng rồi giảm'],
+  answerKey: 'Giảm',
+  explanationText: 'Áp suất tỉ lệ nghịch với thể tích.'
+},
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.3', level: 'Vận dụng', type: 'Short',
+  promptText: 'Một khí có áp suất 3.10^5 Pa trong bình thể tích 0,01 m³. Khi nén đẳng nhiệt còn 0,005 m³, áp suất mới là bao nhiêu?',
+  imageUrl: '',
+  answerKey: '6e5',
+  explanationText: '$p_2 = p_1 \\frac{V_1}{V_2} = 3.10^5 . \\frac{0,01}{0,005} = 6.10^5 Pa$.'
+},
+
+/* ================= l2.4 – ĐỘNG NĂNG PHÂN TỬ (10) ================= */
+
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.4', level: 'Biết', type: 'MCQ',
+  promptText: 'Động năng trung bình của phân tử khí phụ thuộc vào',
+  imageUrl: '',
+  options: ['Áp suất', 'Thể tích', 'Nhiệt độ', 'Khối lượng khí'],
+  answerKey: 'Nhiệt độ',
+  explanationText: 'Động năng ∝ nhiệt độ tuyệt đối.'
+},
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.4', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Khi nhiệt độ của khí tăng gấp đôi thì động năng trung bình của phân tử khí',
+  imageUrl: '',
+  options: ['Tăng gấp đôi', 'Tăng gấp bốn', 'Không đổi', 'Giảm một nửa'],
+  answerKey: 'Tăng gấp đôi',
+  explanationText: 'Động năng trung bình tỉ lệ thuận với nhiệt độ.'
+},
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.4', level: 'Vận dụng', type: 'Short',
+  promptText: 'Ở 300 K, động năng trung bình của phân tử khí là E. Ở 600 K, động năng trung bình là bao nhiêu?',
+  imageUrl: '',
+  answerKey: '2E',
+  explanationText: 'Động năng tỉ lệ với nhiệt độ tuyệt đối.'
+},
+// =======================
+// PHẦN 3 – TỪ TRƯỜNG
+// l3.1 → l3.3 (30 câu)
+// =======================
+
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Biết', type: 'MCQ',
+  promptText: 'Từ trường là dạng vật chất tồn tại xung quanh',
+  imageUrl: '',
+  options: ['Điện tích đứng yên', 'Điện tích chuyển động', 'Vật mang khối lượng', 'Nguồn nhiệt'],
+  answerKey: 'Điện tích chuyển động',
+  explanationText: 'Dòng điện và điện tích chuyển động sinh ra từ trường.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Đại lượng đặc trưng cho từ trường về mặt tác dụng lực là',
+  imageUrl: '',
+  options: ['Từ thông', 'Cảm ứng từ', 'Cường độ điện trường', 'Điện áp'],
+  answerKey: 'Cảm ứng từ',
+  explanationText: 'Cảm ứng từ B đặc trưng cho từ trường.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Đơn vị của cảm ứng từ là',
+  imageUrl: '',
+  options: ['N/C', 'T (Tesla)', 'V/m', 'A'],
+  answerKey: 'T (Tesla)',
+  explanationText: 'Đơn vị SI của cảm ứng từ là Tesla.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Hiểu', type: 'TrueFalse',
+  promptText: 'Xét các phát biểu sau về từ trường.',
+  imageUrl: '',
+  subQuestions: [
+    { id: 'sq1', content: 'Nam châm đứng yên tạo ra từ trường.', isCorrect: true, explanation: 'Nam châm luôn tạo ra từ trường.' },
+    { id: 'sq2', content: 'Điện tích đứng yên không tạo ra từ trường.', isCorrect: true, explanation: 'Chỉ điện tích chuyển động mới tạo từ trường.' },
+    { id: 'sq3', content: 'Từ trường không tác dụng lực lên điện tích chuyển động.', isCorrect: false, explanation: 'Có lực từ tác dụng.' },
+    { id: 'sq4', content: 'Từ trường có thể tác dụng lên dòng điện.', isCorrect: true, explanation: 'Có lực từ lên dây dẫn mang dòng.' }
+  ],
+  answerKey: '',
+  explanationText: 'Nhận biết các tính chất cơ bản của từ trường.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Vận dụng', type: 'Short',
+  promptText: 'Vì sao nam châm có thể hút được các vật bằng sắt?',
+  imageUrl: '',
+  answerKey: 'Do từ trường của nam châm',
+  explanationText: 'Từ trường của nam châm tác dụng lực lên sắt.'
+},
+
+/* ================= l3.2 – LỰC TỪ – ĐỊNH LUẬT AMPE (10) ================= */
+
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.2', level: 'Biết', type: 'MCQ',
+  promptText: 'Lực từ tác dụng lên dây dẫn mang dòng điện đặt trong từ trường gọi là',
+  imageUrl: '',
+  options: ['Lực Coulomb', 'Lực hấp dẫn', 'Lực Ampe', 'Lực điện'],
+  answerKey: 'Lực Ampe',
+  explanationText: 'Lực từ lên dòng điện gọi là lực Ampe.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Độ lớn lực từ tác dụng lên đoạn dây dẫn mang dòng điện được tính bởi',
+  imageUrl: '',
+  options: ['$F = BIl$', '$F = qvB$', '$F = k\\frac{q_1q_2}{r^2}$', '$F = mg$'],
+  answerKey: '$F = BIl$',
+  explanationText: 'Khi dây vuông góc với B.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Chiều của lực từ được xác định bằng',
+  imageUrl: '',
+  options: ['Quy tắc bàn tay trái', 'Quy tắc bàn tay phải', 'Quy tắc nắm tay phải', 'Quy tắc hình bình hành'],
+  answerKey: 'Quy tắc bàn tay trái',
+  explanationText: 'Xác định chiều lực từ.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.2', level: 'Vận dụng', type: 'Short',
+  promptText: 'Một dây dẫn dài 0,2 m mang dòng điện 5 A đặt vuông góc với từ trường B = 0,4 T. Tính lực từ tác dụng lên dây.',
+  imageUrl: '',
+  answerKey: '0.4',
+  explanationText: '$F = BIl = 0,4 . 5 . 0,2 = 0,4 N$.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.2', level: 'Hiểu', type: 'TrueFalse',
+  promptText: 'Xét các phát biểu sau về lực từ.',
+  imageUrl: '',
+  subQuestions: [
+    { id: 'sq1', content: 'Lực từ tác dụng lên điện tích đứng yên.', isCorrect: false, explanation: 'Chỉ tác dụng lên điện tích chuyển động.' },
+    { id: 'sq2', content: 'Lực từ có thể làm đổi hướng chuyển động.', isCorrect: true, explanation: 'Có thể làm đổi hướng vận tốc.' },
+    { id: 'sq3', content: 'Lực từ không phụ thuộc cường độ dòng điện.', isCorrect: false, explanation: 'Phụ thuộc I.' },
+    { id: 'sq4', content: 'Lực từ phụ thuộc cảm ứng từ.', isCorrect: true, explanation: 'Tỉ lệ với B.' }
+  ],
+  answerKey: '',
+  explanationText: 'Tính chất lực từ.'
+},
+
+/* ================= l3.3 – TỪ THÔNG & CẢM ỨNG ĐIỆN TỪ (10) ================= */
+
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.3', level: 'Biết', type: 'MCQ',
+  promptText: 'Từ thông qua một khung dây được xác định bởi',
+  imageUrl: '',
+  options: ['$\\Phi = BS$', '$\\Phi = BSl$', '$\\Phi = Il$', '$\\Phi = qvB$'],
+  answerKey: '$\\Phi = BS$',
+  explanationText: 'Khi B vuông góc mặt khung.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.3', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Hiện tượng cảm ứng điện từ xảy ra khi',
+  imageUrl: '',
+  options: [
+    'Từ thông qua mạch biến thiên',
+    'Có dòng điện chạy qua mạch',
+    'Có từ trường đều',
+    'Mạch đứng yên trong từ trường'
+  ],
+  answerKey: 'Từ thông qua mạch biến thiên',
+  explanationText: 'Điều kiện xuất hiện suất điện động cảm ứng.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.3', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Định luật Faraday cho biết',
+  imageUrl: '',
+  options: [
+    'Chiều dòng điện cảm ứng',
+    'Độ lớn suất điện động cảm ứng',
+    'Từ trường do dòng điện',
+    'Lực tác dụng lên dây dẫn'
+  ],
+  answerKey: 'Độ lớn suất điện động cảm ứng',
+  explanationText: 'Liên hệ với tốc độ biến thiên từ thông.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.3', level: 'Vận dụng', type: 'Short',
+  promptText: 'Một khung dây có diện tích 0,05 m² đặt vuông góc từ trường B = 0,2 T. Tính từ thông qua khung.',
+  imageUrl: '',
+  answerKey: '0.01',
+  explanationText: '$\\Phi = BS = 0,2 . 0,05 = 0,01 Wb$.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.3', level: 'Hiểu', type: 'TrueFalse',
+  promptText: 'Xét các phát biểu sau về cảm ứng điện từ.',
+  imageUrl: '',
+  subQuestions: [
+    { id: 'sq1', content: 'Dòng điện cảm ứng xuất hiện khi từ thông biến thiên.', isCorrect: true, explanation: 'Điều kiện cảm ứng.' },
+    { id: 'sq2', content: 'Từ thông không phụ thuộc diện tích khung.', isCorrect: false, explanation: 'Phụ thuộc S.' },
+    { id: 'sq3', content: 'Cảm ứng điện từ là cơ sở của máy phát điện.', isCorrect: true, explanation: 'Nguyên lí hoạt động.' },
+    { id: 'sq4', content: 'Dòng điện cảm ứng luôn cùng chiều từ thông.', isCorrect: false, explanation: 'Theo Lenz, chống lại sự biến thiên.' }
+  ],
+  answerKey: '',
+  explanationText: 'Đặc điểm hiện tượng cảm ứng.'
+},
+// ===============================
+// PHẦN 4 – HẠT NHÂN & PHÓNG XẠ
+// l4.1 → l4.3 (30 câu)
+// ===============================
+
+ {
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.1', level: 'Biết', type: 'MCQ',
+  promptText: 'Hạt nhân nguyên tử được cấu tạo bởi',
+  imageUrl: '',
+  options: ['Electron và proton', 'Proton và neutron', 'Electron và neutron', 'Chỉ proton'],
+  answerKey: 'Proton và neutron',
+  explanationText: 'Hạt nhân gồm proton và neutron.'
+},
+{
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.1', level: 'Biết', type: 'MCQ',
+  promptText: 'Số proton trong hạt nhân được gọi là',
+  imageUrl: '',
+  options: ['Số khối A', 'Số neutron N', 'Số hiệu nguyên tử Z', 'Nguyên tử số'],
+  answerKey: 'Số hiệu nguyên tử Z',
+  explanationText: 'Z đặc trưng cho nguyên tố.'
+},
+{
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.1', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Số neutron trong hạt nhân được xác định bởi',
+  imageUrl: '',
+  options: ['N = Z - A', 'N = A - Z', 'N = A + Z', 'N = Z'],
+  answerKey: 'N = A - Z',
+  explanationText: 'A = Z + N.'
+},
+{
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.1', level: 'Hiểu', type: 'TrueFalse',
+  promptText: 'Xét các phát biểu sau về hạt nhân.',
+  imageUrl: '',
+  subQuestions: [
+    { id: 'sq1', content: 'Hạt nhân mang điện tích dương.', isCorrect: true, explanation: 'Do proton mang điện dương.' },
+    { id: 'sq2', content: 'Khối lượng nguyên tử tập trung chủ yếu ở hạt nhân.', isCorrect: true, explanation: 'Electron có khối lượng rất nhỏ.' },
+    { id: 'sq3', content: 'Neutron mang điện tích âm.', isCorrect: false, explanation: 'Neutron không mang điện.' },
+    { id: 'sq4', content: 'Các đồng vị có cùng số neutron.', isCorrect: false, explanation: 'Đồng vị có cùng Z, khác N.' }
+  ],
+  answerKey: '',
+  explanationText: 'Các đặc điểm cơ bản của hạt nhân.'
+},
+{
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.1', level: 'Vận dụng', type: 'Short',
+  promptText: 'Xác định số proton và neutron của hạt nhân $^{56}_{26}Fe$.',
+  imageUrl: '',
+  answerKey: 'Z = 26, N = 30',
+  explanationText: '$N = 56 - 26 = 30$.'
+},
+
+/* ================= l4.2 – NĂNG LƯỢNG LIÊN KẾT (10) ================= */
+
+{
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.2', level: 'Biết', type: 'MCQ',
+  promptText: 'Độ hụt khối của hạt nhân là',
+  imageUrl: '',
+  options: [
+    'Khối lượng hạt nhân',
+    'Khối lượng proton',
+    'Hiệu giữa tổng khối lượng nucleon và khối lượng hạt nhân',
+    'Khối lượng neutron'
+  ],
+  answerKey: 'Hiệu giữa tổng khối lượng nucleon và khối lượng hạt nhân',
+  explanationText: 'Δm = Zmp + Nmn − mhn.'
+},
+{
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Năng lượng liên kết của hạt nhân được tính bằng',
+  imageUrl: '',
+  options: ['$W = mc^2$', '$W = \\Delta mc^2$', '$W = qE$', '$W = mgh$'],
+  answerKey: '$W = \\Delta mc^2$',
+  explanationText: 'Theo hệ thức Einstein.'
+},
+{
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.2', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Năng lượng liên kết riêng cho biết',
+  imageUrl: '',
+  options: [
+    'Độ bền vững của hạt nhân',
+    'Khối lượng hạt nhân',
+    'Số nucleon',
+    'Chu kì bán rã'
+  ],
+  answerKey: 'Độ bền vững của hạt nhân',
+  explanationText: 'Liên kết riêng càng lớn, hạt nhân càng bền.'
+},
+{
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.2', level: 'Vận dụng', type: 'Short',
+  promptText: 'Biết độ hụt khối của hạt nhân là $0,02u$. Tính năng lượng liên kết. Cho $1u = 931 MeV/c^2$.',
+  imageUrl: '',
+  answerKey: '18.62',
+  explanationText: '$W = 0,02 . 931 = 18,62 MeV$.'
+},
+{
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.2', level: 'Hiểu', type: 'TrueFalse',
+  promptText: 'Xét các phát biểu sau về năng lượng liên kết.',
+  imageUrl: '',
+  subQuestions: [
+    { id: 'sq1', content: 'Năng lượng liên kết tỉ lệ với độ hụt khối.', isCorrect: true, explanation: 'Theo Einstein.' },
+    { id: 'sq2', content: 'Hạt nhân có năng lượng liên kết riêng lớn thì kém bền.', isCorrect: false, explanation: 'Ngược lại.' },
+    { id: 'sq3', content: 'Năng lượng liên kết riêng phụ thuộc vào số nucleon.', isCorrect: true, explanation: 'Thay đổi theo A.' },
+    { id: 'sq4', content: 'Năng lượng liên kết không liên quan đến phản ứng hạt nhân.', isCorrect: false, explanation: 'Là cơ sở phản ứng.' }
+  ],
+  answerKey: '',
+  explanationText: 'Ý nghĩa năng lượng liên kết.'
+},
+
+/* ================= l4.3 – PHÓNG XẠ (10) ================= */
+
+{
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.3', level: 'Biết', type: 'MCQ',
+  promptText: 'Phóng xạ là quá trình',
+  imageUrl: '',
+  options: [
+    'Biến đổi tự phát của hạt nhân',
+    'Biến đổi do va chạm',
+    'Biến đổi do nung nóng',
+    'Biến đổi do phản ứng hóa học'
+  ],
+  answerKey: 'Biến đổi tự phát của hạt nhân',
+  explanationText: 'Phóng xạ xảy ra tự nhiên.'
+},
+{
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.3', level: 'Hiểu', type: 'MCQ',
+  promptText: 'Chu kì bán rã là thời gian để',
+  imageUrl: '',
+  options: [
+    'Số hạt nhân giảm một nửa',
+    'Tất cả hạt nhân phân rã',
+    'Hạt nhân biến mất',
+    'Khối lượng tăng gấp đôi'
+  ],
+  answerKey: 'Số hạt nhân giảm một nửa',
+  explanationText: 'Định nghĩa chu kì bán rã.'
+},
+{
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.3', level: 'Vận dụng', type: 'Short',
+  promptText: 'Một chất phóng xạ có chu kì bán rã 5 ngày. Sau 15 ngày, khối lượng còn lại bằng bao nhiêu phần ban đầu?',
+  imageUrl: '',
+  answerKey: '1/8',
+  explanationText: '15 ngày = 3 chu kì → (1/2)^3 = 1/8.'
+},
+{
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.3', level: 'Hiểu', type: 'TrueFalse',
+  promptText: 'Xét các phát biểu sau về phóng xạ.',
+  imageUrl: '',
+  subQuestions: [
+    { id: 'sq1', content: 'Phóng xạ không phụ thuộc điều kiện bên ngoài.', isCorrect: true, explanation: 'Không phụ thuộc nhiệt độ, áp suất.' },
+    { id: 'sq2', content: 'Phóng xạ là quá trình có thể điều khiển.', isCorrect: false, explanation: 'Là tự phát.' },
+    { id: 'sq3', content: 'Chu kì bán rã là hằng số đặc trưng cho chất phóng xạ.', isCorrect: true, explanation: 'Đặc trưng riêng.' },
+    { id: 'sq4', content: 'Phóng xạ luôn phát ra tia gamma.', isCorrect: false, explanation: 'Có thể là α, β, γ.' }
+  ],
+  answerKey: '',
+  explanationText: 'Tính chất phóng xạ.'
+}
+
+ 
+
 ];
 
 // 3. Hàm xử lý tự động đánh số ID
