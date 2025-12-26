@@ -307,16 +307,15 @@ const AuthScreen: React.FC<{ onLoginSuccess: (user: UserProfile) => void }> = ({
         };
         await setDoc(doc(db, 'users', cred.user.uid), newUser);
         onLoginSuccess(newUser);
-      } else {
-        const cred = await signInWithEmailAndPassword(auth, email, password);
-        const docSnap = await getDoc(doc(db, 'users', cred.user.uid));
-        if (docSnap.exists()) onLoginSuccess(docSnap.data() as UserProfile);
-        else {
-           const fallback: UserProfile = { uid: cred.user.uid, name: cred.user.displayName || 'Học sinh', email: cred.user.email || '', class: '12', school: 'THPT Tự do', totalScore: 0, practiceScore: 0, gameScore: 0, challengeScore: 0, examScore: 0, rank: 999 };
-           await setDoc(doc(db, 'users', cred.user.uid), fallback);
-           onLoginSuccess(fallback);
-        }
-      }
+      // ✅ ĐOẠN MỚI (TIẾT KIỆM 1 READ)
+} else {
+  // Chỉ cần đăng nhập, còn việc tải data để App.tsx tự lo
+  await signInWithEmailAndPassword(auth, email, password);
+  
+  // Không cần gọi getDoc hay onLoginSuccess ở đây nữa.
+  // Lý do: Khi signIn thành công, onAuthStateChanged bên App.tsx sẽ tự động kích hoạt,
+  // tự kiểm tra cache và tự tải dữ liệu (chỉ tốn 1 Read nếu cần).
+}
     } catch (err: any) { setError(err.message); } finally { setLoading(false); }
   };
 
@@ -1695,12 +1694,24 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
 // 👇 THÊM DÒNG NÀY ĐỂ LƯU CACHE (RAM)
 const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>({});
   // ✅ DÁN ĐOẠN NÀY VÀO
+// ✅ CODE ĐÃ SỬA: SỬ DỤNG CACHE CHO BXH
   useEffect(() => {
     const fetchLeaderboard = async () => {
+      // 1. Tạo chìa khóa
+      const cacheKey = `${filter}_${category}`;
+
+      // 2. 👇 KIỂM TRA CACHE (ĐOẠN NÀY BẠN ĐANG THIẾU)
+      if (leaderboardCache[cacheKey]) {
+          console.log(`🎯 Dùng Cache cho ${cacheKey} (Tiết kiệm 50 Reads)`);
+          setPlayers(leaderboardCache[cacheKey]);
+          setLoading(false);
+          return; // 🛑 Dừng lại ngay, không cho chạy xuống dưới
+      }
+
       try {
         setLoading(true);
         
-        // 1. Xác định trường cần sắp xếp
+        // ... (Phần logic chọn orderByField giữ nguyên) ...
         let orderByField = 'totalScore';
         if (category === 'PRACTICE') orderByField = 'practiceScore';
         if (category === 'MOCK') orderByField = 'mockScore';
@@ -1709,36 +1720,25 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
         if (category === 'CHALLENGE') orderByField = 'challengeScore';
 
         let q;
-
-        // 2. Kiểm tra kỹ dữ liệu trước khi Query (SỬA LỖI TRẮNG TRANG)
+        // ... (Phần logic tạo query giữ nguyên) ...
         if (filter === 'CLASS') {
-            // Nếu thông tin lớp chưa tải xong -> Không làm gì cả
-            if (!currentUser.class) { 
-                setPlayers([]); 
-                setLoading(false); 
-                return; 
-            }
+            if (!currentUser.class) { setPlayers([]); setLoading(false); return; }
             q = query(collection(db, 'users'), where('class', '==', currentUser.class), orderBy(orderByField, 'desc'), limit(50));
-        
         } else if (filter === 'SCHOOL') {
-            // Nếu thông tin trường chưa tải xong
-            if (!currentUser.school) { 
-                setPlayers([]); 
-                setLoading(false); 
-                return; 
-            }
+            if (!currentUser.school) { setPlayers([]); setLoading(false); return; }
             q = query(collection(db, 'users'), where('school', '==', currentUser.school), orderBy(orderByField, 'desc'), limit(50));
-        
         } else {
-            // Toàn quốc (ALL) thì luôn chạy được
             q = query(collection(db, 'users'), orderBy(orderByField, 'desc'), limit(50));
         }
         
-        // 3. Thực hiện lấy dữ liệu
+        // 3. Gọi Firebase (Chỉ chạy khi chưa có Cache)
         const snap = await getDocs(q);
         const list: any[] = [];
         snap.forEach((d) => list.push(d.data()));
+        
+        // 4. 👇 LƯU VÀO CACHE (ĐOẠN NÀY BẠN CŨNG THIẾU)
         setPlayers(list);
+        setLeaderboardCache(prev => ({ ...prev, [cacheKey]: list }));
 
       } catch (err: any) { 
           console.error("Lỗi tải BXH:", err);
@@ -1747,14 +1747,13 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
       }
     };
 
-    // Thêm delay nhỏ 100ms để đảm bảo currentUser đã ổn định
     const timer = setTimeout(() => {
         if(currentUser) fetchLeaderboard();
     }, 100);
 
     return () => clearTimeout(timer);
 
-  }, [filter, category, currentUser]);
+  }, [filter, category, currentUser]); // Bỏ leaderboardCache ra khỏi đây
 
   const getCatLabel = () => {
       if(category === 'TOTAL') return 'Tổng điểm tích lũy';
@@ -2099,13 +2098,20 @@ const ChallengeScreen: React.FC<{
     // State lưu nội dung thầy nhập vào
     const [textInput, setTextInput] = useState('');
 
-    useEffect(() => {
-        // Nếu chưa có câu hỏi hôm nay thì random 1 câu
-        if (!session.todayQ && questions.length > 0) {
-            const randomQ = questions[Math.floor(Math.random() * questions.length)];
+  // ✅ ĐOẠN MỚI (CHỈ LẤY MCQ VÀ SHORT)
+useEffect(() => {
+    if (!session.todayQ && questions.length > 0) {
+        
+        // 1. Lọc danh sách: Chỉ giữ lại MCQ và Short
+        const validQuestions = questions.filter(q => q.type === 'MCQ' || q.type === 'Short');
+
+        // 2. Nếu có câu hỏi phù hợp thì mới random
+        if (validQuestions.length > 0) {
+            const randomQ = validQuestions[Math.floor(Math.random() * validQuestions.length)];
             setSession(prev => ({ ...prev, todayQ: randomQ }));
         }
-    }, [questions]);
+    }
+}, [questions]);
 
     const handleSubmit = (answer: string) => {
         if (!session.todayQ) return;
@@ -2131,7 +2137,7 @@ const ChallengeScreen: React.FC<{
                <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex-1 overflow-y-auto">
                   <div className="flex justify-between items-start mb-6">
                      <div className="bg-sky-50 text-sky-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">Daily Quest</div>
-                     <div className="text-right"><div className="font-black text-2xl text-slate-800">+1</div><div className="text-[10px] text-slate-400 font-bold uppercase">Điểm thưởng</div></div>
+                     <div className="text-right"><div className="font-black text-2xl text-slate-800">+10</div><div className="text-[10px] text-slate-400 font-bold uppercase">Điểm thưởng</div></div>
                   </div>
                   
                   {/* HIỂN THỊ ẢNH TRONG THỬ THÁCH */}
@@ -2239,12 +2245,74 @@ const pendingUpdates = useRef({ game: 0, practice: 0, exam: 0, challenge: 0, moc
   const [selectedTopic, setSelectedTopic] = useState<{id: string, label: string} | null>(null);
   const [expandedLessonIds, setExpandedLessonIds] = useState<string[]>([]);
 
-  useEffect(() => { const u = onAuthStateChanged(auth, (firebaseUser)=>{
-    if (!firebaseUser) {
-        setUser(null);
-        setScreen('AUTH');
+  // ✅ ĐOẠN MỚI: TỰ ĐỘNG ĐĂNG NHẬP TỪ CACHE (Tiết kiệm Read)
+useEffect(() => { 
+  const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
+    if (firebaseUser) {
+      // 1. Thử lấy User từ bộ nhớ máy trước
+      const cachedUser = localStorage.getItem('roboki_user');
+      
+      if (cachedUser) {
+          const parsedUser = JSON.parse(cachedUser);
+          // So khớp UID để đảm bảo an toàn
+          if (parsedUser.uid === firebaseUser.uid) {
+              console.log("👤 Đăng nhập nhanh từ Cache (0 tốn Read)");
+              setUser(parsedUser);
+              setScreen('HOME');
+              return; // 🛑 QUAN TRỌNG: Dừng lại, không gọi Firebase nữa
+          }
+      }
+
+      // 2. Nếu không có Cache thì mới chịu gọi Firebase (Tốn 1 Read)
+      console.log("☁️ Tải hồ sơ từ Firebase...");
+      try {
+          const docSnap = await getDoc(doc(db, 'users', firebaseUser.uid));
+          
+          if (docSnap.exists()) {
+              const userData = docSnap.data() as UserProfile;
+              setUser(userData);
+              // Lưu ngay vào Cache
+              localStorage.setItem('roboki_user', JSON.stringify(userData));
+          } else {
+              // Trường hợp hiếm: User auth có nhưng data chưa có
+              const fallback: UserProfile = { 
+                  uid: firebaseUser.uid, 
+                  name: firebaseUser.displayName || 'Học sinh', 
+                  email: firebaseUser.email || '', 
+                  class: '12', school: 'THPT Tự do', 
+                  totalScore: 0, practiceScore: 0, gameScore: 0, challengeScore: 0, examScore: 0, rank: 999 
+              };
+              await setDoc(doc(db, 'users', firebaseUser.uid), fallback);
+              setUser(fallback);
+              localStorage.setItem('roboki_user', JSON.stringify(fallback));
+          }
+          setScreen('HOME');
+      } catch (e) {
+          console.error("Lỗi login:", e);
+      }
+
+    } else {
+      // Xử lý đăng xuất
+      setUser(null);
+      setScreen('AUTH');
+      localStorage.removeItem('roboki_user'); // Xóa cache để bảo mật
     }
-  }); return () => u(); }, []);
+  }); 
+  
+  return () => unsub(); 
+}, []);
+// ✅ CODE MỚI: TỰ ĐỘNG LƯU USER VÀO MÁY KHI CÓ THAY ĐỔI
+useEffect(() => {
+    if (user) {
+        localStorage.setItem('roboki_user', JSON.stringify(user));
+    }
+}, [user]); // Chạy mỗi khi biến 'user' thay đổi (cộng điểm, sửa tên...)
+// ✅ THÊM ĐOẠN NÀY NGAY DƯỚI ĐỂ CẬP NHẬT CACHE KHI CHƠI GAME
+useEffect(() => {
+    if (user) {
+        localStorage.setItem('roboki_user', JSON.stringify(user));
+    }
+}, [user]);
   
   // ✅ COPY ĐOẠN NÀY ĐÈ LÊN ĐOẠN CŨ CỦA BẠN
   // ✅ DÁN ĐOẠN NÀY VÀO THAY THẾ
