@@ -60,6 +60,13 @@ export interface UserProfile {
   challengeScore: number;  // Điểm thử thách hàng ngày
   
   examScore: number;       // 👈 QUAN TRỌNG: Đã thêm trường này để tính điểm Thi Thử
-  
+  // 👇 THÊM DÒNG NÀY VÀO LÀ HẾT LỖI 👇
+  mockScore?: number;
   rank: number;
+  // 👇 CÁC TRƯỜNG MỚI ĐỂ PHỤC VỤ HUY HIỆU 👇
+  loginStreak?: number;      // Chuỗi ngày đăng nhập liên tiếp (cho huy hiệu Chăm chỉ)
+  fastAnswerCount?: number;  // Số lần trả lời nhanh < 5s (cho huy hiệu Tia chớp)
+  correctStreak?: number;    // Chuỗi trả lời đúng liên tiếp (cho huy hiệu Xạ thủ)
+  lastStudyHour?: number;    // Giờ học bài gần nhất (0-23) (cho Cú đêm, Gà gáy)
+  luckySpinCount?: number;   // Số lần quay trúng thưởng lớn (cho Thần tài)
 }
