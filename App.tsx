@@ -2245,10 +2245,56 @@ const pendingUpdates = useRef({ game: 0, practice: 0, exam: 0, challenge: 0, moc
     }
   }); return () => u(); }, []);
   
-  useEffect(() => { const f = async () => { try { setLoadingData(true); 
-    const lS = await getDocs(collection(db, 'lessons')); const lL: Lesson[] = []; lS.forEach(d => lL.push(d.data() as Lesson)); setLessons(lL);
-    const qS = await getDocs(collection(db, 'questions')); const lQ: Question[] = []; qS.forEach(d => lQ.push(d.data() as Question)); setQuestions(lQ);
-  } catch (e) { setToastMsg("Lỗi tải data"); } finally { setLoadingData(false); } }; f(); }, []);
+  // ✅ COPY ĐOẠN NÀY ĐÈ LÊN ĐOẠN CŨ CỦA BẠN
+  useEffect(() => { 
+    const fetchData = async () => { 
+      try { 
+        setLoadingData(true); 
+        
+        // 1. Kiểm tra xem trong máy đã có dữ liệu chưa
+        const cachedQuestions = localStorage.getItem('questions_cache');
+        const cachedLessons = localStorage.getItem('lessons_cache');
+        const cacheTime = localStorage.getItem('data_cache_time');
+
+        // Kiểm tra xem dữ liệu còn "tươi" không (Ví dụ: 24 giờ = 86400000 ms)
+        // Nếu muốn test ngay thì chỉnh số này nhỏ lại, nhưng để 24h là tốt nhất cho túi tiền
+        const isCacheValid = cacheTime && (Date.now() - parseInt(cacheTime) < 86400000);
+
+        if (cachedQuestions && cachedLessons && isCacheValid) {
+            // -> NẾU CÓ RỒI: Dùng lại, KHÔNG gọi Firebase nữa (Tiết kiệm 100%)
+            console.log("✅ Dùng data từ bộ nhớ đệm (Cache) - Không tốn Read");
+            setQuestions(JSON.parse(cachedQuestions));
+            setLessons(JSON.parse(cachedLessons));
+        } else {
+            // -> NẾU CHƯA CÓ HOẶC QUÁ CŨ: Mới chịu gọi Firebase
+            console.log("⚠️ Cache cũ hoặc không có, đang tải mới từ Firebase...");
+            
+            const lS = await getDocs(collection(db, 'lessons')); 
+            const lL: Lesson[] = []; 
+            lS.forEach(d => lL.push(d.data() as Lesson)); 
+            
+            const qS = await getDocs(collection(db, 'questions')); 
+            const lQ: Question[] = []; 
+            qS.forEach(d => lQ.push(d.data() as Question)); 
+            
+            // Cập nhật State
+            setLessons(lL);
+            setQuestions(lQ);
+
+            // QUAN TRỌNG: Lưu vào máy để lần sau dùng
+            localStorage.setItem('lessons_cache', JSON.stringify(lL));
+            localStorage.setItem('questions_cache', JSON.stringify(lQ));
+            localStorage.setItem('data_cache_time', Date.now().toString());
+        }
+      } catch (e) { 
+        setToastMsg("Lỗi tải data"); 
+      } finally { 
+        setLoadingData(false); 
+      } 
+    }; 
+    
+    fetchData(); 
+  }, []);
 
   // --- HÀM NẠP DATA THÔNG MINH (CHỈ NẠP CÂU MỚI) ---
   const handleNap = async () => {
