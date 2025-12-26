@@ -1692,7 +1692,8 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
   const [category, setCategory] = useState<'TOTAL' | 'PRACTICE' | 'MOCK' | 'EXAM' | 'GAME' | 'CHALLENGE'>('TOTAL');
   const [loading, setLoading] = useState(true);
   const [players, setPlayers] = useState<any[]>([]);
-
+// 👇 THÊM DÒNG NÀY ĐỂ LƯU CACHE (RAM)
+const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>({});
   // ✅ DÁN ĐOẠN NÀY VÀO
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -2246,28 +2247,26 @@ const pendingUpdates = useRef({ game: 0, practice: 0, exam: 0, challenge: 0, moc
   }); return () => u(); }, []);
   
   // ✅ COPY ĐOẠN NÀY ĐÈ LÊN ĐOẠN CŨ CỦA BẠN
+  // ✅ DÁN ĐOẠN NÀY VÀO THAY THẾ
   useEffect(() => { 
     const fetchData = async () => { 
       try { 
         setLoadingData(true); 
         
-        // 1. Kiểm tra xem trong máy đã có dữ liệu chưa
+        // 1. Kiểm tra cache trong máy
         const cachedQuestions = localStorage.getItem('questions_cache');
         const cachedLessons = localStorage.getItem('lessons_cache');
         const cacheTime = localStorage.getItem('data_cache_time');
 
-        // Kiểm tra xem dữ liệu còn "tươi" không (Ví dụ: 24 giờ = 86400000 ms)
-        // Nếu muốn test ngay thì chỉnh số này nhỏ lại, nhưng để 24h là tốt nhất cho túi tiền
+        // Kiểm tra hạn sử dụng cache (24 giờ)
         const isCacheValid = cacheTime && (Date.now() - parseInt(cacheTime) < 86400000);
 
         if (cachedQuestions && cachedLessons && isCacheValid) {
-            // -> NẾU CÓ RỒI: Dùng lại, KHÔNG gọi Firebase nữa (Tiết kiệm 100%)
-            console.log("✅ Dùng data từ bộ nhớ đệm (Cache) - Không tốn Read");
+            console.log("✅ Dùng data từ Cache (Không tốn Read)");
             setQuestions(JSON.parse(cachedQuestions));
             setLessons(JSON.parse(cachedLessons));
         } else {
-            // -> NẾU CHƯA CÓ HOẶC QUÁ CŨ: Mới chịu gọi Firebase
-            console.log("⚠️ Cache cũ hoặc không có, đang tải mới từ Firebase...");
+            console.log("⚠️ Tải mới từ Firebase...");
             
             const lS = await getDocs(collection(db, 'lessons')); 
             const lL: Lesson[] = []; 
@@ -2277,11 +2276,10 @@ const pendingUpdates = useRef({ game: 0, practice: 0, exam: 0, challenge: 0, moc
             const lQ: Question[] = []; 
             qS.forEach(d => lQ.push(d.data() as Question)); 
             
-            // Cập nhật State
             setLessons(lL);
             setQuestions(lQ);
 
-            // QUAN TRỌNG: Lưu vào máy để lần sau dùng
+            // Lưu vào máy
             localStorage.setItem('lessons_cache', JSON.stringify(lL));
             localStorage.setItem('questions_cache', JSON.stringify(lQ));
             localStorage.setItem('data_cache_time', Date.now().toString());
