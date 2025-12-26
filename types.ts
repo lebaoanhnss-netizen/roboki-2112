@@ -11,7 +11,7 @@ export interface Lesson {
   examples?: string[]; // Mảng chứa các ví dụ
 }
 
-// 2. Định nghĩa Interface cho Ý nhỏ trong câu Đúng/Sai (Tách riêng ra cho gọn)
+// 2. Định nghĩa Interface cho Ý nhỏ trong câu Đúng/Sai
 export interface SubQuestion {
   id: string;      // sq1, sq2...
   content: string; // Nội dung ý
@@ -28,7 +28,7 @@ export interface Question {
   id: string;
   topic: string;
   lessonId: string; // Mã bài học (l1.1, l1.2...)
-  level: Difficulty | string; // Cho phép string để linh hoạt
+  level: Difficulty | string;
   type: QuestionType;
   promptText: string;
   imageUrl?: string;
@@ -46,7 +46,7 @@ export interface Question {
   subQuestions?: SubQuestion[]; 
 }
 
-// 5. Định nghĩa Interface cho Người dùng (Đã bổ sung examScore)
+// 5. Định nghĩa Interface cho Người dùng (Đầy đủ các trường)
 export interface UserProfile {
   uid: string;
   name: string;
@@ -54,19 +54,21 @@ export interface UserProfile {
   class: string;
   school: string; 
   
-  totalScore: number;      // Tổng điểm tích lũy
+  // --- HỆ THỐNG ĐIỂM SỐ ---
+  totalScore: number;      // Tổng điểm tích lũy (Ranking chính)
   practiceScore: number;   // Điểm luyện tập
   gameScore: number;       // Điểm trò chơi
-  challengeScore: number;  // Điểm thử thách hàng ngày
+  challengeScore: number;  // Điểm thử thách
+  examScore: number;       // Điểm thi thử
+  mockScore?: number;      // Điểm tự tạo đề (Dấu ? nghĩa là có thể chưa có với user cũ)
   
-  examScore: number;       // 👈 QUAN TRỌNG: Đã thêm trường này để tính điểm Thi Thử
-  // 👇 THÊM DÒNG NÀY VÀO LÀ HẾT LỖI 👇
-  mockScore?: number;
-  rank: number;
-  // 👇 CÁC TRƯỜNG MỚI ĐỂ PHỤC VỤ HUY HIỆU 👇
-  loginStreak?: number;      // Chuỗi ngày đăng nhập liên tiếp (cho huy hiệu Chăm chỉ)
-  fastAnswerCount?: number;  // Số lần trả lời nhanh < 5s (cho huy hiệu Tia chớp)
-  correctStreak?: number;    // Chuỗi trả lời đúng liên tiếp (cho huy hiệu Xạ thủ)
-  lastStudyHour?: number;    // Giờ học bài gần nhất (0-23) (cho Cú đêm, Gà gáy)
-  luckySpinCount?: number;   // Số lần quay trúng thưởng lớn (cho Thần tài)
+  rank?: number;           // Thứ hạng hiện tại
+
+  // --- HỆ THỐNG HUY HIỆU & THỐNG KÊ (MỚI) ---
+  loginStreak?: number;        // Số ngày đăng nhập liên tiếp (Huy hiệu Chăm chỉ)
+  fastAnswerCount?: number;    // Số câu trả lời nhanh < 5s (Huy hiệu Tia chớp)
+  correctStreak?: number;      // Chuỗi trả lời đúng liên tiếp (Huy hiệu Xạ thủ)
+  lastStudyHour?: number;      // Giờ học bài gần nhất 0-23h (Huy hiệu Cú đêm/Gà gáy)
+  luckySpinCount?: number;     // Số lần quay trúng thưởng lớn (Huy hiệu Thần tài)
+  completedChallenges?: number;// Số lượng thử thách đã hoàn thành (Huy hiệu Thợ săn)
 }

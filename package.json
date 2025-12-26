@@ -12,6 +12,8 @@
     "@capacitor/android": "^6.0.0",
     "@capacitor/cli": "^6.0.0",
     "@capacitor/core": "^6.0.0",
+    "expo": "^54.0.30",
+    "expo-av": "~16.0.8",
     "firebase": "^10.8.0",
     "katex": "^0.16.9",
     "lucide-react": "^0.344.0",
@@ -22,6 +24,7 @@
   "devDependencies": {
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
+    "@types/react-native": "^0.72.8",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.18",
     "postcss": "^8.4.35",

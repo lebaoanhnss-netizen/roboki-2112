@@ -1,4 +1,5 @@
 // src/App.tsx
+import { playSound } from './utils/SoundManager';
 import React, { useState, useEffect, useRef } from 'react';
 import MathRender from './components/MathRender';
 import Toast from './components/Toast';
@@ -609,11 +610,14 @@ const ContentScreen: React.FC<{
 // 2. PRACTICE SCREEN
 const PracticeScreen: React.FC<{
   onCopy: (txt: string) => void,
-  onScore: (pts: number) => void,
+ onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge'|'mock') => void,
   sessionData: PracticeSessionData,
   setSessionData: React.Dispatch<React.SetStateAction<PracticeSessionData>>,
   questions: Question[],
-  lessons: Lesson[]
+  lessons: Lesson[],
+  // 👇 Thêm dòng này nếu chưa có (để khớp với App.tsx gọi ở dưới)
+  onSave: () => void, 
+  onExit: () => void
 }> = ({ onCopy, onScore, sessionData, setSessionData, questions, lessons }) => {
   const {
     configMode, selectedTopic, selectedLessonId, selectedLevel, selectedType, errorMsg,
@@ -797,8 +801,9 @@ const MockTestScreen: React.FC<{
   session: MockTestSessionData,
   setSession: React.Dispatch<React.SetStateAction<MockTestSessionData>>,
   questions: Question[],
-  onScore: (pts: number) => void,
-  onCopy: (txt: string) => void 
+  onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge'|'mock') => void,
+  onCopy: (txt: string) => void ,
+  onSave: () => void // 👈 Thêm dòng này
 }> = ({ onBack, session, setSession, questions, onScore, onCopy }) => {
   const { mode, selectedTopics, countMCQ, countTF, countShort, quizQuestions, currentQIndex, userAnswers, score, errorMsg } = session;
 
@@ -960,7 +965,9 @@ const ExamScreen: React.FC<{
   session: ExamSessionData;
   setSession: React.Dispatch<React.SetStateAction<ExamSessionData>>;
   questions: Question[];
-  onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge') => void;
+  // 👇 SỬA DÒNG NÀY
+  onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge'|'mock') => void;
+  onSave: () => void; // 👈 Thêm dòng này
 }> = ({ onBack, session, setSession, questions, onScore }) => {
   const { mode, examType, title, timeLeft, quizQuestions, currentQIndex, userAnswers, score, details } = session;
   const update = (d: any) => setSession((p: any) => ({ ...p, ...d }));
@@ -1213,7 +1220,7 @@ const ExamScreen: React.FC<{
 // 5. GAME SCREEN (ĐÃ SỬA LỖI HIỂN THỊ ĐÁP ÁN TRIỆU PHÚ)
 const GameScreen: React.FC<{
   onCopy: (txt: string) => void,
-  onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge') => void,
+  onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge'|'mock') => void,
   sessionData: GameSessionData,
   setSessionData: React.Dispatch<React.SetStateAction<GameSessionData>>,
   questions: Question[]
@@ -1686,10 +1693,13 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
   const [loading, setLoading] = useState(true);
   const [players, setPlayers] = useState<any[]>([]);
 
+  // ✅ DÁN ĐOẠN NÀY VÀO
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
         setLoading(true);
+        
+        // 1. Xác định trường cần sắp xếp
         let orderByField = 'totalScore';
         if (category === 'PRACTICE') orderByField = 'practiceScore';
         if (category === 'MOCK') orderByField = 'mockScore';
@@ -1698,21 +1708,51 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
         if (category === 'CHALLENGE') orderByField = 'challengeScore';
 
         let q;
+
+        // 2. Kiểm tra kỹ dữ liệu trước khi Query (SỬA LỖI TRẮNG TRANG)
         if (filter === 'CLASS') {
+            // Nếu thông tin lớp chưa tải xong -> Không làm gì cả
+            if (!currentUser.class) { 
+                setPlayers([]); 
+                setLoading(false); 
+                return; 
+            }
             q = query(collection(db, 'users'), where('class', '==', currentUser.class), orderBy(orderByField, 'desc'), limit(50));
+        
         } else if (filter === 'SCHOOL') {
+            // Nếu thông tin trường chưa tải xong
+            if (!currentUser.school) { 
+                setPlayers([]); 
+                setLoading(false); 
+                return; 
+            }
             q = query(collection(db, 'users'), where('school', '==', currentUser.school), orderBy(orderByField, 'desc'), limit(50));
+        
         } else {
+            // Toàn quốc (ALL) thì luôn chạy được
             q = query(collection(db, 'users'), orderBy(orderByField, 'desc'), limit(50));
         }
         
+        // 3. Thực hiện lấy dữ liệu
         const snap = await getDocs(q);
         const list: any[] = [];
         snap.forEach((d) => list.push(d.data()));
         setPlayers(list);
-      } catch (err) { console.error(err); } finally { setLoading(false); }
+
+      } catch (err: any) { 
+          console.error("Lỗi tải BXH:", err);
+      } finally { 
+          setLoading(false); 
+      }
     };
-    fetchLeaderboard();
+
+    // Thêm delay nhỏ 100ms để đảm bảo currentUser đã ổn định
+    const timer = setTimeout(() => {
+        if(currentUser) fetchLeaderboard();
+    }, 100);
+
+    return () => clearTimeout(timer);
+
   }, [filter, category, currentUser]);
 
   const getCatLabel = () => {
@@ -2183,7 +2223,7 @@ const App: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loadingData, setLoadingData] = useState(true);
   // 👇 THÊM DÒNG NÀY: Biến tạm để cộng dồn điểm
- // 👇 Đã thêm trường 'mock'
+ // 👇 Thêm "mock: 0" vào giữa
 const pendingUpdates = useRef({ game: 0, practice: 0, exam: 0, challenge: 0, mock: 0, total: 0 });
   
   // State cũ
@@ -2369,7 +2409,8 @@ const saveData = async () => {
       
       try {
           // 1. Cực kỳ quan trọng: Xóa sạch bộ nhớ đệm trước
-          pendingUpdates.current = { game: 0, practice: 0, exam: 0, challenge: 0, total: 0 };
+          // 👇 Thêm "mock: 0" vào giữa
+pendingUpdates.current = { game: 0, practice: 0, exam: 0, challenge: 0, mock: 0, total: 0 };
           
           // 2. Gửi lệnh đè (set) số 0 lên Firebase ngay lập tức
           // Dùng setDoc với merge:true để đảm bảo nó ghi đè giá trị chứ không cộng dồn
