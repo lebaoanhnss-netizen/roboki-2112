@@ -39,7 +39,7 @@ import {
   ThumbsUp, Percent, Activity, Send, Home, Globe, KeyRound, X, Loader2,
   FileText, ClipboardList, School, Edit3, Save, MapPin, ShieldAlert,
   Lightbulb, GraduationCap, Clock, Phone, Info, StopCircle as StopIcon,
-  Coins, PhoneCall, HelpCircle as HelpIcon, ArrowBigRight, Trash2, SkipForward // 👈 THÊM CÁI NÀY VÀO
+  Coins, PhoneCall, HelpCircle as HelpIcon, ArrowBigRight, Trash2, SkipForward, Medal // 👈 THÊM CÁI NÀY VÀO
 } from 'lucide-react';
 
 // --- UTILS ---
@@ -1679,6 +1679,7 @@ const GameScreen: React.FC<{
 };
 
 // 7. LEADERBOARD SCREEN (GIAO DIỆN MỚI: 2 DÒNG GỌN GÀNG)
+// 7. LEADERBOARD SCREEN (HỆ THỐNG DANH HIỆU ĐA DẠNG THEO TỪNG MỤC)
 const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile }> = ({ onBack, currentUser }) => {
   const [filter, setFilter] = useState<'CLASS' | 'SCHOOL' | 'ALL'>('CLASS');
   const [category, setCategory] = useState<'TOTAL' | 'PRACTICE' | 'MOCK' | 'EXAM' | 'GAME' | 'CHALLENGE'>('TOTAL');
@@ -1723,6 +1724,91 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
       if(category === 'CHALLENGE') return 'Điểm Thử thách';
   }
 
+  // 👇 HÀM TÍNH DANH HIỆU THEO TỪNG LOẠI (SUPER RANK SYSTEM)
+  const getRankByScore = (score: number, type: string) => {
+      // 1. Cấu hình danh hiệu cho TỔNG HỢP (Hệ thống Quân hàm)
+      const TOTAL_RANKS = [
+          { min: 5000, label: 'VUA VẬT LÍ', icon: '👑', color: 'bg-yellow-100 text-yellow-800 border-yellow-300 shadow-md animate-pulse' },
+          { min: 3500, label: 'ĐẠI TƯỚNG', icon: '🐲', color: 'bg-orange-100 text-orange-800 border-orange-300' },
+          { min: 2000, label: 'CAO THỦ', icon: '🦅', color: 'bg-rose-50 text-rose-600 border-rose-200' },
+          { min: 1000, label: 'TINH ANH', icon: '🎖️', color: 'bg-purple-50 text-purple-600 border-purple-200' },
+          { min: 500, label: 'DŨNG SĨ', icon: '🛡️', color: 'bg-indigo-50 text-indigo-600 border-indigo-200' },
+          { min: 200, label: 'CHIẾN BINH', icon: '⚔️', color: 'bg-blue-50 text-blue-600 border-blue-200' },
+          { min: 60, label: 'TÂN BINH', icon: '🐣', color: 'bg-emerald-50 text-emerald-600 border-emerald-200' },
+          { min: 0, label: 'TẬP SỰ', icon: '🌱', color: 'bg-slate-100 text-slate-500 border-slate-200' },
+      ];
+
+      // 2. Cấu hình danh hiệu cho LUYỆN TẬP (Hệ thống Học vấn)
+      const PRACTICE_RANKS = [
+          { min: 2000, label: 'BÁC HỌC ĐIÊN', icon: '🤯', color: 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-300 animate-pulse' },
+          { min: 1500, label: 'GIÁO SƯ', icon: '👨‍🏫', color: 'bg-pink-100 text-pink-800 border-pink-300' },
+          { min: 1000, label: 'TIẾN SĨ', icon: '🎓', color: 'bg-pink-50 text-pink-600 border-pink-200' },
+          { min: 600, label: 'THẠC SĨ', icon: '📜', color: 'bg-purple-50 text-purple-600 border-purple-200' },
+          { min: 300, label: 'CỬ NHÂN', icon: '📙', color: 'bg-indigo-50 text-indigo-600 border-indigo-200' },
+          { min: 100, label: 'MỌT SÁCH', icon: '🤓', color: 'bg-blue-50 text-blue-600 border-blue-200' },
+          { min: 40, label: 'ONG CHĂM CHỈ', icon: '🐝', color: 'bg-amber-50 text-amber-600 border-amber-200' },
+          { min: 0, label: 'HAM HỌC', icon: '📖', color: 'bg-slate-100 text-slate-500 border-slate-200' },
+      ];
+
+      // 3. Cấu hình danh hiệu cho THI THỬ (Hệ thống Khoa cử Quan lại)
+      const EXAM_RANKS = [
+          { min: 2000, label: 'TRẠNG NGUYÊN', icon: '🥇', color: 'bg-red-100 text-red-800 border-red-300 animate-pulse' },
+          { min: 1500, label: 'BẢNG NHÃN', icon: '🥈', color: 'bg-orange-100 text-orange-800 border-orange-300' },
+          { min: 1000, label: 'THÁM HOA', icon: '🥉', color: 'bg-orange-50 text-orange-600 border-orange-200' },
+          { min: 600, label: 'HOÀNG GIÁP', icon: '🏵️', color: 'bg-yellow-50 text-yellow-600 border-yellow-200' },
+          { min: 300, label: 'TIẾN SĨ', icon: '📜', color: 'bg-lime-50 text-lime-600 border-lime-200' },
+          { min: 100, label: 'CỬ NHÂN', icon: '📝', color: 'bg-green-50 text-green-600 border-green-200' },
+          { min: 40, label: 'TÚ TÀI', icon: '✍️', color: 'bg-teal-50 text-teal-600 border-teal-200' },
+          { min: 0, label: 'SĨ TỬ', icon: '🎒', color: 'bg-slate-100 text-slate-500 border-slate-200' },
+      ];
+
+      // 4. Cấu hình danh hiệu cho GAME (Hệ thống Game thủ)
+      const GAME_RANKS = [
+          { min: 2000, label: 'HACKER', icon: '👾', color: 'bg-black text-green-400 border-green-500 shadow-md animate-pulse' },
+          { min: 1500, label: 'TRÙM CUỐI', icon: '👹', color: 'bg-gray-800 text-red-400 border-red-500' },
+          { min: 1000, label: 'TIA CHỚP', icon: '⚡', color: 'bg-yellow-50 text-yellow-600 border-yellow-200' },
+          { min: 600, label: 'CAO THỦ', icon: '🎮', color: 'bg-violet-50 text-violet-600 border-violet-200' },
+          { min: 300, label: 'TAY CHƠI', icon: '🎲', color: 'bg-purple-50 text-purple-600 border-purple-200' },
+          { min: 100, label: 'CÓ KHIẾU', icon: '🎯', color: 'bg-sky-50 text-sky-600 border-sky-200' },
+          { min: 40, label: 'GÀ MỜ', icon: '🐥', color: 'bg-emerald-50 text-emerald-600 border-emerald-200' },
+          { min: 0, label: 'TẬP CHƠI', icon: '🎮', color: 'bg-slate-100 text-slate-500 border-slate-200' },
+      ];
+
+      // 5. Cấu hình danh hiệu cho THỬ THÁCH (Hệ thống Thợ săn)
+      const CHALLENGE_RANKS = [
+          { min: 1000, label: 'KẺ HỦY DIỆT', icon: '🤖', color: 'bg-red-100 text-red-900 border-red-300 animate-pulse' },
+          { min: 700, label: 'BẤT BẠI', icon: '🔥', color: 'bg-orange-100 text-orange-800 border-orange-300' },
+          { min: 400, label: 'CHIẾN THẦN', icon: '🔱', color: 'bg-amber-50 text-amber-700 border-amber-200' },
+          { min: 200, label: 'SÁT THỦ', icon: '🥷', color: 'bg-stone-100 text-stone-700 border-stone-300' },
+          { min: 100, label: 'THỢ SĂN', icon: '🏹', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+          { min: 50, label: 'TRINH SÁT', icon: '🔭', color: 'bg-cyan-50 text-cyan-700 border-cyan-200' },
+          { min: 20, label: 'LÍNH MỚI', icon: '🛡️', color: 'bg-slate-100 text-slate-600 border-slate-200' },
+          { min: 0, label: 'DÂN THƯỜNG', icon: '😐', color: 'bg-slate-50 text-slate-400 border-slate-100' },
+      ];
+
+      // 6. Cấu hình danh hiệu cho TỰ TẠO ĐỀ (Hệ thống Kiến tạo)
+      const MOCK_RANKS = [
+          { min: 1000, label: 'ĐẠI TÔNG SƯ', icon: '🧘', color: 'bg-purple-100 text-purple-900 border-purple-300 animate-pulse' },
+          { min: 700, label: 'VIỆN SĨ', icon: '🏛️', color: 'bg-fuchsia-50 text-fuchsia-800 border-fuchsia-200' },
+          { min: 400, label: 'NHÀ THÔNG THÁI', icon: '🔮', color: 'bg-violet-50 text-violet-700 border-violet-200' },
+          { min: 200, label: 'KIẾN TRÚC SƯ', icon: '📐', color: 'bg-blue-50 text-blue-700 border-blue-200' },
+          { min: 100, label: 'NHÀ NGHIÊN CỨU', icon: '⚗️', color: 'bg-cyan-50 text-cyan-700 border-cyan-200' },
+          { min: 50, label: 'THIẾT KẾ', icon: '✏️', color: 'bg-sky-50 text-sky-700 border-sky-200' },
+          { min: 20, label: 'THỢ HỌC VIỆC', icon: '🔨', color: 'bg-slate-100 text-slate-600 border-slate-200' },
+          { min: 0, label: 'TỰ LẬP', icon: '🧱', color: 'bg-slate-50 text-slate-400 border-slate-100' },
+      ];
+
+      let selectedRanks = TOTAL_RANKS;
+      if (type === 'PRACTICE') selectedRanks = PRACTICE_RANKS;
+      if (type === 'EXAM') selectedRanks = EXAM_RANKS;
+      if (type === 'GAME') selectedRanks = GAME_RANKS;
+      if (type === 'CHALLENGE') selectedRanks = CHALLENGE_RANKS;
+      if (type === 'MOCK') selectedRanks = MOCK_RANKS;
+
+      // Tìm rank phù hợp nhất
+      return selectedRanks.find(r => score >= r.min) || selectedRanks[selectedRanks.length - 1];
+  }
+
   return (
     <div className="pb-24 pt-4 px-4 h-full flex flex-col bg-slate-50">
       <div className="flex items-center gap-3 mb-4">
@@ -1730,21 +1816,18 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
         <div><h2 className="text-xl font-black text-slate-800">Bảng xếp hạng</h2></div>
       </div>
       
-      {/* 1. LỌC THEO PHẠM VI */}
+      {/* 1. LỌC PHẠM VI */}
       <div className="flex bg-white p-1 rounded-2xl shadow-sm border border-slate-100 mb-4">
           <button onClick={() => setFilter('CLASS')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${filter === 'CLASS' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-400'}`}>Lớp</button>
           <button onClick={() => setFilter('SCHOOL')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${filter === 'SCHOOL' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-400'}`}>Trường</button>
           <button onClick={() => setFilter('ALL')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${filter === 'ALL' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-400'}`}>Toàn quốc</button>
       </div>
 
-      {/* 2. MENU CÁC LOẠI ĐIỂM (ĐÃ SỬA THÀNH LƯỚI 3 CỘT x 2 DÒNG) */}
+      {/* 2. MENU GRID (3x2) */}
       <div className="grid grid-cols-3 gap-2 mb-2">
-          {/* Dòng 1 */}
           <button onClick={() => setCategory('TOTAL')} className={`py-2.5 rounded-xl text-[10px] font-bold border transition-all ${category === 'TOTAL' ? 'bg-indigo-50 border-indigo-500 text-indigo-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>Tổng hợp</button>
           <button onClick={() => setCategory('PRACTICE')} className={`py-2.5 rounded-xl text-[10px] font-bold border transition-all ${category === 'PRACTICE' ? 'bg-orange-50 border-orange-500 text-orange-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>Luyện tập</button>
           <button onClick={() => setCategory('MOCK')} className={`py-2.5 rounded-xl text-[10px] font-bold border transition-all ${category === 'MOCK' ? 'bg-purple-50 border-purple-500 text-purple-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>Tự tạo đề</button>
-          
-          {/* Dòng 2 */}
           <button onClick={() => setCategory('EXAM')} className={`py-2.5 rounded-xl text-[10px] font-bold border transition-all ${category === 'EXAM' ? 'bg-red-50 border-red-500 text-red-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>Thi thử</button>
           <button onClick={() => setCategory('CHALLENGE')} className={`py-2.5 rounded-xl text-[10px] font-bold border transition-all ${category === 'CHALLENGE' ? 'bg-sky-50 border-sky-500 text-sky-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>Thử thách</button>
           <button onClick={() => setCategory('GAME')} className={`py-2.5 rounded-xl text-[10px] font-bold border transition-all ${category === 'GAME' ? 'bg-emerald-50 border-emerald-500 text-emerald-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>Trò chơi</button>
@@ -1755,7 +1838,7 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
           {category === 'TOTAL' && <span className="text-[9px] font-bold text-rose-500 bg-rose-50 px-2 py-0.5 rounded border border-rose-100">Trừ điểm Game</span>}
       </div>
 
-      {/* 3. DANH SÁCH XẾP HẠNG */}
+      {/* 3. DANH SÁCH (CÓ DANH HIỆU THEO TỪNG LOẠI) */}
       <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 flex-1 overflow-y-auto">
         {loading ? <div className="text-center py-4 text-slate-400"><Loader2 className="animate-spin inline mr-2"/> Đang tải...</div> : (
           <div className="space-y-3">{players.map((u, i) => {
@@ -1767,16 +1850,39 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
               if (category === 'GAME') displayScore = u.gameScore || 0;
               if (category === 'CHALLENGE') displayScore = u.challengeScore || 0;
 
+              // Huy chương cho Top 3
+              let rankIcon;
+              if (i === 0) rankIcon = <Medal size={32} className="text-yellow-400 fill-yellow-100 drop-shadow-sm animate-bounce-short"/>;
+              else if (i === 1) rankIcon = <Medal size={28} className="text-slate-400 fill-slate-100 drop-shadow-sm"/>;
+              else if (i === 2) rankIcon = <Medal size={28} className="text-orange-600 fill-orange-100 drop-shadow-sm"/>;
+              else rankIcon = <span className="text-sm font-black text-slate-400">{i + 1}</span>;
+
+              // 👇 LẤY DANH HIỆU (Truyền thêm category vào để lấy đúng loại)
+              const rankTitle = getRankByScore(displayScore, category);
+
               return (
-                <div key={u.uid} className="flex items-center justify-between p-4 rounded-2xl border border-slate-100 hover:border-slate-300 transition-colors">
+                <div key={u.uid} className={`flex items-center justify-between p-4 rounded-2xl border transition-colors ${u.uid === currentUser.uid ? 'bg-indigo-50 border-indigo-200' : 'bg-white border-slate-100 hover:border-slate-300'}`}>
                    <div className="flex items-center gap-4">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black ${i===0?'bg-yellow-100 text-yellow-600':i===1?'bg-slate-200 text-slate-600':i===2?'bg-orange-100 text-orange-600':'bg-slate-50 text-slate-400'}`}>{i+1}</div>
+                      {/* Số thứ tự / Huy chương */}
+                      <div className="w-8 h-8 flex items-center justify-center shrink-0">
+                          {rankIcon}
+                      </div>
+                      
                       <div>
-                          <div className="font-bold text-sm text-slate-800">{u.name}</div>
+                          <div className={`font-bold text-sm flex items-center gap-2 flex-wrap ${u.uid === currentUser.uid ? 'text-indigo-700' : 'text-slate-800'}`}>
+                            {u.name} 
+                            {/* 👇 HIỂN THỊ DANH HIỆU */}
+                            <span className={`text-[8px] px-2 py-0.5 rounded-md border font-black uppercase tracking-wider flex items-center gap-1 whitespace-nowrap ${rankTitle.color}`}>
+                                {rankTitle.icon} {rankTitle.label}
+                            </span>
+                          </div>
                           <div className="text-[10px] text-slate-400">{u.class} - {u.school}</div>
                       </div>
                    </div>
-                   <div className="font-black text-slate-800 text-lg">{displayScore}</div>
+                   
+                   <div className={`font-black text-lg ${i===0 ? 'text-yellow-500' : i===1 ? 'text-slate-500' : i===2 ? 'text-orange-600' : 'text-slate-800'}`}>
+                      {displayScore}
+                   </div>
                 </div>
               )
           })}</div>
