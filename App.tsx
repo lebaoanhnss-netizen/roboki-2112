@@ -875,11 +875,13 @@ const MockTestScreen: React.FC<{
               if (uAns === q.answerKey) totalScore += 0.25; 
           }
       });
-      const finalPoints = Math.round(totalScore * 1);
-      onScore(finalPoints);
+      const finalPoints = Math.round(totalScore * 100)/100;
+      
+      // 👇 QUAN TRỌNG NHẤT LÀ SỬA DÒNG NÀY 👇
+      onScore(finalPoints, 'mock'); 
+      
       updateSession({ mode: 'RESULT', score: finalPoints });
   };
-
   const copyQuestionContent = (q: Question) => {
       let content = q.promptText;
       if (q.subQuestions) { content += "\n\nCÁC PHÁT BIỂU:"; q.subQuestions.forEach((sq, idx) => { content += `\n${idx+1}) ${sq.content}`; }); }
@@ -1033,8 +1035,12 @@ const ExamScreen: React.FC<{
        }
     });
 
+    // Làm gọn số lẻ (ví dụ 8.2500001 -> 8.25)
     const finalScore = Math.round(rawScore * 100) / 100; 
-    onScore(Math.round(finalScore * 1), 'exam'); 
+    
+    // 👇 SỬA Ở ĐÂY: Truyền thẳng finalScore, bỏ Math.round đi
+    onScore(finalScore, 'exam'); 
+    
     update({ mode: 'RESULT', score: finalScore, details: { mcq: dMCQ, tf: dTF, short: dShort } });
   };
 
@@ -1672,13 +1678,12 @@ const GameScreen: React.FC<{
   return null;
 };
 
-// 7. LEADERBOARD SCREEN (CẬP NHẬT: THÊM LỌC THEO CATEGORY)
+// 7. LEADERBOARD SCREEN (GIAO DIỆN MỚI: 2 DÒNG GỌN GÀNG)
 const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile }> = ({ onBack, currentUser }) => {
   const [filter, setFilter] = useState<'CLASS' | 'SCHOOL' | 'ALL'>('CLASS');
-  // 👇 THÊM BỘ LỌC CATEGORY
-  const [category, setCategory] = useState<'TOTAL' | 'PRACTICE' | 'EXAM' | 'GAME'>('TOTAL');
+  const [category, setCategory] = useState<'TOTAL' | 'PRACTICE' | 'MOCK' | 'EXAM' | 'GAME' | 'CHALLENGE'>('TOTAL');
   const [loading, setLoading] = useState(true);
-  const [players, setPlayers] = useState<UserProfile[]>([]);
+  const [players, setPlayers] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -1686,8 +1691,10 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
         setLoading(true);
         let orderByField = 'totalScore';
         if (category === 'PRACTICE') orderByField = 'practiceScore';
+        if (category === 'MOCK') orderByField = 'mockScore';
         if (category === 'EXAM') orderByField = 'examScore';
         if (category === 'GAME') orderByField = 'gameScore';
+        if (category === 'CHALLENGE') orderByField = 'challengeScore';
 
         let q;
         if (filter === 'CLASS') {
@@ -1699,13 +1706,22 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
         }
         
         const snap = await getDocs(q);
-        const list: UserProfile[] = [];
-        snap.forEach((d) => list.push(d.data() as UserProfile));
+        const list: any[] = [];
+        snap.forEach((d) => list.push(d.data()));
         setPlayers(list);
       } catch (err) { console.error(err); } finally { setLoading(false); }
     };
     fetchLeaderboard();
   }, [filter, category, currentUser]);
+
+  const getCatLabel = () => {
+      if(category === 'TOTAL') return 'Tổng điểm tích lũy';
+      if(category === 'PRACTICE') return 'Điểm Luyện tập';
+      if(category === 'MOCK') return 'Điểm Tự tạo đề';
+      if(category === 'EXAM') return 'Điểm Thi thử';
+      if(category === 'GAME') return 'Điểm Trò chơi';
+      if(category === 'CHALLENGE') return 'Điểm Thử thách';
+  }
 
   return (
     <div className="pb-24 pt-4 px-4 h-full flex flex-col bg-slate-50">
@@ -1714,40 +1730,55 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
         <div><h2 className="text-xl font-black text-slate-800">Bảng xếp hạng</h2></div>
       </div>
       
-      {/* FILTER SCOPE */}
-      <div className="flex bg-white p-1 rounded-2xl shadow-sm border border-slate-100 mb-3">
+      {/* 1. LỌC THEO PHẠM VI */}
+      <div className="flex bg-white p-1 rounded-2xl shadow-sm border border-slate-100 mb-4">
           <button onClick={() => setFilter('CLASS')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${filter === 'CLASS' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-400'}`}>Lớp</button>
           <button onClick={() => setFilter('SCHOOL')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${filter === 'SCHOOL' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-400'}`}>Trường</button>
           <button onClick={() => setFilter('ALL')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${filter === 'ALL' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-400'}`}>Toàn quốc</button>
       </div>
 
-      {/* FILTER CATEGORY */}
-      <div className="flex overflow-x-auto gap-2 pb-2 mb-2 no-scrollbar">
-          <button onClick={() => setCategory('TOTAL')} className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition-all ${category === 'TOTAL' ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'bg-white border-slate-200 text-slate-500'}`}>Tổng hợp</button>
-          <button onClick={() => setCategory('EXAM')} className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition-all ${category === 'EXAM' ? 'bg-red-50 border-red-500 text-red-700' : 'bg-white border-slate-200 text-slate-500'}`}>Thi thử</button>
-          <button onClick={() => setCategory('PRACTICE')} className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition-all ${category === 'PRACTICE' ? 'bg-orange-50 border-orange-500 text-orange-700' : 'bg-white border-slate-200 text-slate-500'}`}>Luyện tập</button>
-          <button onClick={() => setCategory('GAME')} className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition-all ${category === 'GAME' ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : 'bg-white border-slate-200 text-slate-500'}`}>Trò chơi</button>
+      {/* 2. MENU CÁC LOẠI ĐIỂM (ĐÃ SỬA THÀNH LƯỚI 3 CỘT x 2 DÒNG) */}
+      <div className="grid grid-cols-3 gap-2 mb-2">
+          {/* Dòng 1 */}
+          <button onClick={() => setCategory('TOTAL')} className={`py-2.5 rounded-xl text-[10px] font-bold border transition-all ${category === 'TOTAL' ? 'bg-indigo-50 border-indigo-500 text-indigo-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>Tổng hợp</button>
+          <button onClick={() => setCategory('PRACTICE')} className={`py-2.5 rounded-xl text-[10px] font-bold border transition-all ${category === 'PRACTICE' ? 'bg-orange-50 border-orange-500 text-orange-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>Luyện tập</button>
+          <button onClick={() => setCategory('MOCK')} className={`py-2.5 rounded-xl text-[10px] font-bold border transition-all ${category === 'MOCK' ? 'bg-purple-50 border-purple-500 text-purple-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>Tự tạo đề</button>
+          
+          {/* Dòng 2 */}
+          <button onClick={() => setCategory('EXAM')} className={`py-2.5 rounded-xl text-[10px] font-bold border transition-all ${category === 'EXAM' ? 'bg-red-50 border-red-500 text-red-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>Thi thử</button>
+          <button onClick={() => setCategory('CHALLENGE')} className={`py-2.5 rounded-xl text-[10px] font-bold border transition-all ${category === 'CHALLENGE' ? 'bg-sky-50 border-sky-500 text-sky-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>Thử thách</button>
+          <button onClick={() => setCategory('GAME')} className={`py-2.5 rounded-xl text-[10px] font-bold border transition-all ${category === 'GAME' ? 'bg-emerald-50 border-emerald-500 text-emerald-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>Trò chơi</button>
       </div>
 
+      <div className="flex justify-between items-center mb-2 px-1">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Đang xem: {getCatLabel()}</span>
+          {category === 'TOTAL' && <span className="text-[9px] font-bold text-rose-500 bg-rose-50 px-2 py-0.5 rounded border border-rose-100">Trừ điểm Game</span>}
+      </div>
+
+      {/* 3. DANH SÁCH XẾP HẠNG */}
       <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 flex-1 overflow-y-auto">
         {loading ? <div className="text-center py-4 text-slate-400"><Loader2 className="animate-spin inline mr-2"/> Đang tải...</div> : (
           <div className="space-y-3">{players.map((u, i) => {
-             // Chọn điểm hiển thị
-             let displayScore = 0;
-             if (category === 'TOTAL') displayScore = u.totalScore;
-             if (category === 'PRACTICE') displayScore = u.practiceScore;
-             if (category === 'EXAM') displayScore = u.examScore || 0;
-             if (category === 'GAME') displayScore = u.gameScore;
+              let displayScore = 0;
+              if (category === 'TOTAL') displayScore = u.totalScore || 0;
+              if (category === 'PRACTICE') displayScore = u.practiceScore || 0;
+              if (category === 'MOCK') displayScore = u.mockScore || 0;
+              if (category === 'EXAM') displayScore = u.examScore || 0;
+              if (category === 'GAME') displayScore = u.gameScore || 0;
+              if (category === 'CHALLENGE') displayScore = u.challengeScore || 0;
 
-             return (
-               <div key={u.uid} className="flex items-center justify-between p-4 rounded-2xl border border-slate-100 hover:border-slate-300 transition-colors">
-                  <div className="flex items-center gap-4">
-                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black ${i===0?'bg-yellow-100 text-yellow-600':i===1?'bg-slate-200 text-slate-600':i===2?'bg-orange-100 text-orange-600':'bg-slate-50 text-slate-400'}`}>{i+1}</div>
-                     <div><div className="font-bold text-sm text-slate-800">{u.name}</div><div className="text-[10px] text-slate-400">{u.class} - {u.school}</div></div>
-                  </div>
-                  <div className="font-black text-slate-800">{displayScore}</div>
-               </div>
-             )
+              return (
+                <div key={u.uid} className="flex items-center justify-between p-4 rounded-2xl border border-slate-100 hover:border-slate-300 transition-colors">
+                   <div className="flex items-center gap-4">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black ${i===0?'bg-yellow-100 text-yellow-600':i===1?'bg-slate-200 text-slate-600':i===2?'bg-orange-100 text-orange-600':'bg-slate-50 text-slate-400'}`}>{i+1}</div>
+                      <div>
+                          <div className="font-bold text-sm text-slate-800">{u.name}</div>
+                          <div className="text-[10px] text-slate-400">{u.class} - {u.school}</div>
+                      </div>
+                   </div>
+                   <div className="font-black text-slate-800 text-lg">{displayScore}</div>
+                </div>
+              )
           })}</div>
         )}
       </div>
@@ -1892,7 +1923,8 @@ const App: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loadingData, setLoadingData] = useState(true);
   // 👇 THÊM DÒNG NÀY: Biến tạm để cộng dồn điểm
-  const pendingUpdates = useRef({ game: 0, practice: 0, exam: 0, challenge: 0, total: 0 });
+ // 👇 Đã thêm trường 'mock'
+const pendingUpdates = useRef({ game: 0, practice: 0, exam: 0, challenge: 0, mock: 0, total: 0 });
   
   // State cũ
   const [practiceSession, setPracticeSession] = useState<PracticeSessionData>(INITIAL_PRACTICE_STATE);
@@ -1989,56 +2021,80 @@ const App: React.FC = () => {
 
   // --- LOGIC TÍNH ĐIỂM (ĐÃ SỬA CHUẨN) ---
 // ✅ DÁN ĐOẠN NÀY VÀO (Code mới: Chỉ cộng dồn, không gửi ngay)
-const handleScore = (pts: number, type: 'game'|'practice'|'exam'|'challenge' = 'game') => { 
+// --- LOGIC TÍNH ĐIỂM (ĐÃ CẬP NHẬT: THÊM LOẠI 'mock') ---
+const handleScore = (pts: number, type: 'game'|'practice'|'exam'|'challenge'|'mock' = 'game') => { 
     if(!user) return; 
     
-    // 1. Cộng dồn vào biến tạm (RAM) - CHƯA GHI VÀO FIREBASE
-    if (type === 'game') pendingUpdates.current.game += pts;
-    else if (type === 'challenge') { pendingUpdates.current.challenge += pts; pendingUpdates.current.total += pts; }
-    else if (type === 'practice') { pendingUpdates.current.practice += pts; pendingUpdates.current.total += pts; }
-    else if (type === 'exam') { pendingUpdates.current.exam += pts; pendingUpdates.current.total += pts; }
+    // 1. Cộng dồn vào biến tạm (RAM)
+    if (type === 'game') {
+        pendingUpdates.current.game += pts;
+        // ⚠️ Game KHÔNG cộng vào Total (theo yêu cầu của thầy)
+    } 
+    else if (type === 'practice') { 
+        pendingUpdates.current.practice += pts; 
+        pendingUpdates.current.total += pts; 
+    }
+    else if (type === 'mock') { // 👈 MỚI: TỰ ÔN ĐỀ
+        pendingUpdates.current.mock += pts; 
+        pendingUpdates.current.total += pts; 
+    }
+    else if (type === 'exam') { 
+        pendingUpdates.current.exam += pts; 
+        pendingUpdates.current.total += pts; 
+    }
+    else if (type === 'challenge') { 
+        pendingUpdates.current.challenge += pts; 
+        pendingUpdates.current.total += pts; 
+    }
 
     // 2. Cập nhật giao diện ngay lập tức (Optimistic Update)
     setUser(prev => {
         if (!prev) return null;
         const nu = { ...prev };
+        
+        // Đảm bảo trường mockScore tồn tại để tránh lỗi
+        if (typeof nu.mockScore === 'undefined') nu.mockScore = 0; 
+
         if (type === 'game') nu.gameScore = (nu.gameScore || 0) + pts;
-        else if (type === 'challenge') { nu.challengeScore = (nu.challengeScore || 0) + pts; nu.totalScore = (nu.totalScore || 0) + pts; }
         else if (type === 'practice') { nu.practiceScore = (nu.practiceScore || 0) + pts; nu.totalScore = (nu.totalScore || 0) + pts; }
+        else if (type === 'mock') { nu.mockScore = (nu.mockScore || 0) + pts; nu.totalScore = (nu.totalScore || 0) + pts; } // 👈 Cập nhật UI Mock
         else if (type === 'exam') { nu.examScore = (nu.examScore || 0) + pts; nu.totalScore = (nu.totalScore || 0) + pts; }
+        else if (type === 'challenge') { nu.challengeScore = (nu.challengeScore || 0) + pts; nu.totalScore = (nu.totalScore || 0) + pts; }
         return nu;
     });
     
     const sign = pts > 0 ? '+' : '';
     setToastMsg(`${sign}${pts} điểm`); 
 };
+
 // --- HÀM LƯU DỮ LIỆU (CHỈ GỌI 1 LẦN KHI KẾT THÚC) ---
-  const saveData = async () => {
-      if (!user) return;
-      const updates = pendingUpdates.current;
-      
-      // Nếu không có điểm nào thay đổi thì không cần làm gì cả (Tiết kiệm Writes)
-      if (updates.game === 0 && updates.practice === 0 && updates.exam === 0 && updates.challenge === 0 && updates.total === 0) return;
+const saveData = async () => {
+    if (!user) return;
+    const updates = pendingUpdates.current;
+    
+    // Kiểm tra xem có điểm nào thay đổi không
+    if (Object.values(updates).every(val => val === 0)) return;
 
-      const firestoreUpdates: any = {};
-      // Chỉ cập nhật những trường có thay đổi
-      if (updates.game !== 0) firestoreUpdates.gameScore = increment(updates.game);
-      if (updates.practice !== 0) firestoreUpdates.practiceScore = increment(updates.practice);
-      if (updates.exam !== 0) firestoreUpdates.examScore = increment(updates.exam);
-      if (updates.challenge !== 0) firestoreUpdates.challengeScore = increment(updates.challenge);
-      if (updates.total !== 0) firestoreUpdates.totalScore = increment(updates.total);
+    const firestoreUpdates: any = {};
+    // Chỉ cập nhật những trường có thay đổi
+    if (updates.game !== 0) firestoreUpdates.gameScore = increment(updates.game);
+    if (updates.practice !== 0) firestoreUpdates.practiceScore = increment(updates.practice);
+    if (updates.mock !== 0) firestoreUpdates.mockScore = increment(updates.mock); // 👈 Lưu điểm Mock lên Firebase
+    if (updates.exam !== 0) firestoreUpdates.examScore = increment(updates.exam);
+    if (updates.challenge !== 0) firestoreUpdates.challengeScore = increment(updates.challenge);
+    if (updates.total !== 0) firestoreUpdates.totalScore = increment(updates.total);
 
-      // Reset biến tạm về 0
-      pendingUpdates.current = { game: 0, practice: 0, exam: 0, challenge: 0, total: 0 };
-      
-      // Gửi lên Firebase 1 lần duy nhất
-      try {
+    // Reset biến tạm về 0 (bao gồm cả mock)
+    pendingUpdates.current = { game: 0, practice: 0, exam: 0, challenge: 0, mock: 0, total: 0 };
+    
+    // Gửi lên Firebase 1 lần duy nhất
+    try {
         await updateDoc(doc(db, 'users', user.uid), firestoreUpdates);
         console.log("Đã lưu điểm lên hệ thống!");
-      } catch (error) {
+    } catch (error) {
         console.error("Lỗi lưu điểm:", error);
-      }
-  };
+    }
+};
 
   // Hàm chuyển trang: Tự động lưu điểm trước khi chuyển
   const navigateTo = (newScreen: any) => {
