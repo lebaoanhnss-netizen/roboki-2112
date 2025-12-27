@@ -734,15 +734,14 @@ const ContentScreen: React.FC<{
   );
 };
 
-// 2. PRACTICE SCREEN
+// 2. PRACTICE SCREEN (ĐÃ SỬA LỖI COPY 100%)
 const PracticeScreen: React.FC<{
   onCopy: (txt: string) => void,
- onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge'|'mock') => void,
+  onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge'|'mock') => void,
   sessionData: PracticeSessionData,
   setSessionData: React.Dispatch<React.SetStateAction<PracticeSessionData>>,
   questions: Question[],
   lessons: Lesson[],
-  // 👇 Thêm dòng này nếu chưa có (để khớp với App.tsx gọi ở dưới)
   onSave: () => void, 
   onExit: () => void
 }> = ({ onCopy, onScore, sessionData, setSessionData, questions, lessons }) => {
@@ -783,6 +782,7 @@ const PracticeScreen: React.FC<{
 
   const handleSubAnswer = (subId: string, val: boolean) => { if (isSubmitted) return; updateSession({ subAnswers: { ...subAnswers, [subId]: val } }); };
 
+  // --- GIAO DIỆN CẤU HÌNH (CONFIG MODE) ---
   if (configMode) {
     return (
         <div className="pb-24 pt-4 px-5 h-full flex flex-col bg-slate-50">
@@ -824,8 +824,31 @@ const PracticeScreen: React.FC<{
     );
   }
 
+  // --- GIAO DIỆN LÀM BÀI ---
   const currentQ = quizQuestions[currentQIndex];
   const isGroupQuestion = currentQ.subQuestions && currentQ.subQuestions.length > 0;
+
+  // 👇 HÀM XỬ LÝ COPY THÔNG MINH (SỬA LỖI Ở ĐÂY) 👇
+  const handleAskRoboki = () => {
+      let content = currentQ.promptText;
+      
+      // Kiểm tra nếu là câu Đúng/Sai thì nối thêm 4 ý con
+      if (currentQ.subQuestions && currentQ.subQuestions.length > 0) {
+          content += "\n\nXÉT CÁC PHÁT BIỂU SAU:";
+          currentQ.subQuestions.forEach((sq, idx) => {
+              content += `\n${idx + 1}) ${sq.content}`;
+          });
+      }
+      
+      // Gọi lệnh copy
+      onCopy(generateRobokiPrompt(
+          currentQ.topic, 
+          `Câu hỏi ${currentQ.level}`, 
+          currentQ.level, 
+          content, 
+          currentQ.options
+      ));
+  };
 
   return (
     <div className="pb-24 pt-4 px-4 h-full flex flex-col bg-slate-50">
@@ -835,7 +858,8 @@ const PracticeScreen: React.FC<{
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Câu hỏi</span>
             <span className="font-black text-slate-800 text-lg">{currentQIndex + 1}<span className="text-slate-300 text-sm">/{quizQuestions.length}</span></span>
          </div>
-         <button onClick={() => onCopy(generateRobokiPrompt(currentQ.topic, `Câu ${currentQ.id}`, currentQ.level, currentQ.promptText, currentQ.options))} className="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center border border-slate-100 text-roboki-500"><Copy size={20}/></button>
+         {/* 👇 NÚT COPY TRÊN ĐẦU (ĐÃ GẮN HÀM MỚI) */}
+         <button onClick={handleAskRoboki} className="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center border border-slate-100 text-roboki-500 hover:bg-roboki-50 transition-colors"><Copy size={20}/></button>
       </div>
       <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex-1 overflow-y-auto relative">
          <div className="absolute top-0 right-0 bg-slate-100 text-slate-500 text-[9px] font-black px-3 py-1.5 rounded-bl-2xl rounded-tr-2xl uppercase tracking-wider">{currentQ.level}</div>
@@ -899,11 +923,19 @@ const PracticeScreen: React.FC<{
          </div>
 
          {isSubmitted ? (
-            <div className="mt-8 animate-fade-in">
+            <div className="mt-8 animate-fade-in space-y-4">
+               {/* 👇 NÚT HỎI ROBOKI MÀU CAM (CŨNG GẮN HÀM MỚI) */}
+               <button 
+                   onClick={handleAskRoboki}
+                   className="w-full bg-orange-100 text-orange-700 py-3 rounded-2xl font-bold border border-orange-200 flex items-center justify-center gap-2 hover:bg-orange-200 transition-all shadow-sm"
+               >
+                   <MessageCircle size={20}/> Hỏi Roboki tại sao?
+               </button>
+
                {!isGroupQuestion && (
                    <div className="bg-slate-50 p-5 rounded-2xl text-sm border border-slate-100">
                      <div className="flex items-center gap-2 mb-2 text-roboki-600 font-black text-xs uppercase"><BookOpen size={14}/> Giải thích chi tiết</div>
-                     <MathRender content={currentQ.explanationText} className="text-slate-600"/>
+                     <MathRender content={currentQ.explanationText || "Chưa có giải thích cho câu này."} className="text-slate-600"/>
                    </div>
                )}
                <button onClick={() => updateSession({ currentQIndex: (currentQIndex + 1) % quizQuestions.length, isSubmitted: false, selectedOpt: null, subAnswers: {} })} className="w-full bg-roboki-600 text-white py-4 rounded-2xl font-bold mt-4 shadow-lg shadow-roboki-200">Câu tiếp theo</button>
@@ -921,7 +953,6 @@ const PracticeScreen: React.FC<{
     </div>
   );
 };
-
 // 3. MOCK TEST SCREEN (TỰ CẤU HÌNH)
 const MockTestScreen: React.FC<{
   onBack: () => void,
@@ -1095,7 +1126,8 @@ const ExamScreen: React.FC<{
   // 👇 SỬA DÒNG NÀY
   onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge'|'mock') => void;
   onSave: () => void; // 👈 Thêm dòng này
-}> = ({ onBack, session, setSession, questions, onScore }) => {
+  onCopy: (txt: string) => void; // 👈 THÊM DÒNG NÀY
+}> = ({ onBack, session, setSession, questions, onScore, onCopy }) => { // 👈 THÊM onCopy VÀO ĐÂY
   const { mode, examType, title, timeLeft, quizQuestions, currentQIndex, userAnswers, score, details } = session;
   const update = (d: any) => setSession((p: any) => ({ ...p, ...d }));
 
@@ -1217,9 +1249,11 @@ const ExamScreen: React.FC<{
   );
 
   // --- GIAO DIỆN KẾT QUẢ (RESULT) ---
+  // --- GIAO DIỆN KẾT QUẢ (RESULT) - ĐÃ BỔ SUNG REVIEW & COPY ---
   if (mode === 'RESULT') return (
     <div className="p-6 h-full flex flex-col bg-slate-50">
-      <div className="bg-white rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/50 border border-slate-100 text-center mb-6 relative overflow-hidden">
+      {/* PHẦN TỔNG KẾT ĐIỂM (GIỮ NGUYÊN) */}
+      <div className="bg-white rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/50 border border-slate-100 text-center mb-6 relative overflow-hidden shrink-0">
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-400 via-purple-400 to-orange-400"></div>
         <div className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4">{title}</div>
         <div className="relative inline-block">
@@ -1233,6 +1267,95 @@ const ExamScreen: React.FC<{
            <div className="bg-orange-50 text-orange-700 p-3 rounded-2xl flex flex-col items-center"><div className="text-[10px] font-black uppercase opacity-60">Điền từ</div><div className="text-lg font-black">{details.short}</div></div>
         </div>
       </div>
+
+      {/* 👇 PHẦN MỚI: DANH SÁCH XEM LẠI BÀI LÀM 👇 */}
+      <div className="flex-1 overflow-y-auto pr-1 space-y-4 mb-4 custom-scrollbar">
+          <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Chi tiết bài làm</h3>
+          {quizQuestions.map((q, idx) => {
+              const uAns = userAnswers[q.id];
+              // Logic kiểm tra đúng sai để hiển thị màu
+              let isCorrectMain = false;
+              if (q.type === 'MCQ') isCorrectMain = uAns === q.answerKey;
+              else if (q.type === 'Short') isCorrectMain = uAns?.toString().trim().toLowerCase() === q.answerKey.trim().toLowerCase();
+              
+              // Hàm tạo nội dung để copy hỏi AI
+              const handleAskAI = () => {
+                  let content = q.promptText;
+                  if (q.subQuestions) { 
+                      content += "\n\nCÁC PHÁT BIỂU:"; 
+                      q.subQuestions.forEach((sq, i) => { content += `\n${i+1}) ${sq.content}`; }); 
+                  }
+                  onCopy(generateRobokiPrompt(q.topic, `Câu ${idx+1}`, q.level, content, q.options));
+              };
+
+              return (
+                  <div key={q.id} className={`bg-white rounded-2xl p-4 border shadow-sm relative overflow-hidden ${isCorrectMain || (q.type === 'TrueFalse') ? 'border-slate-100' : 'border-rose-100'}`}>
+                      {/* Nút Copy hỏi Roboki */}
+                      <button 
+                          onClick={handleAskAI} 
+                          className="absolute top-3 right-3 flex items-center gap-1 bg-roboki-50 hover:bg-roboki-100 text-roboki-600 px-3 py-1.5 rounded-lg transition-colors border border-roboki-100 text-[10px] font-bold" 
+                          title="Hỏi Roboki giải thích câu này"
+                      >
+                          <MessageCircle size={14}/> Hỏi AI
+                      </button>
+
+                      <div className="flex gap-2 mb-2">
+                          <span className="bg-slate-100 text-slate-500 text-[10px] font-black px-2 py-1 rounded-md uppercase">Câu {idx + 1}</span>
+                          <span className={`text-[10px] font-bold px-2 py-1 rounded-md uppercase border ${q.level === 'Biết' ? 'text-blue-600 border-blue-200 bg-blue-50' : q.level === 'Hiểu' ? 'text-orange-600 border-orange-200 bg-orange-50' : 'text-rose-600 border-rose-200 bg-rose-50'}`}>{q.level}</span>
+                      </div>
+
+                      <div className="mb-4 pr-16">
+                          {q.imageUrl && <img src={q.imageUrl} className="h-24 w-full object-contain mb-2 rounded-lg border border-slate-100 bg-slate-50" />}
+                          <div className="text-sm font-bold text-slate-800"><MathRender content={q.promptText}/></div>
+                      </div>
+
+                      <div className="bg-slate-50 rounded-xl p-3 text-xs border border-slate-100">
+                          {q.subQuestions ? (
+                              <div className="space-y-2">
+                                  {q.subQuestions.map((sq) => {
+                                      const choice = uAns ? uAns[sq.id] : undefined;
+                                      const isRightSub = choice === sq.isCorrect;
+                                      return (
+                                          <div key={sq.id} className="flex justify-between items-start gap-2 border-b border-slate-200 last:border-0 pb-2 last:pb-0">
+                                              <div className="flex-1">
+                                                  <MathRender content={sq.content} />
+                                                  <div className="mt-1 flex gap-2 font-bold">
+                                                      <span className={choice === true ? 'text-blue-600' : choice === false ? 'text-slate-500' : 'text-slate-400'}>
+                                                          Bạn: {choice === true ? 'Đúng' : choice === false ? 'Sai' : 'Bỏ qua'}
+                                                      </span>
+                                                      <span className="text-slate-300">|</span>
+                                                      <span className="text-emerald-600">Đ.Án: {sq.isCorrect ? 'Đúng' : 'Sai'}</span>
+                                                  </div>
+                                              </div>
+                                              <div className="mt-1">
+                                                  {choice !== undefined ? (isRightSub ? <CheckCircle size={16} className="text-emerald-500"/> : <XCircle size={16} className="text-rose-500"/>) : <div className="w-4 h-4 rounded-full border-2 border-slate-300"></div>}
+                                              </div>
+                                          </div>
+                                      )
+                                  })}
+                              </div>
+                          ) : (
+                              <div className="flex flex-col gap-1">
+                                  <div className="flex justify-between items-center">
+                                      <span className="text-slate-500 font-medium">Bạn chọn:</span>
+                                      <span className={`font-bold ${isCorrectMain ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                          <MathRender content={uAns || 'Chưa làm'} />
+                                      </span>
+                                  </div>
+                                  <div className="flex justify-between items-center border-t border-slate-200 pt-1 mt-1">
+                                      <span className="text-slate-500 font-medium">Đáp án đúng:</span>
+                                      <span className="font-bold text-emerald-600">
+                                          <MathRender content={q.answerKey} />
+                                      </span>
+                                  </div>
+                              </div>
+                          )}
+                      </div>
+                  </div>
+              );
+          })}
+      </div>
+
       <div className="mt-auto space-y-3 pb-20">
         <button onClick={() => start(examType || 'THPT')} className="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold shadow-xl shadow-slate-300 flex items-center justify-center gap-2 active:scale-95 transition-all"><RotateCcw size={20}/> Làm lại đề này</button>
         <div className="flex gap-3">
@@ -2257,39 +2380,50 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
 };
 
 // 8. CHALLENGE SCREEN (Đã phục hồi)
+// 8. CHALLENGE SCREEN (Đã bổ sung nút Hỏi Roboki)
 const ChallengeScreen: React.FC<{
   onBack: () => void,
   session: ChallengeSessionData,
   setSession: React.Dispatch<React.SetStateAction<ChallengeSessionData>>,
   onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge') => void,
-  questions: Question[]
-}> = ({ onBack, session, setSession, onScore, questions }) => {
+  questions: Question[],
+  onCopy: (txt: string) => void // 👈 1. THÊM DÒNG NÀY
+}> = ({ onBack, session, setSession, onScore, questions, onCopy }) => { // 👈 2. THÊM onCopy VÀO ĐÂY
     
-    // State lưu nội dung thầy nhập vào
     const [textInput, setTextInput] = useState('');
 
-  // ✅ ĐOẠN MỚI (CHỈ LẤY MCQ VÀ SHORT)
-useEffect(() => {
-    if (!session.todayQ && questions.length > 0) {
-        
-        // 1. Lọc danh sách: Chỉ giữ lại MCQ và Short
-        const validQuestions = questions.filter(q => q.type === 'MCQ' || q.type === 'Short');
-
-        // 2. Nếu có câu hỏi phù hợp thì mới random
-        if (validQuestions.length > 0) {
-            const randomQ = validQuestions[Math.floor(Math.random() * validQuestions.length)];
-            setSession(prev => ({ ...prev, todayQ: randomQ }));
+    // Logic lấy câu hỏi ngẫu nhiên (Giữ nguyên)
+    useEffect(() => {
+        if (!session.todayQ && questions.length > 0) {
+            const validQuestions = questions.filter(q => q.type === 'MCQ' || q.type === 'Short');
+            if (validQuestions.length > 0) {
+                const randomQ = validQuestions[Math.floor(Math.random() * validQuestions.length)];
+                setSession(prev => ({ ...prev, todayQ: randomQ }));
+            }
         }
-    }
-}, [questions]);
+    }, [questions]);
 
     const handleSubmit = (answer: string) => {
         if (!session.todayQ) return;
-        // So sánh đáp án (không phân biệt hoa thường)
         const isCorrect = answer.trim().toLowerCase() === session.todayQ.answerKey.trim().toLowerCase();
         
         setSession(prev => ({ ...prev, selectedOpt: answer, isSubmitted: true, isCorrect }));
-        if (isCorrect) onScore(isCorrect ? 10 : -5, 'challenge'); // Challenge tính vào gameScore
+        if (isCorrect) onScore(isCorrect ? 10 : -5, 'challenge');
+    };
+
+    // 👇 3. HÀM XỬ LÝ HỎI ROBOKI (MỚI)
+    const handleAskAI = () => {
+        if (!session.todayQ) return;
+        const q = session.todayQ;
+        // Sử dụng hàm tạo prompt có sẵn trong App.tsx
+        const prompt = generateRobokiPrompt(
+            q.topic, 
+            "Thử thách hàng ngày", 
+            q.level, 
+            q.promptText, 
+            q.options
+        );
+        onCopy(prompt);
     };
 
     return (
@@ -2299,7 +2433,6 @@ useEffect(() => {
                   <button onClick={onBack} className="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center border border-slate-100"><ChevronLeft size={20} className="text-slate-600"/></button>
                   <h2 className="text-xl font-black text-slate-800">Thử thách</h2>
                </div>
-               {/* 🛑 Nút kết thúc sớm */}
                <button onClick={onBack} className="bg-rose-50 text-rose-500 p-2 rounded-full"><X size={20}/></button>
             </div>
 
@@ -2310,7 +2443,6 @@ useEffect(() => {
                      <div className="text-right"><div className="font-black text-2xl text-slate-800">+10</div><div className="text-[10px] text-slate-400 font-bold uppercase">Điểm thưởng</div></div>
                   </div>
                   
-                  {/* HIỂN THỊ ẢNH TRONG THỬ THÁCH */}
                   <div className="mb-8">
                      {session.todayQ.imageUrl && (
                        <div className="mb-4 flex justify-center bg-white rounded-xl border border-slate-100 p-2">
@@ -2323,29 +2455,9 @@ useEffect(() => {
                   <div className="space-y-3">
                      {session.todayQ.type === 'Short' ? (
                          <div className="space-y-4 animate-fade-in">
-                             <input
-                                 type="text"
-                                 disabled={session.isSubmitted}
-                                 value={textInput}
-                                 onChange={(e) => setTextInput(e.target.value)}
-                                 placeholder="Nhập đáp án của bạn..."
-                                 className="w-full p-4 rounded-2xl border-2 border-slate-200 font-bold focus:border-sky-500 focus:ring-4 focus:ring-sky-100 outline-none text-center text-lg text-slate-700 placeholder:text-slate-300 transition-all"
-                             />
-                             {!session.isSubmitted && (
-                                 <button
-                                     disabled={!textInput}
-                                     onClick={() => handleSubmit(textInput)}
-                                     className="w-full bg-sky-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-sky-200 active:scale-95 transition-all disabled:opacity-50 disabled:shadow-none flex items-center justify-center gap-2"
-                                 >
-                                     <Target size={18}/> Chốt đáp án
-                                 </button>
-                             )}
-                             {session.isSubmitted && (
-                                 <div className="text-center font-medium bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                                     <div className="text-xs text-slate-400 uppercase font-bold mb-1">Đáp án đúng là</div>
-                                     <div className="text-xl font-black text-emerald-600">{session.todayQ.answerKey}</div>
-                                 </div>
-                             )}
+                             <input type="text" disabled={session.isSubmitted} value={textInput} onChange={(e) => setTextInput(e.target.value)} placeholder="Nhập đáp án của bạn..." className="w-full p-4 rounded-2xl border-2 border-slate-200 font-bold focus:border-sky-500 focus:ring-4 focus:ring-sky-100 outline-none text-center text-lg text-slate-700 placeholder:text-slate-300 transition-all"/>
+                             {!session.isSubmitted && (<button disabled={!textInput} onClick={() => handleSubmit(textInput)} className="w-full bg-sky-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-sky-200 active:scale-95 transition-all disabled:opacity-50 disabled:shadow-none flex items-center justify-center gap-2"><Target size={18}/> Chốt đáp án</button>)}
+                             {session.isSubmitted && (<div className="text-center font-medium bg-slate-50 p-4 rounded-2xl border border-slate-100"><div className="text-xs text-slate-400 uppercase font-bold mb-1">Đáp án đúng là</div><div className="text-xl font-black text-emerald-600">{session.todayQ.answerKey}</div></div>)}
                          </div>
                      ) : (
                          session.todayQ.options?.map((opt, i) => (
@@ -2354,7 +2466,21 @@ useEffect(() => {
                      )}
                   </div>
                   
-                  {session.isSubmitted && (<div className={`mt-8 text-center font-black text-lg ${session.isCorrect ? 'text-emerald-600' : 'text-slate-400'}`}>{session.isCorrect ? 'Tuyệt vời! Bạn đã hoàn thành nhiệm vụ.' : 'Rất tiếc, hãy thử lại vào ngày mai!'}</div>)}
+                  {/* 👇 4. KHU VỰC KẾT QUẢ & NÚT HỎI ROBOKI */}
+                  {session.isSubmitted && (
+                      <div className="mt-8 animate-fade-in space-y-4">
+                          <div className={`text-center font-black text-lg ${session.isCorrect ? 'text-emerald-600' : 'text-slate-400'}`}>
+                              {session.isCorrect ? 'Tuyệt vời! Bạn đã hoàn thành nhiệm vụ.' : 'Rất tiếc, hãy thử lại vào ngày mai!'}
+                          </div>
+                          
+                          <button 
+                              onClick={handleAskAI}
+                              className="w-full bg-roboki-50 text-roboki-600 py-3 rounded-2xl font-bold border border-roboki-100 flex items-center justify-center gap-2 hover:bg-roboki-100 transition-all shadow-sm"
+                          >
+                              <MessageCircle size={20}/> Hỏi Roboki giải thích chi tiết
+                          </button>
+                      </div>
+                  )}
                </div>
             ) : (
               <div className="flex-1 flex items-center justify-center text-slate-400 font-medium animate-pulse">Đang tải câu hỏi...</div>
@@ -2732,10 +2858,29 @@ pendingUpdates.current = { game: 0, practice: 0, exam: 0, challenge: 0, mock: 0,
             {/* 👇 KẾT NỐI HÀM LƯU DỮ LIỆU VÀO CÁC MÀN HÌNH 👇 */}
             {screen === 'PRACTICE' && <PracticeScreen onCopy={handleCopy} onScore={handleScore} sessionData={practiceSession} setSessionData={setPracticeSession} questions={questions} lessons={lessons} onSave={saveData} onExit={()=>navigateTo('HOME')}/>}
             {screen === 'MOCK_TEST' && <MockTestScreen onBack={()=>navigateTo('HOME')} session={mockTestSession} setSession={setMockTestSession} questions={questions} onScore={handleScore} onCopy={handleCopy} onSave={saveData}/>}
-            {screen === 'EXAM' && <ExamScreen onBack={()=>navigateTo('HOME')} session={examSession} setSession={setExamSession} questions={questions} onScore={handleScore} onSave={saveData}/>}
+            {screen === 'EXAM' && (
+  <ExamScreen 
+    onBack={() => navigateTo('HOME')} 
+    session={examSession} 
+    setSession={setExamSession} 
+    questions={questions} 
+    onScore={handleScore} 
+    onSave={saveData}
+    onCopy={handleCopy} // 👈 NHỚ THÊM DÒNG NÀY
+  />
+)}
             
             {screen === 'GAME' && <GameScreen onCopy={handleCopy} onScore={handleScore} sessionData={gameSession} setSessionData={setGameSession} questions={questions}/>}
-            {screen === 'CHALLENGE' && <ChallengeScreen onBack={()=>navigateTo('HOME')} session={challengeSession} setSession={setChallengeSession} onScore={handleScore} questions={questions}/>}
+           {screen === 'CHALLENGE' && (
+    <ChallengeScreen 
+        onBack={() => navigateTo('HOME')} 
+        session={challengeSession} 
+        setSession={setChallengeSession} 
+        onScore={handleScore} 
+        questions={questions}
+        onCopy={handleCopy} // 👈 NHỚ THÊM DÒNG NÀY NẾU CHƯA CÓ
+    />
+)}
             {screen === 'LEADERBOARD' && <LeaderboardScreen onBack={()=>navigateTo('HOME')} currentUser={user}/>}
             {screen === 'CHAT' && <ChatScreen onBack={()=>{navigateTo('HOME');setCopyText('')}} initialPrompt={copyText}/>}
             {screen === 'PROFILE' && <ProfileScreen user={user} onBack={()=>navigateTo('HOME')} onUpdate={setUser} onNavToAuthor={()=>navigateTo('AUTHOR')} />}
