@@ -593,7 +593,9 @@ const ContentScreen: React.FC<{
       const gained = currentScore - currentRank.min;
       progressPercent = Math.min(100, Math.max(5, (gained / range) * 100)); 
       nextRankLabel = nextRank.label;
-      scoreNeeded = nextRank.min - currentScore;
+      
+      // ✅ SỬA THÀNH: Làm tròn đến 2 chữ số thập phân
+      scoreNeeded = Math.round((nextRank.min - currentScore) * 100) / 100;
   }
   if (selectedTopic) {
     const topicLessons = lessons.filter(l => l.topic === selectedTopic.label);
