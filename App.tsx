@@ -528,7 +528,73 @@ const ContentScreen: React.FC<{
   selectedTopic, setSelectedTopic, expandedLessonIds, toggleLesson, lessons
 }) => {
   const TOPICS = [{ id: 't1', label: 'VẬT LÍ NHIỆT', icon: Thermometer }, { id: 't2', label: 'KHÍ LÍ TƯỞNG', icon: Wind }, { id: 't3', label: 'TỪ TRƯỜNG', icon: Magnet }, { id: 't4', label: 'HẠT NHÂN & PHÓNG XẠ', icon: Atom }];
+// --- 1. HỆ THỐNG 40 CẤP ĐỘ (VŨ TRỤ & VẬT LÝ) ---
+  const TOTAL_RANKS = [
+      { min: 10000, label: 'ĐA VŨ TRỤ', icon: '🌌', color: 'from-slate-900 via-purple-900 to-slate-900' },
+      { min: 9000, label: 'VÔ CỰC', icon: '♾️', color: 'from-indigo-600 via-purple-600 to-pink-600' },
+      { min: 8200, label: 'THỜI GIAN', icon: '⏳', color: 'from-emerald-500 via-teal-500 to-cyan-500' },
+      { min: 7500, label: 'KHÔNG GIAN', icon: '💠', color: 'from-blue-600 via-indigo-600 to-violet-600' },
+      { min: 6900, label: 'BIG BANG', icon: '💥', color: 'from-orange-600 via-red-600 to-rose-600' },
+      { min: 6400, label: 'HỐ ĐEN', icon: '⚫', color: 'from-gray-700 via-gray-900 to-black' },
+      { min: 5900, label: 'SIÊU TÂN TINH', icon: '✨', color: 'from-yellow-300 via-orange-400 to-red-500' },
+      { min: 5400, label: 'THIÊN HÀ', icon: '🌀', color: 'from-violet-500 to-fuchsia-500' },
+      { min: 5000, label: 'TINH VÂN', icon: '🌫️', color: 'from-pink-400 to-rose-400' },
+      { min: 4600, label: 'CHÒM SAO', icon: '✨', color: 'from-cyan-400 to-blue-500' },
+      { min: 4200, label: 'MẶT TRỜI', icon: '🌞', color: 'from-yellow-400 to-orange-500' },
+      { min: 3800, label: 'SAO MỘC', icon: '🪐', color: 'from-orange-300 to-amber-500' },
+      { min: 3500, label: 'SAO THỔ', icon: '🪐', color: 'from-yellow-200 to-yellow-500' },
+      { min: 3200, label: 'TRÁI ĐẤT', icon: '🌍', color: 'from-blue-400 to-green-500' },
+      { min: 2900, label: 'SAO HỎA', icon: '🔴', color: 'from-red-400 to-red-600' },
+      { min: 2600, label: 'MẶT TRĂNG', icon: '🌑', color: 'from-slate-300 to-slate-500' },
+      { min: 2350, label: 'VỆ TINH', icon: '🛰️', color: 'from-zinc-400 to-zinc-600' },
+      { min: 2100, label: 'TẦNG ĐIỆN LY', icon: '⚡', color: 'from-violet-400 to-purple-500' },
+      { min: 1900, label: 'BÃO TỪ', icon: '🌪️', color: 'from-fuchsia-400 to-pink-500' },
+      { min: 1700, label: 'CỰC QUANG', icon: '🌈', color: 'from-green-300 to-emerald-500' },
+      { min: 1500, label: 'KHÍ QUYỂN', icon: '☁️', color: 'from-sky-300 to-blue-400' },
+      { min: 1350, label: 'ĐẠI DƯƠNG', icon: '🌊', color: 'from-blue-500 to-indigo-600' },
+      { min: 1200, label: 'LỤC ĐỊA', icon: '⛰️', color: 'from-emerald-500 to-green-700' },
+      { min: 1050, label: 'SINH QUYỂN', icon: '🌳', color: 'from-lime-400 to-green-600' },
+      { min: 900, label: 'RỪNG RẬM', icon: '🌴', color: 'from-green-400 to-teal-600' },
+      { min: 800, label: 'CAO NGUYÊN', icon: '🌄', color: 'from-amber-400 to-orange-500' },
+      { min: 700, label: 'TINH THỂ', icon: '💎', color: 'from-cyan-300 to-blue-500' },
+      { min: 600, label: 'PHÂN TỬ', icon: '⚗️', color: 'from-teal-300 to-teal-500' },
+      { min: 500, label: 'NGUYÊN TỬ', icon: '⚛️', color: 'from-violet-300 to-purple-500' },
+      { min: 420, label: 'HẠT NHÂN', icon: '☢️', color: 'from-yellow-400 to-orange-500' },
+      { min: 350, label: 'NUCLEON', icon: '🔴', color: 'from-rose-400 to-red-500' },
+      { min: 280, label: 'PROTON', icon: '➕', color: 'from-red-500 to-red-700' },
+      { min: 220, label: 'NEUTRON', icon: '⚪', color: 'from-gray-400 to-gray-600' },
+      { min: 160, label: 'ELECTRON', icon: '➖', color: 'from-blue-400 to-blue-600' },
+      { min: 110, label: 'QUARK', icon: '🧩', color: 'from-pink-400 to-rose-500' },
+      { min: 70, label: 'PHOTON', icon: '💡', color: 'from-yellow-300 to-yellow-500' },
+      { min: 40, label: 'HẠT BỤI', icon: '🌫️', color: 'from-stone-300 to-stone-500' },
+      { min: 20, label: 'VÔ HÌNH', icon: '👻', color: 'from-gray-200 to-gray-400' },
+      { min: 10, label: 'HƯ KHÔNG', icon: '🌑', color: 'from-slate-200 to-slate-400' },
+      { min: 0, label: 'KHỞI NGUYÊN', icon: '🥚', color: 'from-slate-100 to-slate-300' },
+  ];
 
+  // --- 2. TÍNH TOÁN LEVEL VÀ TIẾN ĐỘ ---
+  const currentScore = user.totalScore || 0;
+  const currentRankIndex = TOTAL_RANKS.findIndex(r => currentScore >= r.min);
+  const actualRankIndex = currentRankIndex !== -1 ? currentRankIndex : TOTAL_RANKS.length - 1;
+  const currentRank = TOTAL_RANKS[actualRankIndex];
+  
+  // TÍNH SỐ LEVEL (40 - index)
+  const currentLevel = TOTAL_RANKS.length - actualRankIndex;
+
+  // Tìm rank tiếp theo (để tính %)
+  const nextRank = actualRankIndex > 0 ? TOTAL_RANKS[actualRankIndex - 1] : null;
+
+  let progressPercent = 100;
+  let nextRankLabel = "MAX";
+  let scoreNeeded = 0;
+
+  if (nextRank) {
+      const range = nextRank.min - currentRank.min;
+      const gained = currentScore - currentRank.min;
+      progressPercent = Math.min(100, Math.max(5, (gained / range) * 100)); 
+      nextRankLabel = nextRank.label;
+      scoreNeeded = nextRank.min - currentScore;
+  }
   if (selectedTopic) {
     const topicLessons = lessons.filter(l => l.topic === selectedTopic.label);
     return (
@@ -544,9 +610,71 @@ const ContentScreen: React.FC<{
 
   return (
     <div className="pb-28 pt-2 px-4 space-y-5 bg-slate-50 min-h-full">
-      <div className="flex justify-between items-center pt-2">
-        <div className="flex flex-col"><span className="text-slate-500 text-xs font-bold uppercase tracking-wider">Xin chào,</span><span className="text-xl font-black text-slate-800">{user.name} 👋</span></div>
-        <div className="flex items-center gap-3"><div className="bg-roboki-50 text-roboki-700 text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm border border-roboki-100 max-w-[200px] truncate">{user.class} - {user.school || 'THPT'}</div><button onClick={onNavToProfile} className="w-10 h-10 rounded-full bg-slate-200 p-0.5 shadow-sm active:scale-95 transition-transform"><div className="w-full h-full rounded-full bg-gradient-to-tr from-roboki-400 to-orange-500 flex items-center justify-center text-white text-sm font-bold">{user.name.charAt(0)}</div></button></div>
+      {/* 👇 HEADER MỚI: CÓ THANH EXP 40 CẤP ĐỘ */}
+      <div className="flex justify-between items-start pt-2">
+        <div className="flex flex-col gap-1 flex-1 mr-4">
+           <div className="flex items-baseline gap-2 mb-1">
+                <span className="text-slate-500 text-xs font-bold uppercase tracking-wider shrink-0">Xin chào,</span>
+                <span className="text-xl font-black text-slate-800 truncate">{user.name} 👋</span>
+            </div>
+            
+            {/* KHU VỰC THANH KINH NGHIỆM */}
+            <div className="w-full max-w-[220px]">
+                <div className="flex items-end justify-between mb-1">
+                    {/* Chữ Level và Tên Rank */}
+                    <div className="flex items-center gap-1.5">
+                        <span className="bg-orange-600 text-white text-[10px] font-red px-1.5 py-0.5 rounded">
+                            Lv.{currentLevel}
+                        </span>
+                        <span className="text-[11px] font-bold text-black-700 uppercase flex items-center gap-1">
+                            {currentRank.icon} {currentRank.label}
+                        </span>
+                    </div>
+                    {/* Số điểm còn thiếu */}
+                    {nextRank ? (
+                        <span className="text-[9px] font-bold text-slate-400">
+                            +{scoreNeeded} XP lên <span className="text-indigo-600">{nextRankLabel}</span>
+                        </span>
+                    ) : (
+                        <span className="text-[9px] font-bold text-yellow-500">MAX LEVEL</span>
+                    )}
+                </div>
+                
+                {/* Thanh Progress Bar */}
+                <div className="h-3.5 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200 shadow-inner relative">
+                    <div className="absolute top-0 bottom-0 right-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-10 z-10"></div>
+                    {/* Thanh Fill - Màu Gradient thay đổi theo Rank */}
+                    <div 
+                        className={`h-full bg-gradient-to-r ${currentRank.color} rounded-full transition-all duration-1000 ease-out shadow-sm relative flex items-center justify-end pr-1.5`}
+                        style={{ width: `${progressPercent}%` }}
+                    >
+                        <div className="absolute top-0 right-0 bottom-0 w-full bg-gradient-to-b from-white/20 to-transparent"></div>
+                    </div>
+                    {/* Số % nằm đè lên thanh */}
+                    <div className="absolute inset-0 flex items-center justify-center text-[8px] font-black text-orange-600/80 z-20 mix-blend-multiply">
+                        {Math.round(progressPercent)}%
+                    </div>
+                </div>
+                
+                <div className="flex justify-between mt-1 px-0.5">
+                    <span className="text-[9px] font-bold text-green-400">{currentScore} XP</span>
+                    {nextRank && <span className="text-[9px] font-bold text-green-300">{nextRank.min} XP</span>}
+                </div>
+            </div>
+        </div>
+
+        {/* Avatar bên phải */}
+        <div className="flex items-center gap-3 mt-2 shrink-0">
+            <button onClick={onNavToProfile} className="w-12 h-12 rounded-full bg-white p-1 shadow-md active:scale-95 transition-transform border border-slate-100 relative group">
+                <div className="w-full h-full rounded-full bg-gradient-to-tr from-orange-400 to-orange-600 flex items-center justify-center text-white text-lg font-black shadow-inner">
+                    {user.name.charAt(0)}
+                </div>
+                {/* Badge cấp độ nhỏ ở góc avatar */}
+                <div className="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[9px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                    {currentLevel}
+                </div>
+            </button>
+        </div>
       </div>
 
       <div onClick={onNavToChat} className="group relative overflow-hidden bg-tech-dark rounded-3xl p-4 shadow-lg shadow-slate-300 cursor-pointer active:scale-[0.98] transition-all border border-slate-700">
@@ -1765,33 +1893,69 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
   }
 
   // --- HÀM XỬ LÝ DANH HIỆU THÔNG MINH (SWITCH CASE) ---
+ // --- HÀM XỬ LÝ DANH HIỆU 40 CẤP ĐỘ (MỚI) ---
   const getRankByScore = (score: number, type: string) => {
       
-      // 1. TỔNG HỢP (Hệ thống Vũ Trụ - Bao la rộng lớn)
+      // 1. TỔNG HỢP (Hệ thống Vũ Trụ Học & Vật Lý - 40 Cấp)
       const TOTAL_RANKS = [
-          { min: 6000, label: 'VŨ TRỤ', icon: '🌌', color: 'bg-indigo-900 text-indigo-100 border-indigo-500 shadow-md animate-pulse' },
-          { min: 5000, label: 'THIÊN HÀ', icon: '✨', color: 'bg-purple-100 text-purple-900 border-purple-300' },
-          { min: 4500, label: 'SIÊU SAO', icon: '🌟', color: 'bg-purple-50 text-purple-800 border-purple-200' },
-          { min: 4000, label: 'MẶT TRỜI', icon: '🌞', color: 'bg-orange-100 text-orange-800 border-orange-300' },
-          { min: 3600, label: 'HÀNH TINH', icon: '🪐', color: 'bg-blue-100 text-blue-800 border-blue-300' },
-          { min: 3200, label: 'VỆ TINH', icon: '🌑', color: 'bg-slate-200 text-slate-800 border-slate-300' },
-          { min: 2800, label: 'KHÍ QUYỂN', icon: '☁️', color: 'bg-sky-100 text-sky-800 border-sky-300' },
-          { min: 2400, label: 'ĐẠI DƯƠNG', icon: '🌊', color: 'bg-blue-50 text-blue-700 border-blue-200' },
-          { min: 2000, label: 'LỤC ĐỊA', icon: '⛰️', color: 'bg-emerald-100 text-emerald-800 border-emerald-300' },
-          { min: 1700, label: 'SINH QUYỂN', icon: '🌳', color: 'bg-green-50 text-green-700 border-green-200' },
-          { min: 1400, label: 'PHÂN TỬ', icon: '⚗️', color: 'bg-teal-50 text-teal-700 border-teal-200' },
-          { min: 1100, label: 'NGUYÊN TỬ', icon: '⚛️', color: 'bg-cyan-50 text-cyan-700 border-cyan-200' },
-          { min: 900, label: 'HẠT NHÂN', icon: '☢️', color: 'bg-yellow-50 text-yellow-700 border-yellow-200' },
-          { min: 700, label: 'PROTON', icon: '🔴', color: 'bg-red-50 text-red-700 border-red-200' },
-          { min: 500, label: 'NEUTRON', icon: '🔵', color: 'bg-blue-50 text-blue-600 border-blue-200' },
-          { min: 350, label: 'ELECTRON', icon: '⚡', color: 'bg-yellow-50 text-yellow-600 border-yellow-200' },
-          { min: 200, label: 'QUARK', icon: '🧩', color: 'bg-pink-50 text-pink-600 border-pink-200' },
-          { min: 100, label: 'HẠT BỤI', icon: '🌫️', color: 'bg-gray-100 text-gray-600 border-gray-300' },
-          { min: 40, label: 'VÔ HÌNH', icon: '👻', color: 'bg-gray-50 text-gray-400 border-gray-200' },
+          // --- TẦNG 8: ĐẤNG SÁNG TẠO (35-40) ---
+          { min: 10000, label: 'ĐA VŨ TRỤ', icon: '🌌', color: 'bg-slate-900 text-white border-slate-700 shadow-lg shadow-purple-500/50 animate-pulse' },
+          { min: 9000, label: 'VÔ CỰC', icon: '♾️', color: 'bg-fuchsia-900 text-white border-fuchsia-500 shadow-md' },
+          { min: 8200, label: 'THỜI GIAN', icon: '⏳', color: 'bg-teal-800 text-white border-teal-400' },
+          { min: 7500, label: 'KHÔNG GIAN', icon: '💠', color: 'bg-indigo-800 text-white border-indigo-400' },
+          { min: 6900, label: 'BIG BANG', icon: '💥', color: 'bg-rose-800 text-white border-rose-400' },
+          { min: 6400, label: 'HỐ ĐEN', icon: '⚫', color: 'bg-black text-white border-gray-600' },
+
+          // --- TẦNG 7: THIÊN HÀ (30-34) ---
+          { min: 5900, label: 'SIÊU TÂN TINH', icon: '✨', color: 'bg-orange-600 text-white border-orange-300' },
+          { min: 5400, label: 'THIÊN HÀ', icon: '🌀', color: 'bg-violet-600 text-white border-violet-300' },
+          { min: 5000, label: 'TINH VÂN', icon: '🌫️', color: 'bg-pink-500 text-white border-pink-200' },
+          { min: 4600, label: 'CHÒM SAO', icon: '✨', color: 'bg-blue-500 text-white border-blue-200' },
+          { min: 4200, label: 'MẶT TRỜI', icon: '🌞', color: 'bg-yellow-500 text-white border-yellow-200' },
+
+          // --- TẦNG 6: HỆ MẶT TRỜI (25-29) ---
+          { min: 3800, label: 'SAO MỘC', icon: '🪐', color: 'bg-amber-100 text-amber-800 border-amber-300' },
+          { min: 3500, label: 'SAO THỔ', icon: '🪐', color: 'bg-yellow-100 text-yellow-800 border-yellow-300' },
+          { min: 3200, label: 'TRÁI ĐẤT', icon: '🌍', color: 'bg-blue-100 text-blue-800 border-blue-300' },
+          { min: 2900, label: 'SAO HỎA', icon: '🔴', color: 'bg-red-100 text-red-800 border-red-300' },
+          { min: 2600, label: 'MẶT TRĂNG', icon: '🌑', color: 'bg-slate-200 text-slate-800 border-slate-300' },
+
+          // --- TẦNG 5: KHÍ QUYỂN (20-24) ---
+          { min: 2350, label: 'VỆ TINH', icon: '🛰️', color: 'bg-zinc-100 text-zinc-800 border-zinc-300' },
+          { min: 2100, label: 'TẦNG ĐIỆN LY', icon: '⚡', color: 'bg-violet-100 text-violet-800 border-violet-300' },
+          { min: 1900, label: 'BÃO TỪ', icon: '🌪️', color: 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-300' },
+          { min: 1700, label: 'CỰC QUANG', icon: '🌈', color: 'bg-emerald-100 text-emerald-800 border-emerald-300' },
+          { min: 1500, label: 'KHÍ QUYỂN', icon: '☁️', color: 'bg-sky-100 text-sky-800 border-sky-300' },
+
+          // --- TẦNG 4: ĐẠI DƯƠNG (15-19) ---
+          { min: 1350, label: 'ĐẠI DƯƠNG', icon: '🌊', color: 'bg-blue-50 text-blue-700 border-blue-200' },
+          { min: 1200, label: 'LỤC ĐỊA', icon: '⛰️', color: 'bg-green-100 text-green-800 border-green-300' },
+          { min: 1050, label: 'SINH QUYỂN', icon: '🌳', color: 'bg-lime-100 text-lime-800 border-lime-300' },
+          { min: 900, label: 'RỪNG RẬM', icon: '🌴', color: 'bg-teal-50 text-teal-700 border-teal-200' },
+          { min: 800, label: 'CAO NGUYÊN', icon: '🌄', color: 'bg-orange-50 text-orange-700 border-orange-200' },
+
+          // --- TẦNG 3: VẬT CHẤT (10-14) ---
+          { min: 700, label: 'TINH THỂ', icon: '💎', color: 'bg-cyan-50 text-cyan-700 border-cyan-200' },
+          { min: 600, label: 'PHÂN TỬ', icon: '⚗️', color: 'bg-teal-50 text-teal-700 border-teal-200' },
+          { min: 500, label: 'NGUYÊN TỬ', icon: '⚛️', color: 'bg-purple-50 text-purple-700 border-purple-200' },
+          { min: 420, label: 'HẠT NHÂN', icon: '☢️', color: 'bg-yellow-50 text-yellow-700 border-yellow-200' },
+          { min: 350, label: 'NUCLEON', icon: '🔴', color: 'bg-rose-50 text-rose-700 border-rose-200' },
+
+          // --- TẦNG 2: HẠT CƠ BẢN (5-9) ---
+          { min: 280, label: 'PROTON', icon: '➕', color: 'bg-red-50 text-red-700 border-red-200' },
+          { min: 220, label: 'NEUTRON', icon: '⚪', color: 'bg-gray-100 text-gray-700 border-gray-200' },
+          { min: 160, label: 'ELECTRON', icon: '➖', color: 'bg-blue-50 text-blue-700 border-blue-200' },
+          { min: 110, label: 'QUARK', icon: '🧩', color: 'bg-pink-50 text-pink-600 border-pink-200' },
+          { min: 70, label: 'PHOTON', icon: '💡', color: 'bg-yellow-50 text-yellow-600 border-yellow-200' },
+
+          // --- TẦNG 1: KHỞI NGUYÊN (0-4) ---
+          { min: 40, label: 'HẠT BỤI', icon: '🌫️', color: 'bg-stone-100 text-stone-600 border-stone-200' },
+          { min: 20, label: 'VÔ HÌNH', icon: '👻', color: 'bg-gray-50 text-gray-400 border-gray-200' },
+          { min: 10, label: 'HƯ KHÔNG', icon: '🌑', color: 'bg-slate-50 text-slate-400 border-slate-200' },
           { min: 0, label: 'KHỞI NGUYÊN', icon: '🥚', color: 'bg-slate-50 text-slate-400 border-slate-100' },
       ];
 
-      // 2. LUYỆN TẬP (Hệ thống Học Vấn - Sự cần cù)
+      // 2. LUYỆN TẬP (Hệ thống Học Vấn)
       const PRACTICE_RANKS = [
           { min: 3000, label: 'VẠN THẾ SƯ', icon: '🧘', color: 'bg-yellow-100 text-yellow-900 border-yellow-400 animate-pulse' },
           { min: 2500, label: 'THÁNH NHÂN', icon: '⚜️', color: 'bg-yellow-50 text-yellow-800 border-yellow-300' },
@@ -1815,103 +1979,51 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
           { min: 0, label: 'NGƯỜI MỚI', icon: '🥚', color: 'bg-slate-50 text-slate-500 border-slate-200' },
       ];
 
-      // 3. THI THỬ (Hệ thống Quan Lại Khoa Cử)
+      // 3. CÁC HỆ THỐNG KHÁC (GIỮ NGUYÊN)
       const EXAM_RANKS = [
           { min: 3000, label: 'THẦN CƠ', icon: '🔮', color: 'bg-red-100 text-red-900 border-red-400 animate-pulse' },
-          { min: 2600, label: 'QUỐC SƯ', icon: '⛩️', color: 'bg-red-50 text-red-800 border-red-300' },
           { min: 2200, label: 'ĐẠI THẦN', icon: '🏮', color: 'bg-orange-100 text-orange-800 border-orange-300' },
-          { min: 1900, label: 'TỂ TƯỚNG', icon: '📜', color: 'bg-orange-50 text-orange-700 border-orange-200' },
           { min: 1600, label: 'TRẠNG NGUYÊN', icon: '🥇', color: 'bg-yellow-100 text-yellow-800 border-yellow-300' },
-          { min: 1300, label: 'BẢNG NHÃN', icon: '🥈', color: 'bg-yellow-50 text-yellow-700 border-yellow-200' },
           { min: 1100, label: 'THÁM HOA', icon: '🥉', color: 'bg-amber-50 text-amber-700 border-amber-200' },
-          { min: 900, label: 'HOÀNG GIÁP', icon: '🏵️', color: 'bg-lime-50 text-lime-700 border-lime-200' },
           { min: 750, label: 'TIẾN SĨ', icon: '🎓', color: 'bg-green-50 text-green-700 border-green-200' },
-          { min: 600, label: 'HÀN LÂM', icon: '🏛️', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-          { min: 500, label: 'GIÁO THỤ', icon: '🏫', color: 'bg-teal-50 text-teal-700 border-teal-200' },
           { min: 400, label: 'GIÁM SINH', icon: '🎒', color: 'bg-cyan-50 text-cyan-700 border-cyan-200' },
-          { min: 300, label: 'CỐNG SINH', icon: '📘', color: 'bg-sky-50 text-sky-700 border-sky-200' },
           { min: 200, label: 'CỬ NHÂN', icon: '📜', color: 'bg-blue-50 text-blue-700 border-blue-200' },
-          { min: 150, label: 'TÚ TÀI', icon: '✍️', color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
           { min: 100, label: 'KHÓA SINH', icon: '📚', color: 'bg-violet-50 text-violet-700 border-violet-200' },
-          { min: 60, label: 'NHO SINH', icon: '🖌️', color: 'bg-purple-50 text-purple-700 border-purple-200' },
           { min: 30, label: 'THƯ SINH', icon: '📖', color: 'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200' },
-          { min: 10, label: 'HỌC TRÒ', icon: '🧒', color: 'bg-pink-50 text-pink-700 border-pink-200' },
           { min: 0, label: 'ĐỒNG SINH', icon: '👶', color: 'bg-slate-50 text-slate-500 border-slate-200' },
       ];
 
-      // 4. GAME (Hệ thống Rank Game thủ)
       const GAME_RANKS = [
           { min: 5000, label: 'VUA TRÒ CHƠI', icon: '👑', color: 'bg-black text-yellow-400 border-yellow-500 shadow-md animate-pulse' },
-          { min: 4000, label: 'ĐỘC CÔ', icon: '⚔️', color: 'bg-gray-800 text-red-400 border-red-500' },
-          { min: 3500, label: 'TRÙM CUỐI', icon: '👹', color: 'bg-gray-800 text-purple-400 border-purple-500' },
           { min: 3000, label: 'BẤT TỬ', icon: '☠️', color: 'bg-red-100 text-red-800 border-red-300' },
-          { min: 2600, label: 'HUYỀN THOẠI', icon: '⚜️', color: 'bg-orange-100 text-orange-800 border-orange-300' },
           { min: 2200, label: 'MVP', icon: '🏆', color: 'bg-amber-100 text-amber-800 border-amber-300' },
-          { min: 1900, label: 'TUYỂN THỦ', icon: '🎧', color: 'bg-yellow-50 text-yellow-700 border-yellow-200' },
-          { min: 1600, label: 'TOP SERVER', icon: '🌐', color: 'bg-lime-50 text-lime-700 border-lime-200' },
           { min: 1300, label: 'THÁCH ĐẤU', icon: '🔥', color: 'bg-green-50 text-green-700 border-green-200' },
-          { min: 1100, label: 'ĐẠI CAO THỦ', icon: '🐉', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-          { min: 900, label: 'CAO THỦ', icon: '🦅', color: 'bg-teal-50 text-teal-700 border-teal-200' },
           { min: 700, label: 'TINH ANH', icon: '💎', color: 'bg-cyan-50 text-cyan-700 border-cyan-200' },
-          { min: 550, label: 'KIM CƯƠNG', icon: '💠', color: 'bg-sky-50 text-sky-700 border-sky-200' },
-          { min: 400, label: 'BẠCH KIM', icon: '💿', color: 'bg-blue-50 text-blue-700 border-blue-200' },
           { min: 300, label: 'VÀNG ĐOÀN', icon: '🥇', color: 'bg-yellow-50 text-yellow-600 border-yellow-200' },
-          { min: 200, label: 'BẠC ĐOÀN', icon: '🥈', color: 'bg-slate-200 text-slate-600 border-slate-300' },
           { min: 120, label: 'ĐỒNG ĐOÀN', icon: '🥉', color: 'bg-orange-50 text-orange-600 border-orange-200' },
-          { min: 80, label: 'SẮT ĐOÀN', icon: '🛡️', color: 'bg-stone-100 text-stone-600 border-stone-200' },
-          { min: 40, label: 'GÀ MỜ', icon: '🐥', color: 'bg-stone-50 text-stone-500 border-stone-200' },
           { min: 0, label: 'TẬP CHƠI', icon: '🎮', color: 'bg-slate-50 text-slate-400 border-slate-100' },
       ];
 
-      // 5. THỬ THÁCH (Hệ thống Quân Đội)
       const CHALLENGE_RANKS = [
           { min: 2000, label: 'THỐNG LĨNH', icon: '🎖️', color: 'bg-red-100 text-red-900 border-red-400 animate-pulse' },
-          { min: 1800, label: 'ĐẠI TƯỚNG', icon: '⭐⭐⭐⭐', color: 'bg-red-50 text-red-800 border-red-300' },
-          { min: 1600, label: 'THƯỢNG TƯỚNG', icon: '⭐⭐⭐', color: 'bg-orange-100 text-orange-800 border-orange-300' },
           { min: 1400, label: 'TRUNG TƯỚNG', icon: '⭐⭐', color: 'bg-orange-50 text-orange-700 border-orange-200' },
-          { min: 1200, label: 'THIẾU TƯỚNG', icon: '⭐', color: 'bg-amber-50 text-amber-700 border-amber-200' },
           { min: 1000, label: 'ĐẠI TÁ', icon: '🔴', color: 'bg-yellow-50 text-yellow-700 border-yellow-200' },
-          { min: 900, label: 'THƯỢNG TÁ', icon: '🔴', color: 'bg-lime-50 text-lime-700 border-lime-200' },
-          { min: 800, label: 'TRUNG TÁ', icon: '🔴', color: 'bg-green-50 text-green-700 border-green-200' },
-          { min: 700, label: 'THIẾU TÁ', icon: '🔴', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
           { min: 600, label: 'ĐẠI ÚY', icon: '🔷', color: 'bg-teal-50 text-teal-700 border-teal-200' },
-          { min: 500, label: 'THƯỢNG ÚY', icon: '🔷', color: 'bg-cyan-50 text-cyan-700 border-cyan-200' },
-          { min: 400, label: 'TRUNG ÚY', icon: '🔷', color: 'bg-sky-50 text-sky-700 border-sky-200' },
           { min: 300, label: 'THIẾU ÚY', icon: '🔷', color: 'bg-blue-50 text-blue-700 border-blue-200' },
-          { min: 200, label: 'CHUẨN ÚY', icon: '🔹', color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
-          { min: 150, label: 'THƯỢNG SĨ', icon: '🛡️', color: 'bg-violet-50 text-violet-700 border-violet-200' },
           { min: 100, label: 'TRUNG SĨ', icon: '🛡️', color: 'bg-purple-50 text-purple-700 border-purple-200' },
-          { min: 70, label: 'HẠ SĨ', icon: '🛡️', color: 'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200' },
-          { min: 40, label: 'BINH NHẤT', icon: '💂', color: 'bg-pink-50 text-pink-700 border-pink-200' },
-          { min: 20, label: 'BINH NHÌ', icon: '💂', color: 'bg-rose-50 text-rose-700 border-rose-200' },
           { min: 0, label: 'TÂN BINH', icon: '🐣', color: 'bg-slate-50 text-slate-500 border-slate-200' },
       ];
 
-      // 6. TỰ TẠO ĐỀ (Hệ thống Xây dựng)
       const MOCK_RANKS = [
           { min: 2500, label: 'ĐẤNG KIẾN TẠO', icon: '🌌', color: 'bg-violet-100 text-violet-900 border-violet-300 animate-pulse' },
-          { min: 2200, label: 'TỔ SƯ NGHỀ', icon: '🧘', color: 'bg-purple-50 text-purple-800 border-purple-300' },
-          { min: 1900, label: 'NHÀ SÁNG TẠO', icon: '💡', color: 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-300' },
           { min: 1600, label: 'ĐẠI KIẾN TRÚC', icon: '🏛️', color: 'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200' },
-          { min: 1400, label: 'NHÀ QUY HOẠCH', icon: '🗺️', color: 'bg-pink-100 text-pink-800 border-pink-300' },
-          { min: 1200, label: 'TỔNG CÔNG TRÌNH', icon: '🏗️', color: 'bg-pink-50 text-pink-700 border-pink-200' },
           { min: 1000, label: 'KIẾN TRÚC SƯ', icon: '📐', color: 'bg-rose-50 text-rose-700 border-rose-200' },
-          { min: 850, label: 'CHUYÊN GIA', icon: '🧐', color: 'bg-orange-50 text-orange-700 border-orange-200' },
-          { min: 700, label: 'TRƯỞNG PHÒNG', icon: '📁', color: 'bg-orange-50 text-orange-600 border-orange-200' },
-          { min: 600, label: 'THIẾT KẾ VIÊN', icon: '✏️', color: 'bg-amber-50 text-amber-700 border-amber-200' },
           { min: 500, label: 'KỸ SƯ', icon: '⚙️', color: 'bg-amber-50 text-amber-600 border-amber-200' },
-          { min: 400, label: 'KỸ THUẬT VIÊN', icon: '🔧', color: 'bg-yellow-50 text-yellow-700 border-yellow-200' },
-          { min: 300, label: 'ĐỐC CÔNG', icon: '👷', color: 'bg-yellow-50 text-yellow-600 border-yellow-200' },
           { min: 200, label: 'QUẢN CÔNG', icon: '📋', color: 'bg-lime-50 text-lime-700 border-lime-200' },
-          { min: 150, label: 'THỢ CẢ', icon: '🔨', color: 'bg-lime-50 text-lime-600 border-lime-200' },
-          { min: 100, label: 'THỢ CHÍNH', icon: '🧱', color: 'bg-green-50 text-green-700 border-green-200' },
-          { min: 70, label: 'THỢ NỀ', icon: '🧱', color: 'bg-green-50 text-green-600 border-green-200' },
-          { min: 40, label: 'THỢ PHỤ', icon: '🧱', color: 'bg-emerald-50 text-emerald-600 border-emerald-200' },
-          { min: 20, label: 'PHỤ VIỆC', icon: '🧹', color: 'bg-teal-50 text-teal-600 border-teal-200' },
           { min: 0, label: 'TẬP SỰ', icon: '🔰', color: 'bg-slate-50 text-slate-400 border-slate-100' },
       ];
 
-      // 👇 CƠ CHẾ "TAB NÀO RA DANH HIỆU ĐÓ"
+      // 👇 CƠ CHẾ CHỌN DANH SÁCH RANK
       let selectedRanks = TOTAL_RANKS;
       if (type === 'PRACTICE') selectedRanks = PRACTICE_RANKS;
       if (type === 'EXAM') selectedRanks = EXAM_RANKS;
