@@ -638,7 +638,7 @@ const ContentScreen: React.FC<{
                             +{scoreNeeded} XP lên <span className="text-indigo-600">{nextRankLabel}</span>
                         </span>
                     ) : (
-                        <span className="text-[9px] font-bold text-yellow-500">MAX LEVEL</span>
+                        <span className="text-[9px] font-bold text-green-400">{Math.round(currentScore * 100) / 100} XP</span>
                     )}
                 </div>
                 
