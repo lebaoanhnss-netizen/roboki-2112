@@ -2691,9 +2691,340 @@ const RAW_DATA: QuestionInput[] = [
   answerKey: '485',
   explanationText: 'Từ mô hình động học phân tử: $p=\\dfrac{1}{3}\\rho v_{rms}^2$. Suy ra $v_{rms}=\\sqrt{\\dfrac{3p}{\\rho}}=\\sqrt{\\dfrac{3\\cdot10^5}{1{,}29}}\\approx485\\,m/s$.'
 },
+//CẬP NHẬT 28/12/2025
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Tính chất nào sau đây không phải là tính chất của chất khí?',
+    imageUrl: '',
+    options: [
+      'Các phân tử chuyển động hỗn loạn xung quanh các vị trí cân bằng cố định.',
+      'Chất khí có tính bành trướng, luôn chiếm toàn bộ thể tích bình chứa.',
+      'Chất khí dễ nén hơn chất lỏng và chất rắn.',
+      'Các phân tử chuyển động hỗn loạn và không ngừng.'
+    ],
+    answerKey: 'Các phân tử chuyển động hỗn loạn xung quanh các vị trí cân bằng cố định.',
+    explanationText: 'Chuyển động quanh vị trí cân bằng cố định là tính chất của chất rắn.'
+  },
+
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Khẳng định nào sau đây là sai khi nói về cấu tạo chất?',
+    imageUrl: '',
+    options: [
+      'Các chất được cấu tạo từ các hạt riêng gọi là nguyên tử, phân tử.',
+      'Các nguyên tử, phân tử đứng sát nhau và giữa chúng không có khoảng cách.',
+      'Lực tương tác giữa các phân tử ở thể rắn lớn hơn ở thể lỏng và thể khí.',
+      'Các phân tử chất lỏng dao động quanh các vị trí cân bằng không cố định.'
+    ],
+    answerKey: 'Các nguyên tử, phân tử đứng sát nhau và giữa chúng không có khoảng cách.',
+    explanationText: 'Giữa các nguyên tử, phân tử luôn tồn tại khoảng cách.'
+  },
+
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Biết', type: 'MCQ',
+    promptText: 'Nội năng của một vật là',
+    imageUrl: '',
+    options: [
+      'Tổng động năng và thế năng của vật.',
+      'Tổng động năng và thế năng của các phân tử cấu tạo nên vật.',
+      'Tổng nhiệt lượng và cơ năng mà vật nhận được.',
+      'Nhiệt lượng mà vật nhận được.'
+    ],
+    answerKey: 'Tổng động năng và thế năng của các phân tử cấu tạo nên vật.',
+    explanationText: 'Nội năng đặc trưng cho chuyển động và tương tác vi mô của các phân tử.'
+  },
+
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Câu nào sau đây nói về truyền nhiệt và thực hiện công là không đúng?',
+    imageUrl: '',
+    options: [
+      'Thực hiện công có thể làm thay đổi nội năng của vật.',
+      'Trong thực hiện công có sự chuyển hóa giữa nội năng và cơ năng.',
+      'Trong truyền nhiệt có sự truyền động năng từ phân tử này sang phân tử khác.',
+      'Trong truyền nhiệt có sự chuyển hóa từ cơ năng sang nội năng và ngược lại.'
+    ],
+    answerKey: 'Trong truyền nhiệt có sự chuyển hóa từ cơ năng sang nội năng và ngược lại.',
+    explanationText: 'Truyền nhiệt chỉ là sự truyền năng lượng do chênh lệch nhiệt độ.'
+  },
+
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Trong quá trình chất khí nhận nhiệt và sinh công thì công thức $\\Delta U = A + Q$ phải thỏa mãn',
+    imageUrl: '',
+    options: [
+      'Q < 0 và A > 0.',
+      'Q > 0 và A > 0.',
+      'Q < 0 và A < 0.',
+      'Q > 0 và A < 0.'
+    ],
+    answerKey: 'Q > 0 và A > 0.',
+    explanationText: 'Khí nhận nhiệt (Q>0) và sinh công (A>0).'
+  },
+
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Biết', type: 'MCQ',
+    promptText: 'Thân nhiệt bình thường của người là',
+    imageUrl: '',
+    options: ['35°C', '37°C', '38°C', '30°C'],
+    answerKey: '37°C',
+    explanationText: 'Thân nhiệt trung bình của người khỏe mạnh là khoảng 37°C.'
+  },
+
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Biết', type: 'MCQ',
+    promptText: 'Cách xác định nhiệt độ trong thang nhiệt độ Celsius là',
+    imageUrl: '',
+    options: [
+      'Nước đóng băng 10°C, nước sôi 100°C.',
+      'Nước đóng băng 0°C, nước sôi 0°C.',
+      'Nước đóng băng 0°C, nước sôi 100°C.',
+      'Nước đóng băng 100°C, nước sôi 1000°C.'
+    ],
+    answerKey: 'Nước đóng băng 0°C, nước sôi 100°C.',
+    explanationText: 'Thang Celsius lấy 0°C và 100°C làm hai mốc chuẩn.'
+  },
+
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Nhỏ một giọt nước đang sôi vào một cốc nước ấm thì nhiệt năng của giọt nước và nước trong cốc thay đổi như thế nào?',
+    imageUrl: '',
+    options: [
+      'Giọt nước tăng, nước trong cốc giảm.',
+      'Giọt nước giảm, nước trong cốc tăng.',
+      'Cả hai đều giảm.',
+      'Cả hai đều tăng.'
+    ],
+    answerKey: 'Giọt nước giảm, nước trong cốc tăng.',
+    explanationText: 'Nhiệt truyền từ vật nóng hơn sang vật lạnh hơn.'
+  },
+
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Biết', type: 'MCQ',
+    promptText: 'Một vật khối lượng m, có nhiệt dung riêng c, nhiệt độ đầu và cuối là $t_1, t_2$. Công thức $Q = mc(t_2 - t_1)$ dùng để xác định',
+    imageUrl: '',
+    options: ['Nội năng.', 'Nhiệt năng.', 'Nhiệt lượng.', 'Năng lượng.'],
+    answerKey: 'Nhiệt lượng.',
+    explanationText: 'Công thức dùng để tính nhiệt lượng trao đổi.'
+  },
+    {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Câu nào sau đây nói về sự truyền nhiệt là không đúng?',
+    imageUrl: '',
+    options: [
+      'Nhiệt không thể tự truyền từ vật lạnh hơn sang vật nóng hơn.',
+      'Nhiệt có thể tự truyền từ vật nóng hơn sang vật lạnh hơn.',
+      'Nhiệt có thể truyền từ vật lạnh hơn sang vật nóng hơn.',
+      'Nhiệt không thể tự truyền giữa hai vật có cùng nhiệt độ.'
+    ],
+    answerKey: 'Nhiệt có thể truyền từ vật lạnh hơn sang vật nóng hơn.',
+    explanationText: 'Nhiệt chỉ tự truyền từ vật có nhiệt độ cao hơn sang vật có nhiệt độ thấp hơn.'
+  },
+
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Biết', type: 'MCQ',
+    promptText: 'Ở áp suất tiêu chuẩn, chất rắn kết tinh có nhiệt độ nóng chảy là',
+    imageUrl: '',
+    options: ['Thiếc.', 'Nước đá.', 'Chì.', 'Nhôm.'],
+    answerKey: 'Nước đá.',
+    explanationText: 'Ở áp suất tiêu chuẩn, nước đá nóng chảy ở 0°C.'
+  },
+
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Vận dụng', type: 'MCQ',
+    promptText: 'Biết nhiệt nóng chảy của nước đá là $\\lambda = 3,4.10^5\\,J/kg$. Nhiệt lượng cần cung cấp để làm nóng chảy hoàn toàn $4kg$ nước đá ở $0^oC$ là',
+    imageUrl: '',
+    options: [
+      '1,36 MJ.',
+      '0,34 MJ.',
+      '13,6 MJ.',
+      '3,4 MJ.'
+    ],
+    answerKey: '1,36 MJ.',
+    explanationText: '$Q = m\\lambda = 4 . 3,4.10^5 = 1,36.10^6 J = 1,36 MJ.$'
+  },
+
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Vận dụng', type: 'MCQ',
+    promptText: 'Thả một cục nước đá vào cốc nước ấm. Bỏ qua nhiệt dung của cốc. Khi đạt cân bằng nhiệt, phát biểu nào sau đây là đúng?',
+    imageUrl: '',
+    options: [
+      'Nhiệt lượng nước đá tỏa ra bằng nhiệt lượng nước thu vào.',
+      'Nhiệt lượng nước đá thu vào bằng nhiệt lượng nước tỏa ra.',
+      'Nhiệt lượng của nước và nước đá đều tăng.',
+      'Không có trao đổi nhiệt.'
+    ],
+    answerKey: 'Nhiệt lượng nước đá thu vào bằng nhiệt lượng nước tỏa ra.',
+    explanationText: 'Theo nguyên lý cân bằng nhiệt: nhiệt lượng thu vào bằng nhiệt lượng tỏa ra.'
+  },
+
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Biết', type: 'MCQ',
+    promptText: 'Nhiệt hóa hơi được xác định bằng công thức',
+    imageUrl: '',
+    options: [
+      '$Q = mc\\Delta t$',
+      '$Q = \\lambda m$',
+      '$Q = Lm$',
+      '$Q = A + Q$'
+    ],
+    answerKey: '$Q = Lm$',
+    explanationText: 'Nhiệt hóa hơi tỉ lệ với khối lượng chất lỏng: $Q = Lm$.'
+  },
+
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Để xác định nhiệt hóa hơi riêng của một chất lỏng bằng thực nghiệm ta không cần dùng đến dụng cụ nào sau đây?',
+    imageUrl: '',
+    options: [
+      'Cân điện tử.',
+      'Nhiệt kế.',
+      'Oát kế.',
+      'Vôn kế.'
+    ],
+    answerKey: 'Vôn kế.',
+    explanationText: 'Không cần đo hiệu điện thế khi xác định nhiệt hóa hơi.'
+  },
+
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Vận dụng', type: 'MCQ',
+    promptText: 'Dẫn hơi nước ở $100^oC$ vào một nhiệt lượng kế chứa nước. Biết các dữ kiện cần thiết. Nhiệt hóa hơi riêng của nước được xác định dựa trên',
+    imageUrl: '',
+    options: [
+      'Định luật bảo toàn cơ năng.',
+      'Nguyên lý cân bằng nhiệt.',
+      'Công thức nội năng.',
+      'Phương trình trạng thái khí.'
+    ],
+    answerKey: 'Nguyên lý cân bằng nhiệt.',
+    explanationText: 'Dựa vào phương trình cân bằng nhiệt để xác định nhiệt hóa hơi.'
+  },
+
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Vận dụng cao', type: 'MCQ',
+    promptText: 'Một khối nước đá $2kg$ ở $-5^oC$ được thả vào xô nhôm chứa nước nóng. Khi cân bằng còn sót lại $100g$ nước đá. Nhiệt độ cân bằng của hệ là',
+    imageUrl: '',
+    options: [
+      '-5°C.',
+      '0°C.',
+      '5°C.',
+      '100°C.'
+    ],
+    answerKey: '0°C.',
+    explanationText: 'Còn nước đá chưa tan hết nên nhiệt độ cân bằng là 0°C.'
+  },
+// ================= PHẦN II – CÂU TRẮC NGHIỆM ĐÚNG / SAI =================
+  // ===== CÂU 1 =====
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.2',
+    level: 'Vận dụng',
+    type: 'TrueFalse',
+    promptText: 'Một lượng khí bị nung nóng, thể tích tăng thêm $\\Delta V$ và nội năng biến thiên $\\Delta U$. Quá trình diễn ra ở áp suất không đổi $p$.',
+    imageUrl: '',
+    subQuestions: [
+      {
+        id: 'c1a',
+        content: 'Đun khí và thể tích tăng chứng tỏ hệ nhận nhiệt và sinh công.',
+        isCorrect: true,
+        explanation: 'Thể tích tăng nên hệ sinh công $A = p\\Delta V > 0$, đồng thời đun nóng nên $Q > 0$.'
+      },
+      {
+        id: 'c1b',
+        content: 'Công mà hệ sinh ra có giá trị $A = 0$.',
+        isCorrect: false,
+        explanation: 'Quá trình đẳng áp có $\\Delta V > 0$ nên $A = p\\Delta V \\neq 0$.'
+      },
+      {
+        id: 'c1c',
+        content: 'Nhiệt lượng hệ khí nhận được xác định bởi nguyên lý I nhiệt động lực học.',
+        isCorrect: true,
+        explanation: 'Theo nguyên lý I: $$\\Delta U = A + Q \\Rightarrow Q = \\Delta U - A.$$'
+      }
+    ],
+    answerKey: '',
+    explanationText: 'Áp dụng nguyên lý I nhiệt động lực học cho quá trình đẳng áp.'
+  },
+
+  // ===== CÂU 2 =====
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.1',
+    level: 'Hiểu',
+    type: 'TrueFalse',
+    promptText: 'Xét các phép đổi đơn vị giữa thang nhiệt độ Celsius, Fahrenheit và Kelvin.',
+    imageUrl: '',
+    subQuestions: [
+      {
+        id: 'c2a',
+        content: 'Nhiệt độ $5^\\circ C$ tương ứng với $40^\\circ F$.',
+        isCorrect: false,
+        explanation: '$$F = 1{,}8t + 32 \\Rightarrow F = 1{,}8\\times5 + 32 = 41^\\circ F.$$'
+      },
+      {
+        id: 'c2b',
+        content: 'Nhiệt độ $45^\\circ C$ tương ứng với $113^\\circ F$.',
+        isCorrect: true,
+        explanation: '$$F = 1{,}8\\times45 + 32 = 113^\\circ F.$$'
+      },
+      {
+        id: 'c2c',
+        content: 'Nhiệt độ $27^\\circ C$ tương ứng với $300K$.',
+        isCorrect: true,
+        explanation: '$$T = t + 273 \\Rightarrow T = 27 + 273 = 300K.$$'
+      },
+      {
+        id: 'c2d',
+        content: 'Nhiệt độ $300K$ tương ứng với $-243^\\circ C$.',
+        isCorrect: false,
+        explanation: '$$t = T - 273 = 300 - 273 = 27^\\circ C.$$'
+      }
+    ],
+    answerKey: '',
+    explanationText: 'Áp dụng các công thức đổi thang nhiệt độ.'
+  },
+
+  // ===== CÂU 3 =====
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.3',
+    level: 'Vận dụng',
+    type: 'TrueFalse',
+    promptText: 'Thả miếng đồng khối lượng $m_{Cu}=2kg$ ở $80^\\circ C$ vào $2$ lít nước. Miếng đồng nguội đến $10^\\circ C$. Cho $c_{Cu}=380\\,J/kg.K$, $c_{H_2O}=4200\\,J/kg.K$.',
+    imageUrl: '',
+    subQuestions: [
+      {
+        id: 'c3a',
+        content: 'Nhiệt lượng tỏa ra của đồng là $53\\,200J$.',
+        isCorrect: true,
+        explanation: '$$Q_{Cu}=m_{Cu}c_{Cu}(t_1-t_2)=2\\times380\\times(80-10)=53\\,200J.$$'
+      },
+      {
+        id: 'c3b',
+        content: 'Nhiệt lượng nước thu vào bằng nhiệt lượng đồng tỏa ra và bằng $53\\,200J$.',
+        isCorrect: true,
+        explanation: 'Theo cân bằng nhiệt: $$Q_{toả}=Q_{thu}=53\\,200J.$$'
+      },
+      {
+        id: 'c3c',
+        content: 'Nước nóng thêm $63{,}33^\\circ C$.',
+        isCorrect: false,
+        explanation: '$$\\Delta t = \\frac{Q}{mc} = \\frac{53\\,200}{2\\times4200} \\approx 6{,}33^\\circ C.$$'
+      },
+      {
+        id: 'c3d',
+        content: 'Tỉ số giữa nhiệt lượng đồng tỏa ra và nhiệt lượng nước thu vào bằng $1$.',
+        isCorrect: true,
+        explanation: '$$\\frac{Q_{Cu}}{Q_{H_2O}} = 1.$$'
+      }
+    ],
+    answerKey: '',
+    explanationText: 'Áp dụng phương trình cân bằng nhiệt cho hệ kín.'
+  }
+
+
 
   
-
 
  
 
