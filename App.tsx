@@ -1130,50 +1130,80 @@ const MockTestScreen: React.FC<{
       );
   }
 // 👇 THAY THẾ TOÀN BỘ ĐOẠN if (mode === 'RESULT') CỦA MOCK TEST SCREEN
+// 👇 THAY THẾ TOÀN BỘ ĐOẠN if (mode === 'RESULT') TRONG MockTestScreen
   if (mode === 'RESULT') {
+      // 1. TÍNH TOÁN SỐ LIỆU (Tự động tính lại để hiển thị chi tiết)
+      
+      // MCQ: 0.25đ / câu
+      const countMCQCorrect = quizQuestions.filter(q => q.type === 'MCQ' && userAnswers[q.id] === q.answerKey).length;
+      const scoreMCQ = countMCQCorrect * 0.25; 
+
+      // Điền từ (Short): 1.0đ / câu
+      const countShortCorrect = quizQuestions.filter(q => q.type === 'Short' && userAnswers[q.id]?.toString().trim().toLowerCase() === q.answerKey.trim().toLowerCase()).length;
+      const scoreShort = countShortCorrect * 1.0;
+
+      // Đúng/Sai: Đếm số ý đúng (0.25đ / ý)
+      let countTFCorrectIdeas = 0;
+      quizQuestions.filter(q => q.type === 'TrueFalse').forEach(q => {
+          const uAns = userAnswers[q.id];
+          if (uAns && q.subQuestions) {
+              q.subQuestions.forEach(sq => {
+                  if (uAns[sq.id] === sq.isCorrect) countTFCorrectIdeas++;
+              });
+          }
+      });
+      const scoreTF = countTFCorrectIdeas * 0.25; 
+
       return (
         <div className="pb-24 pt-2 px-3 h-full flex flex-col bg-slate-50">
             
-            {/* 1. HEADER KẾT QUẢ: NGANG & GỌN (Tiết kiệm diện tích tối đa) */}
+            {/* 1. HEADER KẾT QUẢ: GIAO DIỆN MỚI (Cột dọc bên phải) */}
             <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-sm mb-2 shrink-0 relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400"></div>
                 
-                <div className="flex items-center justify-between mt-1">
-                    {/* Cột Trái: Điểm số */}
-                    <div>
+                <div className="flex items-center gap-3 mt-1">
+                    {/* CỘT TRÁI: ĐIỂM SỐ CHÍNH */}
+                    <div className="flex-1 flex flex-col items-center justify-center">
                         <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Kết quả bài làm</div>
                         <div className="flex items-baseline gap-1">
-                            <span className="text-3xl font-black text-purple-600 leading-none">{score}</span>
-                            <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-1.5 rounded">điểm</span>
+                            <span className="text-5xl font-black text-purple-600 leading-none tracking-tighter">{score}</span>
                         </div>
+                        <span className="text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full mt-1">Điểm tổng kết</span>
                     </div>
 
-                    {/* Cột Phải: Thống kê số câu đúng (Tự động đếm) */}
-                    <div className="flex gap-1.5">
+                    {/* CỘT PHẢI: THỐNG KÊ XẾP DỌC (Đã update hiển thị điểm) */}
+                    <div className="flex flex-col gap-1.5 w-32 shrink-0 border-l border-slate-100 pl-3 py-0.5">
                        {/* MCQ */}
-                       <div className="px-2 py-1 bg-blue-50 border border-blue-100 rounded-lg flex flex-col items-center min-w-[40px]">
+                       <div className="flex justify-between items-center bg-blue-50 px-2 py-1.5 rounded-lg border border-blue-100">
                            <span className="text-[8px] font-black text-blue-400 uppercase">MCQ</span>
-                           <span className="text-[10px] font-bold text-blue-700 leading-none">
-                               {quizQuestions.filter(q => q.type === 'MCQ' && userAnswers[q.id] === q.answerKey).length}/{countMCQ}
-                           </span>
+                           <div className="flex items-baseline gap-1">
+                               <span className="text-[10px] font-bold text-blue-700">{countMCQCorrect}</span>
+                               <span className="text-[8px] font-medium text-blue-400">({scoreMCQ}đ)</span>
+                           </div>
                        </div>
-                       {/* Đ/S (Chỉ hiện tổng số câu vì tính điểm phức tạp) */}
-                       <div className="px-2 py-1 bg-purple-50 border border-purple-100 rounded-lg flex flex-col items-center min-w-[40px]">
+                       
+                       {/* Đ/S */}
+                       <div className="flex justify-between items-center bg-purple-50 px-2 py-1.5 rounded-lg border border-purple-100">
                            <span className="text-[8px] font-black text-purple-400 uppercase">Đ/S</span>
-                           <span className="text-[10px] font-bold text-purple-700 leading-none">{countTF}c</span>
+                           <div className="flex items-baseline gap-1">
+                               <span className="text-[10px] font-bold text-purple-700">{countTFCorrectIdeas} ý</span>
+                               <span className="text-[8px] font-medium text-purple-400">({scoreTF}đ)</span>
+                           </div>
                        </div>
+
                        {/* Điền từ */}
-                       <div className="px-2 py-1 bg-orange-50 border border-orange-100 rounded-lg flex flex-col items-center min-w-[40px]">
+                       <div className="flex justify-between items-center bg-orange-50 px-2 py-1.5 rounded-lg border border-orange-100">
                            <span className="text-[8px] font-black text-orange-400 uppercase">Điền</span>
-                           <span className="text-[10px] font-bold text-orange-700 leading-none">
-                               {quizQuestions.filter(q => q.type === 'Short' && userAnswers[q.id]?.toString().trim().toLowerCase() === q.answerKey.trim().toLowerCase()).length}/{countShort}
-                           </span>
+                           <div className="flex items-baseline gap-1">
+                               <span className="text-[10px] font-bold text-orange-700">{countShortCorrect}</span>
+                               <span className="text-[8px] font-medium text-orange-400">({scoreShort}đ)</span>
+                           </div>
                        </div>
                     </div>
                 </div>
             </div>
 
-            {/* 2. DANH SÁCH CÂU HỎI (Chiếm toàn bộ không gian còn lại) */}
+            {/* 2. DANH SÁCH CÂU HỎI */}
             <div className="flex-1 overflow-y-auto pr-1 space-y-2 custom-scrollbar">
                 {quizQuestions.map((q, idx) => {
                     const uAns = userAnswers[q.id];
@@ -1182,7 +1212,6 @@ const MockTestScreen: React.FC<{
                     
                     return (
                         <div key={q.id} className="bg-white rounded-xl p-3 border border-slate-100 shadow-sm relative overflow-hidden">
-                            {/* Header câu hỏi */}
                             <div className="flex justify-between items-start mb-2">
                                 <div className="flex gap-1.5">
                                     <span className="bg-slate-100 text-slate-500 text-[9px] font-black px-1.5 py-0.5 rounded uppercase">Câu {idx + 1}</span>
@@ -1191,13 +1220,11 @@ const MockTestScreen: React.FC<{
                                 <button onClick={() => copyQuestionContent(q)} className="text-slate-300 hover:text-purple-500 transition-colors" title="Copy hỏi AI"><Copy size={14}/></button>
                             </div>
                             
-                            {/* Nội dung đề bài */}
                             <div className="mb-2 pr-2">
                                 {q.imageUrl && <img src={q.imageUrl} className="h-16 w-full object-contain mb-2 rounded-lg border border-slate-100 bg-slate-50" />}
                                 <div className="text-xs font-bold text-slate-800 leading-relaxed"><MathRender content={q.promptText}/></div>
                             </div>
                             
-                            {/* Phần Đáp án & Kết quả */}
                             <div className="bg-slate-50 rounded-lg p-2 text-xs border border-slate-100">
                                 {q.subQuestions ? (
                                     <div className="space-y-1.5">
@@ -1226,7 +1253,6 @@ const MockTestScreen: React.FC<{
                                 )}
                             </div>
                             
-                            {/* Giải thích */}
                             <div className="mt-2 text-[10px] text-slate-500 bg-white p-2 rounded-lg border border-slate-100">
                                 <div className="font-bold uppercase text-[9px] text-purple-500 mb-0.5 flex items-center gap-1"><BookOpen size={10}/> Giải thích</div>
                                 <MathRender content={q.explanationText || 'Chưa có giải thích chi tiết.'} />
@@ -1385,116 +1411,157 @@ const ExamScreen: React.FC<{
     </div>
   );
 
-  if (mode === 'RESULT') return (
-    <div className="p-6 h-full flex flex-col bg-slate-50">
-      <div className="bg-white rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/50 border border-slate-100 text-center mb-6 relative overflow-hidden shrink-0">
-        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-400 via-purple-400 to-orange-400"></div>
-        <div className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4">{title}</div>
-        <div className="relative inline-block">
-             <div className="text-7xl font-black text-slate-800 tracking-tighter mb-2">{score}</div>
-             <div className="absolute -top-2 -right-6 text-2xl">🌟</div>
-        </div>
-        <div className="text-slate-500 font-bold text-sm bg-slate-50 inline-block px-4 py-1 rounded-full border border-slate-100">Điểm tổng kết (Thang 10)</div>
-        <div className="grid grid-cols-3 gap-3 mt-8">
-           <div className="bg-blue-50 text-blue-700 p-3 rounded-2xl flex flex-col items-center"><div className="text-[10px] font-black uppercase opacity-60">MCQ</div><div className="text-lg font-black">{details.mcq}</div></div>
-           <div className="bg-purple-50 text-purple-700 p-3 rounded-2xl flex flex-col items-center"><div className="text-[10px] font-black uppercase opacity-60">Đúng/Sai</div><div className="text-lg font-black">{details.tf}</div></div>
-           <div className="bg-orange-50 text-orange-700 p-3 rounded-2xl flex flex-col items-center"><div className="text-[10px] font-black uppercase opacity-60">Điền từ</div><div className="text-lg font-black">{details.short}</div></div>
-        </div>
-      </div>
+// 👇 THAY THẾ ĐOẠN if (mode === 'RESULT') TRONG ExamScreen
+  if (mode === 'RESULT') {
+    // 1. Tính toán số câu đúng
+    const countMCQCorrect = quizQuestions.filter(q => q.type === 'MCQ' && userAnswers[q.id] === q.answerKey).length;
+    const countShortCorrect = quizQuestions.filter(q => q.type === 'Short' && userAnswers[q.id]?.toString().trim().toLowerCase() === q.answerKey.trim().toLowerCase()).length;
+    
+    // 2. TÍNH SỐ Ý ĐÚNG CHO DẠNG ĐÚNG/SAI (Sửa đoạn này)
+    let countTFCorrectIdeas = 0;
+    quizQuestions.filter(q => q.type === 'TrueFalse').forEach(q => {
+        const uAns = userAnswers[q.id];
+        if (uAns && q.subQuestions) {
+            q.subQuestions.forEach(sq => {
+                // Nếu người dùng chọn đúng ý nào thì cộng ý đó
+                if (uAns[sq.id] === sq.isCorrect) {
+                    countTFCorrectIdeas++;
+                }
+            });
+        }
+    });
 
-      <div className="flex-1 overflow-y-auto pr-1 space-y-4 mb-4 custom-scrollbar">
-          <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Chi tiết bài làm</h3>
-          {quizQuestions.map((q, idx) => {
-              const uAns = userAnswers[q.id];
-              let isCorrectMain = false;
-              if (q.type === 'MCQ') isCorrectMain = uAns === q.answerKey;
-              else if (q.type === 'Short') isCorrectMain = uAns?.toString().trim().toLowerCase() === q.answerKey.trim().toLowerCase();
-              
-              const handleAskAI = () => {
-                  let content = q.promptText;
-                  if (q.subQuestions) { 
-                      content += "\n\nCÁC PHÁT BIỂU:"; 
-                      q.subQuestions.forEach((sq, i) => { content += `\n${i+1}) ${sq.content}`; }); 
-                  }
-                  onCopy(generateRobokiPrompt(q.topic, `Câu ${idx+1}`, q.level, content, q.options));
-              };
-
-              return (
-                  <div key={q.id} className={`bg-white rounded-2xl p-4 border shadow-sm relative overflow-hidden ${isCorrectMain || (q.type === 'TrueFalse') ? 'border-slate-100' : 'border-rose-100'}`}>
-                      <button 
-                          onClick={handleAskAI} 
-                          className="absolute top-3 right-3 flex items-center gap-1 bg-roboki-50 hover:bg-roboki-100 text-roboki-600 px-3 py-1.5 rounded-lg transition-colors border border-roboki-100 text-[10px] font-bold" 
-                          title="Hỏi Roboki giải thích câu này"
-                      >
-                          <MessageCircle size={14}/> Hỏi AI
-                      </button>
-
-                      <div className="flex gap-2 mb-2">
-                          <span className="bg-slate-100 text-slate-500 text-[10px] font-black px-2 py-1 rounded-md uppercase">Câu {idx + 1}</span>
-                          <span className={`text-[10px] font-bold px-2 py-1 rounded-md uppercase border ${q.level === 'Biết' ? 'text-blue-600 border-blue-200 bg-blue-50' : q.level === 'Hiểu' ? 'text-orange-600 border-orange-200 bg-orange-50' : 'text-rose-600 border-rose-200 bg-rose-50'}`}>{q.level}</span>
-                      </div>
-
-                      <div className="mb-4 pr-16">
-                          {q.imageUrl && <img src={q.imageUrl} className="h-24 w-full object-contain mb-2 rounded-lg border border-slate-100 bg-slate-50" />}
-                          <div className="text-sm font-bold text-slate-800"><MathRender content={q.promptText}/></div>
-                      </div>
-
-                      <div className="bg-slate-50 rounded-xl p-3 text-xs border border-slate-100">
-                          {q.subQuestions ? (
-                              <div className="space-y-2">
-                                  {q.subQuestions.map((sq) => {
-                                      const choice = uAns ? uAns[sq.id] : undefined;
-                                      const isRightSub = choice === sq.isCorrect;
-                                      return (
-                                          <div key={sq.id} className="flex justify-between items-start gap-2 border-b border-slate-200 last:border-0 pb-2 last:pb-0">
-                                              <div className="flex-1">
-                                                  <MathRender content={sq.content} />
-                                                  <div className="mt-1 flex gap-2 font-bold">
-                                                      <span className={choice === true ? 'text-blue-600' : choice === false ? 'text-slate-500' : 'text-slate-400'}>
-                                                          Bạn: {choice === true ? 'Đúng' : choice === false ? 'Sai' : 'Bỏ qua'}
-                                                      </span>
-                                                      <span className="text-slate-300">|</span>
-                                                      <span className="text-emerald-600">Đ.Án: {sq.isCorrect ? 'Đúng' : 'Sai'}</span>
-                                                  </div>
-                                              </div>
-                                              <div className="mt-1">
-                                                  {choice !== undefined ? (isRightSub ? <CheckCircle size={16} className="text-emerald-500"/> : <XCircle size={16} className="text-rose-500"/>) : <div className="w-4 h-4 rounded-full border-2 border-slate-300"></div>}
-                                              </div>
-                                          </div>
-                                      )
-                                  })}
-                              </div>
-                          ) : (
-                              <div className="flex flex-col gap-1">
-                                  <div className="flex justify-between items-center">
-                                      <span className="text-slate-500 font-medium">Bạn chọn:</span>
-                                      <span className={`font-bold ${isCorrectMain ? 'text-emerald-600' : 'text-rose-600'}`}>
-                                          <MathRender content={uAns || 'Chưa làm'} />
-                                      </span>
-                                  </div>
-                                  <div className="flex justify-between items-center border-t border-slate-200 pt-1 mt-1">
-                                      <span className="text-slate-500 font-medium">Đáp án đúng:</span>
-                                      <span className="font-bold text-emerald-600">
-                                          <MathRender content={q.answerKey} />
-                                      </span>
-                                  </div>
-                              </div>
-                          )}
-                      </div>
+    return (
+      <div className="pb-24 pt-2 px-3 h-full flex flex-col bg-slate-50">
+        
+        {/* 1. THẺ KẾT QUẢ */}
+        <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-sm mb-2 shrink-0 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 via-purple-400 to-orange-400"></div>
+          
+          <div className="flex items-center gap-3 mt-1">
+              {/* CỘT TRÁI: ĐIỂM SỐ */}
+              <div className="flex-1 flex flex-col items-center justify-center">
+                  <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">{title}</div>
+                  <div className="flex items-baseline gap-1">
+                      <span className="text-5xl font-black text-slate-800 leading-none tracking-tighter">{score}</span>
                   </div>
-              );
-          })}
-      </div>
+                  <span className="text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full mt-1">/ 10 điểm</span>
+              </div>
 
-      <div className="mt-auto space-y-3 pb-20">
-        <button onClick={() => start(examType || 'THPT')} className="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold shadow-xl shadow-slate-300 flex items-center justify-center gap-2 active:scale-95 transition-all"><RotateCcw size={20}/> Làm lại đề này</button>
-        <div className="flex gap-3">
-            <button onClick={() => update({ mode: 'MENU' })} className="flex-1 bg-white text-slate-700 py-3.5 rounded-2xl font-bold border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all">Chọn đề khác</button>
-            <button onClick={onBack} className="flex-1 bg-rose-50 text-rose-600 py-3.5 rounded-2xl font-bold border border-rose-100 hover:bg-rose-100 transition-all">Thoát</button>
+              {/* CỘT PHẢI: THỐNG KÊ CHI TIẾT */}
+              <div className="flex flex-col gap-1.5 w-32 shrink-0 border-l border-slate-100 pl-3 py-0.5">
+                 {/* MCQ */}
+                 <div className="flex justify-between items-center bg-blue-50 px-2 py-1.5 rounded-lg border border-blue-100">
+                     <span className="text-[8px] font-black text-blue-400 uppercase">MCQ</span>
+                     <div className="flex items-baseline gap-1">
+                        <span className="text-[10px] font-bold text-blue-700">{countMCQCorrect}</span>
+                        <span className="text-[8px] font-medium text-blue-400">({details.mcq}đ)</span>
+                     </div>
+                 </div>
+                 
+                 {/* Đ/S (Đã sửa: Hiện số Ý ĐÚNG thay vì số câu) */}
+                 <div className="flex justify-between items-center bg-purple-50 px-2 py-1.5 rounded-lg border border-purple-100">
+                     <span className="text-[8px] font-black text-purple-400 uppercase">Đ/S</span>
+                     <div className="flex items-baseline gap-1">
+                        <span className="text-[10px] font-bold text-purple-700">{countTFCorrectIdeas} ý</span>
+                        <span className="text-[8px] font-medium text-purple-400">({details.tf}đ)</span>
+                     </div>
+                 </div>
+
+                 {/* Điền từ */}
+                 <div className="flex justify-between items-center bg-orange-50 px-2 py-1.5 rounded-lg border border-orange-100">
+                     <span className="text-[8px] font-black text-orange-400 uppercase">Điền</span>
+                     <div className="flex items-baseline gap-1">
+                        <span className="text-[10px] font-bold text-orange-700">{countShortCorrect}</span>
+                        <span className="text-[8px] font-medium text-orange-400">({details.short}đ)</span>
+                     </div>
+                 </div>
+              </div>
+          </div>
+        </div>
+
+        {/* 2. DANH SÁCH CÂU HỎI */}
+        <div className="flex-1 overflow-y-auto pr-1 space-y-2 custom-scrollbar">
+            <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1 sticky top-0 bg-slate-50 py-1 z-10">Chi tiết bài làm</h3>
+            
+            {quizQuestions.map((q, idx) => {
+                const uAns = userAnswers[q.id];
+                let isCorrectMain = false;
+                if (q.type === 'MCQ') isCorrectMain = uAns === q.answerKey;
+                else if (q.type === 'Short') isCorrectMain = uAns?.toString().trim().toLowerCase() === q.answerKey.trim().toLowerCase();
+                
+                const handleAskAI = () => {
+                    let content = q.promptText;
+                    if (q.subQuestions) { 
+                        content += "\n\nCÁC PHÁT BIỂU:"; 
+                        q.subQuestions.forEach((sq, i) => { content += `\n${i+1}) ${sq.content}`; }); 
+                    }
+                    onCopy(generateRobokiPrompt(q.topic, `Câu ${idx+1}`, q.level, content, q.options));
+                };
+
+                return (
+                    <div key={q.id} className={`bg-white rounded-xl p-3 border shadow-sm relative overflow-hidden ${isCorrectMain || (q.type === 'TrueFalse') ? 'border-slate-100' : 'border-rose-100'}`}>
+                        <button onClick={handleAskAI} className="absolute top-2 right-2 text-slate-300 hover:text-purple-500 transition-colors" title="Hỏi AI"><MessageCircle size={14}/></button>
+
+                        <div className="flex gap-2 mb-1.5">
+                            <span className="bg-slate-100 text-slate-500 text-[9px] font-black px-1.5 py-0.5 rounded uppercase">Câu {idx + 1}</span>
+                            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded uppercase border ${q.level === 'Biết' ? 'text-blue-600 border-blue-200 bg-blue-50' : q.level === 'Hiểu' ? 'text-orange-600 border-orange-200 bg-orange-50' : 'text-rose-600 border-rose-200 bg-rose-50'}`}>{q.level}</span>
+                        </div>
+
+                        <div className="mb-2 pr-6">
+                            {q.imageUrl && <img src={q.imageUrl} className="h-16 w-full object-contain mb-2 rounded-lg border border-slate-100 bg-slate-50" />}
+                            <div className="text-xs font-bold text-slate-800 leading-relaxed"><MathRender content={q.promptText}/></div>
+                        </div>
+
+                        <div className="bg-slate-50 rounded-lg p-2 text-xs border border-slate-100">
+                            {q.subQuestions ? (
+                                <div className="space-y-1.5">
+                                    {q.subQuestions.map((sq) => {
+                                        const choice = uAns ? uAns[sq.id] : undefined;
+                                        const isRightSub = choice === sq.isCorrect;
+                                        return (
+                                            <div key={sq.id} className="flex justify-between items-start gap-2 border-b border-slate-200 last:border-0 pb-1 last:pb-0">
+                                                <div className="flex-1">
+                                                    <div className="scale-95 origin-top-left"><MathRender content={sq.content} /></div>
+                                                    <div className="mt-0.5 flex gap-2 font-bold text-[10px]">
+                                                        <span className={choice === true ? 'text-blue-600' : choice === false ? 'text-slate-500' : 'text-slate-400'}>Bạn: {choice === true ? 'Đ' : choice === false ? 'S' : '-'}</span>
+                                                        <span className="text-emerald-600">| Đ.Án: {sq.isCorrect ? 'Đ' : 'S'}</span>
+                                                    </div>
+                                                </div>
+                                                <div className="mt-1">{isRightSub ? <CheckCircle size={12} className="text-emerald-500"/> : <XCircle size={12} className="text-rose-500"/>}</div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            ) : (
+                                <div className="flex flex-col gap-1 text-[11px]">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-slate-500 font-medium">Bạn chọn:</span>
+                                        <span className={`font-bold ${isCorrectMain ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                            <MathRender content={uAns || 'Chưa làm'} />
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between items-center border-t border-slate-200 pt-1 mt-1">
+                                        <span className="text-slate-500 font-medium">Đáp án đúng:</span>
+                                        <span className="font-bold text-emerald-600"><MathRender content={q.answerKey} /></span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+
+        {/* 3. NÚT CHỨC NĂNG */}
+        <div className="mt-2 flex gap-2 shrink-0 pt-2 border-t border-slate-200 bg-slate-50">
+          <button onClick={() => start(examType || 'THPT')} className="w-1/3 bg-slate-800 text-white py-2.5 rounded-xl font-bold shadow-lg shadow-slate-300 flex items-center justify-center gap-2 active:scale-95 transition-all text-xs"><RotateCcw size={14}/> Làm lại</button>
+          <button onClick={() => update({ mode: 'MENU' })} className="flex-1 bg-white text-slate-700 py-2.5 rounded-xl font-bold border border-slate-200 hover:bg-slate-50 transition-all text-xs">Chọn đề khác</button>
+          <button onClick={onBack} className="flex-1 bg-rose-50 text-rose-600 py-2.5 rounded-xl font-bold border border-rose-100 hover:bg-rose-100 transition-all text-xs">Thoát</button>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 
   const q = quizQuestions[currentQIndex]; 
   const ans = userAnswers[q.id];
