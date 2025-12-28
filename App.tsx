@@ -1129,28 +1129,118 @@ const MockTestScreen: React.FC<{
         </div>
       );
   }
-
+// 👇 THAY THẾ TOÀN BỘ ĐOẠN if (mode === 'RESULT') CỦA MOCK TEST SCREEN
   if (mode === 'RESULT') {
       return (
-        <div className="pb-24 pt-4 px-5 h-full flex flex-col bg-slate-50">
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 text-center mb-4 shrink-0"><div className="flex items-center justify-center gap-2 mb-2"><Trophy size={32} className="text-yellow-400 animate-bounce-short"/><h2 className="text-xl font-black text-slate-800">Kết quả</h2></div><div className="text-5xl font-black text-purple-600">{score} <span className="text-sm text-slate-400 font-bold">điểm</span></div></div>
-            <div className="flex-1 overflow-y-auto pr-1 space-y-4"><h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Chi tiết bài làm</h3>{quizQuestions.map((q, idx) => {
+        <div className="pb-24 pt-2 px-3 h-full flex flex-col bg-slate-50">
+            
+            {/* 1. HEADER KẾT QUẢ: NGANG & GỌN (Tiết kiệm diện tích tối đa) */}
+            <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-sm mb-2 shrink-0 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400"></div>
+                
+                <div className="flex items-center justify-between mt-1">
+                    {/* Cột Trái: Điểm số */}
+                    <div>
+                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Kết quả bài làm</div>
+                        <div className="flex items-baseline gap-1">
+                            <span className="text-3xl font-black text-purple-600 leading-none">{score}</span>
+                            <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-1.5 rounded">điểm</span>
+                        </div>
+                    </div>
+
+                    {/* Cột Phải: Thống kê số câu đúng (Tự động đếm) */}
+                    <div className="flex gap-1.5">
+                       {/* MCQ */}
+                       <div className="px-2 py-1 bg-blue-50 border border-blue-100 rounded-lg flex flex-col items-center min-w-[40px]">
+                           <span className="text-[8px] font-black text-blue-400 uppercase">MCQ</span>
+                           <span className="text-[10px] font-bold text-blue-700 leading-none">
+                               {quizQuestions.filter(q => q.type === 'MCQ' && userAnswers[q.id] === q.answerKey).length}/{countMCQ}
+                           </span>
+                       </div>
+                       {/* Đ/S (Chỉ hiện tổng số câu vì tính điểm phức tạp) */}
+                       <div className="px-2 py-1 bg-purple-50 border border-purple-100 rounded-lg flex flex-col items-center min-w-[40px]">
+                           <span className="text-[8px] font-black text-purple-400 uppercase">Đ/S</span>
+                           <span className="text-[10px] font-bold text-purple-700 leading-none">{countTF}c</span>
+                       </div>
+                       {/* Điền từ */}
+                       <div className="px-2 py-1 bg-orange-50 border border-orange-100 rounded-lg flex flex-col items-center min-w-[40px]">
+                           <span className="text-[8px] font-black text-orange-400 uppercase">Điền</span>
+                           <span className="text-[10px] font-bold text-orange-700 leading-none">
+                               {quizQuestions.filter(q => q.type === 'Short' && userAnswers[q.id]?.toString().trim().toLowerCase() === q.answerKey.trim().toLowerCase()).length}/{countShort}
+                           </span>
+                       </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* 2. DANH SÁCH CÂU HỎI (Chiếm toàn bộ không gian còn lại) */}
+            <div className="flex-1 overflow-y-auto pr-1 space-y-2 custom-scrollbar">
+                {quizQuestions.map((q, idx) => {
                     const uAns = userAnswers[q.id];
                     let isCorrectMain = false; 
                     if (!q.subQuestions) { isCorrectMain = q.type==='Short' ? uAns?.toString().trim().toLowerCase()===q.answerKey.trim().toLowerCase() : uAns===q.answerKey; }
+                    
                     return (
-                        <div key={q.id} className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm relative overflow-hidden">
-                            <button onClick={() => copyQuestionContent(q)} className="absolute top-3 right-3 p-2 bg-slate-50 hover:bg-purple-50 text-slate-400 hover:text-purple-600 rounded-lg transition-colors border border-slate-100" title="Hỏi Roboki"><Copy size={16}/></button>
-                            <div className="flex gap-2 mb-2"><span className="bg-slate-100 text-slate-500 text-[10px] font-black px-2 py-1 rounded-md uppercase">Câu {idx + 1}</span><span className="text-[10px] font-bold px-2 py-1 rounded-md uppercase border text-blue-600 border-blue-200 bg-blue-50">{q.level}</span></div>
-                            <div className="mb-4">{q.imageUrl && <img src={q.imageUrl} className="h-24 w-full object-contain mb-2 rounded-lg border border-slate-100 bg-slate-50" />}<div className="text-sm font-bold text-slate-800"><MathRender content={q.promptText}/></div></div>
-                            <div className="bg-slate-50 rounded-xl p-3 text-xs border border-slate-100">
-                                {q.subQuestions ? (<div className="space-y-2">{q.subQuestions.map((sq) => { const choice = uAns ? uAns[sq.id] : undefined; const isRightSub = choice === sq.isCorrect; return (<div key={sq.id} className="flex justify-between items-start gap-2 border-b border-slate-200 last:border-0 pb-2 last:pb-0"><div className="flex-1"><MathRender content={sq.content} /><div className="mt-1 flex gap-2 font-bold"><span className={choice === true ? 'text-blue-600' : choice === false ? 'text-slate-500' : 'text-slate-400'}>Bạn: {choice === true ? 'Đúng' : choice === false ? 'Sai' : 'Bỏ qua'}</span><span className="text-slate-300">|</span><span className="text-emerald-600">Đ.Án: {sq.isCorrect ? 'Đúng' : 'Sai'}</span></div></div><div className="mt-1">{isRightSub ? <CheckCircle size={16} className="text-emerald-500"/> : <XCircle size={16} className="text-rose-500"/>}</div></div>) })}</div>) : (<div className="flex flex-col gap-1"><div className="flex justify-between"><span className="text-slate-500 font-medium">Bạn chọn:</span><span className={`font-bold ${isCorrectMain ? 'text-emerald-600' : 'text-rose-600'}`}><MathRender content={uAns || 'Chưa làm'} /></span></div><div className="flex justify-between border-t border-slate-200 pt-1 mt-1"><span className="text-slate-500 font-medium">Đáp án đúng:</span><span className="font-bold text-emerald-600"><MathRender content={q.answerKey} /></span></div></div>)}
+                        <div key={q.id} className="bg-white rounded-xl p-3 border border-slate-100 shadow-sm relative overflow-hidden">
+                            {/* Header câu hỏi */}
+                            <div className="flex justify-between items-start mb-2">
+                                <div className="flex gap-1.5">
+                                    <span className="bg-slate-100 text-slate-500 text-[9px] font-black px-1.5 py-0.5 rounded uppercase">Câu {idx + 1}</span>
+                                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded uppercase border text-slate-400 border-slate-200 bg-slate-50">{q.level}</span>
+                                </div>
+                                <button onClick={() => copyQuestionContent(q)} className="text-slate-300 hover:text-purple-500 transition-colors" title="Copy hỏi AI"><Copy size={14}/></button>
                             </div>
-                            <div className="mt-3 text-xs text-slate-500 bg-white p-3 rounded-xl border border-slate-100"><div className="font-bold uppercase text-[10px] text-purple-500 mb-1 flex items-center gap-1"><BookOpen size={12}/> Giải thích</div><MathRender content={q.explanationText || 'Chưa có giải thích chi tiết.'} /></div>
+                            
+                            {/* Nội dung đề bài */}
+                            <div className="mb-2 pr-2">
+                                {q.imageUrl && <img src={q.imageUrl} className="h-16 w-full object-contain mb-2 rounded-lg border border-slate-100 bg-slate-50" />}
+                                <div className="text-xs font-bold text-slate-800 leading-relaxed"><MathRender content={q.promptText}/></div>
+                            </div>
+                            
+                            {/* Phần Đáp án & Kết quả */}
+                            <div className="bg-slate-50 rounded-lg p-2 text-xs border border-slate-100">
+                                {q.subQuestions ? (
+                                    <div className="space-y-1.5">
+                                        {q.subQuestions.map((sq) => { 
+                                            const choice = uAns ? uAns[sq.id] : undefined; 
+                                            const isRightSub = choice === sq.isCorrect; 
+                                            return (
+                                                <div key={sq.id} className="flex justify-between items-start gap-2 border-b border-slate-200 last:border-0 pb-1 last:pb-0">
+                                                    <div className="flex-1">
+                                                        <div className="scale-95 origin-top-left"><MathRender content={sq.content} /></div>
+                                                        <div className="mt-0.5 flex gap-2 font-bold text-[10px]">
+                                                            <span className={choice === true ? 'text-blue-600' : choice === false ? 'text-slate-500' : 'text-slate-400'}>Bạn: {choice === true ? 'Đ' : choice === false ? 'S' : '-'}</span>
+                                                            <span className="text-emerald-600">| Đ.Án: {sq.isCorrect ? 'Đ' : 'S'}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div className="mt-1">{isRightSub ? <CheckCircle size={12} className="text-emerald-500"/> : <XCircle size={12} className="text-rose-500"/>}</div>
+                                                </div>
+                                            ) 
+                                        })}
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col gap-1 text-[11px]">
+                                        <div className="flex justify-between"><span className="text-slate-500 font-medium">Bạn chọn:</span><span className={`font-bold ${isCorrectMain ? 'text-emerald-600' : 'text-rose-600'}`}><MathRender content={uAns || 'Chưa làm'} /></span></div>
+                                        <div className="flex justify-between border-t border-slate-200 pt-1 mt-1"><span className="text-slate-500 font-medium">Đáp án đúng:</span><span className="font-bold text-emerald-600"><MathRender content={q.answerKey} /></span></div>
+                                    </div>
+                                )}
+                            </div>
+                            
+                            {/* Giải thích */}
+                            <div className="mt-2 text-[10px] text-slate-500 bg-white p-2 rounded-lg border border-slate-100">
+                                <div className="font-bold uppercase text-[9px] text-purple-500 mb-0.5 flex items-center gap-1"><BookOpen size={10}/> Giải thích</div>
+                                <MathRender content={q.explanationText || 'Chưa có giải thích chi tiết.'} />
+                            </div>
                         </div>
                     );
-                })}</div>
-            <div className="mt-4 flex gap-3 shrink-0"><button onClick={onBack} className="flex-1 bg-white text-slate-500 py-3 rounded-2xl font-bold border border-slate-200 hover:bg-slate-50">Về trang chủ</button><button onClick={() => updateSession({ mode: 'CONFIG', quizQuestions: [], userAnswers: {} })} className="flex-1 bg-purple-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-purple-200 hover:bg-purple-700">Làm đề mới</button></div>
+                })}
+            </div>
+
+            {/* 3. NÚT ĐIỀU HƯỚNG */}
+            <div className="mt-2 flex gap-2 shrink-0 pt-2 border-t border-slate-200 bg-slate-50">
+                <button onClick={onBack} className="w-1/3 bg-white text-slate-600 py-2.5 rounded-xl font-bold border border-slate-200 hover:bg-slate-50 text-xs">Thoát</button>
+                <button onClick={() => updateSession({ mode: 'CONFIG', quizQuestions: [], userAnswers: {} })} className="flex-1 bg-purple-600 text-white py-2.5 rounded-xl font-bold shadow-md shadow-purple-200 hover:bg-purple-700 text-xs">Làm đề mới</button>
+            </div>
         </div>
       );
   }
