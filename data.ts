@@ -3020,11 +3020,1489 @@ const RAW_DATA: QuestionInput[] = [
     ],
     answerKey: '',
     explanationText: 'Áp dụng phương trình cân bằng nhiệt cho hệ kín.'
-  }
+  },
+  {
+  topic: 'VẬT LÍ NHIỆT',
+  lessonId: 'l1.3',
+  level: 'Hiểu',
+  type: 'TrueFalse',
+  promptText: 'Để xác định nhiệt dung riêng của nước, có thể tiến hành thí nghiệm theo sơ đồ nguyên lí như hình bên dưới.',
+  imageUrl: 'https://i.postimg.cc/Y2VtbMn1/Please_make_the_202512140930.jpg',
+  subQuestions: [
+    {
+      id: 'c4a',
+      content: 'Biến áp nguồn có nhiệm vụ cung cấp cho mạch một hiệu điện thế.',
+      isCorrect: true,
+      explanation: 'Biến áp dùng để cung cấp và điều chỉnh hiệu điện thế $U$ cho mạch điện đun nước.'
+    },
+    {
+      id: 'c4b',
+      content: 'Oát kế dùng để đo thời gian nước sôi.',
+      isCorrect: false,
+      explanation: 'Oát kế dùng để đo công suất điện $P$ của dòng điện chạy qua dây điện trở, không dùng để đo thời gian.'
+    },
+    {
+      id: 'c4c',
+      content: 'Nhiệt lượng tỏa ra trên dây điện trở lớn hơn nhiệt lượng mà nước thu vào.',
+      isCorrect: false,
+      explanation: 'Trong thí nghiệm lý tưởng, nhiệt lượng tỏa ra trên dây điện trở bằng nhiệt lượng nước thu vào: $$Q_{toả} = Q_{thu} = Pt.$$'
+    },
+    {
+      id: 'c4d',
+      content: 'Nhiệt lượng kế ngăn cản sự truyền nhiệt của các chất đặt trong bình với môi trường bên ngoài.',
+      isCorrect: true,
+      explanation: 'Nhiệt lượng kế có tác dụng hạn chế sự trao đổi nhiệt giữa hệ và môi trường, giúp giảm thất thoát nhiệt.'
+    }
+  ],
+  answerKey: '',
+  explanationText: 'Dựa vào nguyên lý cân bằng nhiệt và công thức $Q = mc\\Delta t$ để xác định nhiệt dung riêng của nước.'
+},
 
+  // ===== CÂU 1 =====
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l2.1', level: 'Biết', type: 'MCQ',
+    promptText: 'Vật chất ở thể khí',
+    imageUrl: '',
+    options: [
+      'Các phân tử dao động quanh vị trí cân bằng xác định.',
+      'Không có thể tích và hình dạng xác định.',
+      'Có khoảng cách giữa các phân tử rất gần nhau.',
+      'Rất khó nén.'
+    ],
+    answerKey: 'Không có thể tích và hình dạng xác định.',
+    explanationText: 'Chất khí không có hình dạng và thể tích xác định.'
+  },
 
+  // ===== CÂU 2 =====
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l2.1', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Tính chất nào sau đây không phải là của phân tử?',
+    imageUrl: '',
+    options: [
+      'Có lúc đứng yên, có lúc chuyển động.',
+      'Chuyển động không ngừng.',
+      'Chuyển động càng nhanh thì nhiệt độ của vật càng cao.',
+      'Va chạm vào thành bình, gây áp suất lên thành bình.'
+    ],
+    answerKey: 'Có lúc đứng yên, có lúc chuyển động.',
+    explanationText: 'Phân tử luôn chuyển động không ngừng.'
+  },
 
-  
+  // ===== CÂU 4 =====
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l2.1', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Mùi thơm của hoa hồng lan tỏa trong không khí thể hiện tính chất nào của thể khí?',
+    imageUrl: '',
+    options: [
+      'Dễ dàng nén được.',
+      'Không có hình dạng xác định.',
+      'Có thể lan tỏa trong không gian theo mọi hướng.',
+      'Không chảy được.'
+    ],
+    answerKey: 'Có thể lan tỏa trong không gian theo mọi hướng.',
+    explanationText: 'Phân tử khí chuyển động hỗn độn và khuếch tán trong không gian.'
+  },
+
+  // ===== CÂU 5 =====
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Bên ngoài thành cốc có giọt nước khi cho đá vào nước là do',
+    imageUrl: '',
+    options: [
+      'Nước trong cốc bay hơi rồi ngưng tụ.',
+      'Nước trong cốc thấm ra ngoài.',
+      'Hơi nước trong không khí gặp lạnh ngưng tụ.',
+      'Thành cốc bị ướt.'
+    ],
+    answerKey: 'Hơi nước trong không khí gặp lạnh ngưng tụ.',
+    explanationText: 'Không khí xung quanh gặp lạnh nên hơi nước ngưng tụ.'
+  },
+
+  // ===== CÂU 6 =====
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Biết', type: 'MCQ',
+    promptText: 'Nhiệt độ từ $19^\\circ C$ đến $28^\\circ C$ tương ứng với thang Kelvin là',
+    imageUrl: '',
+    options: [
+      'Từ 292 K đến 301 K.',
+      'Từ 19 K đến 28 K.',
+      'Từ 273 K đến 301 K.',
+      'Từ 273 K đến 292 K.'
+    ],
+    answerKey: 'Từ 292 K đến 301 K.',
+    explanationText: '$$T = t + 273$$'
+  },
+
+  // ===== CÂU 7 =====
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Biết', type: 'MCQ',
+    promptText: 'Khi hai vật có nhiệt độ khác nhau tiếp xúc, nhiệt truyền',
+    imageUrl: '',
+    options: [
+      'Từ vật có khối lượng lớn sang vật nhỏ.',
+      'Từ vật có nhiệt độ cao sang vật có nhiệt độ thấp.',
+      'Từ vật có nhiệt năng lớn sang vật nhỏ.',
+      'Từ vật ở trên cao xuống dưới thấp.'
+    ],
+    answerKey: 'Từ vật có nhiệt độ cao sang vật có nhiệt độ thấp.',
+    explanationText: 'Nhiệt tự truyền từ nơi nóng hơn sang nơi lạnh hơn.'
+  },
+
+  // ===== CÂU 8 =====
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Biết', type: 'MCQ',
+    promptText: 'Cách xác định thang nhiệt độ Celsius là',
+    imageUrl: '',
+    options: [
+      'Nước đóng băng 10°C, nước sôi 100°C.',
+      'Nước đóng băng 100°C, nước sôi 0°C.',
+      'Nước đóng băng 0°C, nước sôi 100°C.',
+      'Nước đóng băng 100°C, nước sôi 1000°C.'
+    ],
+    answerKey: 'Nước đóng băng 0°C, nước sôi 100°C.',
+    explanationText: 'Hai mốc chuẩn của thang Celsius.'
+  },
+
+  // ===== CÂU 9 =====
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.2', level: 'Biết', type: 'MCQ',
+    promptText: 'Nội năng của một vật là',
+    imageUrl: '',
+    options: [
+      'Tổng động năng và thế năng của vật.',
+      'Tổng động năng và thế năng của các phân tử.',
+      'Tổng nhiệt lượng và cơ năng.',
+      'Nhiệt lượng vật nhận.'
+    ],
+    answerKey: 'Tổng động năng và thế năng của các phân tử.',
+    explanationText: 'Nội năng là đại lượng vi mô.'
+  },
+
+  // ===== CÂU 10 =====
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.2', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Quy ước dấu đúng trong công thức $\\Delta U = A + Q$ là',
+    imageUrl: '',
+    options: [
+      'Nhận công: $A<0$, nhận nhiệt: $Q<0$.',
+      'Nhận công: $A>0$, nhận nhiệt: $Q>0$.',
+      'Sinh công: $A<0$, truyền nhiệt: $Q>0$.',
+      'Sinh công: $A>0$, truyền nhiệt: $Q<0$.'
+    ],
+    answerKey: 'Nhận công: $A>0$, nhận nhiệt: $Q>0$.',
+    explanationText: 'Theo quy ước của nguyên lý I.'
+  },
+
+  // ===== CÂU 11 =====
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.3', level: 'Vận dụng', type: 'MCQ',
+    promptText: 'Với $m=100g$ chì được truyền nhiệt lượng $260J$, nhiệt độ tăng từ $15^\\circ C$ đến $35^\\circ C$. Nhiệt dung riêng của chì là',
+    imageUrl: '',
+    options: [
+      '130 J/kg.K.',
+      '26 J/kg.K.',
+      '130 kJ/kg.K.',
+      '260 kJ/kg.K.'
+    ],
+    answerKey: '130 J/kg.K.',
+    explanationText: '$$c = \\frac{Q}{m\\Delta t} = \\frac{260}{0,1\\times20} = 130$$'
+  },
+
+  // ===== CÂU 12 =====
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.2', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Hệ được cấp nhiệt $500J$ và sinh công $200J$. Độ biến thiên nội năng là',
+    imageUrl: '',
+    options: [
+      'Tăng 300 J.',
+      'Tăng 700 J.',
+      'Giảm 300 J.',
+      'Giảm 700 J.'
+    ],
+    answerKey: 'Tăng 300 J.',
+    explanationText: '$$\\Delta U = Q - A = 500 - 200 = 300J$$'
+  },
+
+  // ===== CÂU 15 =====
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.3', level: 'Vận dụng', type: 'MCQ',
+    promptText: 'Nhiệt lượng cần để hóa hơi hoàn toàn $100g$ nước ở $100^\\circ C$ là',
+    imageUrl: '',
+    options: [
+      '2300 J.',
+      '226000 J.',
+      '22600 J.',
+      '23000 J.'
+    ],
+    answerKey: '226000 J.',
+    explanationText: '$$Q = Lm$$'
+  },
+
+  // ===== CÂU 16 =====
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l2.1', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Tính chất của phân tử chất khí là',
+    imageUrl: '',
+    options: [
+      'Dao động quanh vị trí cân bằng.',
+      'Luôn tương tác mạnh với nhau.',
+      'Chuyển động càng nhanh thì nhiệt độ càng cao.',
+      'Dao động quanh vị trí cân bằng xác định.'
+    ],
+    answerKey: 'Chuyển động càng nhanh thì nhiệt độ càng cao.',
+    explanationText: 'Nhiệt độ liên hệ với động năng trung bình.'
+  },
+
+  // ===== CÂU 17 =====
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l2.1', level: 'Biết', type: 'MCQ',
+    promptText: 'Chuyển động của các hạt phấn hoa trong thí nghiệm Brown là',
+    imageUrl: '',
+    options: [
+      'Chuyển động đều.',
+      'Chuyển động định hướng.',
+      'Chuyển động tròn.',
+      'Chuyển động hỗn độn.'
+    ],
+    answerKey: 'Chuyển động hỗn độn.',
+    explanationText: 'Do va chạm liên tục của các phân tử nước.'
+  },
+
+  // ===== CÂU 18 =====
+  {
+    topic: 'VẬT LÍ NHIỆT', lessonId: 'l2.1', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Nguyên nhân hạt phấn hoa chuyển động Brown là do',
+    imageUrl: '',
+    options: [
+      'Nguyên tử phấn hoa chuyển động.',
+      'Phân tử nước chuyển động va chạm.',
+      'Phân tử phấn hoa chuyển động.',
+      'Dòng electron có hướng.'
+    ],
+    answerKey: 'Phân tử nước chuyển động va chạm.',
+    explanationText: 'Chuyển động nhiệt hỗn độn của phân tử nước.'
+  },
+    // ===== CÂU 3 =====
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.2',
+    level: 'Vận dụng',
+    type: 'TrueFalse',
+    promptText: 'Một lượng khí nhận nhiệt lượng $Q$ do được đun nóng, đồng thời nhận công $A$ do bị nén.',
+    imageUrl: '',
+    subQuestions: [
+      {
+        id: 'c3a',
+        content: 'Nội năng của khí bị thay đổi chỉ bằng truyền nhiệt.',
+        isCorrect: false,
+        explanation: 'Nội năng thay đổi do cả truyền nhiệt và thực hiện công.'
+      },
+      {
+        id: 'c3b',
+        content: 'Theo quy ước, khí nhận nhiệt và bị nén thì $Q > 0$, $A > 0$.',
+        isCorrect: true,
+        explanation: 'Nhận nhiệt: $Q>0$; bị nén (nhận công): $A>0$.'
+      },
+      {
+        id: 'c3c',
+        content: 'Nội năng của lượng khí tăng một lượng $\\Delta U = Q + A$.',
+        isCorrect: true,
+        explanation: 'Theo nguyên lý I nhiệt động lực học: $$\\Delta U = A + Q.$$'
+      },
+      {
+        id: 'c3d',
+        content: 'Nếu chỉ cung cấp nhiệt $Q$ cho khí, khí giãn ra và thực hiện công $A$ thì nội năng giảm một lượng $\\Delta U = Q - A$.',
+        isCorrect: false,
+        explanation: 'Theo nguyên lý I: $$\\Delta U = Q - A.$$ Nếu $Q < A$ thì nội năng mới giảm.'
+      }
+    ],
+    answerKey: '',
+    explanationText: 'Áp dụng nguyên lý I nhiệt động lực học và quy ước dấu.'
+  },
+
+  // ===== CÂU 4 =====
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.3',
+    level: 'Vận dụng',
+    type: 'TrueFalse',
+    promptText: 'Một ấm điện công suất $P=1000W$ chứa $300g$ nước ở $20^\\circ C$. Đun đến khi nước sôi ở áp suất tiêu chuẩn. Cho $c = 4{,}2\\times10^3\\,J/kg.K$, $L = 2{,}26\\times10^6\\,J/kg$.',
+    imageUrl: '',
+    subQuestions: [
+      {
+        id: 'c4a',
+        content: 'Nhiệt lượng để làm nóng $300g$ nước từ $20^\\circ C$ đến $100^\\circ C$ là $100\\,800J$.',
+        isCorrect: true,
+        explanation: '$$Q = mc\\Delta t = 0{,}3\\times4200\\times(100-20)=100\\,800J.$$'
+      },
+      {
+        id: 'c4b',
+        content: 'Nhiệt lượng cần để $200g$ nước hóa hơi hoàn toàn ở $100^\\circ C$ là $678\\times10^6J$.',
+        isCorrect: false,
+        explanation: '$$Q = mL = 0{,}2\\times2{,}26\\times10^6 = 4{,}52\\times10^5J.$$'
+      },
+      {
+        id: 'c4c',
+        content: 'Thời gian cần để đun nước đạt đến $100^\\circ C$ là $100{,}8$ phút.',
+        isCorrect: false,
+        explanation: '$$t = \\frac{Q}{P} = \\frac{100\\,800}{1000} = 100{,}8s \\approx 1{,}68\\,phút.$$'
+      },
+      {
+        id: 'c4d',
+        content: 'Đun sôi tiếp $226s$ thì khối lượng nước bay hơi là $0{,}1kg$, nước còn lại khoảng $100g$.',
+        isCorrect: true,
+        explanation: '$$Q = Pt = 1000\\times226 = 2{,}26\\times10^5J$$ $$m = \\frac{Q}{L} = \\frac{2{,}26\\times10^5}{2{,}26\\times10^6} = 0{,}1kg.$$'
+      }
+    ],
+    answerKey: '',
+    explanationText: 'Áp dụng công thức $Q = mc\\Delta t$, $Q = Lm$, $Q = Pt$ và nguyên lý cân bằng năng lượng.'
+  },
+  {
+  topic: 'VẬT LÍ NHIỆT',
+  lessonId: 'l1.1',
+  level: 'Hiểu',
+  type: 'TrueFalse',
+  promptText: 'Khi tiến hành đun một khối nước đá từ thời điểm $t = 0$, người ta thu được đồ thị biểu diễn sự phụ thuộc của nhiệt độ theo thời gian như hình dưới đây.',
+  imageUrl: 'https://i.postimg.cc/tJzkWyMX/do-thi-11.png',
+  subQuestions: [
+    {
+      id: 'c1a',
+      content: 'Khối nước đá bắt đầu chuyển từ thể rắn sang thể lỏng ở $0^\\circ C$.',
+      isCorrect: true,
+      explanation: 'Ở áp suất tiêu chuẩn, nước đá nóng chảy ở $0^\\circ C$, ứng với đoạn nhiệt độ không đổi trên đồ thị.'
+    },
+    {
+      id: 'c1b',
+      content: 'Trên đoạn OA, khối nước đá không tăng nhiệt độ nên không nhận nhiệt lượng từ nguồn đun.',
+      isCorrect: false,
+      explanation: 'Trên đoạn OA, mặc dù nhiệt độ không tăng nhưng nước đá **vẫn nhận nhiệt lượng** để nóng chảy: $$Q = \\lambda m.$$'
+    },
+    {
+      id: 'c1c',
+      content: 'Ở nhiệt độ $30^\\circ C$, nước chỉ tồn tại ở thể lỏng.',
+      isCorrect: false,
+      explanation: 'Tại một thời điểm xác định, nếu quá trình nóng chảy **chưa hoàn toàn kết thúc**, trong hệ có thể **đồng thời tồn tại nước đá và nước**, dù nhiệt độ đo được là $30^\\circ C$.'
+    },
+    {
+      id: 'c1d',
+      content: 'Trên đoạn AB, nước tăng nhiệt độ.',
+      isCorrect: true,
+      explanation: 'Sau khi nước đá tan hết, nước tiếp tục nhận nhiệt nên nhiệt độ tăng theo thời gian.'
+    }
+  ],
+  answerKey: '',
+  explanationText: 'Dựa vào đồ thị nhiệt độ – thời gian để phân tích các giai đoạn nóng chảy và tăng nhiệt của nước.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT',
+  lessonId: 'l1.3',
+  level: 'Vận dụng',
+  type: 'MCQ',
+  promptText: 'Hình bên là sơ đồ bố trí thí nghiệm đo nhiệt dung riêng của nước. Một học sinh làm thí nghiệm với $m = 150g$ nước, nhiệt độ ban đầu $62^\\circ C$. Số chỉ vôn kế và ampe kế lần lượt là $U = 1{,}60V$, $I = 2{,}50A$. Sau $8$ phút $48$ giây, nhiệt độ nước là $65{,}5^\\circ C$. Bỏ qua nhiệt lượng mà bình nhiệt lượng kế và đũa khuấy thu vào. Nhiệt dung riêng của nước trong thí nghiệm này (chỉ lấy phần nguyên) là',
+  imageUrl: 'https://i.postimg.cc/yx6cqRLC/do-thi-12.png',
+  options: [
+    '4002 J/kg·K',
+    '4032 J/kg·K',
+    '4200 J/kg·K',
+    '4023 J/kg·K'
+  ],
+  answerKey: '4023 J/kg·K',
+  explanationText: `
+Thời gian đun:
+$$t = 8\\,phút\\,48\\,giây = 528s.$$
+
+Nhiệt lượng do dòng điện cung cấp:
+$$Q = UI t = 1{,}6 \\times 2{,}5 \\times 528 = 2112\\,J.$$
+
+Độ tăng nhiệt độ của nước:
+$$\\Delta T = 65{,}5 - 62 = 3{,}5\\,K.$$
+
+Nhiệt dung riêng của nước:
+$$c = \\frac{Q}{m\\Delta T}
+= \\frac{2112}{0{,}15 \\times 3{,}5}
+\\approx 4023\\,\\text{J/kg·K}.$$
+`
+},
+
+  // ===== CÂU 2 =====
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.3',
+    level: 'Vận dụng',
+    type: 'Short',
+    promptText: 'Một thợ kim hoàn muốn nấu chảy một thỏi vàng có khối lượng $m = 0{,}074\\,kg$. Biết nhiệt nóng chảy riêng của vàng là $\\lambda = 0{,}64\\times10^5\\,J/kg$. Tính nhiệt lượng cần cung cấp (đơn vị J).',
+    imageUrl: '',
+    answerKey: '4736',
+    explanationText: '$$Q = m\\lambda = 0{,}074\\times0{,}64\\times10^5 = 4736\\,J.$$'
+  },
+
+  // ===== CÂU 3 =====
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.2',
+    level: 'Hiểu',
+    type: 'Short',
+    promptText: 'Người ta thực hiện công $A = 200\\,J$ để nén khí trong một xilanh. Biết khí truyền ra môi trường nhiệt lượng $Q = 40\\,J$. Tính độ biến thiên nội năng của khí (J).',
+    imageUrl: '',
+    answerKey: '160',
+    explanationText: '$$\\Delta U = A + Q = 200 - 40 = 160\\,J.$$'
+  },
+
+  // ===== CÂU 4 =====
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.3',
+    level: 'Vận dụng',
+    type: 'Short',
+    promptText: 'Biết nhiệt lượng cần cung cấp để làm bay hơi hoàn toàn $100g$ nước ở $100^\\circ C$ là $2{,}3\\times10^5\\,J$. Tính nhiệt hóa hơi riêng của nước (đơn vị $10^5\\,J/kg$).',
+    imageUrl: '',
+    answerKey: '2,3',
+    explanationText: '$$L = \\frac{Q}{m} = \\frac{2{,}3\\times10^5}{0{,}1} = 2{,}3\\times10^6\\,J/kg = 2{,}3\\times10^5\\,J/kg.$$'
+  },
+
+  // ===== CÂU 5 =====
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.3',
+    level: 'Vận dụng cao',
+    type: 'Short',
+    promptText: 'Một khay sắt khối lượng $1{,}2\\,kg$ được làm nóng bằng máy sưởi công suất $500\\,W$ trong $4$ phút. Nhiệt độ tăng từ $22^\\circ C$ đến $45^\\circ C$. Bỏ qua mất mát nhiệt. Tính nhiệt dung riêng của sắt (chỉ lấy phần nguyên).',
+    imageUrl: '',
+    answerKey: '4348',
+    explanationText: '$$Q = Pt = 500\\times240 = 120000\\,J$$ $$c = \\frac{Q}{m\\Delta T} = \\frac{120000}{1{,}2\\times23} \\approx 4348\\,J/kg\\cdot K.$$'
+  },
+  {
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.1',
+  level: 'Nhận biết',
+  type: 'MCQ',
+  promptText: 'Khi nhiệt độ của khối khí trong một bình kín tăng thì áp suất của khối khí trong bình cũng tăng lên vì',
+  imageUrl: '',
+  options: [
+    'Số lượng phân tử khí tăng nên va chạm với thành bình nhiều hơn.',
+    'Các phân tử khí va chạm với nhau nhiều hơn.',
+    'Các phân tử khí chuyển động nhanh hơn nên va chạm với thành bình nhiều hơn.',
+    'Khoảng cách giữa các phân tử khí tăng nên va chạm mạnh hơn.'
+  ],
+  answerKey: 'Các phân tử khí chuyển động nhanh hơn nên va chạm với thành bình nhiều hơn.',
+  explanationText: 'Nhiệt độ tăng → động năng trung bình của phân tử tăng → va chạm vào thành bình mạnh và nhiều hơn.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.1',
+  level: 'Nhận biết',
+  type: 'MCQ',
+  promptText: 'Tính chất nào sau đây không phải là tính chất của chất ở thể khí?',
+  imageUrl: '',
+  options: [
+    'Có hình dạng và thể tích riêng.',
+    'Có thể nén được dễ dàng.',
+    'Các phân tử chuyển động hỗn loạn không ngừng.',
+    'Lực tương tác phân tử nhỏ hơn ở thể rắn và thể lỏng.'
+  ],
+  answerKey: 'Có hình dạng và thể tích riêng.',
+  explanationText: 'Chất khí không có hình dạng và thể tích riêng.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.1',
+  level: 'Thông hiểu',
+  type: 'MCQ',
+  promptText: 'Khí lí tưởng là chất khí trong đó các phân tử được coi là chất điểm và',
+  imageUrl: '',
+  options: [
+    'Chỉ tương tác với nhau khi va chạm.',
+    'Không tương tác với nhau.',
+    'Hút nhau khi ở xa.',
+    'Đẩy nhau khi ở gần.'
+  ],
+  answerKey: 'Chỉ tương tác với nhau khi va chạm.',
+  explanationText: 'Trong mô hình khí lí tưởng, chỉ xét tương tác khi va chạm.'
+},
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.2',
+  level: 'Nhận biết',
+  type: 'MCQ',
+  promptText: 'Phương trình nào sau đây là phương trình trạng thái của khí lí tưởng?',
+  imageUrl: '',
+  options: [
+    '$\\dfrac{pV}{T} = \\text{hằng số}$',
+    '$pT = \\text{hằng số}$',
+    '$VT = \\text{hằng số}$',
+    '$pV = \\text{hằng số}$'
+  ],
+  answerKey: '$\\dfrac{pV}{T} = \\text{hằng số}$',
+  explanationText: 'Phương trình trạng thái khí lí tưởng: $pV = nRT$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.2',
+  level: 'Thông hiểu',
+  type: 'MCQ',
+  promptText: 'Trong quá trình đẳng nhiệt của một lượng khí xác định, đại lượng nào sau đây không đổi?',
+  imageUrl: '',
+  options: [
+    '$pV$',
+    '$\\dfrac{p}{T}$',
+    '$\\dfrac{V}{T}$',
+    '$pT$'
+  ],
+  answerKey: '$pV$',
+  explanationText: 'Quá trình đẳng nhiệt: $pV = \\text{hằng số}$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.2',
+  level: 'Thông hiểu',
+  type: 'MCQ',
+  promptText: 'Phát biểu nào sau đây đúng khi nói về định luật Charles?',
+  imageUrl: '',
+  options: [
+    'Thể tích tỉ lệ nghịch với nhiệt độ tuyệt đối.',
+    'Thể tích tỉ lệ thuận với nhiệt độ tuyệt đối.',
+    'Thể tích tỉ lệ nghịch với nhiệt độ Celsius.',
+    'Thể tích tỉ lệ thuận với áp suất.'
+  ],
+  answerKey: 'Thể tích tỉ lệ thuận với nhiệt độ tuyệt đối.',
+  explanationText: 'Đẳng áp: $\\dfrac{V}{T} = \\text{hằng số}$.'
+},
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.1',
+  level: 'Thông hiểu',
+  type: 'MCQ',
+  promptText: 'Nhận xét nào sau đây không đúng về chuyển động Brown?',
+  imageUrl: '',
+  options: [
+    'Hạt phấn hoa chuyển động hỗn loạn không ngừng.',
+    'Quỹ đạo chuyển động gấp khúc, không theo quy luật.',
+    'Nhiệt độ càng cao thì hạt phấn hoa chuyển động càng chậm.',
+    'Các hạt bị phân tử chất lỏng va đập.'
+  ],
+  answerKey: 'Nhiệt độ càng cao thì hạt phấn hoa chuyển động càng chậm.',
+  explanationText: 'Nhiệt độ tăng → chuyển động Brown diễn ra mạnh hơn.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.1',
+  level: 'Nhận biết',
+  type: 'MCQ',
+  promptText: 'Nguyên nhân gây ra áp suất của chất khí là',
+  imageUrl: '',
+  options: [
+    'Phân tử khí va chạm vào thành bình.',
+    'Giữa các phân tử khí có lực hút.',
+    'Khối lượng riêng của khí nhỏ.',
+    'Phân tử khí có kích thước rất nhỏ.'
+  ],
+  answerKey: 'Phân tử khí va chạm vào thành bình.',
+  explanationText: 'Áp suất là kết quả của các va chạm phân tử lên thành bình.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.1',
+  level: 'Nhận biết',
+  type: 'MCQ',
+  promptText: 'Thông số trạng thái của một lượng khí xác định là',
+  imageUrl: '',
+  options: [
+    'Nhiệt độ, khối lượng, thể tích.',
+    'Khối lượng, nhiệt độ, áp suất.',
+    'Nhiệt độ, thể tích, áp suất.',
+    'Thể tích, áp suất, khối lượng.'
+  ],
+  answerKey: 'Nhiệt độ, thể tích, áp suất.',
+  explanationText: 'Ba thông số trạng thái là $p, V, T$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.1',
+  level: 'Thông hiểu',
+  type: 'MCQ',
+  promptText: 'Phát biểu đúng về khí lí tưởng là',
+  imageUrl: '',
+  options: [
+    'Các phân tử luôn tương tác với nhau.',
+    'Va chạm giữa các phân tử là va chạm mềm.',
+    'Phân tử được coi là chất điểm.',
+    'Khối lượng phân tử có thể bỏ qua.'
+  ],
+  answerKey: 'Phân tử được coi là chất điểm.',
+  explanationText: 'Trong mô hình khí lí tưởng, phân tử được coi là chất điểm.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.1',
+  level: 'Thông hiểu',
+  type: 'MCQ',
+  promptText: 'Robert Brown đã quan sát thấy các hạt phấn hoa',
+  imageUrl: '',
+  options: [
+    'Dao động quanh vị trí cân bằng.',
+    'Có lúc đứng yên, có lúc chuyển động.',
+    'Luôn đứng yên.',
+    'Chuyển động không ngừng.'
+  ],
+  answerKey: 'Chuyển động không ngừng.',
+  explanationText: 'Brown chỉ quan sát hiện tượng, chưa giải thích được nguyên nhân.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.1',
+  level: 'Thông hiểu',
+  type: 'MCQ',
+  promptText: 'Chuyển động nào sau đây không phải là chuyển động Brown?',
+  imageUrl: '',
+  options: [
+    'Hạt phấn hoa trong nước.',
+    'Hạt bụi trong chùm sáng Mặt Trời.',
+    'Hạt khói quan sát bằng kính hiển vi.',
+    'Khói thoát ra khỏi ống xả ô tô.'
+  ],
+  answerKey: 'Khói thoát ra khỏi ống xả ô tô.',
+  explanationText: 'Không phải chuyển động ngẫu nhiên vi mô.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.1',
+  level: 'Nhận biết',
+  type: 'MCQ',
+  promptText: 'Mô hình động học phân tử cho biết vật chất được cấu tạo từ',
+  imageUrl: '',
+  options: [
+    'Các hạt riêng biệt.',
+    'Electron và ion.',
+    'Các hạt không riêng biệt.',
+    'Electron, proton, neutron.'
+  ],
+  answerKey: 'Các hạt riêng biệt.',
+  explanationText: 'Vật chất được cấu tạo từ nguyên tử, phân tử.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.1',
+  level: 'Thông hiểu',
+  type: 'MCQ',
+  promptText: 'Phát biểu nào sau đây sai khi nói về mô hình động học phân tử?',
+  imageUrl: '',
+  options: [
+    'Các phân tử chuyển động không ngừng.',
+    'Giữa các phân tử chỉ có lực hút.',
+    'Nhiệt độ càng cao thì chuyển động càng nhanh.',
+    'Vật chất được cấu tạo từ các phân tử.'
+  ],
+  answerKey: 'Giữa các phân tử chỉ có lực hút.',
+  explanationText: 'Giữa các phân tử có cả lực hút và lực đẩy.'
+},
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.2',
+  level: 'Nhận biết',
+  type: 'MCQ',
+  promptText: 'Quá trình biến đổi trạng thái của một lượng khí xác định trong đó áp suất được giữ không đổi gọi là',
+  imageUrl: '',
+  options: [
+    'Đẳng nhiệt.',
+    'Đẳng áp.',
+    'Đẳng tích.',
+    'Đoạn nhiệt.'
+  ],
+  answerKey: 'Đẳng áp.',
+  explanationText: 'Áp suất không đổi → quá trình đẳng áp.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.2',
+  level: 'Thông hiểu',
+  type: 'MCQ',
+  promptText: 'Ở $27^\\circ C$, thể tích của một khối khí lí tưởng là $3\\,cm^3$. Giữ áp suất không đổi, thể tích của khí ở $127^\\circ C$ là',
+  imageUrl: '',
+  options: [
+    '3,5 cm³.',
+    '1,25 cm³.',
+    '5,7 cm³.',
+    '4 cm³.'
+  ],
+  answerKey: '4 cm³.',
+  explanationText: 'Đẳng áp: $\\dfrac{V_1}{T_1}=\\dfrac{V_2}{T_2} \\Rightarrow V_2=4\\,cm^3$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.2',
+  level: 'Nhận biết',
+  type: 'MCQ',
+  promptText: 'Phương trình trạng thái của khí lí tưởng là',
+  imageUrl: '',
+  options: [
+    '$pV=nRT$',
+    '$pV=RT$',
+    '$pT=nR$',
+    '$VT=nR$'
+  ],
+  answerKey: '$pV=nRT$',
+  explanationText: 'Đây là phương trình Clapeyron.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.2',
+  level: 'Thông hiểu',
+  type: 'MCQ',
+  promptText: 'Trong quá trình đẳng nhiệt, đại lượng nào sau đây không đổi?',
+  imageUrl: '',
+  options: [
+    '$pV$',
+    '$pT$',
+    '$VT$',
+    '$\\dfrac{p}{T}$'
+  ],
+  answerKey: '$pV$',
+  explanationText: 'Đẳng nhiệt: $pV = const$.'
+},
+
+{
+  topic: 'KHÍ LÍ TƯỞNG',
+  lessonId: 'l2.2',
+  level: 'Vận dụng',
+  type: 'MCQ',
+  promptText: 'Một lượng khí có $V_1=6l$. Nhiệt độ không đổi. Áp suất tăng $50\\%$ thì thể tích khí là',
+  imageUrl: '',
+  options: [
+    '3 lít.',
+    '9 lít.',
+    '4 lít.',
+    '6 lít.'
+  ],
+  answerKey: '4 lít.',
+  explanationText: 'Đẳng nhiệt: $V_2=\\dfrac{V_1}{1{,}5}=4l$.'
+},
+   // --- BÀI 2.1: MÔ HÌNH ĐỘNG HỌC PHÂN TỬ CHẤT KHÍ ---
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Tính chất nào sau đây không phải là tính chất của chất ở thể khí?',
+    imageUrl: '',
+    options: [
+      'Có hình dạng và thể tích riêng.',
+      'Có thể nén được dễ dàng.',
+      'Các phân tử chuyển động hỗn loạn không ngừng.',
+      'Lực tương tác phân tử nhỏ hơn ở thể rắn và lỏng.'
+    ],
+    answerKey: 'Có hình dạng và thể tích riêng.',
+    explanationText: 'Chất khí không có hình dạng và thể tích riêng, nó chiếm toàn bộ thể tích bình chứa.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Sự khác biệt về lực tương tác giữa các phân tử trong rắn – lỏng – khí dẫn đến',
+    imageUrl: '',
+    options: [
+      'Sự đồng nhất về khối lượng.',
+      'Sự khác biệt về cấu trúc và thể tích.',
+      'Sự khác biệt về khối lượng.',
+      'Sự đồng nhất về cấu trúc.'
+    ],
+    answerKey: 'Sự khác biệt về cấu trúc và thể tích.',
+    explanationText: 'Lực tương tác khác nhau dẫn đến cấu trúc sắp xếp và khả năng giữ thể tích/hình dạng khác nhau.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Khí lí tưởng là chất khí trong đó các phân tử được coi là chất điểm và',
+    imageUrl: '',
+    options: [
+      'Chỉ tương tác với nhau khi va chạm.',
+      'Không tương tác với nhau.',
+      'Hút nhau khi ở xa.',
+      'Đẩy nhau khi ở gần.'
+    ],
+    answerKey: 'Chỉ tương tác với nhau khi va chạm.',
+    explanationText: 'Khí lí tưởng bỏ qua lực tương tác phân tử, chỉ xét tương tác khi va chạm.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Nhận xét nào sau đây không đúng về chuyển động Brown?',
+    imageUrl: '',
+    options: [
+      'Hạt phấn hoa chuyển động hỗn loạn không ngừng.',
+      'Quỹ đạo chuyển động gấp khúc, không theo quy luật.',
+      'Nhiệt độ càng cao thì hạt phấn hoa chuyển động càng chậm.',
+      'Các hạt bị phân tử nước va đập.'
+    ],
+    answerKey: 'Nhiệt độ càng cao thì hạt phấn hoa chuyển động càng chậm.',
+    explanationText: 'Nhiệt độ càng cao, các phân tử chuyển động càng nhanh, va chạm càng mạnh làm hạt phấn hoa chuyển động nhanh hơn.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Phát biểu đúng về khí lí tưởng là',
+    imageUrl: '',
+    options: [
+      'Phân tử luôn tương tác với nhau.',
+      'Va chạm là va chạm mềm.',
+      'Phân tử được coi là chất điểm.',
+      'Có thể bỏ qua khối lượng phân tử.'
+    ],
+    answerKey: 'Phân tử được coi là chất điểm.',
+    explanationText: 'Trong mô hình khí lí tưởng, các phân tử được coi là các chất điểm có khối lượng.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Robert Brown đã quan sát thấy các hạt phấn hoa trong nước',
+    imageUrl: '',
+    options: [
+      'Dao động quanh vị trí cân bằng.',
+      'Có lúc đứng yên, có lúc chuyển động.',
+      'Luôn đứng yên.',
+      'Chuyển động không ngừng.'
+    ],
+    answerKey: 'Chuyển động không ngừng.',
+    explanationText: 'Các hạt phấn hoa chuyển động hỗn loạn không ngừng do va chạm của các phân tử nước.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Tính chất nào sau đây không phải của chất khí?',
+    imageUrl: '',
+    options: [
+      'Hình dạng phụ thuộc bình chứa.',
+      'Khối lượng riêng rất nhỏ so với chất rắn và lỏng.',
+      'Phân tử luôn tương tác mạnh với nhau.',
+      'Gây áp suất theo mọi hướng.'
+    ],
+    answerKey: 'Phân tử luôn tương tác mạnh với nhau.',
+    explanationText: 'Ở thể khí, lực tương tác phân tử rất yếu (trừ lúc va chạm).'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Chuyển động nào không được coi là chuyển động Brown?',
+    imageUrl: '',
+    options: [
+      'Khói thoát ra khỏi ống xả ô tô.',
+      'Hạt khói trong ống nghiệm quan sát bằng kính hiển vi.',
+      'Hạt bụi lơ lửng trong không khí tĩnh.',
+      'Hạt phấn hoa trong nước.'
+    ],
+    answerKey: 'Khói thoát ra khỏi ống xả ô tô.',
+    explanationText: 'Khói từ ống xả là dòng chuyển động có hướng do áp suất đẩy ra, không phải chuyển động nhiệt hỗn loạn cấp vi mô.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Đặc điểm nào không phải của chất khí?',
+    imageUrl: '',
+    options: [
+      'Nhiệt độ cao phân tử chuyển động nhanh.',
+      'Lực tương tác rất nhỏ.',
+      'Phân tử sắp xếp có trật tự.',
+      'Chuyển động hỗn loạn.'
+    ],
+    answerKey: 'Phân tử sắp xếp có trật tự.',
+    explanationText: 'Sắp xếp có trật tự là đặc điểm của chất rắn kết tinh.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Bóng bay buộc chặt để lâu ngày vẫn bị xẹp dần vì',
+    imageUrl: '',
+    options: [
+      'Không khí nhẹ nên bay ra ngoài.',
+      'Cao su co lại.',
+      'Không khí nguội đi.',
+      'Giữa các phân tử làm vỏ bóng có khoảng cách.'
+    ],
+    answerKey: 'Giữa các phân tử làm vỏ bóng có khoảng cách.',
+    explanationText: 'Các phân tử khí nhỏ li ti có thể chui qua các khoảng cách giữa các phân tử cao su để thoát ra ngoài.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Mô hình động học phân tử cho biết các chất được cấu tạo từ',
+    imageUrl: '',
+    options: [
+      'Các hạt riêng biệt gọi là nguyên tử, phân tử.',
+      'Các dòng vật chất liên tục.',
+      'Các hạt không riêng biệt.',
+      'Chỉ gồm Electron, proton, neutron.'
+    ],
+    answerKey: 'Các hạt riêng biệt gọi là nguyên tử, phân tử.',
+    explanationText: 'Vật chất được cấu tạo từ các hạt riêng biệt gọi là nguyên tử, phân tử.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Chuyển động Brown chứng minh điều gì?',
+    imageUrl: '',
+    options: [
+      'Các phân tử chất lỏng/khí chuyển động hỗn loạn không ngừng.',
+      'Chất rắn có cấu trúc tinh thể.',
+      'Lực hút phân tử rất lớn.',
+      'Phân tử khí rất nặng.'
+    ],
+    answerKey: 'Các phân tử chất lỏng/khí chuyển động hỗn loạn không ngừng.',
+    explanationText: 'Chuyển động Brown là bằng chứng thực nghiệm về chuyển động nhiệt của phân tử.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Hiện tượng nào sau đây chứng tỏ khoảng cách giữa các phân tử khí rất lớn?',
+    imageUrl: '',
+    options: [
+      'Chất khí dễ dàng bị nén.',
+      'Chất khí dẫn điện kém.',
+      'Chất khí có khối lượng.',
+      'Chuyển động Brown.'
+    ],
+    answerKey: 'Chất khí dễ dàng bị nén.',
+    explanationText: 'Vì khoảng cách lớn nên có thể nén khí lại để giảm khoảng cách này.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Phát biểu nào sau đây không phù hợp với khí lí tưởng?',
+    imageUrl: '',
+    options: [
+      'Kích thước của các phân tử có thể bỏ qua so với khoảng cách giữa chúng.',
+      'Các phân tử chỉ tương tác với nhau khi va chạm.',
+      'Các phân tử khí chuyển động càng nhanh khi nhiệt độ càng cao.',
+      'Khối lượng của các phân tử khí có thể bỏ qua.'
+    ],
+    answerKey: 'Khối lượng của các phân tử khí có thể bỏ qua.',
+    explanationText: 'Khí lí tưởng coi phân tử là chất điểm (bỏ qua kích thước) nhưng KHÔNG bỏ qua khối lượng.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Phát biểu nào sau đây sai khi nói về mô hình động học phân tử?',
+    imageUrl: '',
+    options: [
+      'Giữa các phân tử chỉ có tương tác bằng lực hút.',
+      'Các phân tử chuyển động nhiệt càng nhanh thì nhiệt độ càng cao.',
+      'Vật chất được cấu tạo từ rất nhiều phân tử.',
+      'Các phân tử chuyển động nhiệt không ngừng.'
+    ],
+    answerKey: 'Giữa các phân tử chỉ có tương tác bằng lực hút.',
+    explanationText: 'Giữa các phân tử có cả lực hút và lực đẩy.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Khi nói về khí lí tưởng, phát biểu nào sau đây đúng?',
+    imageUrl: '',
+    options: [
+      'Giữa hai va chạm liên tiếp, phân tử chuyển động chậm dần đều.',
+      'Các phân tử luôn tương tác với nhau.',
+      'Các phân tử có kích thước rất nhỏ, có thể bỏ qua.',
+      'Va chạm giữa các phân tử là va chạm mềm.'
+    ],
+    answerKey: 'Các phân tử có kích thước rất nhỏ, có thể bỏ qua.',
+    explanationText: 'Phân tử khí lí tưởng được coi là chất điểm.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Nhận định nào sau đây sai khi nói về một lượng khí xác định trong bình kín?',
+    imageUrl: '',
+    options: [
+      'Tốc độ chuyển động của các phân tử khí luôn bằng nhau.',
+      'Các phân tử va chạm vào thành bình gây áp suất.',
+      'Các phân tử chuyển động hỗn loạn không ngừng.',
+      'Khí chiếm đầy thể tích bình.'
+    ],
+    answerKey: 'Tốc độ chuyển động của các phân tử khí luôn bằng nhau.',
+    explanationText: 'Tốc độ của các phân tử tuân theo quy luật thống kê, không bằng nhau.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Trong mô hình khí lí tưởng, giữa hai va chạm liên tiếp phân tử khí chuyển động',
+    imageUrl: '',
+    options: [
+      'Thẳng chậm dần đều.',
+      'Thẳng đều.',
+      'Tròn đều.',
+      'Thẳng nhanh dần đều.'
+    ],
+    answerKey: 'Thẳng đều.',
+    explanationText: 'Do bỏ qua tương tác xa, nên khi không va chạm, phân tử không chịu lực tác dụng.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Phân tử khí lí tưởng có thế năng tương tác bằng bao nhiêu?',
+    imageUrl: '',
+    options: [
+      'Bằng 0.',
+      'Rất lớn.',
+      'Tỉ lệ với bình phương khoảng cách.',
+      'Phụ thuộc vào nhiệt độ.'
+    ],
+    answerKey: 'Bằng 0.',
+    explanationText: 'Do bỏ qua tương tác xa nên thế năng tương tác coi như bằng 0.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Phát biểu nào sau đây không đúng về lực tương tác phân tử?',
+    imageUrl: '',
+    options: [
+      'Lực hút có thể lớn hơn lực đẩy.',
+      'Lực hút có thể bằng lực đẩy.',
+      'Lực hút không thể lớn hơn lực đẩy.',
+      'Lực phân tử chỉ đáng kể khi các phân tử rất gần nhau.'
+    ],
+    answerKey: 'Lực hút không thể lớn hơn lực đẩy.',
+    explanationText: 'Tùy thuộc vào khoảng cách, lực tương tác có thể là lực hút chiếm ưu thế hoặc lực đẩy chiếm ưu thế.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Số Avogadro là đại lượng đặc trưng cho',
+    imageUrl: '',
+    options: [
+      'Số phân tử có trong 1 lít khí ở ĐKTC.',
+      'Số hạt (nguyên tử/phân tử) có trong 1 mol chất.',
+      'Số phân tử trong 1 g khí.',
+      'Số phân tử trong 1 kg khí.'
+    ],
+    answerKey: 'Số hạt (nguyên tử/phân tử) có trong 1 mol chất.',
+    explanationText: 'Định nghĩa số Avogadro $N_A \approx 6,02.10^{23}$.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Biết $M_{H_2O}=18g/mol$. Số phân tử nước có trong $1g$ nước là',
+    imageUrl: '',
+    options: [
+      '$3,34.10^{22}$',
+      '$3,01.10^{23}$',
+      '$3,01.10^{22}$',
+      '$3,34.10^{23}$'
+    ],
+    answerKey: '$3,34.10^{22}$',
+    explanationText: '$N = \frac{m}{M}N_A = \frac{1}{18}.6,02.10^{23} \approx 3,34.10^{22}$.'
+  },
+
+  // --- BÀI 2.2: PHƯƠNG TRÌNH TRẠNG THÁI KHÍ LÍ TƯỞNG ---
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Thông số trạng thái của một lượng khí xác định gồm',
+    imageUrl: '',
+    options: [
+      'Nhiệt độ, khối lượng, thể tích.',
+      'Khối lượng, nhiệt độ, áp suất.',
+      'Nhiệt độ, thể tích, áp suất.',
+      'Thể tích, áp suất, khối lượng.'
+    ],
+    answerKey: 'Nhiệt độ, thể tích, áp suất.',
+    explanationText: 'Ba thông số trạng thái cơ bản là p, V, T.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Trong hiện tượng nào sau đây, cả ba thông số trạng thái của một lượng khí đều thay đổi?',
+    imageUrl: '',
+    options: [
+      'Đun nóng khí trong bình thép kín (Đẳng tích).',
+      'Bóng bàn bị bẹp nhúng vào nước nóng phồng lên.',
+      'Nén khí từ từ trong xilanh (Đẳng nhiệt).',
+      'Bóng bay đặt trong phòng nhiệt độ không đổi.'
+    ],
+    answerKey: 'Bóng bàn bị bẹp nhúng vào nước nóng phồng lên.',
+    explanationText: 'Khi bóng phồng lên: Thể tích tăng, Nhiệt độ tăng (do nước nóng), Áp suất thay đổi.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Một lượng khí có thể tích ban đầu $V_1 = 6$ lít. Nhiệt độ được giữ không đổi. Nếu áp suất của khí tăng thêm 50% so với ban đầu thì thể tích của lượng khí này là',
+    imageUrl: '',
+    options: ['3 lít.', '9 lít.', '4 lít.', '6 lít.'],
+    answerKey: '4 lít.',
+    explanationText: 'Đẳng nhiệt: $p_1V_1 = p_2V_2$. Với $p_2 = 1,5p_1 \Rightarrow V_2 = \frac{p_1V_1}{1,5p_1} = \frac{6}{1,5} = 4$ lít.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Một bong bóng khí nổi lên trong nước. Khi bán kính giảm từ 1mm xuống 0,5mm (giả sử nhiệt độ không đổi), thì áp suất tác dụng lên bóng',
+    imageUrl: '',
+    options: ['Tăng 8 lần.', 'Giảm 8 lần.', 'Tăng 2 lần.', 'Giảm 2 lần.'],
+    answerKey: 'Tăng 8 lần.',
+    explanationText: 'Thể tích bóng $V \sim R^3$. R giảm 2 lần -> V giảm 8 lần. Đẳng nhiệt $p \sim 1/V$ nên p tăng 8 lần.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Trong quá trình đẳng nhiệt của một lượng khí nhất định, mật độ phân tử khí thay đổi như thế nào?',
+    imageUrl: '',
+    options: [
+      'Tỉ lệ thuận với áp suất.',
+      'Giảm tỉ lệ nghịch với áp suất.',
+      'Chưa đủ dữ kiện.',
+      'Luôn không đổi.'
+    ],
+    answerKey: 'Tỉ lệ thuận với áp suất.',
+    explanationText: 'Mật độ $n = N/V$. Vì $p \sim 1/V$ nên $p \sim n$.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Trong thí nghiệm kiểm chứng định luật Boyle, việc dịch chuyển pít-tông từ từ nhằm đảm bảo điều kiện nào?',
+    imageUrl: '',
+    options: [
+      'Khối lượng khí không đổi.',
+      'Nhiệt độ khí không đổi.',
+      'Thể tích khí không đổi.',
+      'Áp suất khí không đổi.'
+    ],
+    answerKey: 'Nhiệt độ khí không đổi.',
+    explanationText: 'Dịch chuyển chậm để khí kịp trao đổi nhiệt với môi trường, giữ nhiệt độ không đổi.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Công thức đúng của định luật Boyle là',
+    imageUrl: '',
+    options: [
+      '$p_1V_2 = p_2V_2$',
+      '$p_1V_1 = p_2V_1$',
+      '$p_1V_2 = p_2V_1$',
+      '$p_1V_1 = p_2V_2$'
+    ],
+    answerKey: '$p_1V_1 = p_2V_2$',
+    explanationText: 'Định luật Boyle: pV = hằng số.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Trong hệ trục tọa độ (pOV), đường đẳng nhiệt có dạng',
+    imageUrl: '',
+    options: [
+      'Đường thẳng song song trục Op.',
+      'Đường thẳng vuông góc trục OV.',
+      'Đường thẳng đi qua gốc tọa độ.',
+      'Đường hypebol.'
+    ],
+    answerKey: 'Đường hypebol.',
+    explanationText: 'Đồ thị p theo V trong quá trình đẳng nhiệt là đường Hypebol.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Thợ lặn ở độ sâu 35m. Biết $\rho = 1000kg/m^3$, $p_a = 10^5Pa$, $g=10m/s^2$. Áp suất người thợ lặn chịu là',
+    imageUrl: '',
+    options: ['4,5.10^5 Pa.', '3,5.10^5 Pa.', '2,5.10^5 Pa.', '3,5 Pa.'],
+    answerKey: '4,5.10^5 Pa.',
+    explanationText: '$p = p_a + \rho gh = 10^5 + 1000.10.35 = 450000 Pa = 4,5.10^5 Pa$.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Khí đẳng nhiệt có $V_1 = 2 dm^3$, áp suất giảm từ $1,5 atm$ xuống $0,75 atm$. Thể tích khí sẽ',
+    imageUrl: '',
+    options: [
+      'Tăng lên thành 4 dm³.',
+      'Giảm còn 1 dm³.',
+      'Giảm còn 0,5 dm³.',
+      'Tăng lên thành 3 dm³.'
+    ],
+    answerKey: 'Tăng lên thành 4 dm³.',
+    explanationText: 'Áp suất giảm một nửa (1.5 -> 0.75) thì thể tích tăng gấp đôi (2 -> 4).'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Phát biểu nào sau đây đúng khi nói về định luật Charles?',
+    imageUrl: '',
+    options: [
+      'Trong quá trình đẳng áp, thể tích tỉ lệ nghịch với nhiệt độ tuyệt đối.',
+      'Trong quá trình đẳng áp, thể tích tỉ lệ thuận với nhiệt độ tuyệt đối.',
+      'Trong quá trình đẳng áp, thể tích tỉ lệ nghịch với nhiệt độ Celsius.',
+      'Trong quá trình đẳng áp, thể tích tỉ lệ thuận với áp suất.'
+    ],
+    answerKey: 'Trong quá trình đẳng áp, thể tích tỉ lệ thuận với nhiệt độ tuyệt đối.',
+    explanationText: '$V/T = const \Rightarrow V \sim T$.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Một lượng khí lí tưởng xác định biến đổi trạng thái với áp suất không đổi. Hệ thức đúng là',
+    imageUrl: '',
+    options: [
+      '$p_1/T_1 = p_2/T_2$',
+      '$p_1V_1 = p_2V_2$',
+      '$V_1/p_1 = V_2/p_2$',
+      '$V_1/T_1 = V_2/T_2$'
+    ],
+    answerKey: '$V_1/T_1 = V_2/T_2$',
+    explanationText: 'Định luật Charles cho quá trình đẳng áp.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Một khối khí có $V_1 = 10$ lít ở $27^oC$. Giữ áp suất không đổi, để thể tích tăng lên 12 lít thì nhiệt độ phải tăng đến',
+    imageUrl: '',
+    options: ['$87^oC$', '$360^oC$', '$300^oC$', '$60^oC$'],
+    answerKey: '$87^oC$',
+    explanationText: '$T_1 = 300K$. $V_1/T_1 = V_2/T_2 \Rightarrow T_2 = T_1 \frac{V_2}{V_1} = 300 \frac{12}{10} = 360K \Rightarrow t_2 = 87^oC$.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Phương trình nào sau đây là phương trình trạng thái của khí lí tưởng (Phương trình Clapeyron)?',
+    imageUrl: '',
+    options: [
+      '$pV/T = const$',
+      '$pT = const$',
+      '$VT = const$',
+      '$pV = const$'
+    ],
+    answerKey: '$pV/T = const$',
+    explanationText: 'Phương trình trạng thái: $\frac{pV}{T} = const$.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Khối lượng riêng của không khí trong phòng $27^oC$ lớn hơn khối lượng riêng của không khí ngoài sân nắng $42^oC$ bao nhiêu lần? Biết áp suất như nhau.',
+    imageUrl: '',
+    options: ['1,50', '1,00', '1,05', '1,27'],
+    answerKey: '1,05',
+    explanationText: 'Từ $pV = \frac{m}{M}RT \Rightarrow \rho = \frac{m}{V} = \frac{pM}{RT}$. Vậy $\rho \sim 1/T$. Tỉ lệ = $T_2/T_1 = (273+42)/(273+27) = 315/300 = 1,05$.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Một khối khí xác định: áp suất tăng gấp đôi, nhiệt độ tuyệt đối tăng gấp 3. Thể tích khí sẽ',
+    imageUrl: '',
+    options: [
+      'Tăng 1,5 lần.',
+      'Tăng 6 lần.',
+      'Giảm 1,5 lần.',
+      'Giảm 6 lần.'
+    ],
+    answerKey: 'Tăng 1,5 lần.',
+    explanationText: '$\frac{p_1V_1}{T_1} = \frac{p_2V_2}{T_2} \Rightarrow V_2 = V_1 \frac{p_1}{p_2} \frac{T_2}{T_1} = V_1 \frac{1}{2} . 3 = 1,5V_1$.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Hệ thức nào sau đây phù hợp với quá trình đẳng tích?',
+    imageUrl: '',
+    options: [
+      '$V_1/T_1 = V_2/T_2$',
+      '$p_1/T_1 = p_2/T_2$',
+      '$p_1V_1 = p_2V_2$',
+      '$p_1V_1/T_1 = p_2V_2/T_2$'
+    ],
+    answerKey: '$p_1/T_1 = p_2/T_2$',
+    explanationText: 'Định luật Charles cho quá trình đẳng tích (Sách cũ) / Gay-Lussac.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Bình oxy y tế cấp cho bệnh nhân với lưu lượng $5l/phút$. Bình có thể tích 10 lít chứa khí ở áp suất 150 atm. Coi nhiệt độ không đổi và quá trình là đẳng nhiệt. Bệnh nhân sử dụng được trong bao lâu đến khi áp suất trong bình cân bằng với áp suất khí quyển (1 atm)?',
+    imageUrl: '',
+    options: ['300 phút.', '298 phút.', '150 phút.', '1490 phút.'],
+    answerKey: '298 phút.',
+    explanationText: 'Lượng khí khả dụng: $V_{khả_dụng} = 10.(150 - 1) = 1490$ lít (ở 1 atm). Thời gian = 1490 / 5 = 298 phút.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.2',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Hai bình chứa khí thông nhau. Bình 1 có $V_1, p_1, T_1$. Bình 2 có $V_2, p_2, T_2$. Sau khi mở van thông nhau và cân bằng nhiệt ở nhiệt độ T, áp suất p chung là',
+    imageUrl: '',
+    options: [
+      'Tính theo bảo toàn số mol.',
+      'Trung bình cộng áp suất.',
+      'Tổng áp suất.',
+      'Hiệu áp suất.'
+    ],
+    answerKey: 'Tính theo bảo toàn số mol.',
+    explanationText: '$n = n_1 + n_2 \Rightarrow \frac{pV}{RT} = \frac{p_1V_1}{RT_1} + \frac{p_2V_2}{RT_2}$.'
+  },
+
+  // --- BÀI 2.3: ÁP SUẤT KHÍ THEO MÔ HÌNH ĐỘNG HỌC ---
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.3',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Khi nhiệt độ của khối khí trong một bình kín tăng thì áp suất của khối khí trong bình cũng tăng lên vì',
+    imageUrl: '',
+    options: [
+      'Số lượng phân tử khí tăng nên va chạm với thành bình nhiều hơn.',
+      'Các phân tử khí va chạm với nhau nhiều hơn.',
+      'Các phân tử khí chuyển động nhanh hơn nên va chạm với thành bình mạnh hơn và tần số va chạm lớn hơn.',
+      'Khoảng cách giữa các phân tử khí tăng nên va chạm mạnh hơn.'
+    ],
+    answerKey: 'Các phân tử khí chuyển động nhanh hơn nên va chạm với thành bình mạnh hơn và tần số va chạm lớn hơn.',
+    explanationText: 'Theo mô hình động học: Nhiệt độ tăng -> Động năng tăng -> Vận tốc tăng -> Va chạm mạnh hơn và nhiều hơn -> Áp suất tăng.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.3',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Nguyên nhân gây ra áp suất chất khí lên thành bình là',
+    imageUrl: '',
+    options: [
+      'Do lực liên kết giữa các phân tử.',
+      'Do trọng lượng của chất khí.',
+      'Do các phân tử khí va chạm vào thành bình.',
+      'Do chất khí có thể tích lớn.'
+    ],
+    answerKey: 'Do các phân tử khí va chạm vào thành bình.',
+    explanationText: 'Áp suất khí gây ra bởi lực do các phân tử va chạm lên một đơn vị diện tích thành bình.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.3',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Trong bình kín, khi nhiệt độ tăng thì áp suất tăng vì',
+    imageUrl: '',
+    options: [
+      'Mật độ phân tử giảm.',
+      'Phân tử khí chuyển động nhanh hơn.',
+      'Khoảng cách phân tử tăng.',
+      'Số phân tử tăng.'
+    ],
+    answerKey: 'Phân tử khí chuyển động nhanh hơn.',
+    explanationText: 'Giải thích tương tự câu trên: nhiệt độ liên quan đến vận tốc chuyển động nhiệt.'
+  },
+
+  // --- BÀI 2.4: ĐỘNG NĂNG PHÂN TỬ ---
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.4',
+    level: 'Thông hiểu',
+    type: 'MCQ',
+    promptText: 'Khi đun nóng khí trong bình kín, các phân tử khí',
+    imageUrl: '',
+    options: [
+      'Chuyển động nhanh hơn.',
+      'Va chạm yếu hơn.',
+      'Tiến lại gần nhau.',
+      'Giãn nở.'
+    ],
+    answerKey: 'Chuyển động nhanh hơn.',
+    explanationText: 'Nhiệt độ tỉ lệ thuận với động năng trung bình phân tử ($E_d \sim T$).'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.4',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Động năng trung bình của phân tử khí lí tưởng phụ thuộc vào',
+    imageUrl: '',
+    options: [
+      'Thể tích.',
+      'Áp suất.',
+      'Nhiệt độ tuyệt đối.',
+      'Loại chất khí.'
+    ],
+    answerKey: 'Nhiệt độ tuyệt đối.',
+    explanationText: '$W_d = \frac{3}{2}kT$. Chỉ phụ thuộc vào nhiệt độ T.'
+  },
 
  
 

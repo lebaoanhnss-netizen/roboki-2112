@@ -2988,6 +2988,11 @@ useEffect(() => {
       }
 
       setToastMsg(`✅ Đã nạp thành công ${targetQuestions.length} câu hỏi và ${targetLessons.length} bài học!`);
+      // 👇 THÊM 3 DÒNG NÀY ĐỂ XÓA CACHE CŨ 👇
+      localStorage.removeItem('questions_cache');
+      localStorage.removeItem('lessons_cache');
+      localStorage.removeItem('data_cache_time');
+      // 👆 KẾT THÚC THÊM 👆
       setTimeout(() => window.location.reload(), 1500);
 
     } catch (e: any) {
