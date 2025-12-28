@@ -71,4 +71,8 @@ export interface UserProfile {
   lastStudyHour?: number;      // Giờ học bài gần nhất 0-23h (Huy hiệu Cú đêm/Gà gáy)
   luckySpinCount?: number;     // Số lần quay trúng thưởng lớn (Huy hiệu Thần tài)
   completedChallenges?: number;// Số lượng thử thách đã hoàn thành (Huy hiệu Thợ săn)
+  // 👇👇👇 THÊM 3 DÒNG NÀY VÀO CUỐI 👇👇👇
+  treeLevel?: number;      // Cấp độ cây
+  treeExp?: number;        // Kinh nghiệm cây
+  inventory?: { water: number; fertilizer: number; }; // Kho đồ (Nước/Phân bón)
 }

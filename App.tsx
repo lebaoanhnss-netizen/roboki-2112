@@ -1,10 +1,9 @@
 // src/App.tsx
-import { playSound } from './utils/SoundManager';
 import React, { useState, useEffect, useRef } from 'react';
 import MathRender from './components/MathRender';
 import Toast from './components/Toast';
 import { UserProfile, Question, Lesson } from './types';
-// 👇 Import dữ liệu từ file data.ts
+// 👇 Import dữ liệu từ file data.ts (Đảm bảo file này tồn tại)
 import { PHYSICS_LESSONS, QUESTION_BANK } from './data';
 
 import {
@@ -17,7 +16,6 @@ import {
   updateProfile,
   doc,
   setDoc,
-  getDoc,
   updateDoc,
   increment,
   collection,
@@ -26,12 +24,14 @@ import {
   where,
   orderBy,
   limit,
-  writeBatch
+  writeBatch,
+  getDoc
 } from './firebase';
+
 import {
   BookOpen, MessageCircle, User, Copy,
-  CheckCircle, ExternalLink, Target,
-  Trophy, ClipboardCopy, Bell, Search, ChevronRight, ChevronLeft,
+  CheckCircle, Target,
+  Trophy, Bell, Search, ChevronRight, ChevronLeft,
   Video, Share2, Thermometer, Wind, Atom,
   BarChart3, Magnet, Crown, Flame, XCircle, Play, Settings2, Filter,
   List, Type, CheckSquare, Gamepad2, Zap, Timer, RotateCcw, Ghost,
@@ -40,7 +40,7 @@ import {
   ThumbsUp, Percent, Activity, Send, Home, Globe, KeyRound, X, Loader2,
   FileText, ClipboardList, School, Edit3, Save, MapPin, ShieldAlert,
   Lightbulb, GraduationCap, Clock, Phone, Info, StopCircle as StopIcon,
-  Coins, PhoneCall, HelpCircle as HelpIcon, ArrowBigRight, Trash2, SkipForward, Medal // 👈 THÊM CÁI NÀY VÀO
+  Coins, PhoneCall, HelpCircle as HelpIcon, ArrowBigRight, Trash2, SkipForward, Medal, Sprout
 } from 'lucide-react';
 
 // --- UTILS ---
@@ -214,7 +214,7 @@ const INITIAL_CHALLENGE_STATE: ChallengeSessionData = {
 // --- CONSTANTS ---
 const MILLIONAIRE_LADDER = [
     1, 2, 3, 4, 5,   
-    6, 7, 8, 9, 10, 
+    6, 7, 8, 9, 10,  
     11, 12, 13, 14, 15 
 ];
 
@@ -307,15 +307,10 @@ const AuthScreen: React.FC<{ onLoginSuccess: (user: UserProfile) => void }> = ({
         };
         await setDoc(doc(db, 'users', cred.user.uid), newUser);
         onLoginSuccess(newUser);
-      // ✅ ĐOẠN MỚI (TIẾT KIỆM 1 READ)
-} else {
-  // Chỉ cần đăng nhập, còn việc tải data để App.tsx tự lo
-  await signInWithEmailAndPassword(auth, email, password);
-  
-  // Không cần gọi getDoc hay onLoginSuccess ở đây nữa.
-  // Lý do: Khi signIn thành công, onAuthStateChanged bên App.tsx sẽ tự động kích hoạt,
-  // tự kiểm tra cache và tự tải dữ liệu (chỉ tốn 1 Read nếu cần).
-}
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+        // onAuthStateChanged in App.tsx will handle the rest
+      }
     } catch (err: any) { setError(err.message); } finally { setLoading(false); }
   };
 
@@ -331,7 +326,7 @@ const AuthScreen: React.FC<{ onLoginSuccess: (user: UserProfile) => void }> = ({
         </div>
         <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-100">
            <div className="flex justify-center mb-6">
-                <img src="/logo-robok.png" alt="Logo Innedu" className="h-32 w-auto object-contain" />
+                {/* <img src="/logo-robok.png" alt="Logo" className="h-32 w-auto object-contain" /> */}
            </div>
            <div className="flex bg-slate-100 p-1 rounded-2xl mb-6">
              <button onClick={() => { setIsRegistering(false); setError(''); }} className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all ${!isRegistering ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400'}`}>Đăng nhập</button>
@@ -377,30 +372,30 @@ const AuthorScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                <div className="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
                   <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-indigo-500 shrink-0"><School size={20}/></div>
                   <div>
-                     <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Đơn vị công tác</div>
-                     <div className="text-sm font-bold text-slate-800">Trường THPT Nguyễn Sinh Sắc</div>
-                     <div className="text-xs text-slate-500 mt-0.5">Phường Tân Châu, Tỉnh An Giang</div>
+                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Đơn vị công tác</div>
+                      <div className="text-sm font-bold text-slate-800">Trường THPT Nguyễn Sinh Sắc</div>
+                      <div className="text-xs text-slate-500 mt-0.5">Phường Tân Châu, Tỉnh An Giang</div>
                   </div>
                </div>
                <div className="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
                   <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-purple-500 shrink-0"><Award size={20}/></div>
                   <div>
-                     <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Chức vụ</div>
-                     <div className="text-sm font-bold text-slate-800">Tổ trưởng Tổ Vật lí - CNCN</div>
+                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Chức vụ</div>
+                      <div className="text-sm font-bold text-slate-800">Tổ trưởng Tổ Vật lí - CNCN</div>
                   </div>
                </div>
                <div className="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
                   <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-emerald-500 shrink-0"><Phone size={20}/></div>
                   <div>
-                     <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Điện thoại</div>
-                     <div className="text-sm font-bold text-slate-800">0916700177</div>
+                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Điện thoại</div>
+                      <div className="text-sm font-bold text-slate-800">0916700177</div>
                   </div>
                </div>
                <div className="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
                   <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-rose-500 shrink-0"><Mail size={20}/></div>
                   <div>
-                     <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Email liên hệ</div>
-                     <div className="text-sm font-bold text-slate-800 break-all">lebaoanhnss@gmail.com</div>
+                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Email liên hệ</div>
+                      <div className="text-sm font-bold text-slate-800 break-all">lebaoanhnss@gmail.com</div>
                   </div>
                </div>
             </div>
@@ -518,17 +513,20 @@ const ProfileScreen: React.FC<{
 const ContentScreen: React.FC<{
   onCopy: (txt: string) => void; onNavToPractice: () => void; onNavToMockTest: () => void;
   onNavToExam: () => void;
+  onNavToGarden: () => void; 
   onNavToGames: () => void; onNavToChallenge: () => void; onNavToLeaderboard: () => void;
   onNavToProfile: () => void; onNavToChat: () => void; user: UserProfile;
+  
   selectedTopic: { id: string, label: string } | null; setSelectedTopic: (topic: { id: string, label: string } | null) => void;
   expandedLessonIds: string[]; toggleLesson: (id: string) => void; lessons: Lesson[];
 }> = ({
   onCopy, onNavToPractice, onNavToMockTest, onNavToExam, onNavToGames, onNavToChallenge,
+  onNavToGarden,
   onNavToLeaderboard, onNavToProfile, onNavToChat, user,
   selectedTopic, setSelectedTopic, expandedLessonIds, toggleLesson, lessons
 }) => {
   const TOPICS = [{ id: 't1', label: 'VẬT LÍ NHIỆT', icon: Thermometer }, { id: 't2', label: 'KHÍ LÍ TƯỞNG', icon: Wind }, { id: 't3', label: 'TỪ TRƯỜNG', icon: Magnet }, { id: 't4', label: 'HẠT NHÂN & PHÓNG XẠ', icon: Atom }];
-// --- 1. HỆ THỐNG 40 CẤP ĐỘ (VŨ TRỤ & VẬT LÝ) ---
+  
   const TOTAL_RANKS = [
       { min: 10000, label: 'ĐA VŨ TRỤ', icon: '🌌', color: 'from-slate-900 via-purple-900 to-slate-900' },
       { min: 9000, label: 'VÔ CỰC', icon: '♾️', color: 'from-indigo-600 via-purple-600 to-pink-600' },
@@ -593,8 +591,6 @@ const ContentScreen: React.FC<{
       const gained = currentScore - currentRank.min;
       progressPercent = Math.min(100, Math.max(5, (gained / range) * 100)); 
       nextRankLabel = nextRank.label;
-      
-      // ✅ SỬA THÀNH: Làm tròn đến 2 chữ số thập phân
       scoreNeeded = Math.round((nextRank.min - currentScore) * 100) / 100;
   }
   if (selectedTopic) {
@@ -612,18 +608,17 @@ const ContentScreen: React.FC<{
 
   return (
     <div className="pb-28 pt-2 px-4 space-y-5 bg-slate-50 min-h-full">
-      {/* 👇 HEADER MỚI: CÓ THANH EXP 40 CẤP ĐỘ */}
+      {/* HEADER */}
       <div className="flex justify-between items-start pt-2">
         <div className="flex flex-col gap-1 flex-1 mr-4">
            <div className="flex items-baseline gap-2 mb-1">
                 <span className="text-slate-500 text-xs font-bold uppercase tracking-wider shrink-0">Xin chào,</span>
                 <span className="text-xl font-black text-slate-800 truncate">{user.name} 👋</span>
-            </div>
-            
-            {/* KHU VỰC THANH KINH NGHIỆM */}
-            <div className="w-full max-w-[220px]">
+           </div>
+           
+           {/* KHU VỰC THANH KINH NGHIỆM */}
+           <div className="w-full max-w-[220px]">
                 <div className="flex items-end justify-between mb-1">
-                    {/* Chữ Level và Tên Rank */}
                     <div className="flex items-center gap-1.5">
                         <span className="bg-orange-600 text-white text-[10px] font-red px-1.5 py-0.5 rounded">
                             Lv.{currentLevel}
@@ -632,7 +627,6 @@ const ContentScreen: React.FC<{
                             {currentRank.icon} {currentRank.label}
                         </span>
                     </div>
-                    {/* Số điểm còn thiếu */}
                     {nextRank ? (
                         <span className="text-[9px] font-bold text-slate-400">
                             +{scoreNeeded} XP lên <span className="text-indigo-600">{nextRankLabel}</span>
@@ -642,17 +636,14 @@ const ContentScreen: React.FC<{
                     )}
                 </div>
                 
-                {/* Thanh Progress Bar */}
                 <div className="h-3.5 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200 shadow-inner relative">
                     <div className="absolute top-0 bottom-0 right-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-10 z-10"></div>
-                    {/* Thanh Fill - Màu Gradient thay đổi theo Rank */}
                     <div 
                         className={`h-full bg-gradient-to-r ${currentRank.color} rounded-full transition-all duration-1000 ease-out shadow-sm relative flex items-center justify-end pr-1.5`}
                         style={{ width: `${progressPercent}%` }}
                     >
                         <div className="absolute top-0 right-0 bottom-0 w-full bg-gradient-to-b from-white/20 to-transparent"></div>
                     </div>
-                    {/* Số % nằm đè lên thanh */}
                     <div className="absolute inset-0 flex items-center justify-center text-[8px] font-black text-orange-600/80 z-20 mix-blend-multiply">
                         {Math.round(progressPercent)}%
                     </div>
@@ -671,7 +662,6 @@ const ContentScreen: React.FC<{
                 <div className="w-full h-full rounded-full bg-gradient-to-tr from-orange-400 to-orange-600 flex items-center justify-center text-white text-lg font-black shadow-inner">
                     {user.name.charAt(0)}
                 </div>
-                {/* Badge cấp độ nhỏ ở góc avatar */}
                 <div className="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[9px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
                     {currentLevel}
                 </div>
@@ -730,13 +720,19 @@ const ContentScreen: React.FC<{
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-indigo-600 shadow-sm"><Trophy size={20} /></div>
                 <div><div className="font-bold text-indigo-900 text-sm group-hover:text-indigo-600 transition-colors">Xếp hạng</div><div className="text-[10px] text-indigo-600/70">Top học sinh</div></div>
              </div>
+             <div onClick={onNavToGarden} className="col-span-2 bg-lime-50 p-3 rounded-3xl border border-lime-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group">
+                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-lime-600 shadow-sm"><Sprout size={20} /></div>
+                <div><div className="font-bold text-lime-900 text-sm group-hover:text-lime-600 transition-colors">Vườn Cây Tri Thức</div><div className="text-[10px] text-lime-600/70">Chăm sóc cây & Thu hoạch</div></div>
+             </div>
         </div>
+        
       </div>
     </div>
   );
 };
 
-// 2. PRACTICE SCREEN (ĐÃ SỬA LỖI COPY 100%)
+// ... (Các component PracticeScreen, MockTestScreen, ExamScreen, GameScreen giữ nguyên code như cũ)
+// 2. PRACTICE SCREEN
 const PracticeScreen: React.FC<{
   onCopy: (txt: string) => void,
   onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge'|'mock') => void,
@@ -830,7 +826,6 @@ const PracticeScreen: React.FC<{
   const currentQ = quizQuestions[currentQIndex];
   const isGroupQuestion = currentQ.subQuestions && currentQ.subQuestions.length > 0;
 
-  // 👇 HÀM XỬ LÝ COPY THÔNG MINH (SỬA LỖI Ở ĐÂY) 👇
   const handleAskRoboki = () => {
       let content = currentQ.promptText;
       
@@ -860,7 +855,6 @@ const PracticeScreen: React.FC<{
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Câu hỏi</span>
             <span className="font-black text-slate-800 text-lg">{currentQIndex + 1}<span className="text-slate-300 text-sm">/{quizQuestions.length}</span></span>
          </div>
-         {/* 👇 NÚT COPY TRÊN ĐẦU (ĐÃ GẮN HÀM MỚI) */}
          <button onClick={handleAskRoboki} className="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center border border-slate-100 text-roboki-500 hover:bg-roboki-50 transition-colors"><Copy size={20}/></button>
       </div>
       <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex-1 overflow-y-auto relative">
@@ -926,7 +920,6 @@ const PracticeScreen: React.FC<{
 
          {isSubmitted ? (
             <div className="mt-8 animate-fade-in space-y-4">
-               {/* 👇 NÚT HỎI ROBOKI MÀU CAM (CŨNG GẮN HÀM MỚI) */}
                <button 
                    onClick={handleAskRoboki}
                    className="w-full bg-orange-100 text-orange-700 py-3 rounded-2xl font-bold border border-orange-200 flex items-center justify-center gap-2 hover:bg-orange-200 transition-all shadow-sm"
@@ -955,7 +948,8 @@ const PracticeScreen: React.FC<{
     </div>
   );
 };
-// 3. MOCK TEST SCREEN (TỰ CẤU HÌNH)
+
+// 3. MOCK TEST SCREEN (Đã fix lỗi)
 const MockTestScreen: React.FC<{
   onBack: () => void,
   session: MockTestSessionData,
@@ -963,7 +957,7 @@ const MockTestScreen: React.FC<{
   questions: Question[],
   onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge'|'mock') => void,
   onCopy: (txt: string) => void ,
-  onSave: () => void // 👈 Thêm dòng này
+  onSave: () => void 
 }> = ({ onBack, session, setSession, questions, onScore, onCopy }) => {
   const { mode, selectedTopics, countMCQ, countTF, countShort, quizQuestions, currentQIndex, userAnswers, score, errorMsg } = session;
 
@@ -1041,10 +1035,7 @@ const MockTestScreen: React.FC<{
           }
       });
       const finalPoints = Math.round(totalScore * 100)/100;
-      
-      // 👇 QUAN TRỌNG NHẤT LÀ SỬA DÒNG NÀY 👇
       onScore(finalPoints, 'mock'); 
-      
       updateSession({ mode: 'RESULT', score: finalPoints });
   };
   const copyQuestionContent = (q: Question) => {
@@ -1118,18 +1109,16 @@ const MockTestScreen: React.FC<{
   );
 };
 
-// 4. EXAM SCREEN (THI THỬ - MỚI)
-// 4. EXAM SCREEN (THI THỬ - GIAO DIỆN ĐẸP + CHẤM ĐIỂM CHUẨN 2025)
+// 4. EXAM SCREEN
 const ExamScreen: React.FC<{
   onBack: () => void;
   session: ExamSessionData;
   setSession: React.Dispatch<React.SetStateAction<ExamSessionData>>;
   questions: Question[];
-  // 👇 SỬA DÒNG NÀY
   onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge'|'mock') => void;
-  onSave: () => void; // 👈 Thêm dòng này
-  onCopy: (txt: string) => void; // 👈 THÊM DÒNG NÀY
-}> = ({ onBack, session, setSession, questions, onScore, onCopy }) => { // 👈 THÊM onCopy VÀO ĐÂY
+  onSave: () => void;
+  onCopy: (txt: string) => void;
+}> = ({ onBack, session, setSession, questions, onScore, onCopy }) => {
   const { mode, examType, title, timeLeft, quizQuestions, currentQIndex, userAnswers, score, details } = session;
   const update = (d: any) => setSession((p: any) => ({ ...p, ...d }));
 
@@ -1176,7 +1165,6 @@ const ExamScreen: React.FC<{
     update({ mode: 'DOING', examType: type, title, timeLeft: dur, quizQuestions: [...pick('MCQ', 18), ...pick('TrueFalse', 4), ...pick('Short', 6)], currentQIndex: 0, userAnswers: {} });
   };
 
-  // HÀM CHẤM ĐIỂM CHUẨN 2025 (CÓ LŨY TIẾN ĐIỂM ĐÚNG/SAI)
   const finish = (s: any = session) => {
     let rawScore = 0, dMCQ = 0, dTF = 0, dShort = 0;
     
@@ -1203,12 +1191,8 @@ const ExamScreen: React.FC<{
        }
     });
 
-    // Làm gọn số lẻ (ví dụ 8.2500001 -> 8.25)
     const finalScore = Math.round(rawScore * 100) / 100; 
-    
-    // 👇 SỬA Ở ĐÂY: Truyền thẳng finalScore, bỏ Math.round đi
     onScore(finalScore, 'exam'); 
-    
     update({ mode: 'RESULT', score: finalScore, details: { mcq: dMCQ, tf: dTF, short: dShort } });
   };
 
@@ -1219,7 +1203,6 @@ const ExamScreen: React.FC<{
       else update({ userAnswers: { ...userAnswers, [qId]: v } });
   };
 
-  // --- GIAO DIỆN MENU (CHỌN ĐỀ) - ĐẸP HƠN ---
   if (mode === 'MENU') return (
     <div className="p-6 pt-4 h-full flex flex-col bg-slate-50">
         <div className="flex items-center gap-3 mb-8">
@@ -1250,11 +1233,8 @@ const ExamScreen: React.FC<{
     </div>
   );
 
-  // --- GIAO DIỆN KẾT QUẢ (RESULT) ---
-  // --- GIAO DIỆN KẾT QUẢ (RESULT) - ĐÃ BỔ SUNG REVIEW & COPY ---
   if (mode === 'RESULT') return (
     <div className="p-6 h-full flex flex-col bg-slate-50">
-      {/* PHẦN TỔNG KẾT ĐIỂM (GIỮ NGUYÊN) */}
       <div className="bg-white rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/50 border border-slate-100 text-center mb-6 relative overflow-hidden shrink-0">
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-400 via-purple-400 to-orange-400"></div>
         <div className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4">{title}</div>
@@ -1270,17 +1250,14 @@ const ExamScreen: React.FC<{
         </div>
       </div>
 
-      {/* 👇 PHẦN MỚI: DANH SÁCH XEM LẠI BÀI LÀM 👇 */}
       <div className="flex-1 overflow-y-auto pr-1 space-y-4 mb-4 custom-scrollbar">
           <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Chi tiết bài làm</h3>
           {quizQuestions.map((q, idx) => {
               const uAns = userAnswers[q.id];
-              // Logic kiểm tra đúng sai để hiển thị màu
               let isCorrectMain = false;
               if (q.type === 'MCQ') isCorrectMain = uAns === q.answerKey;
               else if (q.type === 'Short') isCorrectMain = uAns?.toString().trim().toLowerCase() === q.answerKey.trim().toLowerCase();
               
-              // Hàm tạo nội dung để copy hỏi AI
               const handleAskAI = () => {
                   let content = q.promptText;
                   if (q.subQuestions) { 
@@ -1292,7 +1269,6 @@ const ExamScreen: React.FC<{
 
               return (
                   <div key={q.id} className={`bg-white rounded-2xl p-4 border shadow-sm relative overflow-hidden ${isCorrectMain || (q.type === 'TrueFalse') ? 'border-slate-100' : 'border-rose-100'}`}>
-                      {/* Nút Copy hỏi Roboki */}
                       <button 
                           onClick={handleAskAI} 
                           className="absolute top-3 right-3 flex items-center gap-1 bg-roboki-50 hover:bg-roboki-100 text-roboki-600 px-3 py-1.5 rounded-lg transition-colors border border-roboki-100 text-[10px] font-bold" 
@@ -1368,27 +1344,20 @@ const ExamScreen: React.FC<{
     </div>
   );
 
-  // --- GIAO DIỆN LÀM BÀI (DOING) ---
   const q = quizQuestions[currentQIndex]; 
   const ans = userAnswers[q.id];
-  
-  // Tính toán phần trăm tiến độ
   const progress = ((currentQIndex + 1) / quizQuestions.length) * 100;
 
   return (
     <div className="flex flex-col h-full pb-20 pt-4 px-4 bg-slate-50">
-      
-      {/* 👇👇👇 SỬA PHẦN HEADER NÀY 👇👇👇 */}
       <div className="bg-white p-4 rounded-[1.5rem] shadow-sm border border-slate-100 mb-4 sticky top-4 z-20">
          <div className="flex justify-between items-center mb-3">
-            {/* Đồng hồ đếm ngược */}
             <div className={`flex items-center gap-2 font-black text-lg ${timeLeft < 300 ? 'text-rose-500 animate-pulse' : 'text-slate-700'}`}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${timeLeft<300?'bg-rose-100':'bg-slate-100'}`}><Clock size={16}/></div>
                 {formatTime(timeLeft)}
             </div>
 
             <div className="flex gap-2">
-                {/* 🆕 NÚT QUA CÂU (ICON SKIP CHUYÊN NGHIỆP) */}
             <button 
                 disabled={currentQIndex === quizQuestions.length - 1} 
                 onClick={() => update({ currentQIndex: currentQIndex + 1 })} 
@@ -1397,15 +1366,12 @@ const ExamScreen: React.FC<{
             >
                 <SkipForward size={20} fill="currentColor"/>
             </button>
-
-                {/* Nút Nộp bài */}
                 <button onClick={() => {if(confirm("Bạn chắc chắn muốn nộp bài?")) finish()}} className="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-md transition-colors">
                     NỘP BÀI
                 </button>
             </div>
          </div>
 
-         {/* 🆕 THANH TIẾN TRÌNH (MỚI THÊM) */}
          <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
              <div 
                 className="h-full bg-indigo-500 transition-all duration-500 ease-out rounded-full" 
@@ -1417,7 +1383,6 @@ const ExamScreen: React.FC<{
              <span className="text-[10px] font-bold text-indigo-600">{currentQIndex + 1}/{quizQuestions.length}</span>
          </div>
       </div>
-      {/* 👆👆👆 HẾT PHẦN SỬA HEADER 👆👆👆 */}
 
       <div className="flex-1 overflow-y-auto no-scrollbar">
           <div className="bg-white p-6 rounded-[2rem] shadow-lg shadow-slate-200/50 border border-slate-100 mb-20 animate-fade-in relative">
@@ -1469,7 +1434,7 @@ const ExamScreen: React.FC<{
   );
 };
 
-// 5. GAME SCREEN (ĐÃ SỬA LỖI HIỂN THỊ ĐÁP ÁN TRIỆU PHÚ)
+// 5. GAME SCREEN
 const GameScreen: React.FC<{
   onCopy: (txt: string) => void,
   onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge'|'mock') => void,
@@ -1503,7 +1468,6 @@ const GameScreen: React.FC<{
 
   // --- HÀM CHO AI LÀ TRIỆU PHÚ ---
   const startMillionaireGame = () => {
-    // 1. Lọc và lấy câu hỏi theo cấp độ (MCQ và Short, không lấy TrueFalse)
     const validQuestions = questions.filter(q => q.type !== 'TrueFalse');
 
     const getQs = (level: string, count: number) => {
@@ -1534,7 +1498,6 @@ const GameScreen: React.FC<{
     });
   };
 
-  // 👇👇👇 ĐÃ SỬA LỖI LOGIC Ở ĐÂY 👇👇👇
   const handleMillionaireAnswer = (ans: string) => {
       const currentQ = millionaireQuestions[currentMilLevel];
       const isRight = currentQ.type === 'Short' 
@@ -1545,30 +1508,26 @@ const GameScreen: React.FC<{
           const points = MILLIONAIRE_LADDER[currentMilLevel];
           
           if (currentMilLevel === 14) {
-              // Thắng cuộc (Câu cuối)
               setSessionData(prev => ({ ...prev, mode: 'RESULT', score: points, isCorrect: true }));
               onScore(points, 'game');
           } else {
-              // Câu tiếp theo: CHỈ HIỆN MÀU XANH TRƯỚC, CHƯA CHUYỂN CÂU HỎI
               setSessionData(prev => ({ 
                   ...prev, 
                   score: points,
                   isCorrect: true, 
               }));
 
-              // Sau 1.5s mới chuyển sang câu hỏi tiếp theo
               setTimeout(() => {
                   setSessionData(prev => ({ 
                       ...prev,
-                      currentMilLevel: prev.currentMilLevel + 1, // Lúc này mới tăng level
+                      currentMilLevel: prev.currentMilLevel + 1,
                       milHiddenOptions: [], 
-                      isCorrect: null // Reset màu
+                      isCorrect: null
                   }));
-                  setMilInput(''); // Xóa input nếu là câu trả lời ngắn
+                  setMilInput(''); 
               }, 1500);
           }
       } else {
-          // Sai -> Game Over
           let safeScore = 0;
           if (currentMilLevel >= 10) safeScore = MILLIONAIRE_LADDER[9];
           else if (currentMilLevel >= 5) safeScore = MILLIONAIRE_LADDER[4];
@@ -1577,7 +1536,6 @@ const GameScreen: React.FC<{
           if(safeScore > 0) onScore(safeScore, 'game');
       }
   };
-  // 👆👆👆 KẾT THÚC PHẦN SỬA LỖI 👆👆👆
 
   // --- QUYỀN TRỢ GIÚP ---
   const useFiftyFifty = () => {
@@ -1900,7 +1858,6 @@ const GameScreen: React.FC<{
              <div className="flex gap-2">
                  <div className="bg-white px-3 py-1.5 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-1"><RotateCcw size={16} className="text-indigo-500"/><span className="font-black text-slate-700">{spinsLeft}</span></div>
                  <div className="bg-white px-3 py-1.5 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-1"><Star size={16} className="text-yellow-400 fill-yellow-400"/><span className="font-black text-slate-700">{score}</span></div>
-                 {/* 🛑 Nút kết thúc sớm cho Vòng quay */}
                  <button onClick={() => setSessionData(prev => ({...prev, mode: 'RESULT'}))} className="bg-rose-50 text-rose-500 p-1.5 rounded-full shadow-sm border border-rose-100 active:scale-95"><StopIcon size={18} fill="currentColor"/></button>
              </div>
            </div>
@@ -1937,34 +1894,27 @@ const GameScreen: React.FC<{
   return null;
 };
 
-// 7. LEADERBOARD SCREEN (GIAO DIỆN MỚI: 2 DÒNG GỌN GÀNG)
-// 7. LEADERBOARD SCREEN (TỰ ĐỘNG ĐỔI DANH HIỆU THEO TỪNG TAB)
+// 7. LEADERBOARD SCREEN
 const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile }> = ({ onBack, currentUser }) => {
   const [filter, setFilter] = useState<'CLASS' | 'SCHOOL' | 'ALL'>('CLASS');
   const [category, setCategory] = useState<'TOTAL' | 'PRACTICE' | 'MOCK' | 'EXAM' | 'GAME' | 'CHALLENGE'>('TOTAL');
   const [loading, setLoading] = useState(true);
   const [players, setPlayers] = useState<any[]>([]);
-// 👇 THÊM DÒNG NÀY ĐỂ LƯU CACHE (RAM)
-const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>({});
-  // ✅ DÁN ĐOẠN NÀY VÀO
-// ✅ CODE ĐÃ SỬA: SỬ DỤNG CACHE CHO BXH
+  const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>({});
+
   useEffect(() => {
     const fetchLeaderboard = async () => {
-      // 1. Tạo chìa khóa
       const cacheKey = `${filter}_${category}`;
 
-      // 2. 👇 KIỂM TRA CACHE (ĐOẠN NÀY BẠN ĐANG THIẾU)
       if (leaderboardCache[cacheKey]) {
-          console.log(`🎯 Dùng Cache cho ${cacheKey} (Tiết kiệm 50 Reads)`);
           setPlayers(leaderboardCache[cacheKey]);
           setLoading(false);
-          return; // 🛑 Dừng lại ngay, không cho chạy xuống dưới
+          return;
       }
 
       try {
         setLoading(true);
         
-        // ... (Phần logic chọn orderByField giữ nguyên) ...
         let orderByField = 'totalScore';
         if (category === 'PRACTICE') orderByField = 'practiceScore';
         if (category === 'MOCK') orderByField = 'mockScore';
@@ -1973,7 +1923,6 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
         if (category === 'CHALLENGE') orderByField = 'challengeScore';
 
         let q;
-        // ... (Phần logic tạo query giữ nguyên) ...
         if (filter === 'CLASS') {
             if (!currentUser.class) { setPlayers([]); setLoading(false); return; }
             q = query(collection(db, 'users'), where('class', '==', currentUser.class), orderBy(orderByField, 'desc'), limit(50));
@@ -1984,12 +1933,10 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
             q = query(collection(db, 'users'), orderBy(orderByField, 'desc'), limit(50));
         }
         
-        // 3. Gọi Firebase (Chỉ chạy khi chưa có Cache)
         const snap = await getDocs(q);
         const list: any[] = [];
         snap.forEach((d) => list.push(d.data()));
         
-        // 4. 👇 LƯU VÀO CACHE (ĐOẠN NÀY BẠN CŨNG THIẾU)
         setPlayers(list);
         setLeaderboardCache(prev => ({ ...prev, [cacheKey]: list }));
 
@@ -2006,7 +1953,7 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
 
     return () => clearTimeout(timer);
 
-  }, [filter, category, currentUser]); // Bỏ leaderboardCache ra khỏi đây
+  }, [filter, category, currentUser]);
 
   const getCatLabel = () => {
       if(category === 'TOTAL') return 'Tổng điểm tích lũy';
@@ -2017,8 +1964,6 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
       if(category === 'CHALLENGE') return 'Điểm Thử thách';
   }
 
-  // --- HÀM XỬ LÝ DANH HIỆU THÔNG MINH (SWITCH CASE) ---
- // --- HÀM XỬ LÝ DANH HIỆU 40 CẤP ĐỘ (MỚI) ---
   const getRankByScore = (score: number, type: string) => {
       
       // 1. TỔNG HỢP (Hệ thống Vũ Trụ Học & Vật Lý - 40 Cấp)
@@ -2104,10 +2049,7 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
           { min: 0, label: 'NGƯỜI MỚI', icon: '🥚', color: 'bg-slate-50 text-slate-500 border-slate-200' },
       ];
 
-   // 3. CÁC HỆ THỐNG KHÁC (CẬP NHẬT ĐẦY ĐỦ 20 CẤP/HỆ)
-
       // --- HỆ THỐNG KHOA CỬ (Exam Score) ---
-      // Chủ đề: Quan chế & Học vị phong kiến
       const EXAM_RANKS = [
           { min: 5200, label: 'THẦN CƠ', icon: '🔮', color: 'bg-red-100 text-red-900 border-red-400 animate-pulse' },
           { min: 4400, label: 'THÁI SƯ', icon: '🏮', color: 'bg-orange-100 text-orange-900 border-orange-400' },
@@ -2132,7 +2074,6 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
       ];
 
       // --- HỆ THỐNG CHIẾN BINH (Game Score) ---
-      // Chủ đề: Xếp hạng E-sports
       const GAME_RANKS = [
           { min: 5000, label: 'VUA TRÒ CHƠI', icon: '👑', color: 'bg-black text-yellow-400 border-yellow-500 shadow-md animate-pulse' },
           { min: 4000, label: 'HUYỀN THOẠI', icon: '☠️', color: 'bg-red-100 text-red-900 border-red-400' },
@@ -2157,7 +2098,6 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
       ];
 
       // --- HỆ THỐNG QUÂN HÀM (Challenge Score) ---
-      // Chủ đề: Quân đội & Kỷ luật
       const CHALLENGE_RANKS = [
           { min: 5000, label: 'THỐNG LĨNH', icon: '🦅', color: 'bg-red-900 text-white border-red-500 shadow-lg animate-pulse' },
           { min: 4000, label: 'ĐẠI TƯỚNG', icon: '🌟🌟🌟🌟', color: 'bg-red-800 text-white border-red-400' },
@@ -2182,7 +2122,6 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
       ];
 
       // --- HỆ THỐNG KIẾN TẠO (Mock/Create Score) ---
-      // Chủ đề: Xây dựng & Sáng tạo
       const MOCK_RANKS = [
           { min: 5000, label: 'ĐẤNG SÁNG THẾ', icon: '🌌', color: 'bg-violet-900 text-white border-violet-500 shadow-lg animate-pulse' },
           { min: 4200, label: 'ĐẤNG KIẾN TẠO', icon: '🪐', color: 'bg-fuchsia-800 text-white border-fuchsia-400' },
@@ -2217,7 +2156,6 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
       return selectedRanks.find(r => score >= r.min) || selectedRanks[selectedRanks.length - 1];
   }
 
-  // --- HỆ THỐNG HUY HIỆU ĐẶC BIỆT (SPECIAL BADGES) ---
   const getBadges = (u: UserProfile, index: number) => {
       const badges = [];
 
@@ -2237,18 +2175,14 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
       }
 
       // 4. 🏹 THỢ SĂN (Hoàn thành 50 Thử thách)
-      // Tạm tính: Mỗi thử thách trung bình 10 điểm -> 50 thử thách ≈ 500 điểm
       if ((u.challengeScore || 0) >= 500) {
           badges.push({ icon: '🏹', color: 'bg-emerald-600 text-white border border-emerald-700', label: 'Thợ săn' });
       }
 
       // 5. 🧠 SIÊU TRÍ TUỆ (Điểm thi thử > 9.5)
-      // Logic: Kiểm tra điểm thi thử (giả sử examScore là điểm cao nhất hoặc điểm lần cuối)
       if ((u.examScore || 0) > 9.5) {
           badges.push({ icon: '🧠', color: 'bg-rose-500 text-white border border-rose-600', label: 'Siêu trí tuệ' });
       }
-
-      // --- CÁC HUY HIỆU DỰA TRÊN THÔNG SỐ (CẦN UPDATE DB ĐỂ HIỆN) ---
 
       // 6. 🔥 CHĂM CHỈ (Học 3 ngày liên tiếp)
       if (u.loginStreak && u.loginStreak >= 3) {
@@ -2279,9 +2213,6 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
       if (u.luckySpinCount && u.luckySpinCount > 0) {
           badges.push({ icon: '🍀', color: 'bg-green-500 text-white border border-green-600', label: 'Thần tài' });
       }
-
-      // 12. 🛡️ NGƯỜI BẢO HỘ (Tính năng tương lai - Tạm ẩn)
-      // if (u.isGuardian) badges.push(...)
 
       return badges;
   }
@@ -2340,9 +2271,9 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
 
               return (
                 <div key={u.uid} className={`flex flex-col p-4 rounded-2xl border transition-colors ${u.uid === currentUser.uid ? 'bg-indigo-50 border-indigo-200' : 'bg-white border-slate-100 hover:border-slate-300'}`}>
-                   {/* Hàng 1 */}
-                   <div className="flex items-center justify-between">
-                       <div className="flex items-center gap-4">
+                    {/* Hàng 1 */}
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
                           <div className="w-8 h-8 flex items-center justify-center shrink-0">
                               {rankIcon}
                           </div>
@@ -2356,22 +2287,22 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
                               </div>
                               <div className="text-[10px] text-slate-400">{u.class} - {u.school}</div>
                           </div>
-                       </div>
-                       <div className={`font-black text-lg ${i===0 ? 'text-yellow-500' : i===1 ? 'text-slate-500' : i===2 ? 'text-orange-600' : 'text-slate-800'}`}>
+                        </div>
+                        <div className={`font-black text-lg ${i===0 ? 'text-yellow-500' : i===1 ? 'text-slate-500' : i===2 ? 'text-orange-600' : 'text-slate-800'}`}>
                           {displayScore}
-                       </div>
-                   </div>
+                        </div>
+                    </div>
 
-                   {/* Hàng 2: Huy hiệu đặc biệt */}
-                   {specialBadges.length > 0 && (
-                       <div className="flex gap-1 mt-2 ml-12 overflow-x-auto no-scrollbar pb-1">
-                           {specialBadges.map((badge, idx) => (
-                               <div key={idx} className={`px-2 py-0.5 rounded-full text-[9px] font-bold flex items-center gap-1 shadow-sm shrink-0 ${badge.color}`} title={badge.label}>
-                                   {badge.icon} {badge.label}
-                               </div>
-                           ))}
-                       </div>
-                   )}
+                    {/* Hàng 2: Huy hiệu đặc biệt */}
+                    {specialBadges.length > 0 && (
+                        <div className="flex gap-1 mt-2 ml-12 overflow-x-auto no-scrollbar pb-1">
+                            {specialBadges.map((badge, idx) => (
+                                <div key={idx} className={`px-2 py-0.5 rounded-full text-[9px] font-bold flex items-center gap-1 shadow-sm shrink-0 ${badge.color}`} title={badge.label}>
+                                    {badge.icon} {badge.label}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
               )
           })}</div>
@@ -2381,20 +2312,18 @@ const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>
   );
 };
 
-// 8. CHALLENGE SCREEN (Đã phục hồi)
-// 8. CHALLENGE SCREEN (Đã bổ sung nút Hỏi Roboki)
+// 8. CHALLENGE SCREEN
 const ChallengeScreen: React.FC<{
   onBack: () => void,
   session: ChallengeSessionData,
   setSession: React.Dispatch<React.SetStateAction<ChallengeSessionData>>,
   onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge') => void,
   questions: Question[],
-  onCopy: (txt: string) => void // 👈 1. THÊM DÒNG NÀY
-}> = ({ onBack, session, setSession, onScore, questions, onCopy }) => { // 👈 2. THÊM onCopy VÀO ĐÂY
+  onCopy: (txt: string) => void
+}> = ({ onBack, session, setSession, onScore, questions, onCopy }) => { 
     
     const [textInput, setTextInput] = useState('');
 
-    // Logic lấy câu hỏi ngẫu nhiên (Giữ nguyên)
     useEffect(() => {
         if (!session.todayQ && questions.length > 0) {
             const validQuestions = questions.filter(q => q.type === 'MCQ' || q.type === 'Short');
@@ -2413,11 +2342,9 @@ const ChallengeScreen: React.FC<{
         if (isCorrect) onScore(isCorrect ? 10 : -5, 'challenge');
     };
 
-    // 👇 3. HÀM XỬ LÝ HỎI ROBOKI (MỚI)
     const handleAskAI = () => {
         if (!session.todayQ) return;
         const q = session.todayQ;
-        // Sử dụng hàm tạo prompt có sẵn trong App.tsx
         const prompt = generateRobokiPrompt(
             q.topic, 
             "Thử thách hàng ngày", 
@@ -2463,10 +2390,12 @@ const ChallengeScreen: React.FC<{
                          </div>
                      ) : (
                          session.todayQ.options?.map((opt, i) => (
-                            <button key={i} disabled={session.isSubmitted} onClick={() => handleSubmit(opt)} className={`w-full p-4 rounded-2xl border-2 text-left text-sm font-bold transition-all ${session.isSubmitted && opt === session.todayQ?.answerKey ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : session.isSubmitted && session.selectedOpt === opt ? 'bg-rose-50 border-rose-500 text-rose-700' : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-600'}`}><MathRender content={opt}/></button>
+                           <button key={i} disabled={session.isSubmitted} onClick={() => handleSubmit(opt)} className={`w-full p-4 rounded-2xl border-2 text-left text-sm font-bold transition-all ${session.isSubmitted && opt === session.todayQ?.answerKey ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : session.isSubmitted && session.selectedOpt === opt ? 'bg-rose-50 border-rose-500 text-rose-700' : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-600'}`}><MathRender content={opt}/></button>
                          ))
                      )}
                   </div>
+                  
+                  {/* Khu vực kết quả và hỏi Roboki */}
                   
                   {/* 👇 4. KHU VỰC KẾT QUẢ & NÚT HỎI ROBOKI */}
                   {session.isSubmitted && (
@@ -2490,7 +2419,197 @@ const ChallengeScreen: React.FC<{
         </div>
     );
 };
+// 10. GARDEN SCREEN (KHU VƯỜN 50 CẤP ĐỘ - BẢN FIX LỖI NÚT BACK)
+const GardenScreen: React.FC<{
+  user: UserProfile;
+  onUpdateUser: (u: UserProfile) => void; 
+  onSaveAndExit: (u: UserProfile) => void;
+}> = ({ user, onUpdateUser, onSaveAndExit }) => {
+  const [msg, setMsg] = useState('');
+  const [animating, setAnimating] = useState(false);
 
+  // Cấu hình 50 Cấp độ
+  const TREE_STAGES = [
+    // GĐ 1: KHỞI NGUYÊN
+    { level: 1, name: 'Hạt Giống Hy Vọng', icon: '🌰', maxExp: 50 },
+    { level: 2, name: 'Mầm Non Tỉnh Giấc', icon: '🌱', maxExp: 80 },
+    { level: 3, name: 'Chồi Non Vươn Lên', icon: '🌿', maxExp: 120 },
+    { level: 4, name: 'Cây Con 1 Lá', icon: '🌱', maxExp: 160 },
+    { level: 5, name: 'Cây Con 2 Lá', icon: '🪴', maxExp: 200 },
+    { level: 6, name: 'Cây Con 3 Lá', icon: '🪴', maxExp: 250 },
+    { level: 7, name: 'Bụi Cỏ Xanh', icon: '🌾', maxExp: 300 },
+    { level: 8, name: 'Bụi Cây Nhỏ', icon: '🌳', maxExp: 360 },
+    { level: 9, name: 'Cây Non Cứng Cáp', icon: '🌳', maxExp: 420 },
+    { level: 10, name: 'Cây Xanh Tốt', icon: '🌳', maxExp: 500 },
+    // GĐ 2: RỪNG RẬM
+    { level: 11, name: 'Cây Tre Kiên Cường', icon: '🎍', maxExp: 600 },
+    { level: 12, name: 'Cây Trúc Quân Tử', icon: '🎋', maxExp: 700 },
+    { level: 13, name: 'Cây Thông Noel', icon: '🎄', maxExp: 850 },
+    { level: 14, name: 'Cây Cọ Nhiệt Đới', icon: '🌴', maxExp: 1000 },
+    { level: 15, name: 'Cây Xương Rồng', icon: '🌵', maxExp: 1200 },
+    { level: 16, name: 'Cây Nấm Khổng Lồ', icon: '🍄', maxExp: 1400 },
+    { level: 17, name: 'Hoa Hướng Dương', icon: '🌻', maxExp: 1600 },
+    { level: 18, name: 'Hoa Hồng Gai', icon: '🌹', maxExp: 1800 },
+    { level: 19, name: 'Cây Phong Lá Đỏ', icon: '🍁', maxExp: 2100 },
+    { level: 20, name: 'Cây Sồi Cổ Thụ', icon: '🌳', maxExp: 2500 },
+    // GĐ 3: HOA QUẢ
+    { level: 21, name: 'Cây Cam Mọng Nước', icon: '🍊', maxExp: 2900 },
+    { level: 22, name: 'Cây Chanh Tươi Mát', icon: '🍋', maxExp: 3300 },
+    { level: 23, name: 'Cây Táo Đỏ', icon: '🍎', maxExp: 3800 },
+    { level: 24, name: 'Cây Táo Xanh', icon: '🍏', maxExp: 4300 },
+    { level: 25, name: 'Cây Lê Ngọt', icon: '🍐', maxExp: 4800 },
+    { level: 26, name: 'Cây Đào Tiên', icon: '🍑', maxExp: 5400 },
+    { level: 27, name: 'Cây Nho Tím', icon: '🍇', maxExp: 6000 },
+    { level: 28, name: 'Cây Dưa Hấu', icon: '🍉', maxExp: 6700 },
+    { level: 29, name: 'Cây Dâu Tây', icon: '🍓', maxExp: 7500 },
+    { level: 30, name: 'Vườn Trái Cây', icon: '🍒', maxExp: 8300 },
+    // GĐ 4: THẦN THOẠI
+    { level: 31, name: 'Cây Bonsai Vàng', icon: '🎋', maxExp: 9200 },
+    { level: 32, name: 'Cây Tiền Tài', icon: '💰', maxExp: 10000 },
+    { level: 33, name: 'Cây Ngọc Bích', icon: '💎', maxExp: 11000 },
+    { level: 34, name: 'Cây Pha Lê', icon: '🧊', maxExp: 12500 },
+    { level: 35, name: 'Cây Lửa Thiêng', icon: '🔥', maxExp: 14000 },
+    { level: 36, name: 'Cây Băng Giá', icon: '❄️', maxExp: 16000 },
+    { level: 37, name: 'Cây Sấm Sét', icon: '⚡', maxExp: 18000 },
+    { level: 38, name: 'Cây Cầu Vồng', icon: '🌈', maxExp: 20000 },
+    { level: 39, name: 'Cây Thần Đèn', icon: '🧞', maxExp: 22500 },
+    { level: 40, name: 'Cây Rồng Thiêng', icon: '🐉', maxExp: 25000 },
+    // GĐ 5: VŨ TRỤ
+    { level: 41, name: 'Cây Sao Băng', icon: '🌠', maxExp: 28000 },
+    { level: 42, name: 'Cây Mặt Trăng', icon: '🌑', maxExp: 31000 },
+    { level: 43, name: 'Cây Mặt Trời', icon: '🌞', maxExp: 35000 },
+    { level: 44, name: 'Cây Thiên Hà', icon: '🌌', maxExp: 40000 },
+    { level: 45, name: 'Cây Hố Đen', icon: '⚫', maxExp: 45000 },
+    { level: 46, name: 'Cây Thời Gian', icon: '⏳', maxExp: 50000 },
+    { level: 47, name: 'Cây Vô Cực', icon: '♾️', maxExp: 60000 },
+    { level: 48, name: 'Cây Sự Sống', icon: '🧬', maxExp: 75000 },
+    { level: 49, name: 'Cây Tri Thức', icon: '🧠', maxExp: 90000 },
+    { level: 50, name: 'Cây Đấng Sáng Tạo', icon: '👑', maxExp: 100000 },
+  ];
+
+  const currentLevel = user.treeLevel || 1;
+  const currentExp = user.treeExp || 0;
+  const inventory = user.inventory || { water: 1, fertilizer: 1 };
+  
+  const getStageInfo = (lv: number) => TREE_STAGES.find(s => s.level === lv) || TREE_STAGES[TREE_STAGES.length - 1];
+  const stageInfo = getStageInfo(currentLevel);
+  
+  let progress = 0;
+  if (currentLevel >= 50) progress = 100;
+  else progress = Math.min(100, (currentExp / stageInfo.maxExp) * 100);
+
+  const handleCare = (type: 'water' | 'fertilizer') => {
+    if (animating) return;
+    if (currentLevel >= 50) { setMsg("Cây đã đạt cấp tối đa! Bạn là huyền thoại! 👑"); return; }
+
+    let newInventory = { ...inventory };
+    let expGain = 0;
+    let message = '';
+
+    if (type === 'water') {
+      if (newInventory.water <= 0) { setMsg('Hết Nước rồi! Hãy làm bài tập để kiếm thêm.'); return; }
+      newInventory.water -= 1;
+      expGain = 20 + Math.floor(currentLevel * 2); 
+      message = `+${expGain} EXP! Cây đang mát mẻ 💧`;
+    } else {
+      if (newInventory.fertilizer <= 0) { setMsg('Hết Phân bón! Hãy đạt điểm cao để nhận.'); return; }
+      newInventory.fertilizer -= 1;
+      expGain = 50 + Math.floor(currentLevel * 5); 
+      message = `+${expGain} EXP! Cây lớn nhanh như thổi 🚀`;
+    }
+
+    setAnimating(true);
+    setMsg(message);
+
+    let newExp = currentExp + expGain;
+    let newLevel = currentLevel;
+    let levelUpOccurred = false;
+
+    while (newLevel < 50) {
+        const currentStageInfo = getStageInfo(newLevel);
+        if (newExp >= currentStageInfo.maxExp) {
+            newExp -= currentStageInfo.maxExp;
+            newLevel++;
+            levelUpOccurred = true;
+        } else {
+            break;
+        }
+    }
+
+    if (levelUpOccurred) {
+      const newStageName = getStageInfo(newLevel).name;
+      setTimeout(() => alert(`🎉 CHÚC MỪNG!\nCây của bạn đã tiến hóa lên cấp ${newLevel}:\n"${newStageName}"`), 500);
+    }
+
+    onUpdateUser({ ...user, treeLevel: newLevel, treeExp: newExp, inventory: newInventory });
+    setTimeout(() => { setAnimating(false); setMsg(''); }, 1500);
+  };
+
+  return (
+    <div className="pb-24 pt-4 px-4 h-full flex flex-col bg-gradient-to-b from-sky-100 to-green-50 overflow-hidden relative">
+      {/* 👇 FIX LỖI NÚT BACK:
+         - z-[100]: Đưa lên lớp cao nhất
+         - relative: Để z-index có tác dụng
+         - pointer-events-auto: Đảm bảo nhận được sự kiện click
+      */}
+      <div className="flex items-center gap-3 mb-4 z-[100] relative pointer-events-auto">
+        <button 
+            onClick={() => onSaveAndExit(user)} 
+            className="w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center border border-slate-100 hover:bg-slate-50 active:scale-95 transition-all"
+        >
+            <ChevronLeft size={20} className="text-slate-700"/>
+        </button>
+        <h2 className="text-xl font-black text-green-800 drop-shadow-sm">Khu Vườn Tri Thức</h2>
+      </div>
+
+      <div className="flex-1 flex flex-col items-center justify-center relative z-10">
+        <div className="text-center mb-6">
+          <div className="inline-block bg-green-100 text-green-700 font-black uppercase text-xs px-3 py-1 rounded-full mb-2 tracking-widest shadow-sm border border-green-200">Cấp độ {currentLevel}/50</div>
+          <h1 className="text-3xl font-black text-slate-800 drop-shadow-md">{stageInfo.name}</h1>
+          <p className="text-slate-500 text-sm font-medium mt-1">{currentLevel < 50 ? 'Hãy chăm sóc để cây tiến hóa tiếp!' : 'Đỉnh cao của sự sống!'}</p>
+        </div>
+
+        <div className={`relative transition-all duration-500 ${animating ? 'scale-110' : 'scale-100'}`}>
+           {/* 👇 THÊM 'pointer-events-none' ĐỂ HIỆU ỨNG KHÔNG CHE NÚT BẤM */}
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-green-400/20 rounded-full blur-3xl animate-pulse pointer-events-none"></div>
+           
+           <div className="text-[160px] drop-shadow-2xl filter animate-bounce-slow cursor-pointer select-none transform transition-transform hover:-translate-y-2 select-none z-20 relative">
+               {stageInfo.icon}
+           </div>
+           
+           {animating && <div className="absolute -top-16 left-1/2 -translate-x-1/2 text-amber-500 font-black text-2xl animate-bounce whitespace-nowrap drop-shadow-md bg-white/90 px-4 py-2 rounded-xl backdrop-blur-sm z-50 border border-amber-100">{msg.split('!')[0]}</div>}
+        </div>
+
+        <div className="w-full max-w-xs mt-12 relative z-20">
+           <div className="flex justify-between text-xs font-bold text-slate-600 mb-1.5 px-1">
+             <span>EXP: {Math.round(currentExp)} / {currentLevel >= 50 ? 'MAX' : stageInfo.maxExp}</span>
+             <span>{Math.round(progress)}%</span>
+           </div>
+           <div className="h-6 bg-white rounded-full border-2 border-green-100 p-1 shadow-inner">
+              <div className="h-full bg-gradient-to-r from-lime-400 to-green-500 rounded-full transition-all duration-700 ease-out shadow-sm relative overflow-hidden" style={{ width: `${progress}%` }}>
+                  <div className="absolute top-0 left-0 w-full h-full bg-white/30 animate-[shimmer_2s_infinite]"></div>
+              </div>
+           </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-t-[2.5rem] p-6 shadow-[0_-10px_60px_rgba(0,0,0,0.15)] z-40 border-t border-slate-50 relative">
+         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-400 shadow-sm border border-slate-100">Kho vật phẩm</div>
+         <div className="flex gap-4 mt-2">
+            <button onClick={() => handleCare('water')} disabled={inventory.water <= 0 || currentLevel >= 50} className={`flex-1 p-4 rounded-3xl border-b-4 flex flex-col items-center gap-2 transition-all active:scale-95 active:border-b-0 active:translate-y-1 ${inventory.water > 0 ? 'bg-sky-50 border-sky-200 hover:bg-sky-100' : 'bg-slate-50 border-slate-200 grayscale opacity-60'}`}>
+                <div className="text-4xl drop-shadow-md">💧</div>
+                <div><div className="font-black text-slate-700">Tưới nước</div><div className="text-xs text-sky-600 font-bold bg-sky-100 px-2 py-0.5 rounded-lg mt-1">Còn: {inventory.water}</div></div>
+            </button>
+            <button onClick={() => handleCare('fertilizer')} disabled={inventory.fertilizer <= 0 || currentLevel >= 50} className={`flex-1 p-4 rounded-3xl border-b-4 flex flex-col items-center gap-2 transition-all active:scale-95 active:border-b-0 active:translate-y-1 ${inventory.fertilizer > 0 ? 'bg-amber-50 border-amber-200 hover:bg-amber-100' : 'bg-slate-50 border-slate-200 grayscale opacity-60'}`}>
+                <div className="text-4xl drop-shadow-md">🧪</div>
+                <div><div className="font-black text-slate-700">Bón phân</div><div className="text-xs text-amber-600 font-bold bg-amber-100 px-2 py-0.5 rounded-lg mt-1">Còn: {inventory.fertilizer}</div></div>
+            </button>
+         </div>
+         {msg && !animating && <div className="mt-4 text-center text-rose-500 text-xs font-bold animate-pulse">{msg}</div>}
+      </div>
+    </div>
+  );
+};
 // 9. CHAT SCREEN (Đã phục hồi)
 const ChatScreen: React.FC<{ onBack: () => void, initialPrompt: string }> = ({ onBack, initialPrompt }) => {
     const [showCopyOverlay, setShowCopyOverlay] = useState(!!initialPrompt);
@@ -2521,7 +2640,8 @@ const ChatScreen: React.FC<{ onBack: () => void, initialPrompt: string }> = ({ o
 const App: React.FC = () => {
   const [isClient, setIsClient] = useState(false); useEffect(() => setIsClient(true), []);
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [screen, setScreen] = useState<'AUTH' | 'HOME' | 'PRACTICE' | 'MOCK_TEST' | 'EXAM' | 'GAME' | 'CHALLENGE' | 'LEADERBOARD' | 'CHAT' | 'PROFILE' | 'AUTHOR'>('AUTH');
+  // 👇 Đã thêm | 'GARDEN' vào cuối dòng
+const [screen, setScreen] = useState<'AUTH' | 'HOME' | 'PRACTICE' | 'MOCK_TEST' | 'EXAM' | 'GAME' | 'CHALLENGE' | 'LEADERBOARD' | 'CHAT' | 'PROFILE' | 'AUTHOR' | 'GARDEN'>('AUTH');
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [copyText, setCopyText] = useState('');
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -2732,49 +2852,56 @@ useEffect(() => {
   // --- LOGIC TÍNH ĐIỂM (ĐÃ SỬA CHUẨN) ---
 // ✅ DÁN ĐOẠN NÀY VÀO (Code mới: Chỉ cộng dồn, không gửi ngay)
 // --- LOGIC TÍNH ĐIỂM (ĐÃ CẬP NHẬT: THÊM LOẠI 'mock') ---
-const handleScore = (pts: number, type: 'game'|'practice'|'exam'|'challenge'|'mock' = 'game') => { 
+// --- LOGIC TÍNH ĐIỂM & RƠI VẬT PHẨM ---
+  const handleScore = (pts: number, type: 'game'|'practice'|'exam'|'challenge'|'mock' = 'game') => { 
     if(!user) return; 
     
-    // 1. Cộng dồn vào biến tạm (RAM)
-    if (type === 'game') {
-        pendingUpdates.current.game += pts;
-        // ⚠️ Game KHÔNG cộng vào Total (theo yêu cầu của thầy)
-    } 
-    else if (type === 'practice') { 
-        pendingUpdates.current.practice += pts; 
-        pendingUpdates.current.total += pts; 
-    }
-    else if (type === 'mock') { // 👈 MỚI: TỰ ÔN ĐỀ
-        pendingUpdates.current.mock += pts; 
-        pendingUpdates.current.total += pts; 
-    }
-    else if (type === 'exam') { 
-        pendingUpdates.current.exam += pts; 
-        pendingUpdates.current.total += pts; 
-    }
-    else if (type === 'challenge') { 
-        pendingUpdates.current.challenge += pts; 
-        pendingUpdates.current.total += pts; 
+    // 1. Cộng điểm (giữ nguyên logic cũ)
+    if (type === 'game') pendingUpdates.current.game += pts;
+    else if (type === 'practice') { pendingUpdates.current.practice += pts; pendingUpdates.current.total += pts; }
+    else if (type === 'mock') { pendingUpdates.current.mock += pts; pendingUpdates.current.total += pts; }
+    else if (type === 'exam') { pendingUpdates.current.exam += pts; pendingUpdates.current.total += pts; }
+    else if (type === 'challenge') { pendingUpdates.current.challenge += pts; pendingUpdates.current.total += pts; }
+
+    // 2. 👇 LOGIC RƠI ĐỒ 👇
+    let dropMsg = '';
+    if (pts > 0) {
+        const currentInv = user.inventory || { water: 0, fertilizer: 0 };
+        const newInv = { ...currentInv };
+        let hasDrop = false;
+
+        // Thi thử / Tự tạo đề: Thưởng to
+        if (type === 'exam' || type === 'mock') {
+            if (pts >= 8) { newInv.fertilizer += 1; dropMsg = ' | 🎁 Nhận: PHÂN BÓN'; hasDrop = true; }
+            else if (pts >= 5) { newInv.water += 1; dropMsg = ' | 🎁 Nhận: NƯỚC THẦN'; hasDrop = true; }
+        } 
+        // Luyện tập / Game: Thưởng nhỏ (40% cơ hội)
+        else if (Math.random() > 0.6) { 
+             newInv.water += 1; dropMsg = ' | 🎁 Nhận: NƯỚC THẦN'; hasDrop = true;
+        }
+
+        if (hasDrop) {
+            setUser(prev => prev ? ({ ...prev, inventory: newInv }) : null);
+            updateDoc(doc(db, 'users', user.uid), { inventory: newInv }).catch(console.error);
+        }
     }
 
-    // 2. Cập nhật giao diện ngay lập tức (Optimistic Update)
+    // 3. Cập nhật giao diện điểm
     setUser(prev => {
         if (!prev) return null;
         const nu = { ...prev };
-        
-        // Đảm bảo trường mockScore tồn tại để tránh lỗi
         if (typeof nu.mockScore === 'undefined') nu.mockScore = 0; 
 
         if (type === 'game') nu.gameScore = (nu.gameScore || 0) + pts;
         else if (type === 'practice') { nu.practiceScore = (nu.practiceScore || 0) + pts; nu.totalScore = (nu.totalScore || 0) + pts; }
-        else if (type === 'mock') { nu.mockScore = (nu.mockScore || 0) + pts; nu.totalScore = (nu.totalScore || 0) + pts; } // 👈 Cập nhật UI Mock
+        else if (type === 'mock') { nu.mockScore = (nu.mockScore || 0) + pts; nu.totalScore = (nu.totalScore || 0) + pts; }
         else if (type === 'exam') { nu.examScore = (nu.examScore || 0) + pts; nu.totalScore = (nu.totalScore || 0) + pts; }
         else if (type === 'challenge') { nu.challengeScore = (nu.challengeScore || 0) + pts; nu.totalScore = (nu.totalScore || 0) + pts; }
         return nu;
     });
     
     const sign = pts > 0 ? '+' : '';
-    setToastMsg(`${sign}${pts} điểm`); 
+    setToastMsg(`${sign}${pts} điểm${dropMsg}`); 
 };
 
 // --- HÀM LƯU DỮ LIỆU (CHỈ GỌI 1 LẦN KHI KẾT THÚC) ---
@@ -2855,7 +2982,31 @@ pendingUpdates.current = { game: 0, practice: 0, exam: 0, challenge: 0, mock: 0,
         {user.email === 'lebaoanhnss@gmail.com' && <div className="fixed bottom-24 right-4 z-50 flex flex-col gap-2"><button onClick={resetAll} className="bg-rose-600 text-white p-3 rounded-full shadow-xl flex items-center gap-2 text-xs font-bold"><Trash2 size={16}/> Reset All</button><button onClick={handleNap} className="bg-indigo-600 text-white p-3 rounded-full shadow-xl flex items-center gap-2 text-xs font-bold"><ShieldAlert size={16}/> Nạp Data</button></div>}
         
         <div className="flex-1 overflow-y-auto w-full relative pb-24">
-            {screen === 'HOME' && <ContentScreen user={user} onCopy={handleCopy} onNavToPractice={()=>navigateTo('PRACTICE')} onNavToMockTest={()=>navigateTo('MOCK_TEST')} onNavToExam={()=>navigateTo('EXAM')} onNavToGames={()=>navigateTo('GAME')} onNavToChallenge={()=>navigateTo('CHALLENGE')} onNavToLeaderboard={()=>navigateTo('LEADERBOARD')} onNavToProfile={()=>navigateTo('PROFILE')} onNavToChat={()=>{setCopyText('');navigateTo('CHAT')}} selectedTopic={selectedTopic} setSelectedTopic={setSelectedTopic} expandedLessonIds={expandedLessonIds} toggleLesson={handleToggleLesson} lessons={lessons}/>}
+            {screen === 'HOME' && (
+                <ContentScreen 
+                    user={user} 
+                    onCopy={handleCopy} 
+                    onNavToPractice={()=>navigateTo('PRACTICE')} 
+                    onNavToMockTest={()=>navigateTo('MOCK_TEST')} 
+                    onNavToExam={()=>navigateTo('EXAM')} 
+                    
+                    // 👇👇👇 THÊM DÒNG NÀY VÀO ĐÂY 👇👇👇
+                    onNavToGarden={() => navigateTo('GARDEN')}
+                    // 👆👆👆 
+                    
+                    onNavToGames={()=>navigateTo('GAME')} 
+                    onNavToChallenge={()=>navigateTo('CHALLENGE')} 
+                    onNavToLeaderboard={()=>navigateTo('LEADERBOARD')} 
+                    onNavToProfile={()=>navigateTo('PROFILE')} 
+                  
+                    onNavToChat={()=>{setCopyText('');navigateTo('CHAT')}} 
+                    selectedTopic={selectedTopic} 
+                    setSelectedTopic={setSelectedTopic} 
+                    expandedLessonIds={expandedLessonIds} 
+                    toggleLesson={handleToggleLesson} 
+                    lessons={lessons}
+                />
+            )}
             
             {/* 👇 KẾT NỐI HÀM LƯU DỮ LIỆU VÀO CÁC MÀN HÌNH 👇 */}
             {screen === 'PRACTICE' && <PracticeScreen onCopy={handleCopy} onScore={handleScore} sessionData={practiceSession} setSessionData={setPracticeSession} questions={questions} lessons={lessons} onSave={saveData} onExit={()=>navigateTo('HOME')}/>}
@@ -2884,6 +3035,26 @@ pendingUpdates.current = { game: 0, practice: 0, exam: 0, challenge: 0, mock: 0,
     />
 )}
             {screen === 'LEADERBOARD' && <LeaderboardScreen onBack={()=>navigateTo('HOME')} currentUser={user}/>}
+              {/* 👇👇👇 DÁN ĐOẠN NÀY VÀO ĐÂY 👇👇👇 */}
+            {/* 👇 MÀN HÌNH KHU VƯỜN (CODE MỚI: CHUYỂN TRANG NGAY LẬP TỨC) 👇 */}
+            {screen === 'GARDEN' && user && (
+               <GardenScreen 
+                 user={user} 
+                 onUpdateUser={(updatedUser) => setUser(updatedUser)}
+                 onSaveAndExit={(finalUser) => {
+                    // 1. QUAN TRỌNG: Chuyển về màn hình chính TRƯỚC (Không chờ đợi gì cả)
+                    setScreen('HOME'); 
+
+                    // 2. Sau đó mới lưu dữ liệu ngầm bên dưới (kệ nó chạy)
+                    updateDoc(doc(db, 'users', finalUser.uid), {
+                        treeLevel: finalUser.treeLevel,
+                        treeExp: finalUser.treeExp,
+                        inventory: finalUser.inventory
+                    }).catch(err => console.log("Lỗi lưu cây (không sao):", err));
+                 }}
+               />
+            )}
+            {/* 👆👆👆 KẾT THÚC ĐOẠN DÁN 👆👆👆 */}
             {screen === 'CHAT' && <ChatScreen onBack={()=>{navigateTo('HOME');setCopyText('')}} initialPrompt={copyText}/>}
             {screen === 'PROFILE' && <ProfileScreen user={user} onBack={()=>navigateTo('HOME')} onUpdate={setUser} onNavToAuthor={()=>navigateTo('AUTHOR')} />}
             {screen === 'AUTHOR' && <AuthorScreen onBack={()=>navigateTo('PROFILE')} />}
