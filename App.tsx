@@ -1910,27 +1910,215 @@ const GameScreen: React.FC<{
   return null;
 };
 
-// 7. LEADERBOARD SCREEN
+// 7. LEADERBOARD SCREEN (FULL 100% - KHÔNG CẮT BỚT)
 const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile }> = ({ onBack, currentUser }) => {
   const [filter, setFilter] = useState<'CLASS' | 'SCHOOL' | 'ALL'>('CLASS');
   const [category, setCategory] = useState<'TOTAL' | 'PRACTICE' | 'MOCK' | 'EXAM' | 'GAME' | 'CHALLENGE'>('TOTAL');
   const [loading, setLoading] = useState(true);
   const [players, setPlayers] = useState<any[]>([]);
   const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>({});
+  
+  // State quản lý Popup xem cấp độ
+  const [showRankInfo, setShowRankInfo] = useState(false);
+  const [infoTab, setInfoTab] = useState<'RANKS' | 'BADGES'>('RANKS');
+
+  // --- 1. DỮ LIỆU CẤP ĐỘ (ĐẦY ĐỦ 6 BỘ) ---
+  
+  // A. TỔNG HỢP (Vũ Trụ)
+  const TOTAL_RANKS = [
+      { min: 10000, label: 'ĐA VŨ TRỤ', icon: '🌌', color: 'text-purple-600' },
+      { min: 9000, label: 'VÔ CỰC', icon: '♾️', color: 'text-fuchsia-600' },
+      { min: 8200, label: 'THỜI GIAN', icon: '⏳', color: 'text-teal-600' },
+      { min: 7500, label: 'KHÔNG GIAN', icon: '💠', color: 'text-indigo-600' },
+      { min: 6900, label: 'BIG BANG', icon: '💥', color: 'text-rose-600' },
+      { min: 6400, label: 'HỐ ĐEN', icon: '⚫', color: 'text-slate-900' },
+      { min: 5900, label: 'SIÊU TÂN TINH', icon: '✨', color: 'text-orange-500' },
+      { min: 5400, label: 'THIÊN HÀ', icon: '🌀', color: 'text-violet-500' },
+      { min: 5000, label: 'TINH VÂN', icon: '🌫️', color: 'text-pink-500' },
+      { min: 4600, label: 'CHÒM SAO', icon: '✨', color: 'text-blue-500' },
+      { min: 4200, label: 'MẶT TRỜI', icon: '🌞', color: 'text-yellow-500' },
+      { min: 3800, label: 'SAO MỘC', icon: '🪐', color: 'text-amber-600' },
+      { min: 3500, label: 'SAO THỔ', icon: '🪐', color: 'text-yellow-600' },
+      { min: 3200, label: 'TRÁI ĐẤT', icon: '🌍', color: 'text-blue-600' },
+      { min: 2900, label: 'SAO HỎA', icon: '🔴', color: 'text-red-600' },
+      { min: 2600, label: 'MẶT TRĂNG', icon: '🌑', color: 'text-slate-500' },
+      { min: 2350, label: 'VỆ TINH', icon: '🛰️', color: 'text-zinc-500' },
+      { min: 2100, label: 'TẦNG ĐIỆN LY', icon: '⚡', color: 'text-violet-500' },
+      { min: 1900, label: 'BÃO TỪ', icon: '🌪️', color: 'text-fuchsia-500' },
+      { min: 1700, label: 'CỰC QUANG', icon: '🌈', color: 'text-emerald-500' },
+      { min: 1500, label: 'KHÍ QUYỂN', icon: '☁️', color: 'text-sky-500' },
+      { min: 1350, label: 'ĐẠI DƯƠNG', icon: '🌊', color: 'text-blue-700' },
+      { min: 1200, label: 'LỤC ĐỊA', icon: '⛰️', color: 'text-green-800' },
+      { min: 1050, label: 'SINH QUYỂN', icon: '🌳', color: 'text-lime-700' },
+      { min: 900, label: 'RỪNG RẬM', icon: '🌴', color: 'text-teal-700' },
+      { min: 800, label: 'CAO NGUYÊN', icon: '🌄', color: 'text-orange-700' },
+      { min: 700, label: 'TINH THỂ', icon: '💎', color: 'text-cyan-700' },
+      { min: 600, label: 'PHÂN TỬ', icon: '⚗️', color: 'text-teal-700' },
+      { min: 500, label: 'NGUYÊN TỬ', icon: '⚛️', color: 'text-purple-700' },
+      { min: 420, label: 'HẠT NHÂN', icon: '☢️', color: 'text-yellow-700' },
+      { min: 350, label: 'NUCLEON', icon: '🔴', color: 'text-rose-700' },
+      { min: 280, label: 'PROTON', icon: '➕', color: 'text-red-700' },
+      { min: 220, label: 'NEUTRON', icon: '⚪', color: 'text-gray-700' },
+      { min: 160, label: 'ELECTRON', icon: '➖', color: 'text-blue-700' },
+      { min: 110, label: 'QUARK', icon: '🧩', color: 'text-pink-600' },
+      { min: 70, label: 'PHOTON', icon: '💡', color: 'text-yellow-600' },
+      { min: 40, label: 'HẠT BỤI', icon: '🌫️', color: 'text-stone-600' },
+      { min: 20, label: 'VÔ HÌNH', icon: '👻', color: 'text-gray-400' },
+      { min: 10, label: 'HƯ KHÔNG', icon: '🌑', color: 'text-slate-400' },
+      { min: 0, label: 'KHỞI NGUYÊN', icon: '🥚', color: 'text-slate-400' },
+  ];
+
+  // B. LUYỆN TẬP (Học Vấn)
+  const PRACTICE_RANKS = [
+      { min: 3000, label: 'VẠN THẾ SƯ', icon: '🧘', color: 'text-yellow-700' },
+      { min: 2500, label: 'THÁNH NHÂN', icon: '⚜️', color: 'text-yellow-600' },
+      { min: 2100, label: 'HIỀN TRIẾT', icon: '👴', color: 'text-amber-700' },
+      { min: 1800, label: 'ĐẠI TRÍ TUỆ', icon: '🧠', color: 'text-amber-600' },
+      { min: 1500, label: 'NHÀ BÁC HỌC', icon: '⚛️', color: 'text-orange-700' },
+      { min: 1200, label: 'GIÁO SƯ', icon: '👨‍🏫', color: 'text-orange-600' },
+      { min: 1000, label: 'TIẾN SĨ', icon: '🎓', color: 'text-red-600' },
+      { min: 800, label: 'THẠC SĨ', icon: '📜', color: 'text-rose-600' },
+      { min: 650, label: 'HỌC GIẢ', icon: '📙', color: 'text-pink-600' },
+      { min: 500, label: 'UYÊN BÁC', icon: '📚', color: 'text-fuchsia-600' },
+      { min: 400, label: 'TINH THÔNG', icon: '💡', color: 'text-purple-600' },
+      { min: 300, label: 'THÔNG HIỂU', icon: '🧐', color: 'text-violet-600' },
+      { min: 200, label: 'CẦN CÙ', icon: '🐜', color: 'text-indigo-600' },
+      { min: 150, label: 'CHĂM CHỈ', icon: '🐝', color: 'text-blue-600' },
+      { min: 100, label: 'MỌT SÁCH', icon: '🤓', color: 'text-sky-600' },
+      { min: 70, label: 'HIẾU HỌC', icon: '📖', color: 'text-cyan-600' },
+      { min: 40, label: 'SƠ CẤP', icon: '📝', color: 'text-teal-600' },
+      { min: 20, label: 'HAM HỌC', icon: '🌱', color: 'text-emerald-600' },
+      { min: 10, label: 'TẬP ĐỌC', icon: '👶', color: 'text-green-600' },
+      { min: 0, label: 'NGƯỜI MỚI', icon: '🥚', color: 'text-slate-400' },
+  ];
+
+  // C. THI THỬ (Khoa Cử)
+  const EXAM_RANKS = [
+      { min: 5200, label: 'THẦN CƠ', icon: '🔮', color: 'text-red-700' },
+      { min: 4400, label: 'THÁI SƯ', icon: '🏮', color: 'text-orange-700' },
+      { min: 3700, label: 'ĐẠI HỌC SĨ', icon: '👴', color: 'text-orange-600' },
+      { min: 3100, label: 'TRẠNG NGUYÊN', icon: '🏆', color: 'text-yellow-600' },
+      { min: 2600, label: 'BẢNG NHÃN', icon: '👁️', color: 'text-yellow-500' },
+      { min: 2150, label: 'THÁM HOA', icon: '🌸', color: 'text-amber-600' },
+      { min: 1750, label: 'HOÀNG GIÁP', icon: '🐢', color: 'text-amber-500' },
+      { min: 1400, label: 'TIẾN SĨ', icon: '🎓', color: 'text-lime-700' },
+      { min: 1100, label: 'PHÓ BẢNG', icon: '🥈', color: 'text-lime-600' },
+      { min: 850, label: 'GIÁM SINH', icon: '🏛️', color: 'text-green-700' },
+      { min: 650, label: 'GIẢI NGUYÊN', icon: '🥇', color: 'text-green-600' },
+      { min: 500, label: 'CỬ NHÂN', icon: '🎓', color: 'text-emerald-600' },
+      { min: 380, label: 'CỐNG SINH', icon: '🎁', color: 'text-teal-600' },
+      { min: 280, label: 'TÚ TÀI', icon: '📜', color: 'text-cyan-600' },
+      { min: 200, label: 'KHÓA SINH', icon: '🎒', color: 'text-sky-700' },
+      { min: 140, label: 'NHO SINH', icon: '🎍', color: 'text-blue-700' },
+      { min: 90, label: 'THƯ SINH', icon: '📖', color: 'text-indigo-700' },
+      { min: 50, label: 'ĐỒNG SINH', icon: '🧒', color: 'text-violet-700' },
+      { min: 20, label: 'NHẬP MÔN', icon: '🎋', color: 'text-purple-700' },
+      { min: 0, label: 'VỠ LÒNG', icon: '👶', color: 'text-slate-400' },
+  ];
+
+  // D. TRÒ CHƠI (Chiến Binh)
+  const GAME_RANKS = [
+      { min: 5000, label: 'VUA TRÒ CHƠI', icon: '👑', color: 'text-yellow-500' },
+      { min: 4000, label: 'HUYỀN THOẠI', icon: '☠️', color: 'text-red-600' },
+      { min: 3200, label: 'THÁCH ĐẤU', icon: '🔥', color: 'text-red-500' },
+      { min: 2600, label: 'ĐẠI CAO THỦ', icon: '🎖️', color: 'text-orange-600' },
+      { min: 2100, label: 'CAO THỦ', icon: '⚔️', color: 'text-orange-500' },
+      { min: 1700, label: 'TINH ANH', icon: '✨', color: 'text-amber-500' },
+      { min: 1350, label: 'KIM CƯƠNG', icon: '💎', color: 'text-cyan-500' },
+      { min: 1100, label: 'LỤC BẢO', icon: '💚', color: 'text-emerald-500' },
+      { min: 900, label: 'BẠCH KIM', icon: '💠', color: 'text-teal-500' },
+      { min: 750, label: 'VÀNG ĐOÀN', icon: '🥇', color: 'text-yellow-500' },
+      { min: 630, label: 'BẠC I', icon: '🥈', color: 'text-slate-400' },
+      { min: 520, label: 'BẠC II', icon: '🥈', color: 'text-slate-500' },
+      { min: 420, label: 'BẠC III', icon: '🥈', color: 'text-slate-600' },
+      { min: 330, label: 'ĐỒNG I', icon: '🥉', color: 'text-orange-700' },
+      { min: 250, label: 'ĐỒNG II', icon: '🥉', color: 'text-orange-600' },
+      { min: 180, label: 'ĐỒNG III', icon: '🥉', color: 'text-stone-600' },
+      { min: 120, label: 'SẮT ĐOÀN', icon: '🔩', color: 'text-zinc-500' },
+      { min: 70, label: 'NHẬP MÔN', icon: '🕹️', color: 'text-gray-600' },
+      { min: 30, label: 'GÀ MỜ', icon: '🐣', color: 'text-slate-400' },
+      { min: 0, label: 'TẬP CHƠI', icon: '🎮', color: 'text-slate-300' },
+  ];
+
+  // E. THỬ THÁCH (Quân Đội)
+  const CHALLENGE_RANKS = [
+      { min: 5000, label: 'THỐNG LĨNH', icon: '🦅', color: 'text-red-800' },
+      { min: 4000, label: 'ĐẠI TƯỚNG', icon: '🌟🌟🌟🌟', color: 'text-red-700' },
+      { min: 3300, label: 'THƯỢNG TƯỚNG', icon: '🌟🌟🌟', color: 'text-red-600' },
+      { min: 2700, label: 'TRUNG TƯỚNG', icon: '🌟🌟', color: 'text-red-600' },
+      { min: 2200, label: 'THIẾU TƯỚNG', icon: '🌟', color: 'text-red-500' },
+      { min: 1800, label: 'ĐẠI TÁ', icon: '🔶🔶🔶🔶', color: 'text-orange-600' },
+      { min: 1450, label: 'THƯỢNG TÁ', icon: '🔶🔶🔶', color: 'text-orange-500' },
+      { min: 1150, label: 'TRUNG TÁ', icon: '🔶🔶', color: 'text-orange-400' },
+      { min: 900, label: 'THIẾU TÁ', icon: '🔶', color: 'text-orange-300' },
+      { min: 700, label: 'ĐẠI ÚY', icon: '⭐⭐⭐⭐', color: 'text-yellow-600' },
+      { min: 560, label: 'THƯỢNG ÚY', icon: '⭐⭐⭐', color: 'text-yellow-500' },
+      { min: 450, label: 'TRUNG ÚY', icon: '⭐⭐', color: 'text-yellow-500' },
+      { min: 350, label: 'THIẾU ÚY', icon: '⭐', color: 'text-yellow-500' },
+      { min: 270, label: 'CHUẨN ÚY', icon: '💠', color: 'text-lime-600' },
+      { min: 200, label: 'THƯỢNG SĨ', icon: '🔹', color: 'text-blue-600' },
+      { min: 140, label: 'TRUNG SĨ', icon: '🔹', color: 'text-blue-500' },
+      { min: 90, label: 'HẠ SĨ', icon: '🔹', color: 'text-sky-500' },
+      { min: 50, label: 'BINH NHẤT', icon: '🛡️', color: 'text-indigo-600' },
+      { min: 20, label: 'BINH NHÌ', icon: '🛡️', color: 'text-violet-600' },
+      { min: 0, label: 'TÂN BINH', icon: '👣', color: 'text-slate-400' },
+  ];
+
+  // F. TỰ TẠO ĐỀ (Kiến Tạo)
+  const MOCK_RANKS = [
+      { min: 5000, label: 'ĐẤNG SÁNG THẾ', icon: '🌌', color: 'text-violet-700' },
+      { min: 3500, label: 'TIÊN PHONG', icon: '🚩', color: 'text-fuchsia-600' },
+      { min: 2900, label: 'NHÀ PHÁT MINH', icon: '💡', color: 'text-pink-600' },
+      { min: 2000, label: 'QUY HOẠCH SƯ', icon: '🗺️', color: 'text-orange-600' },
+      { min: 1300, label: 'KIẾN TRÚC SƯ', icon: '📐', color: 'text-yellow-600' },
+      { min: 1000, label: 'NHÀ THIẾT KẾ', icon: '🎨', color: 'text-lime-600' },
+      { min: 800, label: 'THIẾT KẾ VIÊN', icon: '✏️', color: 'text-green-600' },
+      { min: 650, label: 'KỸ SƯ TRƯỞNG', icon: '🏗️', color: 'text-emerald-600' },
+      { min: 500, label: 'KỸ SƯ CHÍNH', icon: '⚙️', color: 'text-teal-600' },
+      { min: 400, label: 'KỸ SƯ', icon: '🔩', color: 'text-cyan-600' },
+      { min: 300, label: 'KỸ THUẬT VIÊN', icon: '🔧', color: 'text-sky-600' },
+      { min: 200, label: 'QUẢN CÔNG', icon: '📋', color: 'text-blue-600' },
+      { min: 120, label: 'THỢ CẢ', icon: '👷', color: 'text-indigo-600' },
+      { min: 70, label: 'THỢ LÀNH NGHỀ', icon: '🔨', color: 'text-violet-600' },
+      { min: 40, label: 'THỢ HỌC VIỆC', icon: '🧱', color: 'text-purple-600' },
+      { min: 20, label: 'PHỤ VIỆC', icon: '🧹', color: 'text-fuchsia-600' },
+      { min: 0, label: 'TẬP SỰ', icon: '🔰', color: 'text-slate-400' },
+  ];
+
+  // --- 2. DỮ LIỆU HUY HIỆU (HIỂN THỊ TRONG POPUP) ---
+  const BADGE_DEFINITIONS = [
+      { icon: '👑', label: 'Độc tôn', desc: 'Top 1 Bảng xếp hạng', color: 'bg-yellow-100 text-yellow-700' },
+      { icon: '⚛️', label: 'Yêu Vật Lí', desc: 'Tổng điểm > 5000', color: 'bg-indigo-100 text-indigo-700' },
+      { icon: '💎', label: 'Đại gia', desc: 'Điểm Game > 3000', color: 'bg-fuchsia-100 text-fuchsia-700' },
+      { icon: '🏹', label: 'Thợ săn', desc: 'Điểm Thử thách > 500', color: 'bg-emerald-100 text-emerald-700' },
+      { icon: '🧠', label: 'Siêu trí tuệ', desc: 'Điểm thi thử > 9.5', color: 'bg-rose-100 text-rose-700' },
+      { icon: '🔥', label: 'Chăm chỉ', desc: 'Đăng nhập 3 ngày liên tiếp', color: 'bg-orange-100 text-orange-700' },
+      { icon: '⚡', label: 'Tia chớp', desc: 'Trả lời đúng < 5s', color: 'bg-yellow-100 text-yellow-700' },
+      { icon: '🎯', label: 'Xạ thủ', desc: 'Đúng 10 câu liên tiếp', color: 'bg-red-100 text-red-700' },
+      { icon: '🦉', label: 'Cú đêm', desc: 'Học bài sau 23h', color: 'bg-slate-100 text-slate-700' },
+      { icon: '🐓', label: 'Gà gáy', desc: 'Học bài sáng sớm (0h-5h)', color: 'bg-teal-100 text-teal-700' },
+      { icon: '🍀', label: 'Thần tài', desc: 'Quay trúng ô may mắn', color: 'bg-green-100 text-green-700' },
+  ];
+
+  // --- 3. LOGIC XỬ LÝ ---
+  const getCurrentRankList = () => {
+      switch(category) {
+          case 'PRACTICE': return PRACTICE_RANKS;
+          case 'EXAM': return EXAM_RANKS;
+          case 'GAME': return GAME_RANKS;
+          case 'CHALLENGE': return CHALLENGE_RANKS;
+          case 'MOCK': return MOCK_RANKS;
+          default: return TOTAL_RANKS;
+      }
+  };
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
       const cacheKey = `${filter}_${category}`;
-
-      if (leaderboardCache[cacheKey]) {
-          setPlayers(leaderboardCache[cacheKey]);
-          setLoading(false);
-          return;
-      }
+      if (leaderboardCache[cacheKey]) { setPlayers(leaderboardCache[cacheKey]); setLoading(false); return; }
 
       try {
         setLoading(true);
-        
         let orderByField = 'totalScore';
         if (category === 'PRACTICE') orderByField = 'practiceScore';
         if (category === 'MOCK') orderByField = 'mockScore';
@@ -1952,294 +2140,108 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
         const snap = await getDocs(q);
         const list: any[] = [];
         snap.forEach((d) => list.push(d.data()));
-        
         setPlayers(list);
         setLeaderboardCache(prev => ({ ...prev, [cacheKey]: list }));
-
-      } catch (err: any) { 
-          console.error("Lỗi tải BXH:", err);
-      } finally { 
-          setLoading(false); 
-      }
+      } catch (err: any) { console.error("Lỗi tải BXH:", err); } finally { setLoading(false); }
     };
-
-    const timer = setTimeout(() => {
-        if(currentUser) fetchLeaderboard();
-    }, 100);
-
+    const timer = setTimeout(() => { if(currentUser) fetchLeaderboard(); }, 100);
     return () => clearTimeout(timer);
-
   }, [filter, category, currentUser]);
 
   const getCatLabel = () => {
-      if(category === 'TOTAL') return 'Tổng điểm tích lũy';
-      if(category === 'PRACTICE') return 'Điểm Luyện tập';
-      if(category === 'MOCK') return 'Điểm Tự tạo đề';
-      if(category === 'EXAM') return 'Điểm Thi thử';
-      if(category === 'GAME') return 'Điểm Trò chơi';
-      if(category === 'CHALLENGE') return 'Điểm Thử thách';
+      if(category === 'TOTAL') return 'Tổng điểm';
+      if(category === 'PRACTICE') return 'Luyện tập';
+      if(category === 'MOCK') return 'Tạo đề';
+      if(category === 'EXAM') return 'Thi thử';
+      if(category === 'GAME') return 'Trò chơi';
+      if(category === 'CHALLENGE') return 'Thử thách';
+      return '';
   }
 
-  const getRankByScore = (score: number, type: string) => {
-      
-      // 1. TỔNG HỢP (Hệ thống Vũ Trụ Học & Vật Lý - 40 Cấp)
-      const TOTAL_RANKS = [
-          // --- TẦNG 8: ĐẤNG SÁNG TẠO (35-40) ---
-          { min: 10000, label: 'ĐA VŨ TRỤ', icon: '🌌', color: 'bg-slate-900 text-white border-slate-700 shadow-lg shadow-purple-500/50 animate-pulse' },
-          { min: 9000, label: 'VÔ CỰC', icon: '♾️', color: 'bg-fuchsia-900 text-white border-fuchsia-500 shadow-md' },
-          { min: 8200, label: 'THỜI GIAN', icon: '⏳', color: 'bg-teal-800 text-white border-teal-400' },
-          { min: 7500, label: 'KHÔNG GIAN', icon: '💠', color: 'bg-indigo-800 text-white border-indigo-400' },
-          { min: 6900, label: 'BIG BANG', icon: '💥', color: 'bg-rose-800 text-white border-rose-400' },
-          { min: 6400, label: 'HỐ ĐEN', icon: '⚫', color: 'bg-black text-white border-gray-600' },
-
-          // --- TẦNG 7: THIÊN HÀ (30-34) ---
-          { min: 5900, label: 'SIÊU TÂN TINH', icon: '✨', color: 'bg-orange-600 text-white border-orange-300' },
-          { min: 5400, label: 'THIÊN HÀ', icon: '🌀', color: 'bg-violet-600 text-white border-violet-300' },
-          { min: 5000, label: 'TINH VÂN', icon: '🌫️', color: 'bg-pink-500 text-white border-pink-200' },
-          { min: 4600, label: 'CHÒM SAO', icon: '✨', color: 'bg-blue-500 text-white border-blue-200' },
-          { min: 4200, label: 'MẶT TRỜI', icon: '🌞', color: 'bg-yellow-500 text-white border-yellow-200' },
-
-          // --- TẦNG 6: HỆ MẶT TRỜI (25-29) ---
-          { min: 3800, label: 'SAO MỘC', icon: '🪐', color: 'bg-amber-100 text-amber-800 border-amber-300' },
-          { min: 3500, label: 'SAO THỔ', icon: '🪐', color: 'bg-yellow-100 text-yellow-800 border-yellow-300' },
-          { min: 3200, label: 'TRÁI ĐẤT', icon: '🌍', color: 'bg-blue-100 text-blue-800 border-blue-300' },
-          { min: 2900, label: 'SAO HỎA', icon: '🔴', color: 'bg-red-100 text-red-800 border-red-300' },
-          { min: 2600, label: 'MẶT TRĂNG', icon: '🌑', color: 'bg-slate-200 text-slate-800 border-slate-300' },
-
-          // --- TẦNG 5: KHÍ QUYỂN (20-24) ---
-          { min: 2350, label: 'VỆ TINH', icon: '🛰️', color: 'bg-zinc-100 text-zinc-800 border-zinc-300' },
-          { min: 2100, label: 'TẦNG ĐIỆN LY', icon: '⚡', color: 'bg-violet-100 text-violet-800 border-violet-300' },
-          { min: 1900, label: 'BÃO TỪ', icon: '🌪️', color: 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-300' },
-          { min: 1700, label: 'CỰC QUANG', icon: '🌈', color: 'bg-emerald-100 text-emerald-800 border-emerald-300' },
-          { min: 1500, label: 'KHÍ QUYỂN', icon: '☁️', color: 'bg-sky-100 text-sky-800 border-sky-300' },
-
-          // --- TẦNG 4: ĐẠI DƯƠNG (15-19) ---
-          { min: 1350, label: 'ĐẠI DƯƠNG', icon: '🌊', color: 'bg-blue-50 text-blue-700 border-blue-200' },
-          { min: 1200, label: 'LỤC ĐỊA', icon: '⛰️', color: 'bg-green-100 text-green-800 border-green-300' },
-          { min: 1050, label: 'SINH QUYỂN', icon: '🌳', color: 'bg-lime-100 text-lime-800 border-lime-300' },
-          { min: 900, label: 'RỪNG RẬM', icon: '🌴', color: 'bg-teal-50 text-teal-700 border-teal-200' },
-          { min: 800, label: 'CAO NGUYÊN', icon: '🌄', color: 'bg-orange-50 text-orange-700 border-orange-200' },
-
-          // --- TẦNG 3: VẬT CHẤT (10-14) ---
-          { min: 700, label: 'TINH THỂ', icon: '💎', color: 'bg-cyan-50 text-cyan-700 border-cyan-200' },
-          { min: 600, label: 'PHÂN TỬ', icon: '⚗️', color: 'bg-teal-50 text-teal-700 border-teal-200' },
-          { min: 500, label: 'NGUYÊN TỬ', icon: '⚛️', color: 'bg-purple-50 text-purple-700 border-purple-200' },
-          { min: 420, label: 'HẠT NHÂN', icon: '☢️', color: 'bg-yellow-50 text-yellow-700 border-yellow-200' },
-          { min: 350, label: 'NUCLEON', icon: '🔴', color: 'bg-rose-50 text-rose-700 border-rose-200' },
-
-          // --- TẦNG 2: HẠT CƠ BẢN (5-9) ---
-          { min: 280, label: 'PROTON', icon: '➕', color: 'bg-red-50 text-red-700 border-red-200' },
-          { min: 220, label: 'NEUTRON', icon: '⚪', color: 'bg-gray-100 text-gray-700 border-gray-200' },
-          { min: 160, label: 'ELECTRON', icon: '➖', color: 'bg-blue-50 text-blue-700 border-blue-200' },
-          { min: 110, label: 'QUARK', icon: '🧩', color: 'bg-pink-50 text-pink-600 border-pink-200' },
-          { min: 70, label: 'PHOTON', icon: '💡', color: 'bg-yellow-50 text-yellow-600 border-yellow-200' },
-
-          // --- TẦNG 1: KHỞI NGUYÊN (0-4) ---
-          { min: 40, label: 'HẠT BỤI', icon: '🌫️', color: 'bg-stone-100 text-stone-600 border-stone-200' },
-          { min: 20, label: 'VÔ HÌNH', icon: '👻', color: 'bg-gray-50 text-gray-400 border-gray-200' },
-          { min: 10, label: 'HƯ KHÔNG', icon: '🌑', color: 'bg-slate-50 text-slate-400 border-slate-200' },
-          { min: 0, label: 'KHỞI NGUYÊN', icon: '🥚', color: 'bg-slate-50 text-slate-400 border-slate-100' },
-      ];
-
-      // 2. LUYỆN TẬP (Hệ thống Học Vấn)
-      const PRACTICE_RANKS = [
-          { min: 3000, label: 'VẠN THẾ SƯ', icon: '🧘', color: 'bg-yellow-100 text-yellow-900 border-yellow-400 animate-pulse' },
-          { min: 2500, label: 'THÁNH NHÂN', icon: '⚜️', color: 'bg-yellow-50 text-yellow-800 border-yellow-300' },
-          { min: 2100, label: 'HIỀN TRIẾT', icon: '👴', color: 'bg-amber-100 text-amber-800 border-amber-300' },
-          { min: 1800, label: 'ĐẠI TRÍ TUỆ', icon: '🧠', color: 'bg-amber-50 text-amber-700 border-amber-200' },
-          { min: 1500, label: 'NHÀ BÁC HỌC', icon: '⚛️', color: 'bg-orange-100 text-orange-800 border-orange-300' },
-          { min: 1200, label: 'GIÁO SƯ', icon: '👨‍🏫', color: 'bg-orange-50 text-orange-700 border-orange-200' },
-          { min: 1000, label: 'TIẾN SĨ', icon: '🎓', color: 'bg-red-50 text-red-700 border-red-200' },
-          { min: 800, label: 'THẠC SĨ', icon: '📜', color: 'bg-rose-50 text-rose-600 border-rose-200' },
-          { min: 650, label: 'HỌC GIẢ', icon: '📙', color: 'bg-pink-50 text-pink-600 border-pink-200' },
-          { min: 500, label: 'UYÊN BÁC', icon: '📚', color: 'bg-fuchsia-50 text-fuchsia-600 border-fuchsia-200' },
-          { min: 400, label: 'TINH THÔNG', icon: '💡', color: 'bg-purple-50 text-purple-600 border-purple-200' },
-          { min: 300, label: 'THÔNG HIỂU', icon: '🧐', color: 'bg-violet-50 text-violet-600 border-violet-200' },
-          { min: 200, label: 'CẦN CÙ', icon: '🐜', color: 'bg-indigo-50 text-indigo-600 border-indigo-200' },
-          { min: 150, label: 'CHĂM CHỈ', icon: '🐝', color: 'bg-blue-50 text-blue-600 border-blue-200' },
-          { min: 100, label: 'MỌT SÁCH', icon: '🤓', color: 'bg-sky-50 text-sky-600 border-sky-200' },
-          { min: 70, label: 'HIẾU HỌC', icon: '📖', color: 'bg-cyan-50 text-cyan-600 border-cyan-200' },
-          { min: 40, label: 'SƠ CẤP', icon: '📝', color: 'bg-teal-50 text-teal-600 border-teal-200' },
-          { min: 20, label: 'HAM HỌC', icon: '🌱', color: 'bg-emerald-50 text-emerald-600 border-emerald-200' },
-          { min: 10, label: 'TẬP ĐỌC', icon: '👶', color: 'bg-green-50 text-green-600 border-green-200' },
-          { min: 0, label: 'NGƯỜI MỚI', icon: '🥚', color: 'bg-slate-50 text-slate-500 border-slate-200' },
-      ];
-
-      // --- HỆ THỐNG KHOA CỬ (Exam Score) ---
-      const EXAM_RANKS = [
-          { min: 5200, label: 'THẦN CƠ', icon: '🔮', color: 'bg-red-100 text-red-900 border-red-400 animate-pulse' },
-          { min: 4400, label: 'THÁI SƯ', icon: '🏮', color: 'bg-orange-100 text-orange-900 border-orange-400' },
-          { min: 3700, label: 'ĐẠI HỌC SĨ', icon: '👴', color: 'bg-orange-50 text-orange-800 border-orange-300' },
-          { min: 3100, label: 'TRẠNG NGUYÊN', icon: '🏆', color: 'bg-yellow-100 text-yellow-800 border-yellow-400' },
-          { min: 2600, label: 'BẢNG NHÃN', icon: '👁️', color: 'bg-yellow-50 text-yellow-700 border-yellow-300' },
-          { min: 2150, label: 'THÁM HOA', icon: '🌸', color: 'bg-amber-100 text-amber-700 border-amber-300' },
-          { min: 1750, label: 'HOÀNG GIÁP', icon: '🐢', color: 'bg-amber-50 text-amber-600 border-amber-200' },
-          { min: 1400, label: 'TIẾN SĨ', icon: '🎓', color: 'bg-lime-100 text-lime-800 border-lime-300' },
-          { min: 1100, label: 'PHÓ BẢNG', icon: '🥈', color: 'bg-lime-50 text-lime-700 border-lime-200' },
-          { min: 850, label: 'GIÁM SINH', icon: '🏛️', color: 'bg-green-100 text-green-800 border-green-300' },
-          { min: 650, label: 'GIẢI NGUYÊN', icon: '🥇', color: 'bg-green-50 text-green-700 border-green-200' },
-          { min: 500, label: 'CỬ NHÂN', icon: '🎓', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-          { min: 380, label: 'CỐNG SINH', icon: '🎁', color: 'bg-teal-50 text-teal-700 border-teal-200' },
-          { min: 280, label: 'TÚ TÀI', icon: '📜', color: 'bg-cyan-50 text-cyan-700 border-cyan-200' },
-          { min: 200, label: 'KHÓA SINH', icon: '🎒', color: 'bg-sky-50 text-sky-700 border-sky-200' },
-          { min: 140, label: 'NHO SINH', icon: '🎍', color: 'bg-blue-50 text-blue-700 border-blue-200' },
-          { min: 90, label: 'THƯ SINH', icon: '📖', color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
-          { min: 50, label: 'ĐỒNG SINH', icon: '🧒', color: 'bg-violet-50 text-violet-700 border-violet-200' },
-          { min: 20, label: 'NHẬP MÔN', icon: '🎋', color: 'bg-purple-50 text-purple-700 border-purple-200' },
-          { min: 0, label: 'VỠ LÒNG', icon: '👶', color: 'bg-slate-50 text-slate-500 border-slate-200' },
-      ];
-
-      // --- HỆ THỐNG CHIẾN BINH (Game Score) ---
-      const GAME_RANKS = [
-          { min: 5000, label: 'VUA TRÒ CHƠI', icon: '👑', color: 'bg-black text-yellow-400 border-yellow-500 shadow-md animate-pulse' },
-          { min: 4000, label: 'HUYỀN THOẠI', icon: '☠️', color: 'bg-red-100 text-red-900 border-red-400' },
-          { min: 3200, label: 'THÁCH ĐẤU', icon: '🔥', color: 'bg-red-50 text-red-700 border-red-300' },
-          { min: 2600, label: 'ĐẠI CAO THỦ', icon: '🎖️', color: 'bg-orange-100 text-orange-800 border-orange-300' },
-          { min: 2100, label: 'CAO THỦ', icon: '⚔️', color: 'bg-orange-50 text-orange-700 border-orange-200' },
-          { min: 1700, label: 'TINH ANH', icon: '✨', color: 'bg-amber-50 text-amber-700 border-amber-200' },
-          { min: 1350, label: 'KIM CƯƠNG', icon: '💎', color: 'bg-cyan-100 text-cyan-800 border-cyan-400' },
-          { min: 1100, label: 'LỤC BẢO', icon: '💚', color: 'bg-emerald-100 text-emerald-800 border-emerald-400' },
-          { min: 900, label: 'BẠCH KIM', icon: '💠', color: 'bg-teal-100 text-teal-800 border-teal-300' },
-          { min: 750, label: 'VÀNG ĐOÀN', icon: '🥇', color: 'bg-yellow-100 text-yellow-700 border-yellow-300' },
-          { min: 630, label: 'BẠC I', icon: '🥈', color: 'bg-slate-200 text-slate-700 border-slate-400' },
-          { min: 520, label: 'BẠC II', icon: '🥈', color: 'bg-slate-100 text-slate-600 border-slate-300' },
-          { min: 420, label: 'BẠC III', icon: '🥈', color: 'bg-slate-50 text-slate-600 border-slate-200' },
-          { min: 330, label: 'ĐỒNG I', icon: '🥉', color: 'bg-orange-100 text-orange-800 border-orange-300' },
-          { min: 250, label: 'ĐỒNG II', icon: '🥉', color: 'bg-orange-50 text-orange-700 border-orange-200' },
-          { min: 180, label: 'ĐỒNG III', icon: '🥉', color: 'bg-stone-50 text-stone-600 border-stone-200' },
-          { min: 120, label: 'SẮT ĐOÀN', icon: '🔩', color: 'bg-zinc-100 text-zinc-600 border-zinc-300' },
-          { min: 70, label: 'NHẬP MÔN', icon: '🕹️', color: 'bg-gray-100 text-gray-600 border-gray-300' },
-          { min: 30, label: 'GÀ MỜ', icon: '🐣', color: 'bg-gray-50 text-gray-500 border-gray-200' },
-          { min: 0, label: 'TẬP CHƠI', icon: '🎮', color: 'bg-white text-gray-400 border-gray-100' },
-      ];
-
-      // --- HỆ THỐNG QUÂN HÀM (Challenge Score) ---
-      const CHALLENGE_RANKS = [
-          { min: 5000, label: 'THỐNG LĨNH', icon: '🦅', color: 'bg-red-900 text-white border-red-500 shadow-lg animate-pulse' },
-          { min: 4000, label: 'ĐẠI TƯỚNG', icon: '🌟🌟🌟🌟', color: 'bg-red-800 text-white border-red-400' },
-          { min: 3300, label: 'THƯỢNG TƯỚNG', icon: '🌟🌟🌟', color: 'bg-red-700 text-white border-red-300' },
-          { min: 2700, label: 'TRUNG TƯỚNG', icon: '🌟🌟', color: 'bg-red-600 text-white border-red-200' },
-          { min: 2200, label: 'THIẾU TƯỚNG', icon: '🌟', color: 'bg-red-500 text-white border-red-200' },
-          { min: 1800, label: 'ĐẠI TÁ', icon: '🔶🔶🔶🔶', color: 'bg-orange-600 text-white border-orange-300' },
-          { min: 1450, label: 'THƯỢNG TÁ', icon: '🔶🔶🔶', color: 'bg-orange-500 text-white border-orange-200' },
-          { min: 1150, label: 'TRUNG TÁ', icon: '🔶🔶', color: 'bg-orange-400 text-white border-orange-200' },
-          { min: 900, label: 'THIẾU TÁ', icon: '🔶', color: 'bg-orange-300 text-white border-orange-200' },
-          { min: 700, label: 'ĐẠI ÚY', icon: '⭐⭐⭐⭐', color: 'bg-yellow-500 text-white border-yellow-200' },
-          { min: 560, label: 'THƯỢNG ÚY', icon: '⭐⭐⭐', color: 'bg-yellow-400 text-white border-yellow-200' },
-          { min: 450, label: 'TRUNG ÚY', icon: '⭐⭐', color: 'bg-yellow-300 text-white border-yellow-200' },
-          { min: 350, label: 'THIẾU ÚY', icon: '⭐', color: 'bg-yellow-200 text-yellow-800 border-yellow-100' },
-          { min: 270, label: 'CHUẨN ÚY', icon: '💠', color: 'bg-lime-100 text-lime-800 border-lime-300' },
-          { min: 200, label: 'THƯỢNG SĨ', icon: '🔹', color: 'bg-blue-100 text-blue-800 border-blue-300' },
-          { min: 140, label: 'TRUNG SĨ', icon: '🔹', color: 'bg-blue-50 text-blue-700 border-blue-200' },
-          { min: 90, label: 'HẠ SĨ', icon: '🔹', color: 'bg-sky-50 text-sky-700 border-sky-200' },
-          { min: 50, label: 'BINH NHẤT', icon: '🛡️', color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
-          { min: 20, label: 'BINH NHÌ', icon: '🛡️', color: 'bg-violet-50 text-violet-700 border-violet-200' },
-          { min: 0, label: 'TÂN BINH', icon: '👣', color: 'bg-slate-50 text-slate-500 border-slate-200' },
-      ];
-
-      // --- HỆ THỐNG KIẾN TẠO (Mock/Create Score) ---
-      const MOCK_RANKS = [
-          { min: 5000, label: 'ĐẤNG SÁNG THẾ', icon: '🌌', color: 'bg-violet-900 text-white border-violet-500 shadow-lg animate-pulse' },
-          { min: 4200, label: 'ĐẤNG KIẾN TẠO', icon: '🪐', color: 'bg-fuchsia-800 text-white border-fuchsia-400' },
-          { min: 3500, label: 'TIÊN PHONG', icon: '🚩', color: 'bg-fuchsia-100 text-fuchsia-900 border-fuchsia-300' },
-          { min: 2900, label: 'NHÀ PHÁT MINH', icon: '💡', color: 'bg-pink-100 text-pink-900 border-pink-300' },
-          { min: 2400, label: 'NHÀ SÁNG CHẾ', icon: '🔦', color: 'bg-rose-100 text-rose-900 border-rose-300' },
-          { min: 2000, label: 'QUY HOẠCH SƯ', icon: '🗺️', color: 'bg-orange-100 text-orange-900 border-orange-300' },
-          { min: 1600, label: 'ĐẠI KIẾN TRÚC', icon: '🏛️', color: 'bg-amber-100 text-amber-900 border-amber-300' },
-          { min: 1300, label: 'KIẾN TRÚC SƯ', icon: '📐', color: 'bg-yellow-100 text-yellow-900 border-yellow-300' },
-          { min: 1000, label: 'NHÀ THIẾT KẾ', icon: '🎨', color: 'bg-lime-100 text-lime-900 border-lime-300' },
-          { min: 800, label: 'THIẾT KẾ VIÊN', icon: '✏️', color: 'bg-green-100 text-green-900 border-green-300' },
-          { min: 650, label: 'KỸ SƯ TRƯỞNG', icon: '🏗️', color: 'bg-emerald-100 text-emerald-900 border-emerald-300' },
-          { min: 500, label: 'KỸ SƯ CHÍNH', icon: '⚙️', color: 'bg-teal-100 text-teal-900 border-teal-300' },
-          { min: 400, label: 'KỸ SƯ', icon: '🔩', color: 'bg-cyan-100 text-cyan-900 border-cyan-300' },
-          { min: 300, label: 'KỸ THUẬT VIÊN', icon: '🔧', color: 'bg-sky-100 text-sky-900 border-sky-300' },
-          { min: 200, label: 'QUẢN CÔNG', icon: '📋', color: 'bg-blue-100 text-blue-900 border-blue-300' },
-          { min: 120, label: 'THỢ CẢ', icon: '👷', color: 'bg-indigo-100 text-indigo-900 border-indigo-300' },
-          { min: 70, label: 'THỢ LÀNH NGHỀ', icon: '🔨', color: 'bg-violet-100 text-violet-900 border-violet-300' },
-          { min: 40, label: 'THỢ HỌC VIỆC', icon: '🧱', color: 'bg-purple-100 text-purple-900 border-purple-300' },
-          { min: 20, label: 'PHỤ VIỆC', icon: '🧹', color: 'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200' },
-          { min: 0, label: 'TẬP SỰ', icon: '🔰', color: 'bg-slate-50 text-slate-500 border-slate-200' },
-      ];
-
-      // 👇 CƠ CHẾ CHỌN DANH SÁCH RANK
-      let selectedRanks = TOTAL_RANKS;
-      if (type === 'PRACTICE') selectedRanks = PRACTICE_RANKS;
-      if (type === 'EXAM') selectedRanks = EXAM_RANKS;
-      if (type === 'GAME') selectedRanks = GAME_RANKS;
-      if (type === 'CHALLENGE') selectedRanks = CHALLENGE_RANKS;
-      if (type === 'MOCK') selectedRanks = MOCK_RANKS;
-
-      return selectedRanks.find(r => score >= r.min) || selectedRanks[selectedRanks.length - 1];
+  const getRankByScore = (score: number) => {
+      const list = getCurrentRankList();
+      return list.find(r => score >= r.min) || list[list.length - 1];
   }
 
+  // 👇 HÀM CHECK HUY HIỆU ĐẦY ĐỦ 👇
   const getBadges = (u: UserProfile, index: number) => {
       const badges = [];
-
-      // 1. 👑 ĐỘC TÔN (Top 1 Bảng xếp hạng)
-      if (index === 0) {
-          badges.push({ icon: '👑', color: 'bg-yellow-400 text-white border border-yellow-500', label: 'Độc tôn' });
-      }
-
-      // 2. ⚛️ YÊU VẬT LÍ (Tổng điểm > 5000)
-      if ((u.totalScore || 0) > 5000) {
-          badges.push({ icon: '⚛️', color: 'bg-indigo-600 text-white border border-indigo-700', label: 'Yêu Vật Lí' });
-      }
-
-      // 3. 💎 ĐẠI GIA (Tích lũy > 3000 điểm Game)
-      if ((u.gameScore || 0) > 3000) {
-          badges.push({ icon: '💎', color: 'bg-fuchsia-500 text-white border border-fuchsia-600', label: 'Đại gia' });
-      }
-
-      // 4. 🏹 THỢ SĂN (Hoàn thành 50 Thử thách)
-      if ((u.challengeScore || 0) >= 500) {
-          badges.push({ icon: '🏹', color: 'bg-emerald-600 text-white border border-emerald-700', label: 'Thợ săn' });
-      }
-
-      // 5. 🧠 SIÊU TRÍ TUỆ (Điểm thi thử > 9.5)
-      if ((u.examScore || 0) > 9.5) {
-          badges.push({ icon: '🧠', color: 'bg-rose-500 text-white border border-rose-600', label: 'Siêu trí tuệ' });
-      }
-
-      // 6. 🔥 CHĂM CHỈ (Học 3 ngày liên tiếp)
-      if (u.loginStreak && u.loginStreak >= 3) {
-          badges.push({ icon: '🔥', color: 'bg-orange-500 text-white border border-orange-600', label: 'Chăm chỉ' });
-      }
-
-      // 7. ⚡ TIA CHỚP (Có trả lời đúng < 5s)
-      if (u.fastAnswerCount && u.fastAnswerCount > 0) {
-          badges.push({ icon: '⚡', color: 'bg-yellow-500 text-white border border-yellow-600', label: 'Tia chớp' });
-      }
-
-      // 8. 🎯 XẠ THỦ (Đúng 10 câu liên tiếp)
-      if (u.correctStreak && u.correctStreak >= 10) {
-          badges.push({ icon: '🎯', color: 'bg-red-600 text-white border border-red-700', label: 'Xạ thủ' });
-      }
-
-      // 9. 🦉 CÚ ĐÊM (Học bài sau 23h đêm)
-      if (u.lastStudyHour !== undefined && u.lastStudyHour >= 23) {
-          badges.push({ icon: '🦉', color: 'bg-slate-800 text-white border border-slate-600', label: 'Cú đêm' });
-      }
-
-      // 10. 🐓 GÀ GÁY (Học bài trước 5h sáng)
-      if (u.lastStudyHour !== undefined && u.lastStudyHour >= 0 && u.lastStudyHour < 5) {
-          badges.push({ icon: '🐓', color: 'bg-teal-600 text-white border border-teal-700', label: 'Gà gáy' });
-      }
-
-      // 11. 🍀 THẦN TÀI (Quay trúng ô may mắn/10 điểm)
-      if (u.luckySpinCount && u.luckySpinCount > 0) {
-          badges.push({ icon: '🍀', color: 'bg-green-500 text-white border border-green-600', label: 'Thần tài' });
-      }
-
+      if (index === 0) badges.push({ icon: '👑', color: 'bg-yellow-400 text-white border border-yellow-500', label: 'Độc tôn' });
+      if ((u.totalScore || 0) > 5000) badges.push({ icon: '⚛️', color: 'bg-indigo-600 text-white border border-indigo-700', label: 'Yêu Vật Lí' });
+      if ((u.gameScore || 0) > 3000) badges.push({ icon: '💎', color: 'bg-fuchsia-500 text-white border border-fuchsia-600', label: 'Đại gia' });
+      if ((u.challengeScore || 0) >= 500) badges.push({ icon: '🏹', color: 'bg-emerald-600 text-white border border-emerald-700', label: 'Thợ săn' });
+      if ((u.examScore || 0) > 9.5) badges.push({ icon: '🧠', color: 'bg-rose-500 text-white border border-rose-600', label: 'Siêu trí tuệ' });
+      if (u.loginStreak && u.loginStreak >= 3) badges.push({ icon: '🔥', color: 'bg-orange-500 text-white border border-orange-600', label: 'Chăm chỉ' });
+      if (u.fastAnswerCount && u.fastAnswerCount > 0) badges.push({ icon: '⚡', color: 'bg-yellow-500 text-white border border-yellow-600', label: 'Tia chớp' });
+      if (u.correctStreak && u.correctStreak >= 10) badges.push({ icon: '🎯', color: 'bg-red-600 text-white border border-red-700', label: 'Xạ thủ' });
+      if (u.lastStudyHour !== undefined && u.lastStudyHour >= 23) badges.push({ icon: '🦉', color: 'bg-slate-800 text-white border border-slate-600', label: 'Cú đêm' });
+      if (u.lastStudyHour !== undefined && u.lastStudyHour >= 0 && u.lastStudyHour < 5) badges.push({ icon: '🐓', color: 'bg-teal-600 text-white border border-teal-700', label: 'Gà gáy' });
+      if (u.luckySpinCount && u.luckySpinCount > 0) badges.push({ icon: '🍀', color: 'bg-green-500 text-white border border-green-600', label: 'Thần tài' });
       return badges;
   }
 
+  // --- 4. GIAO DIỆN ---
   return (
-    <div className="pb-24 pt-4 px-4 h-full flex flex-col bg-slate-50">
-      <div className="flex items-center gap-3 mb-4">
-        <button onClick={onBack} className="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center border border-slate-100"><ChevronLeft size={20}/></button>
-        <div><h2 className="text-xl font-black text-slate-800">Bảng xếp hạng</h2></div>
+    <div className="pb-24 pt-4 px-4 h-full flex flex-col bg-slate-50 relative">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+            <button onClick={onBack} className="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center border border-slate-100"><ChevronLeft size={20}/></button>
+            <h2 className="text-xl font-black text-slate-800">Bảng xếp hạng</h2>
+        </div>
+        
+        {/* Nút bật Popup */}
+        <button onClick={() => setShowRankInfo(true)} className="flex items-center gap-1 bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-full text-[10px] font-bold border border-indigo-100 active:scale-95 transition-transform"><Info size={14}/> Xem cấp độ</button>
       </div>
-      
+
+      {/* POPUP HIỂN THỊ CẤP ĐỘ & HUY HIỆU */}
+      {showRankInfo && (
+        <div className="absolute inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+            <div className="bg-white w-full max-w-sm h-[80%] rounded-3xl shadow-2xl flex flex-col overflow-hidden">
+                <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                    <h3 className="font-black text-slate-800 flex items-center gap-2"><Trophy size={18} className="text-yellow-500"/> Thông tin danh hiệu</h3>
+                    <button onClick={() => setShowRankInfo(false)} className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-slate-400 shadow-sm hover:bg-slate-50"><X size={16}/></button>
+                </div>
+                
+                {/* Switch Tab */}
+                <div className="flex p-2 gap-2 bg-slate-50 border-b border-slate-100">
+                    <button onClick={()=>setInfoTab('RANKS')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${infoTab==='RANKS' ? 'bg-white shadow text-indigo-600' : 'text-slate-400'}`}>Cấp độ ({getCatLabel()})</button>
+                    <button onClick={()=>setInfoTab('BADGES')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${infoTab==='BADGES' ? 'bg-white shadow text-rose-600' : 'text-slate-400'}`}>Huy hiệu đặc biệt</button>
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                    {infoTab === 'RANKS' ? (
+                        <>
+                            <p className="text-xs text-slate-500 mb-2 italic text-center">Tích lũy điểm {getCatLabel()} để thăng cấp:</p>
+                            {getCurrentRankList().map((r, i) => (
+                                <div key={i} className="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-xl shadow-sm">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-2xl">{r.icon}</span>
+                                        <span className={`font-black text-sm uppercase ${r.color}`}>{r.label}</span>
+                                    </div>
+                                    <span className="text-xs font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-lg">{r.min.toLocaleString()} XP</span>
+                                </div>
+                            ))}
+                        </>
+                    ) : (
+                        <>
+                            <p className="text-xs text-slate-500 mb-2 italic text-center">Hoàn thành nhiệm vụ để mở khóa:</p>
+                            {BADGE_DEFINITIONS.map((b, i) => (
+                                <div key={i} className="flex items-center gap-3 p-3 bg-white border border-slate-100 rounded-xl shadow-sm">
+                                    <div className="text-2xl">{b.icon}</div>
+                                    <div className="flex-1">
+                                        <div className={`font-black text-xs uppercase ${b.color.split(' ')[1]}`}>{b.label}</div>
+                                        <div className="text-[10px] text-slate-500 font-medium">{b.desc}</div>
+                                    </div>
+                                </div>
+                            ))}
+                        </>
+                    )}
+                </div>
+                <button onClick={() => setShowRankInfo(false)} className="m-4 bg-slate-800 text-white py-3 rounded-xl font-bold active:scale-95 transition-transform">Đã hiểu</button>
+            </div>
+        </div>
+      )}
+
       {/* 1. LỌC PHẠM VI */}
       <div className="flex bg-white p-1 rounded-2xl shadow-sm border border-slate-100 mb-4">
           <button onClick={() => setFilter('CLASS')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${filter === 'CLASS' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-400'}`}>Lớp</button>
@@ -2247,7 +2249,7 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
           <button onClick={() => setFilter('ALL')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${filter === 'ALL' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-400'}`}>Toàn quốc</button>
       </div>
 
-      {/* 2. MENU GRID (3x2) */}
+      {/* 2. MENU GRID */}
       <div className="grid grid-cols-3 gap-2 mb-2">
           <button onClick={() => setCategory('TOTAL')} className={`py-2.5 rounded-xl text-[10px] font-bold border transition-all ${category === 'TOTAL' ? 'bg-indigo-50 border-indigo-500 text-indigo-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>Tổng hợp</button>
           <button onClick={() => setCategory('PRACTICE')} className={`py-2.5 rounded-xl text-[10px] font-bold border transition-all ${category === 'PRACTICE' ? 'bg-orange-50 border-orange-500 text-orange-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>Luyện tập</button>
@@ -2262,7 +2264,7 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
           {category === 'TOTAL' && <span className="text-[9px] font-bold text-rose-500 bg-rose-50 px-2 py-0.5 rounded border border-rose-100">Không tính điểm Game</span>}
       </div>
 
-      {/* 3. DANH SÁCH (CÓ DANH HIỆU 20 CẤP) */}
+      {/* 3. DANH SÁCH USER */}
       <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 flex-1 overflow-y-auto">
         {loading ? <div className="text-center py-4 text-slate-400"><Loader2 className="animate-spin inline mr-2"/> Đang tải...</div> : (
           <div className="space-y-3">{players.map((u, i) => {
@@ -2281,23 +2283,18 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
               else if (i === 2) rankIcon = <Medal size={28} className="text-orange-600 fill-orange-100 drop-shadow-sm"/>;
               else rankIcon = <span className="text-sm font-black text-slate-400">{i + 1}</span>;
 
-              // 👇 LẤY DANH HIỆU 20 CẤP
-              const rankTitle = getRankByScore(displayScore, category);
+              const rankTitle = getRankByScore(displayScore);
               const specialBadges = getBadges(u, i);
 
               return (
                 <div key={u.uid} className={`flex flex-col p-4 rounded-2xl border transition-colors ${u.uid === currentUser.uid ? 'bg-indigo-50 border-indigo-200' : 'bg-white border-slate-100 hover:border-slate-300'}`}>
-                    {/* Hàng 1 */}
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
-                          <div className="w-8 h-8 flex items-center justify-center shrink-0">
-                              {rankIcon}
-                          </div>
+                          <div className="w-8 h-8 flex items-center justify-center shrink-0">{rankIcon}</div>
                           <div>
                               <div className={`font-bold text-sm flex items-center gap-2 flex-wrap ${u.uid === currentUser.uid ? 'text-indigo-700' : 'text-slate-800'}`}>
                                 {u.name} 
-                                {/* HIỂN THỊ DANH HIỆU 20 CẤP */}
-                                <span className={`text-[8px] px-2 py-0.5 rounded-md border font-black uppercase tracking-wider flex items-center gap-1 whitespace-nowrap ${rankTitle.color}`}>
+                                <span className={`text-[8px] px-2 py-0.5 rounded-md border font-black uppercase tracking-wider flex items-center gap-1 whitespace-nowrap bg-white/50 border-slate-200 text-slate-600 ${rankTitle.color}`}>
                                     {rankTitle.icon} {rankTitle.label}
                                 </span>
                               </div>
@@ -2308,8 +2305,6 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
                           {displayScore}
                         </div>
                     </div>
-
-                    {/* Hàng 2: Huy hiệu đặc biệt */}
                     {specialBadges.length > 0 && (
                         <div className="flex gap-1 mt-2 ml-12 overflow-x-auto no-scrollbar pb-1">
                             {specialBadges.map((badge, idx) => (
@@ -2435,7 +2430,7 @@ const ChallengeScreen: React.FC<{
         </div>
     );
 };
-// 10. GARDEN SCREEN (ĐÃ FIX: CHO PHÉP KÉO MÀN HÌNH + NÚT BACK OK)
+// 10. GARDEN SCREEN (ĐÃ CẬP NHẬT: THÔNG TIN VẬT PHẨM KHỚP VỚI LOGIC MỚI)
 const GardenScreen: React.FC<{
   user: UserProfile;
   onUpdateUser: (u: UserProfile) => void; 
@@ -2443,8 +2438,12 @@ const GardenScreen: React.FC<{
 }> = ({ user, onUpdateUser, onSaveAndExit }) => {
   const [msg, setMsg] = useState('');
   const [animating, setAnimating] = useState(false);
+  
+  // 👇 State bật tắt bảng thông tin
+  const [showLevelInfo, setShowLevelInfo] = useState(false);
+  const [infoTab, setInfoTab] = useState<'LEVELS' | 'ITEMS'>('LEVELS'); // Tab chuyển đổi
 
-  // Cấu hình 50 Cấp độ
+  // Cấu hình 50 Cấp độ (Full)
   const TREE_STAGES = [
     // GĐ 1: KHỞI NGUYÊN
     { level: 1, name: 'Hạt Giống Hy Vọng', icon: '🌰', maxExp: 50 },
@@ -2505,16 +2504,17 @@ const GardenScreen: React.FC<{
 
   const currentLevel = user.treeLevel || 1;
   const currentExp = user.treeExp || 0;
-  // Quà tân thủ: 1 nước, 1 phân (chỉ áp dụng nếu chưa có dữ liệu inventory)
   const inventory = user.inventory || { water: 1, fertilizer: 1 };
   
   const getStageInfo = (lv: number) => TREE_STAGES.find(s => s.level === lv) || TREE_STAGES[TREE_STAGES.length - 1];
   const stageInfo = getStageInfo(currentLevel);
   
+  // Tính % tiến độ
   let progress = 0;
   if (currentLevel >= 50) progress = 100;
   else progress = Math.min(100, (currentExp / stageInfo.maxExp) * 100);
 
+  // --- HÀM CHĂM SÓC CÂY (Logic: 1 Item = 1 XP) ---
   const handleCare = (type: 'water' | 'fertilizer') => {
     if (animating) return;
     if (currentLevel >= 50) { setMsg("Cây đã đạt cấp tối đa! Bạn là huyền thoại! 👑"); return; }
@@ -2524,24 +2524,36 @@ const GardenScreen: React.FC<{
     let message = '';
 
     if (type === 'water') {
-      if (newInventory.water <= 0) { setMsg('Hết Nước rồi! Hãy làm bài tập để kiếm thêm.'); return; }
+      if (newInventory.water <= 0) { 
+          setMsg('Hết Nước rồi! Xem cách kiếm thêm nhé.'); 
+          setShowLevelInfo(true); 
+          setInfoTab('ITEMS'); 
+          return; 
+      }
       newInventory.water -= 1;
-      expGain = 20 + Math.floor(currentLevel * 2); 
-      message = `+${expGain} EXP! Cây đang mát mẻ 💧`;
+      expGain = 1; // 1 Nước = 1 XP
+      message = `+1 XP! Cây đang mát mẻ 💧`;
     } else {
-      if (newInventory.fertilizer <= 0) { setMsg('Hết Phân bón! Hãy đạt điểm cao để nhận.'); return; }
+      if (newInventory.fertilizer <= 0) { 
+          setMsg('Hết Phân bón! Xem cách kiếm thêm nhé.'); 
+          setShowLevelInfo(true); 
+          setInfoTab('ITEMS'); 
+          return; 
+      }
       newInventory.fertilizer -= 1;
-      expGain = 50 + Math.floor(currentLevel * 5); 
-      message = `+${expGain} EXP! Cây lớn nhanh như thổi 🚀`;
+      expGain = 1; // 1 Phân = 1 XP
+      message = `+1 XP! Cây lớn nhanh như thổi 🚀`;
     }
 
     setAnimating(true);
     setMsg(message);
+    playSound('correct');
 
     let newExp = currentExp + expGain;
     let newLevel = currentLevel;
     let levelUpOccurred = false;
 
+    // Logic lên cấp
     while (newLevel < 50) {
         const currentStageInfo = getStageInfo(newLevel);
         if (newExp >= currentStageInfo.maxExp) {
@@ -2553,7 +2565,9 @@ const GardenScreen: React.FC<{
         }
     }
 
+    // Hiệu ứng khi lên cấp
     if (levelUpOccurred) {
+      playSound('levelup');
       const newStageName = getStageInfo(newLevel).name;
       setTimeout(() => alert(`🎉 CHÚC MỪNG!\nCây của bạn đã tiến hóa lên cấp ${newLevel}:\n"${newStageName}"`), 500);
     }
@@ -2563,20 +2577,139 @@ const GardenScreen: React.FC<{
   };
 
   return (
-    // 👇👇👇 DÒNG NÀY ĐÃ SỬA: thay 'overflow-hidden' thành 'overflow-y-auto'
     <div className="pb-24 pt-4 px-4 h-full flex flex-col bg-gradient-to-b from-sky-100 to-green-50 overflow-y-auto relative">
       
-      {/* Header: z-100 để không bị che bởi hiệu ứng cây */}
-      <div className="flex items-center gap-3 mb-4 z-[100] relative pointer-events-auto shrink-0">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4 z-[40] relative pointer-events-auto shrink-0">
+        <div className="flex items-center gap-3">
+            <button 
+                onClick={() => onSaveAndExit(user)} 
+                className="w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center border border-slate-100 hover:bg-slate-50 active:scale-95 transition-all"
+            >
+                <ChevronLeft size={20} className="text-slate-700"/>
+            </button>
+            <h2 className="text-xl font-black text-green-800 drop-shadow-sm">Khu Vườn Tri Thức</h2>
+        </div>
+        
+        {/* NÚT THÔNG TIN (Giao diện giống ảnh bạn gửi) */}
         <button 
-            onClick={() => onSaveAndExit(user)} 
-            className="w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center border border-slate-100 hover:bg-slate-50 active:scale-95 transition-all"
+            onClick={() => setShowLevelInfo(true)}
+            className="flex items-center gap-1 bg-white text-green-700 px-3 py-1.5 rounded-full text-[10px] font-bold border border-green-200 shadow-sm active:scale-95 transition-transform"
         >
-            <ChevronLeft size={20} className="text-slate-700"/>
+            <Info size={14}/> Thông tin
         </button>
-        <h2 className="text-xl font-black text-green-800 drop-shadow-sm">Khu Vườn Tri Thức</h2>
       </div>
 
+      {/* 👇 POPUP ĐA NĂNG (LEVELS + ITEMS) */}
+      {showLevelInfo && (
+        <div className="absolute inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+            <div className="bg-white w-full max-w-sm h-[80%] rounded-3xl shadow-2xl flex flex-col overflow-hidden">
+                {/* Popup Header */}
+                <div className="p-4 border-b border-green-100 flex justify-between items-center bg-green-50">
+                    <h3 className="font-black text-green-800 flex items-center gap-2"><Sprout size={18} className="text-green-600"/> Hướng dẫn Khu vườn</h3>
+                    <button onClick={() => setShowLevelInfo(false)} className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-slate-400 shadow-sm hover:bg-slate-50"><X size={16}/></button>
+                </div>
+
+                {/* Tab Switcher */}
+                <div className="flex p-2 gap-2 bg-slate-50 border-b border-slate-100">
+                    <button onClick={()=>setInfoTab('LEVELS')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${infoTab==='LEVELS' ? 'bg-white shadow text-green-600' : 'text-slate-400'}`}>Lộ trình 50 Cấp</button>
+                    <button onClick={()=>setInfoTab('ITEMS')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${infoTab==='ITEMS' ? 'bg-white shadow text-amber-600' : 'text-slate-400'}`}>Vật phẩm & Cách kiếm</button>
+                </div>
+
+                {/* Nội dung Popup */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50">
+                    
+                    {/* TAB 1: DANH SÁCH CẤP ĐỘ */}
+                    {infoTab === 'LEVELS' ? (
+                        <>
+                            <p className="text-xs text-slate-500 mb-2 italic text-center">Chăm sóc cây để đạt các trạng thái:</p>
+                            {TREE_STAGES.map((stage) => {
+                                const isCurrent = stage.level === currentLevel;
+                                const isPassed = stage.level < currentLevel;
+                                
+                                return (
+                                    <div key={stage.level} className={`flex items-center justify-between p-3 rounded-xl border transition-all ${isCurrent ? 'bg-white border-green-500 shadow-md scale-[1.02] z-10 ring-1 ring-green-200' : isPassed ? 'bg-green-50 border-green-200 opacity-80' : 'bg-slate-100 border-slate-200 grayscale opacity-60'}`}>
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-2xl drop-shadow-sm">{stage.icon}</span>
+                                            <div>
+                                                <div className={`font-black text-xs uppercase ${isCurrent ? 'text-green-700' : 'text-slate-600'}`}>
+                                                    Lv.{stage.level} - {stage.name}
+                                                </div>
+                                                <div className="text-[10px] text-slate-400 font-bold mt-0.5">Mục tiêu: {stage.maxExp} EXP</div>
+                                            </div>
+                                        </div>
+                                        <div className="text-lg">
+                                            {isCurrent ? <span className="text-[9px] font-bold bg-green-600 text-white px-2 py-1 rounded-full animate-pulse">HIỆN TẠI</span> : isPassed ? <CheckCircle size={18} className="text-green-500"/> : <Lock size={16} className="text-slate-400"/>}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </>
+                    ) : (
+                        // TAB 2: HƯỚNG DẪN KIẾM VẬT PHẨM (ĐÃ SỬA THEO LOGIC MỚI)
+                        <div className="space-y-4">
+                            {/* NƯỚC THẦN */}
+                            <div className="bg-white p-4 rounded-2xl border border-sky-100 shadow-sm">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="text-4xl drop-shadow-md">💧</div>
+                                    <div>
+                                        <div className="font-black text-sky-600 text-lg">Nước Thần</div>
+                                        <div className="text-[10px] font-bold text-sky-400 bg-sky-50 px-2 py-0.5 rounded w-fit">Vật phẩm phổ thông</div>
+                                    </div>
+                                </div>
+                                <div className="space-y-2 text-xs text-slate-600">
+                                    <div className="flex gap-2">
+                                        <span className="font-bold text-sky-500">• Tác dụng:</span>
+                                        <span>Tăng <b>1 EXP</b> cho cây.</span>
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <span className="font-bold text-sky-500">• Cách kiếm (Làm bao nhiêu hưởng bấy nhiêu):</span>
+                                        <ul className="list-disc list-inside space-y-1 ml-1 text-slate-500">
+                                            <li>Làm bài tập / Chơi game: <b>1 Điểm = 1 Nước</b>.</li>
+                                            <li>Ví dụ: Bạn được 8 điểm ➔ Nhận ngay 8 Nước.</li>
+                                            <li>Điểm tối thiểu: Luôn nhận ít nhất 1 Nước dù điểm thấp.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* PHÂN BÓN */}
+                            <div className="bg-white p-4 rounded-2xl border border-amber-100 shadow-sm">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="text-4xl drop-shadow-md">🧪</div>
+                                    <div>
+                                        <div className="font-black text-amber-600 text-lg">Phân Bón</div>
+                                        <div className="text-[10px] font-bold text-amber-400 bg-amber-50 px-2 py-0.5 rounded w-fit">Vật phẩm thưởng thêm</div>
+                                    </div>
+                                </div>
+                                <div className="space-y-2 text-xs text-slate-600">
+                                    <div className="flex gap-2">
+                                        <span className="font-bold text-amber-500">• Tác dụng:</span>
+                                        <span>Tăng <b>1 EXP</b> cho cây.</span>
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <span className="font-bold text-amber-500">• Cách kiếm (Phần thưởng xuất sắc):</span>
+                                        <ul className="list-disc list-inside space-y-1 ml-1 text-slate-500">
+                                            <li>Thi thử đạt <b>8 - 9 điểm</b>: Tặng thêm <b>1 Phân bón</b>.</li>
+                                            <li>Thi thử đạt <b>9 - 10 điểm</b>: Tặng thêm <b>2 Phân bón</b>.</li>
+                                            <li>Chơi Game đạt <b>trên 10 điểm</b>: Tặng thêm <b>1 Phân bón</b>.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="text-center text-[10px] text-slate-400 italic bg-slate-100 p-2 rounded-xl">
+                                *Mẹo: Hãy cố gắng đạt điểm cao để nhận cả Nước lẫn Phân bón!
+                            </div>
+                        </div>
+                    )}
+                </div>
+                <button onClick={() => setShowLevelInfo(false)} className="m-4 bg-green-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-green-200 active:scale-95 transition-transform">Đã hiểu</button>
+            </div>
+        </div>
+      )}
+
+      {/* CÂY & THANH TIẾN ĐỘ */}
       <div className="flex-1 flex flex-col items-center justify-start relative z-10 min-h-[500px]">
         <div className="text-center mb-6 shrink-0">
           <div className="inline-block bg-green-100 text-green-700 font-black uppercase text-xs px-3 py-1 rounded-full mb-2 tracking-widest shadow-sm border border-green-200">Cấp độ {currentLevel}/50</div>
@@ -2596,7 +2729,7 @@ const GardenScreen: React.FC<{
 
         <div className="w-full max-w-xs mt-8 mb-8 relative z-20 shrink-0">
            <div className="flex justify-between text-xs font-bold text-slate-600 mb-1.5 px-1">
-             <span>EXP: {Math.round(currentExp)} / {currentLevel >= 50 ? 'MAX' : stageInfo.maxExp}</span>
+             <span>EXP: {currentExp} / {currentLevel >= 50 ? 'MAX' : stageInfo.maxExp}</span>
              <span>{Math.round(progress)}%</span>
            </div>
            <div className="h-6 bg-white rounded-full border-2 border-green-100 p-1 shadow-inner">
@@ -2867,46 +3000,74 @@ useEffect(() => {
 
   // --- LOGIC TÍNH ĐIỂM (ĐÃ SỬA CHUẨN) ---
 // ✅ DÁN ĐOẠN NÀY VÀO (Code mới: Chỉ cộng dồn, không gửi ngay)
-// --- LOGIC TÍNH ĐIỂM (ĐÃ CẬP NHẬT: THÊM LOẠI 'mock') ---
-// --- LOGIC TÍNH ĐIỂM & RƠI VẬT PHẨM ---
-  // 👇 HÀM TÍNH ĐIỂM CÓ ÂM THANH 👇
+// 👇 HÀM TÍNH ĐIỂM & QUÀ TẶNG (LOGIC & MÔ TẢ MỚI)
   const handleScore = (pts: number, type: 'game'|'practice'|'exam'|'challenge'|'mock' = 'game') => { 
     if(!user) return; 
 
-    // --- PHÁT NHẠC ---
-    if (pts > 0) playSound('correct'); // Đúng: Ting ting
-    else playSound('wrong');           // Sai: Ố ồ
-    // -----------------
+    // 1. Phát nhạc
+    if (pts > 0) playSound('correct'); 
+    else playSound('wrong');
 
-    // 1. Cộng điểm
+    // 2. Cộng điểm tích lũy
     if (type === 'game') pendingUpdates.current.game += pts;
     else if (type === 'practice') { pendingUpdates.current.practice += pts; pendingUpdates.current.total += pts; }
     else if (type === 'mock') { pendingUpdates.current.mock += pts; pendingUpdates.current.total += pts; }
     else if (type === 'exam') { pendingUpdates.current.exam += pts; pendingUpdates.current.total += pts; }
     else if (type === 'challenge') { pendingUpdates.current.challenge += pts; pendingUpdates.current.total += pts; }
 
-    // 2. Logic rơi vật phẩm
+    // --- 3. TÍNH TOÁN VẬT PHẨM & MÔ TẢ ---
     let dropMsg = '';
+    
     if (pts > 0) {
         const currentInv = user.inventory || { water: 0, fertilizer: 0 };
         const newInv = { ...currentInv };
         let hasDrop = false;
+        
+        let addWater = 0;
+        let addFertilizer = 0;
 
+        // A. CHẾ ĐỘ THI CỬ (Exam / Mock)
         if (type === 'exam' || type === 'mock') {
-            if (pts >= 8) { newInv.fertilizer += 1; dropMsg = ' | 🎁 Nhận: PHÂN BÓN'; hasDrop = true; }
-            else if (pts >= 5) { newInv.water += 1; dropMsg = ' | 🎁 Nhận: NƯỚC THẦN'; hasDrop = true; }
+            addWater = Math.floor(pts); // 8.5 điểm = 8 Nước
+            
+            if (pts >= 9) { 
+                addFertilizer = 2; // Xuất sắc: 2 Phân
+            } else if (pts >= 8) { 
+                addFertilizer = 1; // Giỏi: 1 Phân
+            }
         } 
-        else if (Math.random() > 0.6) { 
-             newInv.water += 1; dropMsg = ' | 🎁 Nhận: NƯỚC THẦN'; hasDrop = true;
+        // B. CHẾ ĐỘ KHÁC (Luyện tập / Game / Thử thách)
+        else {
+            addWater = Math.floor(pts);
+            if (addWater < 1) addWater = 1; // Tối thiểu luôn nhận 1 Nước
+            
+            if (pts >= 10) {
+                addFertilizer = 1; // Điểm cao: Tặng 1 Phân
+            }
         }
 
+        // Cập nhật kho và tạo thông báo
+        if (addWater > 0 || addFertilizer > 0) {
+            newInv.water += addWater;
+            newInv.fertilizer += addFertilizer;
+            hasDrop = true;
+
+            // 👇 VIẾT LẠI MÔ TẢ TẠI ĐÂY 👇
+            if (addFertilizer > 0) {
+                dropMsg = ` | 🎁 +${addFertilizer} Phân & +${addWater} Nước`;
+            } else {
+                dropMsg = ` | 🎁 +${addWater} Nước`;
+            }
+        }
+
+        // Lưu vào Firebase
         if (hasDrop) {
             setUser(prev => prev ? ({ ...prev, inventory: newInv }) : null);
             updateDoc(doc(db, 'users', user.uid), { inventory: newInv }).catch(console.error);
         }
     }
 
-    // 3. Cập nhật giao diện điểm
+    // 4. Cập nhật giao diện điểm
     setUser(prev => {
         if (!prev) return null;
         const nu = { ...prev };
@@ -2920,6 +3081,7 @@ useEffect(() => {
         return nu;
     });
     
+    // Hiển thị thông báo (Toast)
     const sign = pts > 0 ? '+' : '';
     setToastMsg(`${sign}${pts} điểm${dropMsg}`); 
   };
