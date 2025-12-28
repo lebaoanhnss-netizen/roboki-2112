@@ -609,6 +609,36 @@ const ContentScreen: React.FC<{
       nextRankLabel = nextRank.label;
       scoreNeeded = Math.round((nextRank.min - currentScore) * 100) / 100;
   }
+  // HÀM TẶNG QUÀ TOÀN SERVER (ADMIN ONLY)
+  const handleGiftAll = async () => {
+    if (!confirm("⚠️ ADMIN CHÚ Ý:\nBạn có chắc muốn tặng 10 Nước & 10 Phân cho TẤT CẢ học sinh không?")) return;
+    try {
+      const q = query(collection(db, 'users'));
+      const snapshot = await getDocs(q);
+      const batch = writeBatch(db);
+      let count = 0;
+
+      snapshot.forEach((d) => {
+        const uData = d.data();
+        const currentInv = uData.inventory || { water: 0, fertilizer: 0 };
+        const newInv = {
+          water: (currentInv.water || 0) + 10,
+          fertilizer: (currentInv.fertilizer || 0) + 10
+        };
+        batch.update(doc(db, 'users', d.id), { inventory: newInv });
+        count++;
+      });
+
+      await batch.commit();
+      alert(`✅ Đã tặng quà cho ${count} bạn thành công!`);
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      alert("Lỗi khi tặng quà!");
+    }
+  };
+
+  // 👆👆👆 KẾT THÚC ĐOẠN CHÈN 👆👆👆
   if (selectedTopic) {
     const topicLessons = lessons.filter(l => l.topic === selectedTopic.label);
     return (
@@ -741,7 +771,23 @@ const ContentScreen: React.FC<{
                 <div><div className="font-bold text-lime-900 text-sm group-hover:text-lime-600 transition-colors">Vườn Cây Tri Thức</div><div className="text-[10px] text-lime-600/70">Chăm sóc cây & Thu hoạch</div></div>
              </div>
         </div>
+        {/* 👇👇👇 DÁN ĐOẠN CODE NÚT TẶNG QUÀ VÀO ĐÂY 👇👇👇 */}
         
+        {user.email === 'lebaoanhnss@gmail.com' && (
+          <div className="mt-8 mb-4 border-t border-slate-200 pt-4">
+            <h3 className="font-bold text-slate-800 text-base mb-3 flex items-center gap-2">
+               🛡️ Admin Control
+            </h3>
+            <button 
+                onClick={handleGiftAll}
+                className="w-full bg-gradient-to-r from-pink-500 to-rose-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-pink-200 flex items-center justify-center gap-2 active:scale-95 transition-transform"
+            >
+                🎁 Tặng quà toàn Server (10 Nước - 10 Phân)
+            </button>
+          </div>
+        )}
+
+        {/* 👆👆👆 KẾT THÚC ĐOẠN DÁN 👆👆👆 */}
       </div>
     </div>
   );
@@ -2430,7 +2476,7 @@ const ChallengeScreen: React.FC<{
         </div>
     );
 };
-// 10. GARDEN SCREEN (ĐÃ CẬP NHẬT: THÔNG TIN VẬT PHẨM KHỚP VỚI LOGIC MỚI)
+// 10. GARDEN SCREEN (CHẾ ĐỘ TẤT TAY: DÙNG 1 LẦN LÀ HẾT KHO)
 const GardenScreen: React.FC<{
   user: UserProfile;
   onUpdateUser: (u: UserProfile) => void; 
@@ -2439,13 +2485,11 @@ const GardenScreen: React.FC<{
   const [msg, setMsg] = useState('');
   const [animating, setAnimating] = useState(false);
   
-  // 👇 State bật tắt bảng thông tin
   const [showLevelInfo, setShowLevelInfo] = useState(false);
-  const [infoTab, setInfoTab] = useState<'LEVELS' | 'ITEMS'>('LEVELS'); // Tab chuyển đổi
+  const [infoTab, setInfoTab] = useState<'LEVELS' | 'ITEMS'>('LEVELS');
 
-  // Cấu hình 50 Cấp độ (Full)
+  // Cấu hình 50 Cấp độ
   const TREE_STAGES = [
-    // GĐ 1: KHỞI NGUYÊN
     { level: 1, name: 'Hạt Giống Hy Vọng', icon: '🌰', maxExp: 50 },
     { level: 2, name: 'Mầm Non Tỉnh Giấc', icon: '🌱', maxExp: 80 },
     { level: 3, name: 'Chồi Non Vươn Lên', icon: '🌿', maxExp: 120 },
@@ -2456,7 +2500,6 @@ const GardenScreen: React.FC<{
     { level: 8, name: 'Bụi Cây Nhỏ', icon: '🌳', maxExp: 360 },
     { level: 9, name: 'Cây Non Cứng Cáp', icon: '🌳', maxExp: 420 },
     { level: 10, name: 'Cây Xanh Tốt', icon: '🌳', maxExp: 500 },
-    // GĐ 2: RỪNG RẬM
     { level: 11, name: 'Cây Tre Kiên Cường', icon: '🎍', maxExp: 600 },
     { level: 12, name: 'Cây Trúc Quân Tử', icon: '🎋', maxExp: 700 },
     { level: 13, name: 'Cây Thông Noel', icon: '🎄', maxExp: 850 },
@@ -2467,7 +2510,6 @@ const GardenScreen: React.FC<{
     { level: 18, name: 'Hoa Hồng Gai', icon: '🌹', maxExp: 1800 },
     { level: 19, name: 'Cây Phong Lá Đỏ', icon: '🍁', maxExp: 2100 },
     { level: 20, name: 'Cây Sồi Cổ Thụ', icon: '🌳', maxExp: 2500 },
-    // GĐ 3: HOA QUẢ
     { level: 21, name: 'Cây Cam Mọng Nước', icon: '🍊', maxExp: 2900 },
     { level: 22, name: 'Cây Chanh Tươi Mát', icon: '🍋', maxExp: 3300 },
     { level: 23, name: 'Cây Táo Đỏ', icon: '🍎', maxExp: 3800 },
@@ -2478,7 +2520,6 @@ const GardenScreen: React.FC<{
     { level: 28, name: 'Cây Dưa Hấu', icon: '🍉', maxExp: 6700 },
     { level: 29, name: 'Cây Dâu Tây', icon: '🍓', maxExp: 7500 },
     { level: 30, name: 'Vườn Trái Cây', icon: '🍒', maxExp: 8300 },
-    // GĐ 4: THẦN THOẠI
     { level: 31, name: 'Cây Bonsai Vàng', icon: '🎋', maxExp: 9200 },
     { level: 32, name: 'Cây Tiền Tài', icon: '💰', maxExp: 10000 },
     { level: 33, name: 'Cây Ngọc Bích', icon: '💎', maxExp: 11000 },
@@ -2489,7 +2530,6 @@ const GardenScreen: React.FC<{
     { level: 38, name: 'Cây Cầu Vồng', icon: '🌈', maxExp: 20000 },
     { level: 39, name: 'Cây Thần Đèn', icon: '🧞', maxExp: 22500 },
     { level: 40, name: 'Cây Rồng Thiêng', icon: '🐉', maxExp: 25000 },
-    // GĐ 5: VŨ TRỤ
     { level: 41, name: 'Cây Sao Băng', icon: '🌠', maxExp: 28000 },
     { level: 42, name: 'Cây Mặt Trăng', icon: '🌑', maxExp: 31000 },
     { level: 43, name: 'Cây Mặt Trời', icon: '🌞', maxExp: 35000 },
@@ -2504,17 +2544,16 @@ const GardenScreen: React.FC<{
 
   const currentLevel = user.treeLevel || 1;
   const currentExp = user.treeExp || 0;
-  const inventory = user.inventory || { water: 1, fertilizer: 1 };
+  const inventory = user.inventory || { water: 10, fertilizer: 3 };
   
   const getStageInfo = (lv: number) => TREE_STAGES.find(s => s.level === lv) || TREE_STAGES[TREE_STAGES.length - 1];
   const stageInfo = getStageInfo(currentLevel);
   
-  // Tính % tiến độ
   let progress = 0;
   if (currentLevel >= 50) progress = 100;
   else progress = Math.min(100, (currentExp / stageInfo.maxExp) * 100);
 
-  // --- HÀM CHĂM SÓC CÂY (Logic: 1 Item = 1 XP) ---
+  // 👇 HÀM CHĂM SÓC CÂY (LOGIC TẤT TAY - QUAN TRỌNG) 👇
   const handleCare = (type: 'water' | 'fertilizer') => {
     if (animating) return;
     if (currentLevel >= 50) { setMsg("Cây đã đạt cấp tối đa! Bạn là huyền thoại! 👑"); return; }
@@ -2522,38 +2561,55 @@ const GardenScreen: React.FC<{
     let newInventory = { ...inventory };
     let expGain = 0;
     let message = '';
+    let amountUsed = 0; // Biến lưu số lượng đã dùng
 
     if (type === 'water') {
-      if (newInventory.water <= 0) { 
+      // 1. Lấy HẾT số lượng nước đang có
+      amountUsed = newInventory.water; 
+      
+      if (amountUsed <= 0) { 
           setMsg('Hết Nước rồi! Xem cách kiếm thêm nhé.'); 
           setShowLevelInfo(true); 
           setInfoTab('ITEMS'); 
           return; 
       }
-      newInventory.water -= 1;
-      expGain = 1; // 1 Nước = 1 XP
-      message = `+1 XP! Cây đang mát mẻ 💧`;
+
+      // 2. Set kho về 0 (Dùng sạch sành sanh)
+      newInventory.water = 0;
+      
+      // 3. Tính điểm XP (1 Nước = 1 XP)
+      expGain = amountUsed; 
+      message = `Đã tưới hết ${amountUsed} Nước! +${expGain} XP 💧`;
+
     } else {
-      if (newInventory.fertilizer <= 0) { 
+      // 1. Lấy HẾT số lượng phân bón
+      amountUsed = newInventory.fertilizer;
+
+      if (amountUsed <= 0) { 
           setMsg('Hết Phân bón! Xem cách kiếm thêm nhé.'); 
           setShowLevelInfo(true); 
           setInfoTab('ITEMS'); 
           return; 
       }
-      newInventory.fertilizer -= 1;
-      expGain = 1; // 1 Phân = 1 XP
-      message = `+1 XP! Cây lớn nhanh như thổi 🚀`;
+
+      // 2. Set kho về 0
+      newInventory.fertilizer = 0;
+
+      // 3. Tính điểm XP (1 Phân = 1 XP)
+      expGain = amountUsed; 
+      message = `Đã bón hết ${amountUsed} Phân! +${expGain} XP 🚀`;
     }
 
     setAnimating(true);
     setMsg(message);
     playSound('correct');
 
+    // 4. Cộng dồn XP và tính toán nhảy cóc cấp độ (Vòng lặp)
     let newExp = currentExp + expGain;
     let newLevel = currentLevel;
     let levelUpOccurred = false;
 
-    // Logic lên cấp
+    // Vòng lặp: Nếu XP dư nhiều thì lên cấp liên tục
     while (newLevel < 50) {
         const currentStageInfo = getStageInfo(newLevel);
         if (newExp >= currentStageInfo.maxExp) {
@@ -2565,142 +2621,60 @@ const GardenScreen: React.FC<{
         }
     }
 
-    // Hiệu ứng khi lên cấp
     if (levelUpOccurred) {
       playSound('levelup');
       const newStageName = getStageInfo(newLevel).name;
-      setTimeout(() => alert(`🎉 CHÚC MỪNG!\nCây của bạn đã tiến hóa lên cấp ${newLevel}:\n"${newStageName}"`), 500);
+      setTimeout(() => alert(`🎉 QUÁ ĐỈNH!\nBạn đã dùng ${amountUsed} vật phẩm và cây tiến hóa thẳng lên cấp ${newLevel}:\n"${newStageName}"`), 500);
     }
 
     onUpdateUser({ ...user, treeLevel: newLevel, treeExp: newExp, inventory: newInventory });
-    setTimeout(() => { setAnimating(false); setMsg(''); }, 1500);
+    setTimeout(() => { setAnimating(false); setMsg(''); }, 2000);
   };
 
   return (
     <div className="pb-24 pt-4 px-4 h-full flex flex-col bg-gradient-to-b from-sky-100 to-green-50 overflow-y-auto relative">
-      
-      {/* Header */}
       <div className="flex items-center justify-between mb-4 z-[40] relative pointer-events-auto shrink-0">
         <div className="flex items-center gap-3">
-            <button 
-                onClick={() => onSaveAndExit(user)} 
-                className="w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center border border-slate-100 hover:bg-slate-50 active:scale-95 transition-all"
-            >
-                <ChevronLeft size={20} className="text-slate-700"/>
-            </button>
+            <button onClick={() => onSaveAndExit(user)} className="w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center border border-slate-100 hover:bg-slate-50 active:scale-95 transition-all"><ChevronLeft size={20} className="text-slate-700"/></button>
             <h2 className="text-xl font-black text-green-800 drop-shadow-sm">Khu Vườn Tri Thức</h2>
         </div>
-        
-        {/* NÚT THÔNG TIN (Giao diện giống ảnh bạn gửi) */}
-        <button 
-            onClick={() => setShowLevelInfo(true)}
-            className="flex items-center gap-1 bg-white text-green-700 px-3 py-1.5 rounded-full text-[10px] font-bold border border-green-200 shadow-sm active:scale-95 transition-transform"
-        >
-            <Info size={14}/> Thông tin
-        </button>
+        <button onClick={() => setShowLevelInfo(true)} className="flex items-center gap-1 bg-white text-green-700 px-3 py-1.5 rounded-full text-[10px] font-bold border border-green-200 shadow-sm active:scale-95 transition-transform"><Info size={14}/> Thông tin</button>
       </div>
 
-      {/* 👇 POPUP ĐA NĂNG (LEVELS + ITEMS) */}
       {showLevelInfo && (
         <div className="absolute inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
             <div className="bg-white w-full max-w-sm h-[80%] rounded-3xl shadow-2xl flex flex-col overflow-hidden">
-                {/* Popup Header */}
                 <div className="p-4 border-b border-green-100 flex justify-between items-center bg-green-50">
                     <h3 className="font-black text-green-800 flex items-center gap-2"><Sprout size={18} className="text-green-600"/> Hướng dẫn Khu vườn</h3>
                     <button onClick={() => setShowLevelInfo(false)} className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-slate-400 shadow-sm hover:bg-slate-50"><X size={16}/></button>
                 </div>
-
-                {/* Tab Switcher */}
                 <div className="flex p-2 gap-2 bg-slate-50 border-b border-slate-100">
                     <button onClick={()=>setInfoTab('LEVELS')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${infoTab==='LEVELS' ? 'bg-white shadow text-green-600' : 'text-slate-400'}`}>Lộ trình 50 Cấp</button>
                     <button onClick={()=>setInfoTab('ITEMS')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${infoTab==='ITEMS' ? 'bg-white shadow text-amber-600' : 'text-slate-400'}`}>Vật phẩm & Cách kiếm</button>
                 </div>
-
-                {/* Nội dung Popup */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50">
-                    
-                    {/* TAB 1: DANH SÁCH CẤP ĐỘ */}
                     {infoTab === 'LEVELS' ? (
                         <>
                             <p className="text-xs text-slate-500 mb-2 italic text-center">Chăm sóc cây để đạt các trạng thái:</p>
                             {TREE_STAGES.map((stage) => {
                                 const isCurrent = stage.level === currentLevel;
                                 const isPassed = stage.level < currentLevel;
-                                
                                 return (
                                     <div key={stage.level} className={`flex items-center justify-between p-3 rounded-xl border transition-all ${isCurrent ? 'bg-white border-green-500 shadow-md scale-[1.02] z-10 ring-1 ring-green-200' : isPassed ? 'bg-green-50 border-green-200 opacity-80' : 'bg-slate-100 border-slate-200 grayscale opacity-60'}`}>
                                         <div className="flex items-center gap-3">
                                             <span className="text-2xl drop-shadow-sm">{stage.icon}</span>
-                                            <div>
-                                                <div className={`font-black text-xs uppercase ${isCurrent ? 'text-green-700' : 'text-slate-600'}`}>
-                                                    Lv.{stage.level} - {stage.name}
-                                                </div>
-                                                <div className="text-[10px] text-slate-400 font-bold mt-0.5">Mục tiêu: {stage.maxExp} EXP</div>
-                                            </div>
+                                            <div><div className={`font-black text-xs uppercase ${isCurrent ? 'text-green-700' : 'text-slate-600'}`}>Lv.{stage.level} - {stage.name}</div><div className="text-[10px] text-slate-400 font-bold mt-0.5">Mục tiêu: {stage.maxExp} EXP</div></div>
                                         </div>
-                                        <div className="text-lg">
-                                            {isCurrent ? <span className="text-[9px] font-bold bg-green-600 text-white px-2 py-1 rounded-full animate-pulse">HIỆN TẠI</span> : isPassed ? <CheckCircle size={18} className="text-green-500"/> : <Lock size={16} className="text-slate-400"/>}
-                                        </div>
+                                        <div className="text-lg">{isCurrent ? <span className="text-[9px] font-bold bg-green-600 text-white px-2 py-1 rounded-full animate-pulse">HIỆN TẠI</span> : isPassed ? <CheckCircle size={18} className="text-green-500"/> : <Lock size={16} className="text-slate-400"/>}</div>
                                     </div>
                                 );
                             })}
                         </>
                     ) : (
-                        // TAB 2: HƯỚNG DẪN KIẾM VẬT PHẨM (ĐÃ SỬA THEO LOGIC MỚI)
                         <div className="space-y-4">
-                            {/* NƯỚC THẦN */}
-                            <div className="bg-white p-4 rounded-2xl border border-sky-100 shadow-sm">
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="text-4xl drop-shadow-md">💧</div>
-                                    <div>
-                                        <div className="font-black text-sky-600 text-lg">Nước Thần</div>
-                                        <div className="text-[10px] font-bold text-sky-400 bg-sky-50 px-2 py-0.5 rounded w-fit">Vật phẩm phổ thông</div>
-                                    </div>
-                                </div>
-                                <div className="space-y-2 text-xs text-slate-600">
-                                    <div className="flex gap-2">
-                                        <span className="font-bold text-sky-500">• Tác dụng:</span>
-                                        <span>Tăng <b>1 EXP</b> cho cây.</span>
-                                    </div>
-                                    <div className="flex flex-col gap-1">
-                                        <span className="font-bold text-sky-500">• Cách kiếm (Làm bao nhiêu hưởng bấy nhiêu):</span>
-                                        <ul className="list-disc list-inside space-y-1 ml-1 text-slate-500">
-                                            <li>Làm bài tập / Chơi game: <b>1 Điểm = 1 Nước</b>.</li>
-                                            <li>Ví dụ: Bạn được 8 điểm ➔ Nhận ngay 8 Nước.</li>
-                                            <li>Điểm tối thiểu: Luôn nhận ít nhất 1 Nước dù điểm thấp.</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* PHÂN BÓN */}
-                            <div className="bg-white p-4 rounded-2xl border border-amber-100 shadow-sm">
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="text-4xl drop-shadow-md">🧪</div>
-                                    <div>
-                                        <div className="font-black text-amber-600 text-lg">Phân Bón</div>
-                                        <div className="text-[10px] font-bold text-amber-400 bg-amber-50 px-2 py-0.5 rounded w-fit">Vật phẩm thưởng thêm</div>
-                                    </div>
-                                </div>
-                                <div className="space-y-2 text-xs text-slate-600">
-                                    <div className="flex gap-2">
-                                        <span className="font-bold text-amber-500">• Tác dụng:</span>
-                                        <span>Tăng <b>1 EXP</b> cho cây.</span>
-                                    </div>
-                                    <div className="flex flex-col gap-1">
-                                        <span className="font-bold text-amber-500">• Cách kiếm (Phần thưởng xuất sắc):</span>
-                                        <ul className="list-disc list-inside space-y-1 ml-1 text-slate-500">
-                                            <li>Thi thử đạt <b>8 - 9 điểm</b>: Tặng thêm <b>1 Phân bón</b>.</li>
-                                            <li>Thi thử đạt <b>9 - 10 điểm</b>: Tặng thêm <b>2 Phân bón</b>.</li>
-                                            <li>Chơi Game đạt <b>trên 10 điểm</b>: Tặng thêm <b>1 Phân bón</b>.</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div className="text-center text-[10px] text-slate-400 italic bg-slate-100 p-2 rounded-xl">
-                                *Mẹo: Hãy cố gắng đạt điểm cao để nhận cả Nước lẫn Phân bón!
-                            </div>
+                            <div className="bg-white p-4 rounded-2xl border border-sky-100 shadow-sm"><div className="flex items-center gap-3 mb-3"><div className="text-4xl drop-shadow-md">💧</div><div><div className="font-black text-sky-600 text-lg">Nước Thần</div><div className="text-[10px] font-bold text-sky-400 bg-sky-50 px-2 py-0.5 rounded w-fit">Vật phẩm phổ thông</div></div></div><div className="space-y-2 text-xs text-slate-600"><div className="flex gap-2"><span className="font-bold text-sky-500">• Tác dụng:</span><span>Tăng <b>1 EXP</b> cho cây.</span></div><div className="flex flex-col gap-1"><span className="font-bold text-sky-500">• Cách kiếm (Làm bao nhiêu hưởng bấy nhiêu):</span><ul className="list-disc list-inside space-y-1 ml-1 text-slate-500"><li>Làm bài tập / Chơi game: <b>1 Điểm = 1 Nước</b>.</li><li>Ví dụ: Bạn được 8 điểm ➔ Nhận ngay 8 Nước.</li><li>Điểm tối thiểu: Luôn nhận ít nhất 1 Nước dù điểm thấp.</li></ul></div></div></div>
+                            <div className="bg-white p-4 rounded-2xl border border-amber-100 shadow-sm"><div className="flex items-center gap-3 mb-3"><div className="text-4xl drop-shadow-md">🧪</div><div><div className="font-black text-amber-600 text-lg">Phân Bón</div><div className="text-[10px] font-bold text-amber-400 bg-amber-50 px-2 py-0.5 rounded w-fit">Vật phẩm thưởng thêm</div></div></div><div className="space-y-2 text-xs text-slate-600"><div className="flex gap-2"><span className="font-bold text-amber-500">• Tác dụng:</span><span>Tăng <b>1 EXP</b> cho cây.</span></div><div className="flex flex-col gap-1"><span className="font-bold text-amber-500">• Cách kiếm (Phần thưởng xuất sắc):</span><ul className="list-disc list-inside space-y-1 ml-1 text-slate-500"><li>Thi thử đạt <b>8 - 9 điểm</b>: Tặng thêm <b>1 Phân bón</b>.</li><li>Thi thử đạt <b>9 - 10 điểm</b>: Tặng thêm <b>2 Phân bón</b>.</li><li>Chơi Game đạt <b>trên 10 điểm</b>: Tặng thêm <b>1 Phân bón</b>.</li></ul></div></div></div>
+                            <div className="text-center text-[10px] text-slate-400 italic bg-slate-100 p-2 rounded-xl">*Mẹo: Hãy cố gắng đạt điểm cao để nhận cả Nước lẫn Phân bón!</div>
                         </div>
                     )}
                 </div>
@@ -2709,7 +2683,6 @@ const GardenScreen: React.FC<{
         </div>
       )}
 
-      {/* CÂY & THANH TIẾN ĐỘ */}
       <div className="flex-1 flex flex-col items-center justify-start relative z-10 min-h-[500px]">
         <div className="text-center mb-6 shrink-0">
           <div className="inline-block bg-green-100 text-green-700 font-black uppercase text-xs px-3 py-1 rounded-full mb-2 tracking-widest shadow-sm border border-green-200">Cấp độ {currentLevel}/50</div>
@@ -2719,47 +2692,27 @@ const GardenScreen: React.FC<{
 
         <div className={`relative transition-all duration-500 my-4 ${animating ? 'scale-110' : 'scale-100'}`}>
            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-green-400/20 rounded-full blur-3xl animate-pulse pointer-events-none"></div>
-           
-           <div className="text-[160px] drop-shadow-2xl filter animate-bounce-slow cursor-pointer select-none transform transition-transform hover:-translate-y-2 select-none z-20 relative">
-               {stageInfo.icon}
-           </div>
-           
+           <div className="text-[160px] drop-shadow-2xl filter animate-bounce-slow cursor-pointer select-none transform transition-transform hover:-translate-y-2 select-none z-20 relative">{stageInfo.icon}</div>
            {animating && <div className="absolute -top-16 left-1/2 -translate-x-1/2 text-amber-500 font-black text-2xl animate-bounce whitespace-nowrap drop-shadow-md bg-white/90 px-4 py-2 rounded-xl backdrop-blur-sm z-50 border border-amber-100">{msg.split('!')[0]}</div>}
         </div>
 
         <div className="w-full max-w-xs mt-8 mb-8 relative z-20 shrink-0">
-           <div className="flex justify-between text-xs font-bold text-slate-600 mb-1.5 px-1">
-             <span>EXP: {currentExp} / {currentLevel >= 50 ? 'MAX' : stageInfo.maxExp}</span>
-             <span>{Math.round(progress)}%</span>
-           </div>
-           <div className="h-6 bg-white rounded-full border-2 border-green-100 p-1 shadow-inner">
-              <div className="h-full bg-gradient-to-r from-lime-400 to-green-500 rounded-full transition-all duration-700 ease-out shadow-sm relative overflow-hidden" style={{ width: `${progress}%` }}>
-                  <div className="absolute top-0 left-0 w-full h-full bg-white/30 animate-[shimmer_2s_infinite]"></div>
-              </div>
-           </div>
+           <div className="flex justify-between text-xs font-bold text-slate-600 mb-1.5 px-1"><span>EXP: {currentExp} / {currentLevel >= 50 ? 'MAX' : stageInfo.maxExp}</span><span>{Math.round(progress)}%</span></div>
+           <div className="h-6 bg-white rounded-full border-2 border-green-100 p-1 shadow-inner"><div className="h-full bg-gradient-to-r from-lime-400 to-green-500 rounded-full transition-all duration-700 ease-out shadow-sm relative overflow-hidden" style={{ width: `${progress}%` }}><div className="absolute top-0 left-0 w-full h-full bg-white/30 animate-[shimmer_2s_infinite]"></div></div></div>
         </div>
       
-        {/* Kho vật phẩm */}
         <div className="w-full bg-white rounded-[2rem] p-6 shadow-[0_-10px_60px_rgba(0,0,0,0.15)] z-40 border border-slate-50 relative shrink-0">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-400 shadow-sm border border-slate-100">Kho vật phẩm</div>
             <div className="flex gap-4 mt-2">
-                <button onClick={() => handleCare('water')} disabled={inventory.water <= 0 || currentLevel >= 50} className={`flex-1 p-4 rounded-3xl border-b-4 flex flex-col items-center gap-2 transition-all active:scale-95 active:border-b-0 active:translate-y-1 ${inventory.water > 0 ? 'bg-sky-50 border-sky-200 hover:bg-sky-100' : 'bg-slate-50 border-slate-200 grayscale opacity-60'}`}>
-                    <div className="text-4xl drop-shadow-md">💧</div>
-                    <div><div className="font-black text-slate-700">Tưới nước</div><div className="text-xs text-sky-600 font-bold bg-sky-100 px-2 py-0.5 rounded-lg mt-1">Còn: {inventory.water}</div></div>
-                </button>
-                <button onClick={() => handleCare('fertilizer')} disabled={inventory.fertilizer <= 0 || currentLevel >= 50} className={`flex-1 p-4 rounded-3xl border-b-4 flex flex-col items-center gap-2 transition-all active:scale-95 active:border-b-0 active:translate-y-1 ${inventory.fertilizer > 0 ? 'bg-amber-50 border-amber-200 hover:bg-amber-100' : 'bg-slate-50 border-slate-200 grayscale opacity-60'}`}>
-                    <div className="text-4xl drop-shadow-md">🧪</div>
-                    <div><div className="font-black text-slate-700">Bón phân</div><div className="text-xs text-amber-600 font-bold bg-amber-100 px-2 py-0.5 rounded-lg mt-1">Còn: {inventory.fertilizer}</div></div>
-                </button>
+                <button onClick={() => handleCare('water')} disabled={inventory.water <= 0 || currentLevel >= 50} className={`flex-1 p-4 rounded-3xl border-b-4 flex flex-col items-center gap-2 transition-all active:scale-95 active:border-b-0 active:translate-y-1 ${inventory.water > 0 ? 'bg-sky-50 border-sky-200 hover:bg-sky-100' : 'bg-slate-50 border-slate-200 grayscale opacity-60'}`}><div className="text-4xl drop-shadow-md">💧</div><div><div className="font-black text-slate-700">Tưới nước</div><div className="text-xs text-sky-600 font-bold bg-sky-100 px-2 py-0.5 rounded-lg mt-1">Còn: {inventory.water}</div></div></button>
+                <button onClick={() => handleCare('fertilizer')} disabled={inventory.fertilizer <= 0 || currentLevel >= 50} className={`flex-1 p-4 rounded-3xl border-b-4 flex flex-col items-center gap-2 transition-all active:scale-95 active:border-b-0 active:translate-y-1 ${inventory.fertilizer > 0 ? 'bg-amber-50 border-amber-200 hover:bg-amber-100' : 'bg-slate-50 border-slate-200 grayscale opacity-60'}`}><div className="text-4xl drop-shadow-md">🧪</div><div><div className="font-black text-slate-700">Bón phân</div><div className="text-xs text-amber-600 font-bold bg-amber-100 px-2 py-0.5 rounded-lg mt-1">Còn: {inventory.fertilizer}</div></div></button>
             </div>
             {msg && !animating && <div className="mt-4 text-center text-rose-500 text-xs font-bold animate-pulse">{msg}</div>}
         </div>
-      
       </div>
     </div>
   );
-};
-// 9. CHAT SCREEN (Đã phục hồi)
+};// 9. CHAT SCREEN (Đã phục hồi)
 const ChatScreen: React.FC<{ onBack: () => void, initialPrompt: string }> = ({ onBack, initialPrompt }) => {
     const [showCopyOverlay, setShowCopyOverlay] = useState(!!initialPrompt);
     useEffect(() => {
