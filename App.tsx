@@ -2693,7 +2693,17 @@ const GardenScreen: React.FC<{
         <div className={`relative transition-all duration-500 my-4 ${animating ? 'scale-110' : 'scale-100'}`}>
            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-green-400/20 rounded-full blur-3xl animate-pulse pointer-events-none"></div>
            <div className="text-[160px] drop-shadow-2xl filter animate-bounce-slow cursor-pointer select-none transform transition-transform hover:-translate-y-2 select-none z-20 relative">{stageInfo.icon}</div>
-           {animating && <div className="absolute -top-16 left-1/2 -translate-x-1/2 text-amber-500 font-black text-2xl animate-bounce whitespace-nowrap drop-shadow-md bg-white/90 px-4 py-2 rounded-xl backdrop-blur-sm z-50 border border-amber-100">{msg.split('!')[0]}</div>}
+           {/* 👇 ĐOẠN ĐÃ SỬA: CĂN GIỮA, CHỮ NHỎ, KHÔNG BỊ TRÀN MÀN HÌNH 👇 */}
+           {animating && (
+             <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 z-50 w-max max-w-[280px] flex justify-center pointer-events-none">
+                 <div className="bg-white/95 backdrop-blur-md px-4 py-2 rounded-2xl border border-amber-200 shadow-xl animate-bounce">
+                     <div className="text-amber-600 font-black text-xs text-center whitespace-normal leading-tight">
+                        {msg.split('!')[0]}
+                     </div>
+                 </div>
+             </div>
+           )}
+           {/* 👆 KẾT THÚC ĐOẠN SỬA 👆 */}
         </div>
 
         <div className="w-full max-w-xs mt-8 mb-8 relative z-20 shrink-0">
