@@ -2894,7 +2894,9 @@ useEffect(() => {
         const cacheTime = localStorage.getItem('data_cache_time');
 
         // Kiểm tra hạn sử dụng cache (24 giờ)
-        const isCacheValid = cacheTime && (Date.now() - parseInt(cacheTime) < 86400000);
+        // 👇 SỬA LẠI: Giảm thời gian Cache xuống 10 phút (600,000 ms)
+        // Để khi thầy nạp câu hỏi mới, học sinh cập nhật nhanh hơn.
+        const isCacheValid = cacheTime && (Date.now() - parseInt(cacheTime) < 0);
 
         if (cachedQuestions && cachedLessons && isCacheValid) {
             console.log("✅ Dùng data từ Cache (Không tốn Read)");
