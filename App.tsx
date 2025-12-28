@@ -5,7 +5,23 @@ import Toast from './components/Toast';
 import { UserProfile, Question, Lesson } from './types';
 // 👇 Import dữ liệu từ file data.ts (Đảm bảo file này tồn tại)
 import { PHYSICS_LESSONS, QUESTION_BANK } from './data';
+// --- CẤU HÌNH ÂM THANH (Dùng link online cho tiện) ---
+const playSound = (type: 'click' | 'correct' | 'wrong' | 'levelup') => {
+  const sounds = {
+    // Tiếng click nhẹ (khi bấm nút)
+    click: 'https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a73467.mp3', 
+    // Tiếng ting ting (khi làm đúng / nhận quà)
+    correct: 'https://cdn.pixabay.com/audio/2021/08/04/audio_12b0c7443c.mp3',
+    // Tiếng ố ồ (khi làm sai)
+    wrong: 'https://cdn.pixabay.com/audio/2022/03/10/audio_c2957f354f.mp3',
+    // Tiếng chiến thắng (khi lên cấp)
+    levelup: 'https://cdn.pixabay.com/audio/2021/08/04/audio_0625c1539c.mp3' 
+  };
 
+  const audio = new Audio(sounds[type]);
+  audio.volume = 0.5; // Chỉnh âm lượng (0.0 đến 1.0)
+  audio.play().catch(e => console.log("Chưa tương tác, chưa phát nhạc được"));
+};
 import {
   auth,
   db,
@@ -2853,29 +2869,33 @@ useEffect(() => {
 // ✅ DÁN ĐOẠN NÀY VÀO (Code mới: Chỉ cộng dồn, không gửi ngay)
 // --- LOGIC TÍNH ĐIỂM (ĐÃ CẬP NHẬT: THÊM LOẠI 'mock') ---
 // --- LOGIC TÍNH ĐIỂM & RƠI VẬT PHẨM ---
+  // 👇 HÀM TÍNH ĐIỂM CÓ ÂM THANH 👇
   const handleScore = (pts: number, type: 'game'|'practice'|'exam'|'challenge'|'mock' = 'game') => { 
     if(!user) return; 
-    
-    // 1. Cộng điểm (giữ nguyên logic cũ)
+
+    // --- PHÁT NHẠC ---
+    if (pts > 0) playSound('correct'); // Đúng: Ting ting
+    else playSound('wrong');           // Sai: Ố ồ
+    // -----------------
+
+    // 1. Cộng điểm
     if (type === 'game') pendingUpdates.current.game += pts;
     else if (type === 'practice') { pendingUpdates.current.practice += pts; pendingUpdates.current.total += pts; }
     else if (type === 'mock') { pendingUpdates.current.mock += pts; pendingUpdates.current.total += pts; }
     else if (type === 'exam') { pendingUpdates.current.exam += pts; pendingUpdates.current.total += pts; }
     else if (type === 'challenge') { pendingUpdates.current.challenge += pts; pendingUpdates.current.total += pts; }
 
-    // 2. 👇 LOGIC RƠI ĐỒ 👇
+    // 2. Logic rơi vật phẩm
     let dropMsg = '';
     if (pts > 0) {
         const currentInv = user.inventory || { water: 0, fertilizer: 0 };
         const newInv = { ...currentInv };
         let hasDrop = false;
 
-        // Thi thử / Tự tạo đề: Thưởng to
         if (type === 'exam' || type === 'mock') {
             if (pts >= 8) { newInv.fertilizer += 1; dropMsg = ' | 🎁 Nhận: PHÂN BÓN'; hasDrop = true; }
             else if (pts >= 5) { newInv.water += 1; dropMsg = ' | 🎁 Nhận: NƯỚC THẦN'; hasDrop = true; }
         } 
-        // Luyện tập / Game: Thưởng nhỏ (40% cơ hội)
         else if (Math.random() > 0.6) { 
              newInv.water += 1; dropMsg = ' | 🎁 Nhận: NƯỚC THẦN'; hasDrop = true;
         }
@@ -2902,7 +2922,7 @@ useEffect(() => {
     
     const sign = pts > 0 ? '+' : '';
     setToastMsg(`${sign}${pts} điểm${dropMsg}`); 
-};
+  };
 
 // --- HÀM LƯU DỮ LIỆU (CHỈ GỌI 1 LẦN KHI KẾT THÚC) ---
 const saveData = async () => {
@@ -2933,11 +2953,16 @@ const saveData = async () => {
     }
 };
 
-  // Hàm chuyển trang: Tự động lưu điểm trước khi chuyển
+  // 👇 HÀM CHUYỂN TRANG CÓ ÂM THANH 👇
   const navigateTo = (newScreen: any) => {
-      saveData(); // Lưu điểm cũ
-      setScreen(newScreen); // Chuyển trang mới
-  }
+      // 1. Phát tiếng click
+            
+      // 2. Lưu điểm cũ
+      saveData(); 
+      
+      // 3. Chuyển trang
+      setScreen(newScreen); 
+  };
   // --- HÀM RESET ĐIỂM (CHO ADMIN) - ĐÃ SỬA LỖI ---
   // --- HÀM RESET ĐIỂM (FIXED: RELOAD TRANG ĐỂ XÓA SẠCH RAM) ---
   const resetAll = async () => {
