@@ -2419,7 +2419,7 @@ const ChallengeScreen: React.FC<{
         </div>
     );
 };
-// 10. GARDEN SCREEN (KHU VƯỜN 50 CẤP ĐỘ - BẢN FIX LỖI NÚT BACK)
+// 10. GARDEN SCREEN (ĐÃ FIX: CHO PHÉP KÉO MÀN HÌNH + NÚT BACK OK)
 const GardenScreen: React.FC<{
   user: UserProfile;
   onUpdateUser: (u: UserProfile) => void; 
@@ -2489,6 +2489,7 @@ const GardenScreen: React.FC<{
 
   const currentLevel = user.treeLevel || 1;
   const currentExp = user.treeExp || 0;
+  // Quà tân thủ: 1 nước, 1 phân (chỉ áp dụng nếu chưa có dữ liệu inventory)
   const inventory = user.inventory || { water: 1, fertilizer: 1 };
   
   const getStageInfo = (lv: number) => TREE_STAGES.find(s => s.level === lv) || TREE_STAGES[TREE_STAGES.length - 1];
@@ -2546,13 +2547,11 @@ const GardenScreen: React.FC<{
   };
 
   return (
-    <div className="pb-24 pt-4 px-4 h-full flex flex-col bg-gradient-to-b from-sky-100 to-green-50 overflow-hidden relative">
-      {/* 👇 FIX LỖI NÚT BACK:
-         - z-[100]: Đưa lên lớp cao nhất
-         - relative: Để z-index có tác dụng
-         - pointer-events-auto: Đảm bảo nhận được sự kiện click
-      */}
-      <div className="flex items-center gap-3 mb-4 z-[100] relative pointer-events-auto">
+    // 👇👇👇 DÒNG NÀY ĐÃ SỬA: thay 'overflow-hidden' thành 'overflow-y-auto'
+    <div className="pb-24 pt-4 px-4 h-full flex flex-col bg-gradient-to-b from-sky-100 to-green-50 overflow-y-auto relative">
+      
+      {/* Header: z-100 để không bị che bởi hiệu ứng cây */}
+      <div className="flex items-center gap-3 mb-4 z-[100] relative pointer-events-auto shrink-0">
         <button 
             onClick={() => onSaveAndExit(user)} 
             className="w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center border border-slate-100 hover:bg-slate-50 active:scale-95 transition-all"
@@ -2562,15 +2561,14 @@ const GardenScreen: React.FC<{
         <h2 className="text-xl font-black text-green-800 drop-shadow-sm">Khu Vườn Tri Thức</h2>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center relative z-10">
-        <div className="text-center mb-6">
+      <div className="flex-1 flex flex-col items-center justify-start relative z-10 min-h-[500px]">
+        <div className="text-center mb-6 shrink-0">
           <div className="inline-block bg-green-100 text-green-700 font-black uppercase text-xs px-3 py-1 rounded-full mb-2 tracking-widest shadow-sm border border-green-200">Cấp độ {currentLevel}/50</div>
           <h1 className="text-3xl font-black text-slate-800 drop-shadow-md">{stageInfo.name}</h1>
           <p className="text-slate-500 text-sm font-medium mt-1">{currentLevel < 50 ? 'Hãy chăm sóc để cây tiến hóa tiếp!' : 'Đỉnh cao của sự sống!'}</p>
         </div>
 
-        <div className={`relative transition-all duration-500 ${animating ? 'scale-110' : 'scale-100'}`}>
-           {/* 👇 THÊM 'pointer-events-none' ĐỂ HIỆU ỨNG KHÔNG CHE NÚT BẤM */}
+        <div className={`relative transition-all duration-500 my-4 ${animating ? 'scale-110' : 'scale-100'}`}>
            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-green-400/20 rounded-full blur-3xl animate-pulse pointer-events-none"></div>
            
            <div className="text-[160px] drop-shadow-2xl filter animate-bounce-slow cursor-pointer select-none transform transition-transform hover:-translate-y-2 select-none z-20 relative">
@@ -2580,7 +2578,7 @@ const GardenScreen: React.FC<{
            {animating && <div className="absolute -top-16 left-1/2 -translate-x-1/2 text-amber-500 font-black text-2xl animate-bounce whitespace-nowrap drop-shadow-md bg-white/90 px-4 py-2 rounded-xl backdrop-blur-sm z-50 border border-amber-100">{msg.split('!')[0]}</div>}
         </div>
 
-        <div className="w-full max-w-xs mt-12 relative z-20">
+        <div className="w-full max-w-xs mt-8 mb-8 relative z-20 shrink-0">
            <div className="flex justify-between text-xs font-bold text-slate-600 mb-1.5 px-1">
              <span>EXP: {Math.round(currentExp)} / {currentLevel >= 50 ? 'MAX' : stageInfo.maxExp}</span>
              <span>{Math.round(progress)}%</span>
@@ -2591,21 +2589,23 @@ const GardenScreen: React.FC<{
               </div>
            </div>
         </div>
-      </div>
-
-      <div className="bg-white rounded-t-[2.5rem] p-6 shadow-[0_-10px_60px_rgba(0,0,0,0.15)] z-40 border-t border-slate-50 relative">
-         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-400 shadow-sm border border-slate-100">Kho vật phẩm</div>
-         <div className="flex gap-4 mt-2">
-            <button onClick={() => handleCare('water')} disabled={inventory.water <= 0 || currentLevel >= 50} className={`flex-1 p-4 rounded-3xl border-b-4 flex flex-col items-center gap-2 transition-all active:scale-95 active:border-b-0 active:translate-y-1 ${inventory.water > 0 ? 'bg-sky-50 border-sky-200 hover:bg-sky-100' : 'bg-slate-50 border-slate-200 grayscale opacity-60'}`}>
-                <div className="text-4xl drop-shadow-md">💧</div>
-                <div><div className="font-black text-slate-700">Tưới nước</div><div className="text-xs text-sky-600 font-bold bg-sky-100 px-2 py-0.5 rounded-lg mt-1">Còn: {inventory.water}</div></div>
-            </button>
-            <button onClick={() => handleCare('fertilizer')} disabled={inventory.fertilizer <= 0 || currentLevel >= 50} className={`flex-1 p-4 rounded-3xl border-b-4 flex flex-col items-center gap-2 transition-all active:scale-95 active:border-b-0 active:translate-y-1 ${inventory.fertilizer > 0 ? 'bg-amber-50 border-amber-200 hover:bg-amber-100' : 'bg-slate-50 border-slate-200 grayscale opacity-60'}`}>
-                <div className="text-4xl drop-shadow-md">🧪</div>
-                <div><div className="font-black text-slate-700">Bón phân</div><div className="text-xs text-amber-600 font-bold bg-amber-100 px-2 py-0.5 rounded-lg mt-1">Còn: {inventory.fertilizer}</div></div>
-            </button>
-         </div>
-         {msg && !animating && <div className="mt-4 text-center text-rose-500 text-xs font-bold animate-pulse">{msg}</div>}
+      
+        {/* Kho vật phẩm */}
+        <div className="w-full bg-white rounded-[2rem] p-6 shadow-[0_-10px_60px_rgba(0,0,0,0.15)] z-40 border border-slate-50 relative shrink-0">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-400 shadow-sm border border-slate-100">Kho vật phẩm</div>
+            <div className="flex gap-4 mt-2">
+                <button onClick={() => handleCare('water')} disabled={inventory.water <= 0 || currentLevel >= 50} className={`flex-1 p-4 rounded-3xl border-b-4 flex flex-col items-center gap-2 transition-all active:scale-95 active:border-b-0 active:translate-y-1 ${inventory.water > 0 ? 'bg-sky-50 border-sky-200 hover:bg-sky-100' : 'bg-slate-50 border-slate-200 grayscale opacity-60'}`}>
+                    <div className="text-4xl drop-shadow-md">💧</div>
+                    <div><div className="font-black text-slate-700">Tưới nước</div><div className="text-xs text-sky-600 font-bold bg-sky-100 px-2 py-0.5 rounded-lg mt-1">Còn: {inventory.water}</div></div>
+                </button>
+                <button onClick={() => handleCare('fertilizer')} disabled={inventory.fertilizer <= 0 || currentLevel >= 50} className={`flex-1 p-4 rounded-3xl border-b-4 flex flex-col items-center gap-2 transition-all active:scale-95 active:border-b-0 active:translate-y-1 ${inventory.fertilizer > 0 ? 'bg-amber-50 border-amber-200 hover:bg-amber-100' : 'bg-slate-50 border-slate-200 grayscale opacity-60'}`}>
+                    <div className="text-4xl drop-shadow-md">🧪</div>
+                    <div><div className="font-black text-slate-700">Bón phân</div><div className="text-xs text-amber-600 font-bold bg-amber-100 px-2 py-0.5 rounded-lg mt-1">Còn: {inventory.fertilizer}</div></div>
+                </button>
+            </div>
+            {msg && !animating && <div className="mt-4 text-center text-rose-500 text-xs font-bold animate-pulse">{msg}</div>}
+        </div>
+      
       </div>
     </div>
   );
