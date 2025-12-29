@@ -1132,17 +1132,17 @@ const MockTestScreen: React.FC<{
       );
   }
 // 👇 THAY THẾ TOÀN BỘ ĐOẠN if (mode === 'RESULT') CỦA MOCK TEST SCREEN
-// 👇 THAY THẾ TOÀN BỘ ĐOẠN if (mode === 'RESULT') TRONG MockTestScreen
+// 👇 THAY THẾ ĐOẠN TÍNH TOÁN Ở ĐẦU if (mode === 'RESULT')
   if (mode === 'RESULT') {
-      // 1. TÍNH TOÁN SỐ LIỆU (Tự động tính lại để hiển thị chi tiết)
+      // 1. TÍNH TOÁN SỐ LIỆU
       
       // MCQ: 0.25đ / câu
       const countMCQCorrect = quizQuestions.filter(q => q.type === 'MCQ' && userAnswers[q.id] === q.answerKey).length;
       const scoreMCQ = countMCQCorrect * 0.25; 
 
-      // Điền từ (Short): 1.0đ / câu
+      // Điền từ (Short): SỬA THÀNH 0.25đ / câu
       const countShortCorrect = quizQuestions.filter(q => q.type === 'Short' && userAnswers[q.id]?.toString().trim().toLowerCase() === q.answerKey.trim().toLowerCase()).length;
-      const scoreShort = countShortCorrect * 1.0;
+      const scoreShort = countShortCorrect * 0.25; // 👈 ĐÃ SỬA CHỖ NÀY
 
       // Đúng/Sai: Đếm số ý đúng (0.25đ / ý)
       let countTFCorrectIdeas = 0;
