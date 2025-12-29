@@ -2498,6 +2498,8 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
               if (category === 'EXAM') displayScore = u.examScore || 0;
               if (category === 'GAME') displayScore = u.gameScore || 0;
               if (category === 'CHALLENGE') displayScore = u.challengeScore || 0;
+              // 👇 THÊM DÒNG NÀY ĐỂ LÀM TRÒN SỐ
+              displayScore = Math.round(displayScore * 100) / 100;
 
               // Rank Icon
               let rankIcon;
