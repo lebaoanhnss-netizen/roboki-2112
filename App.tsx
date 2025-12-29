@@ -2526,7 +2526,7 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
   );
 };
 
-// 8. CHALLENGE SCREEN
+// 8. CHALLENGE SCREEN (ĐÃ NÂNG CẤP: CHỐNG SPAM & COOLDOWN 60 PHÚT)
 const ChallengeScreen: React.FC<{
   onBack: () => void,
   session: ChallengeSessionData,
@@ -2537,23 +2537,134 @@ const ChallengeScreen: React.FC<{
 }> = ({ onBack, session, setSession, onScore, questions, onCopy }) => { 
     
     const [textInput, setTextInput] = useState('');
+    const [timeLeft, setTimeLeft] = useState<string | null>(null); // Hiển thị thời gian chờ
 
+    // HÀM: Format thời gian đếm ngược
+    const formatTimeLeft = (ms: number) => {
+        const m = Math.floor(ms / 60000);
+        const s = Math.floor((ms % 60000) / 1000);
+        return `${m} phút ${s} giây`;
+    };
+
+    // 1. LOGIC KHỞI TẠO QUAN TRỌNG
     useEffect(() => {
-        if (!session.todayQ && questions.length > 0) {
-            const validQuestions = questions.filter(q => q.type === 'MCQ' || q.type === 'Short');
-            if (validQuestions.length > 0) {
-                const randomQ = validQuestions[Math.floor(Math.random() * validQuestions.length)];
-                setSession(prev => ({ ...prev, todayQ: randomQ }));
-            }
-        }
-    }, [questions]);
+        const loadChallenge = () => {
+            const NOW = Date.now();
+            const COOLDOWN_TIME = 60 * 60 * 1000; // 60 phút (tính bằng ms)
+            
+            // Lấy dữ liệu từ bộ nhớ máy
+            const savedData = localStorage.getItem('roboki_challenge_state');
+            
+            if (savedData) {
+                const parsed = JSON.parse(savedData);
+                const timePassed = NOW - parsed.timestamp;
 
+                // TRƯỜNG HỢP A: Chưa hết 60 phút -> BẮT BUỘC DÙNG LẠI CÂU CŨ
+                if (timePassed < COOLDOWN_TIME) {
+                    // Tìm lại câu hỏi cũ trong danh sách
+                    const oldQ = questions.find(q => q.id === parsed.qId);
+                    
+                    if (oldQ) {
+                        // Khôi phục lại toàn bộ trạng thái cũ
+                        setSession({
+                            todayQ: oldQ,
+                            selectedOpt: parsed.selectedOpt,
+                            isSubmitted: parsed.isSubmitted,
+                            isCorrect: parsed.isCorrect,
+                            history: session.history
+                        });
+                        
+                        // Nếu là điền từ, điền lại text cũ
+                        if (oldQ.type === 'Short' && parsed.selectedOpt) {
+                            setTextInput(parsed.selectedOpt);
+                        }
+
+                        // Nếu đã làm xong rồi -> Tính thời gian chờ câu tiếp theo
+                        if (parsed.isSubmitted) {
+                            const remaining = COOLDOWN_TIME - timePassed;
+                            setTimeLeft(formatTimeLeft(remaining));
+                            
+                            // Chạy đồng hồ đếm ngược
+                            const timer = setInterval(() => {
+                                const newRem = COOLDOWN_TIME - (Date.now() - parsed.timestamp);
+                                if (newRem <= 0) {
+                                    clearInterval(timer);
+                                    setTimeLeft(null); // Hết giờ chờ -> Cho phép làm mới
+                                } else {
+                                    setTimeLeft(formatTimeLeft(newRem));
+                                }
+                            }, 1000);
+                            return () => clearInterval(timer);
+                        }
+                        return; // Dừng lại, không tạo câu mới
+                    }
+                }
+            }
+
+            // TRƯỜNG HỢP B: Đã quá 60 phút hoặc chưa có dữ liệu -> TẠO CÂU MỚI
+            if (questions.length > 0) {
+                const validQuestions = questions.filter(q => q.type === 'MCQ' || q.type === 'Short');
+                if (validQuestions.length > 0) {
+                    const randomQ = validQuestions[Math.floor(Math.random() * validQuestions.length)];
+                    
+                    // Cập nhật State React
+                    setSession(prev => ({ 
+                        ...prev, 
+                        todayQ: randomQ, 
+                        isSubmitted: false, 
+                        selectedOpt: null, 
+                        isCorrect: false 
+                    }));
+
+                    // Lưu ngay vào LocalStorage (Đánh dấu thời gian bắt đầu)
+                    localStorage.setItem('roboki_challenge_state', JSON.stringify({
+                        timestamp: NOW,
+                        qId: randomQ.id,
+                        isSubmitted: false,
+                        isCorrect: false,
+                        selectedOpt: null
+                    }));
+                    setTimeLeft(null);
+                }
+            }
+        };
+
+        // Chỉ chạy nếu danh sách câu hỏi đã tải xong
+        if (questions.length > 0) {
+            loadChallenge();
+        }
+    }, [questions]); // Dependency là questions để đảm bảo data đã load
+
+    // 2. XỬ LÝ NỘP BÀI (CẬP NHẬT LẠI STORAGE)
     const handleSubmit = (answer: string) => {
         if (!session.todayQ) return;
+        
         const isCorrect = answer.trim().toLowerCase() === session.todayQ.answerKey.trim().toLowerCase();
         
+        // Cập nhật State
         setSession(prev => ({ ...prev, selectedOpt: answer, isSubmitted: true, isCorrect }));
-        if (isCorrect) onScore(isCorrect ? 10 : -5, 'challenge');
+        
+        // Tính điểm
+        if (isCorrect) onScore(10, 'challenge'); // Thưởng 10 điểm
+        else onScore(-5, 'challenge'); // Phạt 5 điểm (tùy chọn)
+
+        // CẬP NHẬT STORAGE NGAY LẬP TỨC (Chống F5)
+        const savedData = localStorage.getItem('roboki_challenge_state');
+        const timestamp = savedData ? JSON.parse(savedData).timestamp : Date.now(); // Giữ nguyên thời gian gốc
+
+        localStorage.setItem('roboki_challenge_state', JSON.stringify({
+            timestamp: timestamp, // Quan trọng: Không đổi giờ
+            qId: session.todayQ.id,
+            isSubmitted: true, // Đánh dấu đã làm
+            isCorrect: isCorrect,
+            selectedOpt: answer
+        }));
+
+        // Bắt đầu đếm ngược ngay lập tức cho giao diện
+        const COOLDOWN_TIME = 60 * 60 * 1000;
+        const timePassed = Date.now() - timestamp;
+        const remaining = COOLDOWN_TIME - timePassed;
+        if (remaining > 0) setTimeLeft(formatTimeLeft(remaining));
     };
 
     const handleAskAI = () => {
@@ -2579,10 +2690,42 @@ const ChallengeScreen: React.FC<{
                <button onClick={onBack} className="bg-rose-50 text-rose-500 p-2 rounded-full"><X size={20}/></button>
             </div>
 
-            {session.todayQ ? (
+            {/* MÀN HÌNH CHỜ (COOLDOWN) - CHỈ HIỆN KHI ĐÃ LÀM XONG VÀ CÒN THỜI GIAN CHỜ */}
+            {session.isSubmitted && timeLeft ? (
+                <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 animate-fade-in">
+                    <div className="relative">
+                        <div className="w-32 h-32 bg-slate-100 rounded-full flex items-center justify-center border-4 border-slate-200">
+                            <Clock size={64} className="text-slate-400 animate-pulse"/>
+                        </div>
+                        {session.isCorrect ? (
+                            <div className="absolute -bottom-2 right-0 bg-emerald-500 text-white p-2 rounded-full border-4 border-slate-50"><CheckCircle size={24}/></div>
+                        ) : (
+                            <div className="absolute -bottom-2 right-0 bg-rose-500 text-white p-2 rounded-full border-4 border-slate-50"><XCircle size={24}/></div>
+                        )}
+                    </div>
+                    
+                    <div>
+                        <h3 className="text-2xl font-black text-slate-700">Đợi chút nhé!</h3>
+                        <p className="text-slate-500 text-sm mt-2 max-w-[250px] mx-auto">
+                            Bạn đã hoàn thành thử thách lúc nãy. Hãy quay lại sau để nhận nhiệm vụ mới.
+                        </p>
+                    </div>
+
+                    <div className="bg-indigo-50 text-indigo-600 px-6 py-3 rounded-2xl font-black text-xl shadow-sm border border-indigo-100">
+                        {timeLeft}
+                    </div>
+
+                    <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm max-w-xs w-full mt-4">
+                        <div className="text-xs font-bold text-slate-400 uppercase mb-2">Kết quả vừa rồi</div>
+                        <div className={`font-black text-lg ${session.isCorrect ? 'text-emerald-600' : 'text-rose-600'}`}>
+                            {session.isCorrect ? '+10 Điểm (Chính xác)' : '0 Điểm (Chưa đúng)'}
+                        </div>
+                    </div>
+                </div>
+            ) : session.todayQ ? (
                <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex-1 overflow-y-auto">
                   <div className="flex justify-between items-start mb-6">
-                     <div className="bg-sky-50 text-sky-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">Daily Quest</div>
+                     <div className="bg-sky-50 text-sky-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">Nhiệm vụ khả dụng</div>
                      <div className="text-right"><div className="font-black text-2xl text-slate-800">+10</div><div className="text-[10px] text-slate-400 font-bold uppercase">Điểm thưởng</div></div>
                   </div>
                   
@@ -2609,13 +2752,10 @@ const ChallengeScreen: React.FC<{
                      )}
                   </div>
                   
-                  {/* Khu vực kết quả và hỏi Roboki */}
-                  
-                  {/* 👇 4. KHU VỰC KẾT QUẢ & NÚT HỎI ROBOKI */}
                   {session.isSubmitted && (
                       <div className="mt-8 animate-fade-in space-y-4">
                           <div className={`text-center font-black text-lg ${session.isCorrect ? 'text-emerald-600' : 'text-slate-400'}`}>
-                              {session.isCorrect ? 'Tuyệt vời! Bạn đã hoàn thành nhiệm vụ.' : 'Rất tiếc, hãy thử lại vào ngày mai!'}
+                              {session.isCorrect ? 'Tuyệt vời! Bạn đã hoàn thành.' : 'Rất tiếc, câu trả lời chưa đúng.'}
                           </div>
                           
                           <button 
