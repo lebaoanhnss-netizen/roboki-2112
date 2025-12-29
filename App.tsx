@@ -1132,7 +1132,6 @@ const MockTestScreen: React.FC<{
       );
   }
 // 👇 THAY THẾ TOÀN BỘ ĐOẠN if (mode === 'RESULT') CỦA MOCK TEST SCREEN
-// 👇 THAY THẾ ĐOẠN TÍNH TOÁN Ở ĐẦU if (mode === 'RESULT')
   if (mode === 'RESULT') {
       // 1. TÍNH TOÁN SỐ LIỆU
       
@@ -2119,21 +2118,18 @@ const GameScreen: React.FC<{
   return null;
 };
 
-// 7. LEADERBOARD SCREEN (FULL 100% - KHÔNG CẮT BỚT)
+// 7. LEADERBOARD SCREEN (ĐÃ TỐI ƯU: DÙNG SESSION STORAGE ĐỂ TIẾT KIỆM READ)
 const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile }> = ({ onBack, currentUser }) => {
   const [filter, setFilter] = useState<'CLASS' | 'SCHOOL' | 'ALL'>('CLASS');
   const [category, setCategory] = useState<'TOTAL' | 'PRACTICE' | 'MOCK' | 'EXAM' | 'GAME' | 'CHALLENGE'>('TOTAL');
   const [loading, setLoading] = useState(true);
   const [players, setPlayers] = useState<any[]>([]);
-  const [leaderboardCache, setLeaderboardCache] = useState<{[key: string]: any[]}>({});
   
   // State quản lý Popup xem cấp độ
   const [showRankInfo, setShowRankInfo] = useState(false);
   const [infoTab, setInfoTab] = useState<'RANKS' | 'BADGES'>('RANKS');
 
-  // --- 1. DỮ LIỆU CẤP ĐỘ (ĐẦY ĐỦ 6 BỘ) ---
-  
-  // A. TỔNG HỢP (Vũ Trụ)
+  // --- 1. DỮ LIỆU CẤP ĐỘ ---
   const TOTAL_RANKS = [
       { min: 10000, label: 'ĐA VŨ TRỤ', icon: '🌌', color: 'text-purple-600' },
       { min: 9000, label: 'VÔ CỰC', icon: '♾️', color: 'text-fuchsia-600' },
@@ -2177,7 +2173,6 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
       { min: 0, label: 'KHỞI NGUYÊN', icon: '🥚', color: 'text-slate-400' },
   ];
 
-  // B. LUYỆN TẬP (Học Vấn)
   const PRACTICE_RANKS = [
       { min: 3000, label: 'VẠN THẾ SƯ', icon: '🧘', color: 'text-yellow-700' },
       { min: 2500, label: 'THÁNH NHÂN', icon: '⚜️', color: 'text-yellow-600' },
@@ -2201,7 +2196,6 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
       { min: 0, label: 'NGƯỜI MỚI', icon: '🥚', color: 'text-slate-400' },
   ];
 
-  // C. THI THỬ (Khoa Cử)
   const EXAM_RANKS = [
       { min: 5200, label: 'THẦN CƠ', icon: '🔮', color: 'text-red-700' },
       { min: 4400, label: 'THÁI SƯ', icon: '🏮', color: 'text-orange-700' },
@@ -2225,7 +2219,6 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
       { min: 0, label: 'VỠ LÒNG', icon: '👶', color: 'text-slate-400' },
   ];
 
-  // D. TRÒ CHƠI (Chiến Binh)
   const GAME_RANKS = [
       { min: 5000, label: 'VUA TRÒ CHƠI', icon: '👑', color: 'text-yellow-500' },
       { min: 4000, label: 'HUYỀN THOẠI', icon: '☠️', color: 'text-red-600' },
@@ -2249,7 +2242,6 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
       { min: 0, label: 'TẬP CHƠI', icon: '🎮', color: 'text-slate-300' },
   ];
 
-  // E. THỬ THÁCH (Quân Đội)
   const CHALLENGE_RANKS = [
       { min: 5000, label: 'THỐNG LĨNH', icon: '🦅', color: 'text-red-800' },
       { min: 4000, label: 'ĐẠI TƯỚNG', icon: '🌟🌟🌟🌟', color: 'text-red-700' },
@@ -2273,7 +2265,6 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
       { min: 0, label: 'TÂN BINH', icon: '👣', color: 'text-slate-400' },
   ];
 
-  // F. TỰ TẠO ĐỀ (Kiến Tạo)
   const MOCK_RANKS = [
       { min: 5000, label: 'ĐẤNG SÁNG THẾ', icon: '🌌', color: 'text-violet-700' },
       { min: 3500, label: 'TIÊN PHONG', icon: '🚩', color: 'text-fuchsia-600' },
@@ -2294,7 +2285,7 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
       { min: 0, label: 'TẬP SỰ', icon: '🔰', color: 'text-slate-400' },
   ];
 
-  // --- 2. DỮ LIỆU HUY HIỆU (HIỂN THỊ TRONG POPUP) ---
+  // --- 2. DỮ LIỆU HUY HIỆU ---
   const BADGE_DEFINITIONS = [
       { icon: '👑', label: 'Độc tôn', desc: 'Top 1 Bảng xếp hạng', color: 'bg-yellow-100 text-yellow-700' },
       { icon: '⚛️', label: 'Yêu Vật Lí', desc: 'Tổng điểm > 5000', color: 'bg-indigo-100 text-indigo-700' },
@@ -2309,7 +2300,7 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
       { icon: '🍀', label: 'Thần tài', desc: 'Quay trúng ô may mắn', color: 'bg-green-100 text-green-700' },
   ];
 
-  // --- 3. LOGIC XỬ LÝ ---
+  // --- 3. LOGIC XỬ LÝ (ĐÃ SỬA LẠI PHẦN FETCH) ---
   const getCurrentRankList = () => {
       switch(category) {
           case 'PRACTICE': return PRACTICE_RANKS;
@@ -2321,13 +2312,25 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
       }
   };
 
+  // 👇 HÀM FETCH DỮ LIỆU MỚI (DÙNG SESSION STORAGE) 👇
   useEffect(() => {
     const fetchLeaderboard = async () => {
-      const cacheKey = `${filter}_${category}`;
-      if (leaderboardCache[cacheKey]) { setPlayers(leaderboardCache[cacheKey]); setLoading(false); return; }
+      const cacheKey = `bxh_${filter}_${category}`; // Key lưu trong Session
+      
+      // 1. Kiểm tra Session Storage trước
+      const cachedData = sessionStorage.getItem(cacheKey);
+      if (cachedData) { 
+          console.log("🏆 Lấy BXH từ Cache (0 tốn Read)");
+          setPlayers(JSON.parse(cachedData)); 
+          setLoading(false); 
+          return; 
+      }
 
+      // 2. Nếu không có Cache thì mới gọi Firebase
       try {
         setLoading(true);
+        console.log("☁️ Tải BXH mới từ Firebase (Tốn 50 Reads)");
+
         let orderByField = 'totalScore';
         if (category === 'PRACTICE') orderByField = 'practiceScore';
         if (category === 'MOCK') orderByField = 'mockScore';
@@ -2349,12 +2352,20 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
         const snap = await getDocs(q);
         const list: any[] = [];
         snap.forEach((d) => list.push(d.data()));
+        
         setPlayers(list);
-        setLeaderboardCache(prev => ({ ...prev, [cacheKey]: list }));
-      } catch (err: any) { console.error("Lỗi tải BXH:", err); } finally { setLoading(false); }
+        
+        // 3. Lưu vào Session Storage
+        sessionStorage.setItem(cacheKey, JSON.stringify(list));
+
+      } catch (err: any) { 
+          console.error("Lỗi tải BXH:", err); 
+      } finally { 
+          setLoading(false); 
+      }
     };
-    const timer = setTimeout(() => { if(currentUser) fetchLeaderboard(); }, 100);
-    return () => clearTimeout(timer);
+
+    fetchLeaderboard();
   }, [filter, category, currentUser]);
 
   const getCatLabel = () => {
@@ -2372,7 +2383,6 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
       return list.find(r => score >= r.min) || list[list.length - 1];
   }
 
-  // 👇 HÀM CHECK HUY HIỆU ĐẦY ĐỦ 👇
   const getBadges = (u: UserProfile, index: number) => {
       const badges = [];
       if (index === 0) badges.push({ icon: '👑', color: 'bg-yellow-400 text-white border border-yellow-500', label: 'Độc tôn' });
@@ -2389,7 +2399,7 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
       return badges;
   }
 
-  // --- 4. GIAO DIỆN ---
+  // --- 4. GIAO DIỆN (CHỈ THÊM NÚT REFRESH) ---
   return (
     <div className="pb-24 pt-4 px-4 h-full flex flex-col bg-slate-50 relative">
       <div className="flex items-center justify-between mb-4">
@@ -2398,8 +2408,12 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
             <h2 className="text-xl font-black text-slate-800">Bảng xếp hạng</h2>
         </div>
         
-        {/* Nút bật Popup */}
-        <button onClick={() => setShowRankInfo(true)} className="flex items-center gap-1 bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-full text-[10px] font-bold border border-indigo-100 active:scale-95 transition-transform"><Info size={14}/> Xem cấp độ</button>
+        <div className="flex gap-2">
+            {/* Nút làm mới dữ liệu (Xóa cache để tải lại) */}
+            <button onClick={() => { sessionStorage.removeItem(`bxh_${filter}_${category}`); setCategory(prev => prev); /* Hack để trigger useEffect */ window.location.reload(); }} className="w-8 h-8 flex items-center justify-center bg-white rounded-full text-slate-400 shadow-sm border border-slate-100 active:scale-90"><RotateCcw size={14}/></button>
+            
+            <button onClick={() => setShowRankInfo(true)} className="flex items-center gap-1 bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-full text-[10px] font-bold border border-indigo-100 active:scale-95 transition-transform"><Info size={14}/> Xem cấp độ</button>
+        </div>
       </div>
 
       {/* POPUP HIỂN THỊ CẤP ĐỘ & HUY HIỆU */}
@@ -3148,29 +3162,48 @@ useEffect(() => {
     }
 }, [user]);
   
-  // ✅ COPY ĐOẠN NÀY ĐÈ LÊN ĐOẠN CŨ CỦA BẠN
-  // ✅ DÁN ĐOẠN NÀY VÀO THAY THẾ
+// ✅ CODE TỐI ƯU: CHỈ TỐN 1 READ ĐỂ KIỂM TRA DỮ LIỆU MỚI
   useEffect(() => { 
     const fetchData = async () => { 
       try { 
         setLoadingData(true); 
         
-        // 1. Kiểm tra cache trong máy
+        // 1. Lấy thông tin từ bộ nhớ máy
         const cachedQuestions = localStorage.getItem('questions_cache');
         const cachedLessons = localStorage.getItem('lessons_cache');
+        const localVersion = localStorage.getItem('data_version');
+        
+        // Cấu hình thời gian cache (ví dụ 1 tiếng để kiểm tra version 1 lần)
         const cacheTime = localStorage.getItem('data_cache_time');
+        const CACHE_CHECK_INTERVAL = 1000 * 60 * 60; // 1 Tiếng
+        
+        // Kiểm tra xem đã đến lúc cần check server chưa?
+        const needCheckServer = !cacheTime || (Date.now() - parseInt(cacheTime) > CACHE_CHECK_INTERVAL);
 
-        // Kiểm tra hạn sử dụng cache (24 giờ)
-        // 👇 SỬA LẠI: Giảm thời gian Cache xuống 10 phút (600,000 ms)
-        // Để khi thầy nạp câu hỏi mới, học sinh cập nhật nhanh hơn.
-        const isCacheValid = cacheTime && (Date.now() - parseInt(cacheTime) < 0);
+        // NẾU CÓ DATA VÀ CHƯA ĐẾN GIỜ CHECK -> DÙNG LUÔN (0 READ)
+        if (cachedQuestions && cachedLessons && !needCheckServer) {
+            console.log("✅ Dùng Cache (Chưa đến giờ check)");
+            setQuestions(JSON.parse(cachedQuestions));
+            setLessons(JSON.parse(cachedLessons));
+            setLoadingData(false);
+            return;
+        }
 
-        if (cachedQuestions && cachedLessons && isCacheValid) {
-            console.log("✅ Dùng data từ Cache (Không tốn Read)");
+        // NẾU ĐẾN GIỜ CHECK -> GỌI 1 READ ĐỂ XEM VERSION
+        console.log("🔍 Kiểm tra phiên bản mới từ Firebase...");
+        const versionSnap = await getDoc(doc(db, 'system', 'info'));
+        const remoteVersion = versionSnap.exists() ? versionSnap.data().version : 0;
+
+        // SO SÁNH VERSION
+        if (cachedQuestions && cachedLessons && localVersion && parseInt(localVersion) === remoteVersion) {
+            console.log("🛡️ Dữ liệu khớp version -> KHÔNG TẢI LẠI (Tiết kiệm Reads)");
+            // Cập nhật lại thời gian check để 1 tiếng sau mới check tiếp
+            localStorage.setItem('data_cache_time', Date.now().toString());
+            
             setQuestions(JSON.parse(cachedQuestions));
             setLessons(JSON.parse(cachedLessons));
         } else {
-            console.log("⚠️ Tải mới từ Firebase...");
+            console.log("🚀 Phát hiện Version mới -> TẢI DỮ LIỆU VỀ MÁY...");
             
             const lS = await getDocs(collection(db, 'lessons')); 
             const lL: Lesson[] = []; 
@@ -3183,13 +3216,18 @@ useEffect(() => {
             setLessons(lL);
             setQuestions(lQ);
 
-            // Lưu vào máy
+            // Lưu dữ liệu + Version mới vào máy
             localStorage.setItem('lessons_cache', JSON.stringify(lL));
             localStorage.setItem('questions_cache', JSON.stringify(lQ));
             localStorage.setItem('data_cache_time', Date.now().toString());
+            localStorage.setItem('data_version', remoteVersion.toString());
         }
       } catch (e) { 
-        setToastMsg("Lỗi tải data"); 
+        console.error(e);
+        setToastMsg("Lỗi tải data (Có thể do mạng)"); 
+        // Fallback: Nếu lỗi mạng, cố gắng dùng cache cũ nếu có
+        const cachedQ = localStorage.getItem('questions_cache');
+        if(cachedQ) setQuestions(JSON.parse(cachedQ));
       } finally { 
         setLoadingData(false); 
       } 
@@ -3257,10 +3295,14 @@ useEffect(() => {
       }
 
       setToastMsg(`✅ Đã nạp thành công ${targetQuestions.length} câu hỏi và ${targetLessons.length} bài học!`);
+      // 👇 THÊM ĐOẠN NÀY: Cập nhật phiên bản hệ thống lên Firebase (Tạo 1 Write)
+      // Dùng thời gian hiện tại làm mã phiên bản (luôn là số mới nhất)
+      await setDoc(doc(db, 'system', 'info'), { version: Date.now() });
       // 👇 THÊM 3 DÒNG NÀY ĐỂ XÓA CACHE CŨ 👇
       localStorage.removeItem('questions_cache');
       localStorage.removeItem('lessons_cache');
       localStorage.removeItem('data_cache_time');
+      localStorage.removeItem('data_version'); // Xóa cả version cũ
       // 👆 KẾT THÚC THÊM 👆
       setTimeout(() => window.location.reload(), 1500);
 
