@@ -1081,6 +1081,7 @@ const MockTestScreen: React.FC<{
       }
   };
 
+  // 👇 THAY THẾ HÀM finishExam TRONG MockTestScreen
   const finishExam = () => {
       let totalScore = 0;
       quizQuestions.forEach(q => {
@@ -1091,7 +1092,8 @@ const MockTestScreen: React.FC<{
               q.subQuestions.forEach(sq => { if (uAns[sq.id] === sq.isCorrect) correctSub++; });
               totalScore += correctSub * 0.25; 
           } else if (q.type === 'Short') {
-              if (uAns.trim().toLowerCase() === q.answerKey.trim().toLowerCase()) totalScore += 1; 
+              // ✅ ĐÃ SỬA: Điền từ chỉ được 0.25 điểm
+              if (uAns.trim().toLowerCase() === q.answerKey.trim().toLowerCase()) totalScore += 0.25; 
           } else {
               if (uAns === q.answerKey) totalScore += 0.25; 
           }
@@ -1864,11 +1866,15 @@ const GameScreen: React.FC<{
     const validQs = questions.filter(q => q.type !== 'TrueFalse');
     setTimeout(() => { setSessionData(prev => ({ ...prev, currentQ: validQs[Math.floor(Math.random() * validQs.length)], isCorrect: null, selectedSpeedOpt: null })); }, 800);
   };
+  // 👇 THAY THẾ HÀM handleWheelAnswer TRONG GameScreen
   const handleWheelAnswer = (opt: string) => {
      if (!currentQ) return;
      const isRight = currentQ.type==='Short' ? opt.trim().toLowerCase()===currentQ.answerKey.trim().toLowerCase() : opt===currentQ.answerKey;
+     
      if (isRight) {
-        onScore(1, 'game');
+        // ✅ ĐÃ SỬA: Cộng đúng số điểm quay được vào XP (pendingPoints)
+        onScore(pendingPoints, 'game'); 
+        
         setSessionData(prev => ({ ...prev, isCorrect: true, score: prev.score + pendingPoints }));
         setTimeout(() => { setSessionData(prev => { if (prev.spinsLeft <= 0) return { ...prev, showWheelQuestion: false, isCorrect: null, currentQ: null, mode: 'RESULT' }; return { ...prev, showWheelQuestion: false, isCorrect: null, currentQ: null }; }); }, 1000);
      } else {
@@ -2636,6 +2642,7 @@ const ChallengeScreen: React.FC<{
     }, [questions]); // Dependency là questions để đảm bảo data đã load
 
     // 2. XỬ LÝ NỘP BÀI (CẬP NHẬT LẠI STORAGE)
+// 👇 THAY THẾ HÀM handleSubmit TRONG ChallengeScreen
     const handleSubmit = (answer: string) => {
         if (!session.todayQ) return;
         
@@ -2644,23 +2651,23 @@ const ChallengeScreen: React.FC<{
         // Cập nhật State
         setSession(prev => ({ ...prev, selectedOpt: answer, isSubmitted: true, isCorrect }));
         
-        // Tính điểm
-        if (isCorrect) onScore(10, 'challenge'); // Thưởng 10 điểm
-        else onScore(-5, 'challenge'); // Phạt 5 điểm (tùy chọn)
+        // ✅ ĐÃ SỬA: Đúng +10, Sai -10
+        if (isCorrect) onScore(10, 'challenge'); 
+        else onScore(-10, 'challenge'); 
 
-        // CẬP NHẬT STORAGE NGAY LẬP TỨC (Chống F5)
+        // CẬP NHẬT STORAGE NGAY LẬP TỨC
         const savedData = localStorage.getItem('roboki_challenge_state');
-        const timestamp = savedData ? JSON.parse(savedData).timestamp : Date.now(); // Giữ nguyên thời gian gốc
+        const timestamp = savedData ? JSON.parse(savedData).timestamp : Date.now();
 
         localStorage.setItem('roboki_challenge_state', JSON.stringify({
-            timestamp: timestamp, // Quan trọng: Không đổi giờ
+            timestamp: timestamp,
             qId: session.todayQ.id,
-            isSubmitted: true, // Đánh dấu đã làm
+            isSubmitted: true,
             isCorrect: isCorrect,
             selectedOpt: answer
         }));
 
-        // Bắt đầu đếm ngược ngay lập tức cho giao diện
+        // Bắt đầu đếm ngược
         const COOLDOWN_TIME = 60 * 60 * 1000;
         const timePassed = Date.now() - timestamp;
         const remaining = COOLDOWN_TIME - timePassed;
