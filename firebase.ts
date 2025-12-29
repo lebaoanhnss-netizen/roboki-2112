@@ -10,19 +10,24 @@ import {
 } from "firebase/auth";
 
 import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-  updateDoc,
+  getFirestore, 
+  collection, 
+  doc, 
+  getDoc, 
+  getDocs, 
+  setDoc, 
+  updateDoc, 
+  query, 
+  where, 
+  orderBy, 
+  limit, 
+  writeBatch, 
   increment,
-  collection,
-  getDocs,
-  query,
-  where,
-  orderBy,
-  limit,
-  writeBatch, // <-- Đã thêm mới
+  // 👇 THÊM 2 MÓN NÀY VÀO ĐÂY:
+  arrayUnion, 
+  arrayRemove,
+  getCountFromServer,
+  
 } from "firebase/firestore";
 
 // ---- CONFIG CỦA BẠN ----
@@ -60,4 +65,8 @@ export {
   orderBy,
   limit,
   writeBatch, // <-- Đã thêm mới
+  // 👇 XUẤT 2 MÓN NÀY RA ĐỂ APP.TSX DÙNG ĐƯỢC:
+  arrayUnion,
+  arrayRemove,
+  getCountFromServer
 };

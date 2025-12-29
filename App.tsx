@@ -41,7 +41,8 @@ import {
   orderBy,
   limit,
   writeBatch,
-  getDoc
+  getDoc,
+  getCountFromServer,
 } from './firebase';
 
 import {
@@ -2312,51 +2313,118 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
       }
   };
 
-  // 👇 HÀM FETCH DỮ LIỆU MỚI (DÙNG SESSION STORAGE) 👇
+// 👇 STATE MỚI: Lưu hạng chính xác của người dùng
+  const [myExactRank, setMyExactRank] = useState<number | null>(null);
+
+  // 👇 HÀM FETCH DỮ LIỆU "ULTIMATE": CACHE 60P + LIMIT 30 + ĐẾM HẠNG CHÍNH XÁC
   useEffect(() => {
     const fetchLeaderboard = async () => {
-      const cacheKey = `bxh_${filter}_${category}`; // Key lưu trong Session
-      
-      // 1. Kiểm tra Session Storage trước
-      const cachedData = sessionStorage.getItem(cacheKey);
-      if (cachedData) { 
-          console.log("🏆 Lấy BXH từ Cache (0 tốn Read)");
-          setPlayers(JSON.parse(cachedData)); 
-          setLoading(false); 
-          return; 
+      const cacheKey = `bxh_${filter}_${category}`; 
+      const CACHE_DURATION = 60 * 60 * 1000; // 60 phút mới hết hạn
+
+      // 1. Kiểm tra Cache trong máy
+      const cachedRaw = localStorage.getItem(cacheKey);
+      if (cachedRaw) { 
+          try {
+            const parsedCache = JSON.parse(cachedRaw);
+            const isOldFormat = Array.isArray(parsedCache);
+            const timeDiff = Date.now() - (parsedCache.timestamp || 0);
+
+            // Nếu Cache chưa thiu (chưa quá 60p) -> DÙNG LUÔN
+            if (!isOldFormat && timeDiff < CACHE_DURATION) {
+                console.log("🏆 Cache còn hạn -> Dùng ngay (0 tốn Read)");
+                let list = parsedCache.data;
+                
+                // Kỹ thuật tráo điểm (Cập nhật điểm mới nhất của mình vào danh sách cũ)
+                const myIndex = list.findIndex((p: any) => p.uid === currentUser.uid);
+                
+                if (myIndex !== -1) {
+                    list[myIndex] = { ...list[myIndex], ...currentUser };
+                    setMyExactRank(myIndex + 1); // Nếu có trong list thì hạng là index + 1
+                } else {
+                    // Nếu không có trong Top 30, dùng rank đã lưu lần trước (nếu có)
+                    setMyExactRank(parsedCache.myRank || null); 
+                }
+                
+                setPlayers(list); 
+                setLoading(false); 
+                return; // 🛑 DỪNG, KHÔNG GỌI FIREBASE
+            }
+          } catch (e) {}
       }
 
-      // 2. Nếu không có Cache thì mới gọi Firebase
+      // 2. Nếu không có Cache hoặc Cache hết hạn -> Tải mới từ Firebase
       try {
         setLoading(true);
-        console.log("☁️ Tải BXH mới từ Firebase (Tốn 50 Reads)");
+        console.log("☁️ Tải mới từ Firebase (Tốn 30 Reads)...");
 
         let orderByField = 'totalScore';
-        if (category === 'PRACTICE') orderByField = 'practiceScore';
-        if (category === 'MOCK') orderByField = 'mockScore';
-        if (category === 'EXAM') orderByField = 'examScore';
-        if (category === 'GAME') orderByField = 'gameScore';
-        if (category === 'CHALLENGE') orderByField = 'challengeScore';
+        let currentScore = currentUser.totalScore || 0;
 
+        if (category === 'PRACTICE') { orderByField = 'practiceScore'; currentScore = currentUser.practiceScore || 0; }
+        if (category === 'MOCK') { orderByField = 'mockScore'; currentScore = currentUser.mockScore || 0; }
+        if (category === 'EXAM') { orderByField = 'examScore'; currentScore = currentUser.examScore || 0; }
+        if (category === 'GAME') { orderByField = 'gameScore'; currentScore = currentUser.gameScore || 0; }
+        if (category === 'CHALLENGE') { orderByField = 'challengeScore'; currentScore = currentUser.challengeScore || 0; }
+
+        // A. Tải Top 30 (Limit 30 -> Tốn 30 Reads)
         let q;
         if (filter === 'CLASS') {
-            if (!currentUser.class) { setPlayers([]); setLoading(false); return; }
-            q = query(collection(db, 'users'), where('class', '==', currentUser.class), orderBy(orderByField, 'desc'), limit(50));
+             if (!currentUser.class) { setPlayers([]); setLoading(false); return; }
+             q = query(collection(db, 'users'), where('class', '==', currentUser.class), orderBy(orderByField, 'desc'), limit(30));
         } else if (filter === 'SCHOOL') {
-            if (!currentUser.school) { setPlayers([]); setLoading(false); return; }
-            q = query(collection(db, 'users'), where('school', '==', currentUser.school), orderBy(orderByField, 'desc'), limit(50));
+             if (!currentUser.school) { setPlayers([]); setLoading(false); return; }
+             q = query(collection(db, 'users'), where('school', '==', currentUser.school), orderBy(orderByField, 'desc'), limit(30));
         } else {
-            q = query(collection(db, 'users'), orderBy(orderByField, 'desc'), limit(50));
+             q = query(collection(db, 'users'), orderBy(orderByField, 'desc'), limit(30));
         }
-        
+
         const snap = await getDocs(q);
         const list: any[] = [];
         snap.forEach((d) => list.push(d.data()));
         
+        // B. Tính hạng chính xác của TÔI
+        let calculatedRank = null;
+        const myIndexInTop = list.findIndex(u => u.uid === currentUser.uid);
+
+        if (myIndexInTop !== -1) {
+            // Trường hợp 1: Nằm trong Top 30 -> Hạng là index + 1
+            calculatedRank = myIndexInTop + 1;
+        } else {
+            // Trường hợp 2: Nằm ngoài Top 30 -> Gọi thêm 1 lệnh đếm (Tốn thêm 1 Read)
+            try {
+                let countQuery;
+                const usersRef = collection(db, 'users');
+                
+                // Query: Đếm số người có điểm LỚN HƠN điểm của tôi
+                if (filter === 'CLASS') {
+                    countQuery = query(usersRef, where('class', '==', currentUser.class), where(orderByField, '>', currentScore));
+                } else if (filter === 'SCHOOL') {
+                    countQuery = query(usersRef, where('school', '==', currentUser.school), where(orderByField, '>', currentScore));
+                } else {
+                    countQuery = query(usersRef, where(orderByField, '>', currentScore));
+                }
+
+                // Dùng getCountFromServer (Cần import ở trên đầu file nhé)
+                const snapshot = await getCountFromServer(countQuery);
+                const countBetter = snapshot.data().count;
+                calculatedRank = countBetter + 1; // Hạng = Số người giỏi hơn + 1
+                console.log(`🔢 Đã đếm hạng chính xác: ${calculatedRank}`);
+
+            } catch (err) {
+                console.error("Lỗi đếm hạng:", err);
+            }
+        }
+
+        setMyExactRank(calculatedRank);
         setPlayers(list);
         
-        // 3. Lưu vào Session Storage
-        sessionStorage.setItem(cacheKey, JSON.stringify(list));
+        // C. Lưu Cache (Kèm thời gian & Rank riêng)
+        localStorage.setItem(cacheKey, JSON.stringify({
+            timestamp: Date.now(),
+            data: list,
+            myRank: calculatedRank 
+        }));
 
       } catch (err: any) { 
           console.error("Lỗi tải BXH:", err); 
@@ -2410,7 +2478,7 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
         
         <div className="flex gap-2">
             {/* Nút làm mới dữ liệu (Xóa cache để tải lại) */}
-            <button onClick={() => { sessionStorage.removeItem(`bxh_${filter}_${category}`); setCategory(prev => prev); /* Hack để trigger useEffect */ window.location.reload(); }} className="w-8 h-8 flex items-center justify-center bg-white rounded-full text-slate-400 shadow-sm border border-slate-100 active:scale-90"><RotateCcw size={14}/></button>
+            <button onClick={() => { localStorage.removeItem(`bxh_${filter}_${category}`); setCategory(prev => prev); /* Hack để trigger useEffect */ window.location.reload(); }} className="w-8 h-8 flex items-center justify-center bg-white rounded-full text-slate-400 shadow-sm border border-slate-100 active:scale-90"><RotateCcw size={14}/></button>
             
             <button onClick={() => setShowRankInfo(true)} className="flex items-center gap-1 bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-full text-[10px] font-bold border border-indigo-100 active:scale-95 transition-transform"><Info size={14}/> Xem cấp độ</button>
         </div>
@@ -2487,63 +2555,106 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
           {category === 'TOTAL' && <span className="text-[9px] font-bold text-rose-500 bg-rose-50 px-2 py-0.5 rounded border border-rose-100">Không tính điểm Game</span>}
       </div>
 
-      {/* 3. DANH SÁCH USER */}
-      <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 flex-1 overflow-y-auto">
-        {loading ? <div className="text-center py-4 text-slate-400"><Loader2 className="animate-spin inline mr-2"/> Đang tải...</div> : (
-          <div className="space-y-3">{players.map((u, i) => {
-              let displayScore = 0;
-              if (category === 'TOTAL') displayScore = u.totalScore || 0;
-              if (category === 'PRACTICE') displayScore = u.practiceScore || 0;
-              if (category === 'MOCK') displayScore = u.mockScore || 0;
-              if (category === 'EXAM') displayScore = u.examScore || 0;
-              if (category === 'GAME') displayScore = u.gameScore || 0;
-              if (category === 'CHALLENGE') displayScore = u.challengeScore || 0;
-              // 👇 THÊM DÒNG NÀY ĐỂ LÀM TRÒN SỐ
-              displayScore = Math.round(displayScore);
+{/* 3. DANH SÁCH USER (GIAO DIỆN MỚI: TOP 30 + STICKY ME) */}
+      {(() => {
+          // Logic: Kiểm tra xem "Tôi" có nằm trong danh sách đang hiển thị không
+          const myIndexInList = players.findIndex(p => p.uid === currentUser.uid);
+          const isMeInTop30 = myIndexInList !== -1;
 
-              // Rank Icon
-              let rankIcon;
-              if (i === 0) rankIcon = <Medal size={32} className="text-yellow-400 fill-yellow-100 drop-shadow-sm animate-bounce-short"/>;
-              else if (i === 1) rankIcon = <Medal size={28} className="text-slate-400 fill-slate-100 drop-shadow-sm"/>;
-              else if (i === 2) rankIcon = <Medal size={28} className="text-orange-600 fill-orange-100 drop-shadow-sm"/>;
-              else rankIcon = <span className="text-sm font-black text-slate-400">{i + 1}</span>;
+          return (
+            <div className="flex-1 overflow-hidden flex flex-col relative bg-white rounded-3xl shadow-sm border border-slate-100">
+                {/* A. DANH SÁCH TOP 30 (Cuộn được) */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-3 pb-24 custom-scrollbar">
+                    {loading ? <div className="text-center py-4 text-slate-400"><Loader2 className="animate-spin inline mr-2"/> Đang tải...</div> : (
+                        players.map((u, i) => {
+                            // Logic hiển thị điểm
+                            let displayScore = 0;
+                            if (category === 'TOTAL') displayScore = u.totalScore || 0;
+                            if (category === 'PRACTICE') displayScore = u.practiceScore || 0;
+                            if (category === 'MOCK') displayScore = u.mockScore || 0;
+                            if (category === 'EXAM') displayScore = u.examScore || 0;
+                            if (category === 'GAME') displayScore = u.gameScore || 0;
+                            if (category === 'CHALLENGE') displayScore = u.challengeScore || 0;
+                            displayScore = Math.round(displayScore);
 
-              const rankTitle = getRankByScore(displayScore);
-              const specialBadges = getBadges(u, i);
+                            // Rank Icon
+                            let rankIcon;
+                            if (i === 0) rankIcon = <Medal size={32} className="text-yellow-400 fill-yellow-100 drop-shadow-sm animate-bounce-short"/>;
+                            else if (i === 1) rankIcon = <Medal size={28} className="text-slate-400 fill-slate-100 drop-shadow-sm"/>;
+                            else if (i === 2) rankIcon = <Medal size={28} className="text-orange-600 fill-orange-100 drop-shadow-sm"/>;
+                            else rankIcon = <span className="text-sm font-black text-slate-400">{i + 1}</span>;
 
-              return (
-                <div key={u.uid} className={`flex flex-col p-4 rounded-2xl border transition-colors ${u.uid === currentUser.uid ? 'bg-indigo-50 border-indigo-200' : 'bg-white border-slate-100 hover:border-slate-300'}`}>
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className="w-8 h-8 flex items-center justify-center shrink-0">{rankIcon}</div>
-                          <div>
-                              <div className={`font-bold text-sm flex items-center gap-2 flex-wrap ${u.uid === currentUser.uid ? 'text-indigo-700' : 'text-slate-800'}`}>
-                                {u.name} 
-                                <span className={`text-[8px] px-2 py-0.5 rounded-md border font-black uppercase tracking-wider flex items-center gap-1 whitespace-nowrap bg-white/50 border-slate-200 text-slate-600 ${rankTitle.color}`}>
-                                    {rankTitle.icon} {rankTitle.label}
-                                </span>
-                              </div>
-                              <div className="text-[10px] text-slate-400">{u.class} - {u.school}</div>
-                          </div>
-                        </div>
-                        <div className={`font-black text-lg ${i===0 ? 'text-yellow-500' : i===1 ? 'text-slate-500' : i===2 ? 'text-orange-600' : 'text-slate-800'}`}>
-                          {displayScore}
-                        </div>
-                    </div>
-                    {specialBadges.length > 0 && (
-                        <div className="flex gap-1 mt-2 ml-12 overflow-x-auto no-scrollbar pb-1">
-                            {specialBadges.map((badge, idx) => (
-                                <div key={idx} className={`px-2 py-0.5 rounded-full text-[9px] font-bold flex items-center gap-1 shadow-sm shrink-0 ${badge.color}`} title={badge.label}>
-                                    {badge.icon} {badge.label}
+                            const rankTitle = getRankByScore(displayScore);
+                            const specialBadges = getBadges(u, i);
+
+                            return (
+                                <div key={u.uid} className={`flex flex-col p-4 rounded-2xl border transition-colors ${u.uid === currentUser.uid ? 'bg-indigo-50 border-indigo-200 ring-1 ring-indigo-200' : 'bg-white border-slate-100'}`}>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-8 h-8 flex items-center justify-center shrink-0">{rankIcon}</div>
+                                            <div>
+                                                <div className={`font-bold text-sm flex items-center gap-2 flex-wrap ${u.uid === currentUser.uid ? 'text-indigo-700' : 'text-slate-800'}`}>
+                                                    {u.name} 
+                                                    {u.uid === currentUser.uid && <span className="text-[9px] bg-indigo-600 text-white px-1.5 py-0.5 rounded font-black">TÔI</span>}
+                                                    <span className={`text-[8px] px-2 py-0.5 rounded-md border font-black uppercase tracking-wider flex items-center gap-1 whitespace-nowrap bg-white/50 border-slate-200 text-slate-600 ${rankTitle.color}`}>
+                                                        {rankTitle.icon} {rankTitle.label}
+                                                    </span>
+                                                </div>
+                                                <div className="text-[10px] text-slate-400">{u.class} - {u.school}</div>
+                                            </div>
+                                        </div>
+                                        <div className={`font-black text-lg ${i===0 ? 'text-yellow-500' : i===1 ? 'text-slate-500' : i===2 ? 'text-orange-600' : 'text-slate-800'}`}>
+                                            {displayScore}
+                                        </div>
+                                    </div>
+                                    {specialBadges.length > 0 && (
+                                        <div className="flex gap-1 mt-2 ml-12 overflow-x-auto no-scrollbar pb-1">
+                                            {specialBadges.map((badge, idx) => (
+                                                <div key={idx} className={`px-2 py-0.5 rounded-full text-[9px] font-bold flex items-center gap-1 shadow-sm shrink-0 ${badge.color}`} title={badge.label}>
+                                                    {badge.icon} {badge.label}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
-                            ))}
-                        </div>
+                            )
+                        })
                     )}
                 </div>
-              )
-          })}</div>
-        )}
-      </div>
+
+                {/* B. THANH CỦA TÔI (CHỈ HIỆN KHI BẠN KHÔNG NẰM TRONG TOP 30) */}
+                {!loading && !isMeInTop30 && (
+                    <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] z-10 animate-slide-up">
+                         <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <div className="w-8 h-8 flex items-center justify-center shrink-0 text-slate-400 font-black text-xs bg-slate-100 rounded-full border border-slate-200">30+</div>
+                                <div>
+                                    <div className="font-bold text-sm flex items-center gap-2 text-indigo-700">
+                                        {currentUser.name}
+                                        <span className="text-[9px] bg-indigo-600 text-white px-1.5 py-0.5 rounded font-black">TÔI</span>
+                                    </div>
+                                    <div className="text-[10px] text-slate-400">Bạn đang nằm ngoài Top 30</div>
+                                </div>
+                            </div>
+                            <div className="font-black text-lg text-indigo-600">
+                                {(() => {
+                                    // Tính điểm hiển thị cho chính mình
+                                    let s = 0;
+                                    if (category === 'TOTAL') s = currentUser.totalScore || 0;
+                                    if (category === 'PRACTICE') s = currentUser.practiceScore || 0;
+                                    if (category === 'MOCK') s = currentUser.mockScore || 0;
+                                    if (category === 'EXAM') s = currentUser.examScore || 0;
+                                    if (category === 'GAME') s = currentUser.gameScore || 0;
+                                    if (category === 'CHALLENGE') s = currentUser.challengeScore || 0;
+                                    return Math.round(s);
+                                })()}
+                            </div>
+                         </div>
+                    </div>
+                )}
+            </div>
+          );
+      })()}
     </div>
   );
 };
