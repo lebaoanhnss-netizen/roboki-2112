@@ -5,22 +5,24 @@ import Toast from './components/Toast';
 import { UserProfile, Question, Lesson } from './types';
 // 👇 Import dữ liệu từ file data.ts (Đảm bảo file này tồn tại)
 import { PHYSICS_LESSONS, QUESTION_BANK } from './data';
-// --- CẤU HÌNH ÂM THANH (Dùng link online cho tiện) ---
+// --- CẤU HÌNH ÂM THANH (Dùng file local) ---
 const playSound = (type: 'click' | 'correct' | 'wrong' | 'levelup') => {
   const sounds = {
-    // Tiếng click nhẹ (khi bấm nút)
-    click: 'https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a73467.mp3', 
-    // Tiếng ting ting (khi làm đúng / nhận quà)
-    correct: 'https://cdn.pixabay.com/audio/2021/08/04/audio_12b0c7443c.mp3',
-    // Tiếng ố ồ (khi làm sai)
-    wrong: 'https://cdn.pixabay.com/audio/2022/03/10/audio_c2957f354f.mp3',
-    // Tiếng chiến thắng (khi lên cấp)
-    levelup: 'https://cdn.pixabay.com/audio/2021/08/04/audio_0625c1539c.mp3' 
+    // Tiếng click nhẹ (khi bấm nút) - lấy từ file public/sounds/click.mp3
+    click: '/sounds/click.mp3', 
+    // Tiếng ting ting (khi làm đúng) - lấy từ file public/sounds/correct.mp3
+    correct: '/sounds/correct.mp3',
+    // Tiếng ố ồ (khi làm sai) - lấy từ file public/sounds/wrong.mp3
+    wrong: '/sounds/wrong.mp3',
+    // Tiếng chiến thắng (khi lên cấp) - lấy từ file public/sounds/victory.mp3
+    levelup: '/sounds/victory.mp3' 
   };
 
   const audio = new Audio(sounds[type]);
   audio.volume = 0.5; // Chỉnh âm lượng (0.0 đến 1.0)
-  audio.play().catch(e => console.log("Chưa tương tác, chưa phát nhạc được"));
+  
+  // Phát nhạc và bắt lỗi (phòng trường hợp trình duyệt chặn tự phát)
+  audio.play().catch(e => console.log("Chưa tương tác, chưa phát nhạc được: ", e));
 };
 import {
   auth,
@@ -826,18 +828,29 @@ const PracticeScreen: React.FC<{
     updateSession({ quizQuestions: shuffled, currentQIndex: 0, isSubmitted: false, selectedOpt: null, subAnswers: {}, configMode: false, errorMsg: '' });
   };
 
-  const submit = () => {
+ const submit = () => {
     updateSession({ isSubmitted: true });
     const currentQ = quizQuestions[currentQIndex];
+
+    // Xử lý câu hỏi chùm (SubQuestions)
     if (currentQ.subQuestions && currentQ.subQuestions.length > 0) {
         let correctCount = 0;
         currentQ.subQuestions.forEach(sq => { if (subAnswers && subAnswers[sq.id] === sq.isCorrect) correctCount++; });
-        if(correctCount > 0) onScore(correctCount * 0.25, 'practice');
+        
+        // ✅ SỬA: Luôn gọi onScore dù điểm = 0 để phát âm thanh Wrong
+        onScore(correctCount * 0.25, 'practice');
+
     } else {
+        // Xử lý câu hỏi đơn
         let isCorrect = false;
         if (currentQ.type === 'Short') { isCorrect = selectedOpt?.trim().toLowerCase() === currentQ.answerKey.trim().toLowerCase(); }
         else { isCorrect = selectedOpt === currentQ.answerKey; }
-        if (isCorrect) onScore(isCorrect ? 0.25 : 0, 'practice');
+        
+        // ✅ SỬA: Luôn gọi onScore dù sai (0 điểm)
+        onScore(isCorrect ? 0.25 : 0, 'practice');
+        
+        // 👇 Nếu bạn đã thêm tính năng Biểu đồ năng lực ở bước trước, hãy giữ dòng này:
+        // if (currentQ.topic && onUpdateStats) onUpdateStats(currentQ.topic, isCorrect);
     }
   };
 
@@ -2125,7 +2138,8 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
   const [category, setCategory] = useState<'TOTAL' | 'PRACTICE' | 'MOCK' | 'EXAM' | 'GAME' | 'CHALLENGE'>('TOTAL');
   const [loading, setLoading] = useState(true);
   const [players, setPlayers] = useState<any[]>([]);
-  
+  // 👇👇👇 THÊM DÒNG NÀY ĐỂ SỬA LỖI setMyExactRank 👇👇👇
+  const [myExactRank, setMyExactRank] = useState<number | null>(null);
   // State quản lý Popup xem cấp độ
   const [showRankInfo, setShowRankInfo] = useState(false);
   const [infoTab, setInfoTab] = useState<'RANKS' | 'BADGES'>('RANKS');
@@ -2313,51 +2327,49 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
       }
   };
 
-// 👇 STATE MỚI: Lưu hạng chính xác của người dùng
-  const [myExactRank, setMyExactRank] = useState<number | null>(null);
-
-  // 👇 HÀM FETCH DỮ LIỆU "ULTIMATE": CACHE 60P + LIMIT 30 + ĐẾM HẠNG CHÍNH XÁC
+  // 👇 HÀM FETCH DỮ LIỆU ĐÃ SỬA: BỎ LỌC LỚP/TRƯỜNG, GIỮ LẠI CATEGORY (6 TAB)
   useEffect(() => {
     const fetchLeaderboard = async () => {
-      const cacheKey = `bxh_${filter}_${category}`; 
-      const CACHE_DURATION = 60 * 60 * 1000; // 60 phút mới hết hạn
+      // ✅ Key cache bây giờ chỉ phụ thuộc vào Category (Ví dụ: bxh_ALL_GAME, bxh_ALL_EXAM...)
+      // Mặc định là ALL (Toàn quốc)
+      const cacheKey = `bxh_ALL_${category}`;
+      const CACHE_DURATION = 60 * 60 * 1000; // 60 phút
 
       // 1. Kiểm tra Cache trong máy
       const cachedRaw = localStorage.getItem(cacheKey);
-      if (cachedRaw) { 
+      if (cachedRaw) {
           try {
             const parsedCache = JSON.parse(cachedRaw);
             const isOldFormat = Array.isArray(parsedCache);
             const timeDiff = Date.now() - (parsedCache.timestamp || 0);
 
-            // Nếu Cache chưa thiu (chưa quá 60p) -> DÙNG LUÔN
             if (!isOldFormat && timeDiff < CACHE_DURATION) {
-                console.log("🏆 Cache còn hạn -> Dùng ngay (0 tốn Read)");
+                console.log(`🏆 Cache ${category} còn hạn -> Dùng ngay (0 tốn Read)`);
                 let list = parsedCache.data;
-                
+
                 // Kỹ thuật tráo điểm (Cập nhật điểm mới nhất của mình vào danh sách cũ)
                 const myIndex = list.findIndex((p: any) => p.uid === currentUser.uid);
-                
+
                 if (myIndex !== -1) {
                     list[myIndex] = { ...list[myIndex], ...currentUser };
-                    setMyExactRank(myIndex + 1); // Nếu có trong list thì hạng là index + 1
+                    setMyExactRank(myIndex + 1);
                 } else {
-                    // Nếu không có trong Top 30, dùng rank đã lưu lần trước (nếu có)
-                    setMyExactRank(parsedCache.myRank || null); 
+                    setMyExactRank(parsedCache.myRank || null);
                 }
-                
-                setPlayers(list); 
-                setLoading(false); 
+
+                setPlayers(list);
+                setLoading(false);
                 return; // 🛑 DỪNG, KHÔNG GỌI FIREBASE
             }
           } catch (e) {}
       }
 
-      // 2. Nếu không có Cache hoặc Cache hết hạn -> Tải mới từ Firebase
+      // 2. Tải mới từ Firebase (Luôn tải TOÀN SEVER theo từng loại điểm)
       try {
         setLoading(true);
-        console.log("☁️ Tải mới từ Firebase (Tốn 30 Reads)...");
+        console.log(`☁️ Tải BXH ${category} toàn Server (Tốn 30 Reads)...`);
 
+        // A. Xác định trường điểm cần lấy dựa trên 6 TAB (Category)
         let orderByField = 'totalScore';
         let currentScore = currentUser.totalScore || 0;
 
@@ -2367,50 +2379,28 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
         if (category === 'GAME') { orderByField = 'gameScore'; currentScore = currentUser.gameScore || 0; }
         if (category === 'CHALLENGE') { orderByField = 'challengeScore'; currentScore = currentUser.challengeScore || 0; }
 
-        // A. Tải Top 30 (Limit 30 -> Tốn 30 Reads)
-        let q;
-        if (filter === 'CLASS') {
-             if (!currentUser.class) { setPlayers([]); setLoading(false); return; }
-             q = query(collection(db, 'users'), where('class', '==', currentUser.class), orderBy(orderByField, 'desc'), limit(30));
-        } else if (filter === 'SCHOOL') {
-             if (!currentUser.school) { setPlayers([]); setLoading(false); return; }
-             q = query(collection(db, 'users'), where('school', '==', currentUser.school), orderBy(orderByField, 'desc'), limit(30));
-        } else {
-             q = query(collection(db, 'users'), orderBy(orderByField, 'desc'), limit(30));
-        }
+        // B. Query đơn giản hóa: Luôn lấy Top 30 toàn server (Bỏ qua lọc Lớp/Trường)
+        const q = query(collection(db, 'users'), orderBy(orderByField, 'desc'), limit(30));
 
         const snap = await getDocs(q);
         const list: any[] = [];
         snap.forEach((d) => list.push(d.data()));
-        
-        // B. Tính hạng chính xác của TÔI
+
+        // C. Tính hạng chính xác của TÔI
         let calculatedRank = null;
         const myIndexInTop = list.findIndex(u => u.uid === currentUser.uid);
 
         if (myIndexInTop !== -1) {
-            // Trường hợp 1: Nằm trong Top 30 -> Hạng là index + 1
             calculatedRank = myIndexInTop + 1;
         } else {
-            // Trường hợp 2: Nằm ngoài Top 30 -> Gọi thêm 1 lệnh đếm (Tốn thêm 1 Read)
+            // Nếu không nằm trong Top 30, đếm số người giỏi hơn trên TOÀN SERVER
             try {
-                let countQuery;
-                const usersRef = collection(db, 'users');
-                
-                // Query: Đếm số người có điểm LỚN HƠN điểm của tôi
-                if (filter === 'CLASS') {
-                    countQuery = query(usersRef, where('class', '==', currentUser.class), where(orderByField, '>', currentScore));
-                } else if (filter === 'SCHOOL') {
-                    countQuery = query(usersRef, where('school', '==', currentUser.school), where(orderByField, '>', currentScore));
-                } else {
-                    countQuery = query(usersRef, where(orderByField, '>', currentScore));
-                }
-
-                // Dùng getCountFromServer (Cần import ở trên đầu file nhé)
+                // Query đếm cũng bỏ qua lọc Lớp/Trường, chỉ so sánh điểm
+                const countQuery = query(collection(db, 'users'), where(orderByField, '>', currentScore));
                 const snapshot = await getCountFromServer(countQuery);
                 const countBetter = snapshot.data().count;
-                calculatedRank = countBetter + 1; // Hạng = Số người giỏi hơn + 1
+                calculatedRank = countBetter + 1;
                 console.log(`🔢 Đã đếm hạng chính xác: ${calculatedRank}`);
-
             } catch (err) {
                 console.error("Lỗi đếm hạng:", err);
             }
@@ -2418,23 +2408,23 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
 
         setMyExactRank(calculatedRank);
         setPlayers(list);
-        
-        // C. Lưu Cache (Kèm thời gian & Rank riêng)
+
+        // D. Lưu Cache
         localStorage.setItem(cacheKey, JSON.stringify({
             timestamp: Date.now(),
             data: list,
-            myRank: calculatedRank 
+            myRank: calculatedRank
         }));
 
-      } catch (err: any) { 
-          console.error("Lỗi tải BXH:", err); 
-      } finally { 
-          setLoading(false); 
+      } catch (err: any) {
+          console.error("Lỗi tải BXH:", err);
+      } finally {
+          setLoading(false);
       }
     };
 
     fetchLeaderboard();
-  }, [filter, category, currentUser]);
+  }, [category, currentUser]);
 
   const getCatLabel = () => {
       if(category === 'TOTAL') return 'Tổng điểm';
@@ -2458,6 +2448,7 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
       if ((u.gameScore || 0) > 3000) badges.push({ icon: '💎', color: 'bg-fuchsia-500 text-white border border-fuchsia-600', label: 'Đại gia' });
       if ((u.challengeScore || 0) >= 500) badges.push({ icon: '🏹', color: 'bg-emerald-600 text-white border border-emerald-700', label: 'Thợ săn' });
       if ((u.examScore || 0) > 9.5) badges.push({ icon: '🧠', color: 'bg-rose-500 text-white border border-rose-600', label: 'Siêu trí tuệ' });
+
       if (u.loginStreak && u.loginStreak >= 3) badges.push({ icon: '🔥', color: 'bg-orange-500 text-white border border-orange-600', label: 'Chăm chỉ' });
       if (u.fastAnswerCount && u.fastAnswerCount > 0) badges.push({ icon: '⚡', color: 'bg-yellow-500 text-white border border-yellow-600', label: 'Tia chớp' });
       if (u.correctStreak && u.correctStreak >= 10) badges.push({ icon: '🎯', color: 'bg-red-600 text-white border border-red-700', label: 'Xạ thủ' });
@@ -2533,14 +2524,7 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
         </div>
       )}
 
-      {/* 1. LỌC PHẠM VI */}
-      <div className="flex bg-white p-1 rounded-2xl shadow-sm border border-slate-100 mb-4">
-          <button onClick={() => setFilter('CLASS')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${filter === 'CLASS' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-400'}`}>Lớp</button>
-          <button onClick={() => setFilter('SCHOOL')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${filter === 'SCHOOL' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-400'}`}>Trường</button>
-          <button onClick={() => setFilter('ALL')} className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${filter === 'ALL' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-400'}`}>Toàn quốc</button>
-      </div>
-
-      {/* 2. MENU GRID */}
+            {/* 2. MENU GRID */}
       <div className="grid grid-cols-3 gap-2 mb-2">
           <button onClick={() => setCategory('TOTAL')} className={`py-2.5 rounded-xl text-[10px] font-bold border transition-all ${category === 'TOTAL' ? 'bg-indigo-50 border-indigo-500 text-indigo-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>Tổng hợp</button>
           <button onClick={() => setCategory('PRACTICE')} className={`py-2.5 rounded-xl text-[10px] font-bold border transition-all ${category === 'PRACTICE' ? 'bg-orange-50 border-orange-500 text-orange-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>Luyện tập</button>
