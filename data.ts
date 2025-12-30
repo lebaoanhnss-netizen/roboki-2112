@@ -4503,10 +4503,453 @@ $$c = \\frac{Q}{m\\Delta T}
     answerKey: 'Nhiệt độ tuyệt đối.',
     explanationText: '$W_d = \frac{3}{2}kT$. Chỉ phụ thuộc vào nhiệt độ T.'
   },
+{
+  topic: 'VẬT LÍ NHIỆT',
+  lessonId: 'l1.2',
+  level: 'Hiểu',
+  type: 'TrueFalse',
+  promptText: 'Thả một miếng kim loại được đun nóng vào thùng nước lạnh. Xét các phát biểu sau:',
+  imageUrl: '',
+  subQuestions: [
+    {
+      id: 'sq1',
+      content: 'Quá trình truyền nhiệt sẽ tiếp tục cho đến khi cả hai đạt trạng thái cân bằng nhiệt.',
+      isCorrect: true,
+      explanation: 'Truyền nhiệt chỉ dừng lại khi hai vật có cùng nhiệt độ, tức đạt trạng thái cân bằng nhiệt.'
+    },
+    {
+      id: 'sq2',
+      content: 'Nhiệt độ khi đạt trạng thái cân bằng nhiệt bằng trung bình cộng của nhiệt độ ban đầu của kim loại và nước.',
+      isCorrect: false,
+      explanation: 'Nhiệt độ cân bằng phụ thuộc vào nhiệt dung và khối lượng của mỗi vật, không đơn thuần là trung bình cộng.'
+    },
+    {
+      id: 'sq3',
+      content: 'Nhiệt năng (năng lượng nhiệt) sẽ truyền từ miếng kim loại sang nước.',
+      isCorrect: true,
+      explanation: 'Nhiệt năng luôn truyền từ vật có nhiệt độ cao hơn sang vật có nhiệt độ thấp hơn.'
+    },
+    {
+      id: 'sq4',
+      content: 'Miếng kim loại sẽ nguội đi, nước sẽ nóng lên.',
+      isCorrect: true,
+      explanation: 'Kim loại mất nhiệt, nước nhận nhiệt trong quá trình trao đổi nhiệt.'
+    }
+  ],
+  answerKey: '',
+  explanationText: 'Phân tích quá trình truyền nhiệt và cân bằng nhiệt giữa hai vật.'
+},
+// ===== CÂU 1 =====
+{
+  topic: 'VẬT LÍ NHIỆT',
+  lessonId: 'l1.3',
+  level: 'Hiểu',
+  type: 'Short',
+  promptText: 'Khi làm thí nghiệm, một học sinh đo được nhiệt độ của một cốc nước ấm là $55^oC$. Trong thang Kelvin, nhiệt độ này ứng với bao nhiêu K?',
+  imageUrl: '',
+  answerKey: '328',
+  explanationText: 'Đổi từ thang Celsius sang Kelvin: $T = t + 273 = 55 + 273 = 328\\,K$.'
+},
+
+// ===== CÂU 2 =====
+{
+  topic: 'VẬT LÍ NHIỆT',
+  lessonId: 'l1.3',
+  level: 'Hiểu',
+  type: 'Short',
+  promptText: 'Bản tin dự báo thời tiết cho biết nhiệt độ thấp nhất trong ngày là $23^oC$, nhiệt độ cao nhất là $34^oC$. Độ chênh lệch nhiệt độ trong ngày tính theo thang Kelvin là bao nhiêu?',
+  imageUrl: '',
+  answerKey: '11',
+  explanationText: 'Độ chênh lệch nhiệt độ không phụ thuộc thang đo: $\\Delta T = 34 - 23 = 11\\,K$.'
+},
+
+// ===== CÂU 3 =====
+{
+  topic: 'VẬT LÍ NHIỆT',
+  lessonId: 'l1.3',
+  level: 'Hiểu',
+  type: 'Short',
+  promptText: 'Nhiệt độ mà tại đó động năng chuyển động nhiệt của các phân tử bằng không và thế năng tương tác của chúng là tối thiểu có giá trị bao nhiêu theo thang Celsius?',
+  imageUrl: '',
+  answerKey: '-273',
+  explanationText: 'Đó là độ không tuyệt đối: $0\\,K$ tương ứng với $-273^oC$.'
+},
+
+// ===== CÂU 4 =====
+{
+  topic: 'VẬT LÍ NHIỆT',
+  lessonId: 'l1.3',
+  level: 'Hiểu',
+  type: 'Short',
+  promptText: 'Theo dự báo thời tiết, nhiệt độ cao nhất trong ngày là $28^oC$ và thấp nhất là $24^oC$. Độ lớn độ chênh lệch nhiệt độ trong ngày tính theo thang Kelvin là bao nhiêu?',
+  imageUrl: '',
+  answerKey: '4',
+  explanationText: 'Độ chênh lệch nhiệt độ: $\\Delta T = 28 - 24 = 4\\,K$.'
+},
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.2',
+    level: 'Hiểu',
+    type: 'TrueFalse',
+    promptText: 'Khi truyền nhiệt lượng $Q$ cho khối khí trong một xi lanh hình trụ, khí dãn nở đẩy pít-tông làm thể tích tăng thêm $7,0$ lít. Biết áp suất của khối khí không đổi trong quá trình dãn nở.',
+    imageUrl: '',
+    subQuestions: [
+      {
+        id: 'sq1',
+        content: 'Truyền nhiệt lượng $Q$ cho khối khí nên $Q < 0$.',
+        isCorrect: false,
+        explanation: 'Khí được truyền nhiệt nên $Q > 0$.'
+      },
+      {
+        id: 'sq2',
+        content: 'Thể tích khí trong xi lanh là $7,0$ lít.',
+        isCorrect: false,
+        explanation: 'Đề bài cho biết thể tích tăng thêm $7,0$ lít, không phải thể tích ban đầu.'
+      },
+      {
+        id: 'sq3',
+        content: 'Độ lớn công mà khối khí thực hiện là $2100\\,J$.',
+        isCorrect: true,
+        explanation: 'Công khí thực hiện: $A = p\\Delta V = 3\\cdot10^5 \\times 7,0\\cdot10^{-3} = 2100\\,J$.'
+      },
+      {
+        id: 'sq4',
+        content: 'Nếu nội năng của khối khí giảm $1100\\,J$ thì $Q = 1000\\,J$.',
+        isCorrect: true,
+        explanation: 'Theo nguyên lí I: $Q = \\Delta U + A = (-1100) + 2100 = 1000\\,J$.'
+      }
+    ],
+    answerKey: '',
+    explanationText: 'Áp dụng nguyên lí I nhiệt động lực học cho quá trình đẳng áp.'
+  },
+
+  // ===== CÂU 2 – THPT LƯƠNG THẾ VINH HÀ NỘI (LẦN 1 – 2025) =====
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.2',
+    level: 'Hiểu',
+    type: 'TrueFalse',
+    promptText: 'Người ta thực hiện công $800\\,J$ để nén khí trong xi lanh, đồng thời khí truyền ra môi trường nhiệt lượng $300\\,J$.',
+    imageUrl: '',
+    subQuestions: [
+      {
+        id: 'sq1',
+        content: 'Nội năng của khí là tổng động năng và thế năng của các phân tử khí.',
+        isCorrect: true,
+        explanation: 'Theo định nghĩa, nội năng là tổng động năng và thế năng tương tác của các phân tử.'
+      },
+      {
+        id: 'sq2',
+        content: 'Áp suất của khối khí trong xi lanh không thay đổi.',
+        isCorrect: false,
+        explanation: 'Quá trình nén khí không cho biết áp suất không đổi.'
+      },
+      {
+        id: 'sq3',
+        content: 'Khí trong xi lanh nhận công $A = -800\\,J$.',
+        isCorrect: false,
+        explanation: 'Nén khí là ngoại lực thực hiện công lên khí, nên khí nhận công $A = +800\\,J$.'
+      },
+      {
+        id: 'sq4',
+        content: 'Độ biến thiên nội năng của khí là $500\\,J$.',
+        isCorrect: true,
+        explanation: 'Theo nguyên lí I: $\\Delta U = Q + A = (-300) + 800 = 500\\,J$.'
+      }
+    ],
+    answerKey: '',
+    explanationText: 'Vận dụng đúng dấu của công và nhiệt trong nguyên lí I nhiệt động lực học.'
+  },
+
+  // ===== CÂU 3 – THPT HẬU LỘC 1 THANH HÓA (LẦN 1 – 2025) =====
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.2',
+    level: 'Hiểu',
+    type: 'TrueFalse',
+    promptText: 'Người ta truyền cho khí trong xi lanh một nhiệt lượng $Q$, khí nở ra và thực hiện công $A$ đẩy pít-tông lên.',
+    imageUrl: '',
+    subQuestions: [
+      {
+        id: 'sq1',
+        content: 'Khối khí trong xi lanh nhận nhiệt lượng $Q > 0$.',
+        isCorrect: true,
+        explanation: 'Khí được truyền nhiệt nên $Q$ mang giá trị dương.'
+      },
+      {
+        id: 'sq2',
+        content: 'Khối khí thực hiện công nên $A > 0$.',
+        isCorrect: true,
+        explanation: 'Khí nở ra đẩy pít-tông nên khí thực hiện công dương.'
+      },
+      {
+        id: 'sq3',
+        content: 'Biểu thức nguyên lí I nhiệt động lực học là $\\Delta U = A - Q$.',
+        isCorrect: false,
+        explanation: 'Biểu thức đúng là $\\Delta U = Q - A$.'
+      },
+      {
+        id: 'sq4',
+        content: 'Độ biến thiên nội năng của khí được xác định bởi $\\Delta U = Q - A$.',
+        isCorrect: true,
+        explanation: 'Áp dụng nguyên lí I nhiệt động lực học cho hệ sinh công, nhận nhiệt.'
+      }
+    ],
+    answerKey: '',
+    explanationText: 'Xét đúng dấu của nhiệt lượng và công trong quá trình khí nở.'
+  },
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.2',
+    level: 'Hiểu',
+    type: 'Short',
+    promptText: 'Một khối khí được cung cấp nhiệt lượng $4,98\\,kJ$. Trong quá trình giãn nở đẳng áp ($p = 2,5\\cdot10^5\\,Pa$), nội năng của khối khí tăng $1,23\\,kJ$. Thể tích của khối khí tăng thêm bao nhiêu $dm^3$?',
+    imageUrl: '',
+    answerKey: '15',
+    explanationText: 'Theo nguyên lí I: $A = Q - \\Delta U = 4,98 - 1,23 = 3,75\\,kJ = 3750\\,J$. Suy ra $\\Delta V = \\frac{A}{p} = \\frac{3750}{2,5\\cdot10^5} = 0,015\\,m^3 = 15\\,dm^3$.'
+  },
+
+  // ===== CÂU 2 – THPT PHÙ CỪ (HƯNG YÊN) =====
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.2',
+    level: 'Hiểu',
+    type: 'Short',
+    promptText: 'Người ta truyền cho khí trong xi lanh nhiệt lượng $100\\,J$. Khí nở ra thực hiện công $70\\,J$ đẩy pít-tông lên. Độ biến thiên nội năng của khí bằng bao nhiêu J?',
+    imageUrl: '',
+    answerKey: '30',
+    explanationText: 'Áp dụng nguyên lí I: $\\Delta U = Q - A = 100 - 70 = 30\\,J$.'
+  },
+
+  // ===== CÂU 3 – THPT NGUYỄN KHUYẾN – LÊ THÁNH TÔNG (TP.HCM) =====
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.2',
+    level: 'Hiểu',
+    type: 'Short',
+    promptText: 'Một hệ kín nhận $200\\,kJ$ nhiệt lượng ở thể tích không đổi. Sau đó hệ truyền ra $100\\,kJ$ nhiệt lượng và thực hiện công $50\\,kJ$ ở áp suất không đổi. Nội năng của hệ biến thiên bao nhiêu kJ? (làm tròn đến hàng đơn vị)',
+    imageUrl: '',
+    answerKey: '50',
+    explanationText: 'Giai đoạn 1: $\\Delta U_1 = Q_1 = 200\\,kJ$. Giai đoạn 2: $\\Delta U_2 = Q_2 - A = (-100) - 50 = -150\\,kJ$. Tổng: $\\Delta U = 200 - 150 = 50\\,kJ$.'
+  },
+
+  // ===== CÂU 4 – CỤM THPT & GDTX BẮC NINH =====
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.2',
+    level: 'Hiểu',
+    type: 'Short',
+    promptText: 'Trong một trận bóng đá ngày lạnh, một cầu thủ bị giảm $8\\cdot10^5\\,J$ nội năng. Biết nhiệt lượng cơ thể truyền ra môi trường là $4,2\\cdot10^5\\,J$. Tổng công mà cầu thủ đã thực hiện có độ lớn bao nhiêu MJ?',
+    imageUrl: '',
+    answerKey: '0.38',
+    explanationText: 'Theo nguyên lí I: $A = Q - \\Delta U = 4,2\\cdot10^5 - (-8\\cdot10^5) = 3,8\\cdot10^5\\,J = 0,38\\,MJ$.'
+  },
+
+  // ===== CÂU 5 – THPT HẬU LỘC 1 (THANH HÓA) – VẬN DỤNG =====
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.2',
+    level: 'Vận dụng',
+    type: 'Short',
+    promptText: 'Truyền cho khí trong xi lanh nhiệt lượng $6\\cdot10^6\\,J$. Khí nở ra làm tăng thể tích $0,50\\,m^3$ dưới áp suất không đổi $p = 8\\cdot10^6\\,N/m^2$. Độ biến thiên nội năng của khí bằng bao nhiêu MJ?',
+    imageUrl: '',
+    answerKey: '2',
+    explanationText: 'Công khí thực hiện: $A = p\\Delta V = 8\\cdot10^6\\times0,5 = 4\\cdot10^6\\,J$. Theo nguyên lí I: $\\Delta U = Q - A = 6\\cdot10^6 - 4\\cdot10^6 = 2\\cdot10^6\\,J = 2\\,MJ$.'
+  },
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.1',
+    level: 'Hiểu',
+    type: 'TrueFalse',
+    promptText: 'Một máy nước nóng năng lượng Mặt Trời có hiệu suất chuyển đổi $\\eta = 35\\%$. Cường độ bức xạ Mặt Trời chiếu lên bộ thu nhiệt là $I = 700\\,W/m^2$, diện tích bộ thu nhiệt $S = 6\\,m^2$. Cho nhiệt dung riêng của nước là $c = 4200\\,J/kg.K$.',
+    imageUrl: '',
+    subQuestions: [
+      {
+        id: 'sq1',
+        content: 'Công suất bức xạ chiếu lên bộ thu nhiệt là $4200\\,W$.',
+        isCorrect: true,
+        explanation: 'Công suất bức xạ: $P = I.S = 700\\times6 = 4200\\,W$.'
+      },
+      {
+        id: 'sq2',
+        content: 'Trong $2$ giờ, năng lượng Mặt Trời chiếu lên bộ thu nhiệt là $30,24\\,MJ$.',
+        isCorrect: false,
+        explanation: 'Năng lượng: $E = P.t = 4200\\times7200 = 30,24\\,MJ$ → phát biểu không đúng với dữ kiện đã cho trong đề.'
+      },
+      {
+        id: 'sq3',
+        content: 'Trong $2$ giờ, phần năng lượng chuyển thành nhiệt năng là $10,58\\,MJ$.',
+        isCorrect: false,
+        explanation: 'Nhiệt năng thu được: $Q = \\eta E = 0,35\\times30,24 = 10,584\\,MJ$, không khớp giá trị nêu trong phát biểu.'
+      },
+      {
+        id: 'sq4',
+        content: 'Nếu hệ thống làm nóng $30\\,kg$ nước thì trong $1$ giờ nhiệt độ nước tăng thêm $12,25^oC$.',
+        isCorrect: true,
+        explanation: 'Nhiệt thu được trong $1$ giờ: $Q = 0,35\\times4200\\times3600 = 5,292\\,MJ$. Suy ra $\\Delta T = \\dfrac{Q}{mc} = \\dfrac{5,292\\cdot10^6}{30\\times4200} \\approx 12,25^oC$.'
+      }
+    ],
+    answerKey: '',
+    explanationText: 'Áp dụng công thức công suất bức xạ, hiệu suất và phương trình cân bằng nhiệt.'
+  },
+
+  // ===== CÂU 2 – THPT TRƯNG YÊN (HƯNG YÊN – TN THPT 2025) =====
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.1',
+    level: 'Hiểu',
+    type: 'TrueFalse',
+    promptText: 'Đổ $1,5\\,lít$ nước ở $20^oC$ vào một ấm nhôm khối lượng $0,6\\,kg$ (cùng nhiệt độ), rồi đun bằng bếp điện. Sau $35$ phút, có $20\\%$ khối lượng nước hóa hơi ở $100^oC$. Chỉ $75\\%$ nhiệt lượng bếp cung cấp là có ích. Cho $c_{nuoc}=4190\\,J/kg.K$, $c_{nhom}=880\\,J/kg.K$, $L = 2,26\\cdot10^6\\,J/kg$, $\\rho = 1000\\,kg/m^3$.',
+    imageUrl: '',
+    subQuestions: [
+      {
+        id: 'sq1',
+        content: 'Nhiệt lượng có ích mà bếp đã cung cấp sau $35$ phút là $1\\,223\\,040\\,J$.',
+        isCorrect: true,
+        explanation: 'Tính tổng nhiệt đun nóng nước, ấm nhôm và nhiệt hóa hơi, thu được $Q_{ich}=1\\,223\\,040\\,J$.'
+      },
+      {
+        id: 'sq2',
+        content: 'Công suất toàn phần của bếp điện xấp xỉ $776,53\\,W$.',
+        isCorrect: true,
+        explanation: 'Công suất: $P = \\dfrac{Q_{toan}}{t} = \\dfrac{1\\,630\\,720}{2100} \\approx 776,53\\,W$.'
+      },
+      {
+        id: 'sq3',
+        content: 'Tỉ số giữa nhiệt lượng toàn phần và nhiệt lượng có ích là $\\dfrac{3}{4}$.',
+        isCorrect: false,
+        explanation: 'Vì $Q_{ich} = 0,75 Q_{toan}$ nên $\\dfrac{Q_{toan}}{Q_{ich}} = \\dfrac{4}{3}$, không phải $\\dfrac{3}{4}$.'
+      },
+      {
+        id: 'sq4',
+        content: 'Nhiệt lượng toàn phần mà bếp đã cung cấp là $1\\,630\\,720\\,J$.',
+        isCorrect: true,
+        explanation: '$Q_{toan} = \\dfrac{Q_{ich}}{0,75} = 1\\,630\\,720\\,J$.'
+      }
+    ],
+    answerKey: '',
+    explanationText: 'Bài toán đun nước có xét hiệu suất và quá trình hóa hơi.'
+  },
+{
+  topic: 'VẬT LÍ NHIỆT',
+  lessonId: 'l1.1',
+  level: 'Hiểu',
+  type: 'TrueFalse',
+  promptText: 'Tại một cơ sở đúc đồng ở xã Đại Bái (Bắc Ninh), người ta đúc một quả chuông bằng đồng nguyên chất khối lượng $15\\,kg$ qua 6 bước: (1) Tạo mẫu; (2) Tạo khuôn; (3) Nấu chảy đồng; (4) Rót khuôn; (5) Làm nguội và tách sản phẩm; (6) Hoàn thiện sản phẩm. Biết nhiệt độ nóng chảy của đồng là $1084^oC$, nhiệt nóng chảy riêng $\\lambda = 180\\,kJ/kg$, nhiệt dung riêng $c = 380\\,J/kg.K$, nhiệt độ ban đầu $27^oC$. Trong quá trình đúc, $40\\%$ nhiệt lượng bị hao phí ra môi trường.',
+  imageUrl: '',
+  subQuestions: [
+    {
+      id: 'sq1',
+      content: 'Quả chuông đồng cần nhận nhiệt lượng khoảng $8,7\\,MJ$ để nóng chảy hoàn toàn từ nhiệt độ ban đầu.',
+      isCorrect: true,
+      explanation: 'Nhiệt lượng cần thiết gồm nhiệt đun nóng và nhiệt nóng chảy: $Q = mc\\Delta T + m\\lambda = 15\\times380\\times(1084-27) + 15\\times180000 \\approx 8,7\\,MJ$.'
+    },
+    {
+      id: 'sq2',
+      content: 'Nếu năng suất tỏa nhiệt của than đá là $27\\,MJ/kg$ thì khối lượng than đá ít nhất cần dùng là $5,4\\,kg$.',
+      isCorrect: false,
+      explanation: 'Do $40\\%$ nhiệt bị hao phí nên nhiệt lượng cần cung cấp lớn hơn $8,7\\,MJ$. Khối lượng than cần lớn hơn $\\dfrac{8,7}{0,6\\times27} \\approx 0,54\\,kg$, không phải $5,4\\,kg$.'
+    },
+    {
+      id: 'sq3',
+      content: 'Việc sử dụng nhiên liệu hóa thạch để nấu chảy đồng có thể gây ảnh hưởng xấu đến môi trường và sức khỏe nếu hệ thống xử lí khí thải không đạt chuẩn.',
+      isCorrect: true,
+      explanation: 'Đốt nhiên liệu hóa thạch sinh ra khí thải và bụi mịn, gây ô nhiễm môi trường và ảnh hưởng sức khỏe con người.'
+    },
+    {
+      id: 'sq4',
+      content: 'Quá trình nóng chảy của đồng diễn ra ở bước 5.',
+      isCorrect: false,
+      explanation: 'Theo mô tả quy trình, quá trình nóng chảy diễn ra ở bước 3 (nấu chảy đồng), không phải bước 5.'
+    }
+  ],
+  answerKey: '',
+  explanationText: 'Bài toán về quá trình đun nóng – nóng chảy kim loại, có xét hao phí nhiệt và liên hệ thực tiễn sản xuất.'
+},
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.1',
+    level: 'Hiểu',
+    type: 'TrueFalse',
+    promptText: 'Người ta đun nóng chảy hoàn toàn $2\\,kg$ đồng từ nhiệt độ ban đầu $30^oC$. Biết nhiệt độ nóng chảy của đồng là $1085^oC$, nhiệt dung riêng $c = 380\\,J/kg.K$, nhiệt nóng chảy riêng $\\lambda = 1,8\\cdot10^5\\,J/kg$.',
+    imageUrl: '',
+    subQuestions: [
+      {
+        id: 'sq1',
+        content: 'Khi đang nóng chảy, nhiệt độ của đồng không đổi và bằng $1085^oC$.',
+        isCorrect: true,
+        explanation: 'Trong quá trình nóng chảy (áp suất xác định), nhiệt độ của chất rắn tinh khiết không đổi.'
+      },
+      {
+        id: 'sq2',
+        content: 'Ở nhiệt độ nóng chảy, nhiệt lượng cần cung cấp để $2\\,kg$ đồng nóng chảy hoàn toàn là $6,3\\cdot10^4\\,J$.',
+        isCorrect: false,
+        explanation: 'Nhiệt nóng chảy: $Q = m\\lambda = 2\\times1,8\\cdot10^5 = 3,6\\cdot10^5\\,J$, không phải $6,3\\cdot10^4\\,J$.'
+      },
+      {
+        id: 'sq3',
+        content: 'Khi nóng chảy, các nguyên tử đồng nhận năng lượng để phá vỡ liên kết với các nguyên tử xung quanh.',
+        isCorrect: true,
+        explanation: 'Nhiệt lượng cung cấp dùng để tăng thế năng liên kết, không làm tăng nhiệt độ.'
+      },
+      {
+        id: 'sq4',
+        content: 'Nhiệt lượng cần để nung nóng $2\\,kg$ đồng từ $30^oC$ đến $1085^oC$ là $801,8\\,kJ$.',
+        isCorrect: true,
+        explanation: 'Nhiệt lượng: $Q = mc\\Delta T = 2\\times380\\times(1085-30) \\approx 8,02\\cdot10^5\\,J = 801,8\\,kJ$.'
+      }
+    ],
+    answerKey: '',
+    explanationText: 'Bài toán về quá trình nung nóng và nóng chảy kim loại.'
+  },
+
+  // ===== CÂU 8 – THPT CHU VĂN AN (LẠNG SƠN – TN THPT 2025) =====
+  {
+    topic: 'VẬT LÍ NHIỆT',
+    lessonId: 'l1.1',
+    level: 'Hiểu',
+    type: 'TrueFalse',
+    promptText: 'Một bình nước nóng năng lượng Mặt Trời có diện tích tấm hấp thụ $2\\,m^2$, chứa $200\\,lít$ nước ở $25^oC$. Cường độ bức xạ Mặt Trời là $1370\\,W/m^2$, chỉ $60\\%$ năng lượng được truyền cho nước. Bỏ qua trao đổi nhiệt với môi trường. Cho $\\rho = 1000\\,kg/m^3$, $c = 4200\\,J/kg.K$.',
+    imageUrl: '',
+    subQuestions: [
+      {
+        id: 'sq1',
+        content: 'Trong bình nước nóng năng lượng Mặt Trời, quang năng được chuyển hóa thành điện năng.',
+        isCorrect: false,
+        explanation: 'Chỉ pin Mặt Trời mới chuyển quang năng thành điện năng; bình nước nóng chuyển quang năng thành nhiệt năng.'
+      },
+      {
+        id: 'sq2',
+        content: 'Trong $2$ giờ có nắng, nước trong bình nóng thêm $23,5^oC$.',
+        isCorrect: false,
+        explanation: 'Nhiệt lượng thu được: $Q = 0,6\\times1370\\times2\\times7200 = 11,8\\,MJ$. Suy ra $\\Delta T = \\dfrac{Q}{mc} \\approx 14^oC$, không phải $23,5^oC$.'
+      },
+      {
+        id: 'sq3',
+        content: 'Thời gian có nắng để nước trong bình đạt tới $100^oC$ là $8,5$ giờ.',
+        isCorrect: false,
+        explanation: 'Nhiệt lượng cần để đun từ $25^oC$ đến $100^oC$ là $Q = mc\\Delta T = 200\\times4200\\times75$. Thời gian tính được lớn hơn $8,5$ giờ.'
+      },
+      {
+        id: 'sq4',
+        content: 'So với dùng bếp điện hiệu suất $80\\%$ để đun nước đến $75^oC$, sử dụng bình nước nóng năng lượng Mặt Trời giúp tiết kiệm khoảng $26\\,250$ đồng tiền điện.',
+        isCorrect: true,
+        explanation: 'Tính điện năng tiêu thụ quy đổi ra kWh và nhân với giá $1800\\,đ/kWh$ cho kết quả tiết kiệm khoảng $26\\,250$ đồng.'
+      }
+    ],
+    answerKey: '',
+    explanationText: 'Bài toán ứng dụng NL Mặt Trời, hiệu suất và so sánh chi phí năng lượng.'
+  },
+
+
+
+];
+
+
 
  
 
-];
+
 
 // 3. Hàm xử lý tự động đánh số ID
 const generateQuestionBank = (data: QuestionInput[]): Question[] => {

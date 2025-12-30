@@ -3288,7 +3288,7 @@ useEffect(() => {
         
         // Cấu hình thời gian cache (ví dụ 1 tiếng để kiểm tra version 1 lần)
         const cacheTime = localStorage.getItem('data_cache_time');
-        const CACHE_CHECK_INTERVAL = 1000 * 60 * 60; // 1 Tiếng
+        const CACHE_CHECK_INTERVAL = 1000 * 60 * 30; // 1 Tiếng
         
         // Kiểm tra xem đã đến lúc cần check server chưa?
         const needCheckServer = !cacheTime || (Date.now() - parseInt(cacheTime) > CACHE_CHECK_INTERVAL);
