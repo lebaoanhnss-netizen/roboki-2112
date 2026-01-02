@@ -2144,178 +2144,214 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
   const [showRankInfo, setShowRankInfo] = useState(false);
   const [infoTab, setInfoTab] = useState<'RANKS' | 'BADGES'>('RANKS');
 
-  // --- 1. DỮ LIỆU CẤP ĐỘ ---
+// --- 1. DỮ LIỆU CẤP ĐỘ (ĐÃ TĂNG ĐỘ KHÓ - HARD MODE) ---
+  
+  // 🌌 TỔNG HỢP: Max cũ 10k -> Max mới 50k (Cày rất lâu mới max)
   const TOTAL_RANKS = [
-      { min: 10000, label: 'ĐA VŨ TRỤ', icon: '🌌', color: 'text-purple-600' },
-      { min: 9000, label: 'VÔ CỰC', icon: '♾️', color: 'text-fuchsia-600' },
-      { min: 8200, label: 'THỜI GIAN', icon: '⏳', color: 'text-teal-600' },
-      { min: 7500, label: 'KHÔNG GIAN', icon: '💠', color: 'text-indigo-600' },
-      { min: 6900, label: 'BIG BANG', icon: '💥', color: 'text-rose-600' },
-      { min: 6400, label: 'HỐ ĐEN', icon: '⚫', color: 'text-slate-900' },
-      { min: 5900, label: 'SIÊU TÂN TINH', icon: '✨', color: 'text-orange-500' },
-      { min: 5400, label: 'THIÊN HÀ', icon: '🌀', color: 'text-violet-500' },
-      { min: 5000, label: 'TINH VÂN', icon: '🌫️', color: 'text-pink-500' },
-      { min: 4600, label: 'CHÒM SAO', icon: '✨', color: 'text-blue-500' },
-      { min: 4200, label: 'MẶT TRỜI', icon: '🌞', color: 'text-yellow-500' },
-      { min: 3800, label: 'SAO MỘC', icon: '🪐', color: 'text-amber-600' },
-      { min: 3500, label: 'SAO THỔ', icon: '🪐', color: 'text-yellow-600' },
-      { min: 3200, label: 'TRÁI ĐẤT', icon: '🌍', color: 'text-blue-600' },
-      { min: 2900, label: 'SAO HỎA', icon: '🔴', color: 'text-red-600' },
-      { min: 2600, label: 'MẶT TRĂNG', icon: '🌑', color: 'text-slate-500' },
-      { min: 2350, label: 'VỆ TINH', icon: '🛰️', color: 'text-zinc-500' },
-      { min: 2100, label: 'TẦNG ĐIỆN LY', icon: '⚡', color: 'text-violet-500' },
-      { min: 1900, label: 'BÃO TỪ', icon: '🌪️', color: 'text-fuchsia-500' },
-      { min: 1700, label: 'CỰC QUANG', icon: '🌈', color: 'text-emerald-500' },
-      { min: 1500, label: 'KHÍ QUYỂN', icon: '☁️', color: 'text-sky-500' },
-      { min: 1350, label: 'ĐẠI DƯƠNG', icon: '🌊', color: 'text-blue-700' },
-      { min: 1200, label: 'LỤC ĐỊA', icon: '⛰️', color: 'text-green-800' },
-      { min: 1050, label: 'SINH QUYỂN', icon: '🌳', color: 'text-lime-700' },
-      { min: 900, label: 'RỪNG RẬM', icon: '🌴', color: 'text-teal-700' },
+      { min: 50000, label: 'ĐA VŨ TRỤ', icon: '🌌', color: 'text-purple-600' },
+      { min: 42000, label: 'VÔ CỰC', icon: '♾️', color: 'text-fuchsia-600' },
+      { min: 35000, label: 'THỜI GIAN', icon: '⏳', color: 'text-teal-600' },
+      { min: 29000, label: 'KHÔNG GIAN', icon: '💠', color: 'text-indigo-600' },
+      { min: 24000, label: 'BIG BANG', icon: '💥', color: 'text-rose-600' },
+      { min: 20000, label: 'HỐ ĐEN', icon: '⚫', color: 'text-slate-900' },
+      { min: 17000, label: 'SIÊU TÂN TINH', icon: '✨', color: 'text-orange-500' },
+      { min: 14500, label: 'THIÊN HÀ', icon: '🌀', color: 'text-violet-500' },
+      { min: 12500, label: 'TINH VÂN', icon: '🌫️', color: 'text-pink-500' },
+      { min: 11000, label: 'CHÒM SAO', icon: '✨', color: 'text-blue-500' },
+      { min: 9500, label: 'MẶT TRỜI', icon: '🌞', color: 'text-yellow-500' },
+      { min: 8200, label: 'SAO MỘC', icon: '🪐', color: 'text-amber-600' },
+      { min: 7000, label: 'SAO THỔ', icon: '🪐', color: 'text-yellow-600' },
+      { min: 6000, label: 'TRÁI ĐẤT', icon: '🌍', color: 'text-blue-600' },
+      { min: 5200, label: 'SAO HỎA', icon: '🔴', color: 'text-red-600' },
+      { min: 4500, label: 'MẶT TRĂNG', icon: '🌑', color: 'text-slate-500' },
+      { min: 3800, label: 'VỆ TINH', icon: '🛰️', color: 'text-zinc-500' },
+      { min: 3200, label: 'TẦNG ĐIỆN LY', icon: '⚡', color: 'text-violet-500' },
+      { min: 2700, label: 'BÃO TỪ', icon: '🌪️', color: 'text-fuchsia-500' },
+      { min: 2300, label: 'CỰC QUANG', icon: '🌈', color: 'text-emerald-500' },
+      { min: 1900, label: 'KHÍ QUYỂN', icon: '☁️', color: 'text-sky-500' },
+      { min: 1600, label: 'ĐẠI DƯƠNG', icon: '🌊', color: 'text-blue-700' },
+      { min: 1350, label: 'LỤC ĐỊA', icon: '⛰️', color: 'text-green-800' },
+      { min: 1150, label: 'SINH QUYỂN', icon: '🌳', color: 'text-lime-700' },
+      { min: 950, label: 'RỪNG RẬM', icon: '🌴', color: 'text-teal-700' },
       { min: 800, label: 'CAO NGUYÊN', icon: '🌄', color: 'text-orange-700' },
-      { min: 700, label: 'TINH THỂ', icon: '💎', color: 'text-cyan-700' },
-      { min: 600, label: 'PHÂN TỬ', icon: '⚗️', color: 'text-teal-700' },
-      { min: 500, label: 'NGUYÊN TỬ', icon: '⚛️', color: 'text-purple-700' },
-      { min: 420, label: 'HẠT NHÂN', icon: '☢️', color: 'text-yellow-700' },
-      { min: 350, label: 'NUCLEON', icon: '🔴', color: 'text-rose-700' },
-      { min: 280, label: 'PROTON', icon: '➕', color: 'text-red-700' },
-      { min: 220, label: 'NEUTRON', icon: '⚪', color: 'text-gray-700' },
-      { min: 160, label: 'ELECTRON', icon: '➖', color: 'text-blue-700' },
-      { min: 110, label: 'QUARK', icon: '🧩', color: 'text-pink-600' },
-      { min: 70, label: 'PHOTON', icon: '💡', color: 'text-yellow-600' },
-      { min: 40, label: 'HẠT BỤI', icon: '🌫️', color: 'text-stone-600' },
-      { min: 20, label: 'VÔ HÌNH', icon: '👻', color: 'text-gray-400' },
-      { min: 10, label: 'HƯ KHÔNG', icon: '🌑', color: 'text-slate-400' },
+      { min: 650, label: 'TINH THỂ', icon: '💎', color: 'text-cyan-700' },
+      { min: 500, label: 'PHÂN TỬ', icon: '⚗️', color: 'text-teal-700' },
+      { min: 400, label: 'NGUYÊN TỬ', icon: '⚛️', color: 'text-purple-700' },
+      { min: 300, label: 'HẠT NHÂN', icon: '☢️', color: 'text-yellow-700' },
+      { min: 220, label: 'NUCLEON', icon: '🔴', color: 'text-rose-700' },
+      { min: 150, label: 'PROTON', icon: '➕', color: 'text-red-700' },
+      { min: 100, label: 'NEUTRON', icon: '⚪', color: 'text-gray-700' },
+      { min: 70, label: 'ELECTRON', icon: '➖', color: 'text-blue-700' },
+      { min: 50, label: 'QUARK', icon: '🧩', color: 'text-pink-600' },
+      { min: 30, label: 'PHOTON', icon: '💡', color: 'text-yellow-600' },
+      { min: 15, label: 'HẠT BỤI', icon: '🌫️', color: 'text-stone-600' },
+      { min: 5, label: 'VÔ HÌNH', icon: '👻', color: 'text-gray-400' },
       { min: 0, label: 'KHỞI NGUYÊN', icon: '🥚', color: 'text-slate-400' },
   ];
 
+  // 📚 LUYỆN TẬP: Max cũ 3k -> Max mới 10k
   const PRACTICE_RANKS = [
-      { min: 3000, label: 'VẠN THẾ SƯ', icon: '🧘', color: 'text-yellow-700' },
-      { min: 2500, label: 'THÁNH NHÂN', icon: '⚜️', color: 'text-yellow-600' },
-      { min: 2100, label: 'HIỀN TRIẾT', icon: '👴', color: 'text-amber-700' },
-      { min: 1800, label: 'ĐẠI TRÍ TUỆ', icon: '🧠', color: 'text-amber-600' },
-      { min: 1500, label: 'NHÀ BÁC HỌC', icon: '⚛️', color: 'text-orange-700' },
-      { min: 1200, label: 'GIÁO SƯ', icon: '👨‍🏫', color: 'text-orange-600' },
-      { min: 1000, label: 'TIẾN SĨ', icon: '🎓', color: 'text-red-600' },
-      { min: 800, label: 'THẠC SĨ', icon: '📜', color: 'text-rose-600' },
-      { min: 650, label: 'HỌC GIẢ', icon: '📙', color: 'text-pink-600' },
-      { min: 500, label: 'UYÊN BÁC', icon: '📚', color: 'text-fuchsia-600' },
-      { min: 400, label: 'TINH THÔNG', icon: '💡', color: 'text-purple-600' },
-      { min: 300, label: 'THÔNG HIỂU', icon: '🧐', color: 'text-violet-600' },
-      { min: 200, label: 'CẦN CÙ', icon: '🐜', color: 'text-indigo-600' },
-      { min: 150, label: 'CHĂM CHỈ', icon: '🐝', color: 'text-blue-600' },
-      { min: 100, label: 'MỌT SÁCH', icon: '🤓', color: 'text-sky-600' },
-      { min: 70, label: 'HIẾU HỌC', icon: '📖', color: 'text-cyan-600' },
-      { min: 40, label: 'SƠ CẤP', icon: '📝', color: 'text-teal-600' },
-      { min: 20, label: 'HAM HỌC', icon: '🌱', color: 'text-emerald-600' },
-      { min: 10, label: 'TẬP ĐỌC', icon: '👶', color: 'text-green-600' },
+      { min: 10000, label: 'VẠN THẾ SƯ', icon: '🧘', color: 'text-yellow-700' },
+      { min: 8500, label: 'THÁNH NHÂN', icon: '⚜️', color: 'text-yellow-600' },
+      { min: 7200, label: 'HIỀN TRIẾT', icon: '👴', color: 'text-amber-700' },
+      { min: 6000, label: 'ĐẠI TRÍ TUỆ', icon: '🧠', color: 'text-amber-600' },
+      { min: 5000, label: 'NHÀ BÁC HỌC', icon: '⚛️', color: 'text-orange-700' },
+      { min: 4200, label: 'GIÁO SƯ', icon: '👨‍🏫', color: 'text-orange-600' },
+      { min: 3500, label: 'TIẾN SĨ', icon: '🎓', color: 'text-red-600' },
+      { min: 2800, label: 'THẠC SĨ', icon: '📜', color: 'text-rose-600' },
+      { min: 2200, label: 'HỌC GIẢ', icon: '📙', color: 'text-pink-600' },
+      { min: 1700, label: 'UYÊN BÁC', icon: '📚', color: 'text-fuchsia-600' },
+      { min: 1300, label: 'TINH THÔNG', icon: '💡', color: 'text-purple-600' },
+      { min: 1000, label: 'THÔNG HIỂU', icon: '🧐', color: 'text-violet-600' },
+      { min: 750, label: 'CẦN CÙ', icon: '🐜', color: 'text-indigo-600' },
+      { min: 550, label: 'CHĂM CHỈ', icon: '🐝', color: 'text-blue-600' },
+      { min: 350, label: 'MỌT SÁCH', icon: '🤓', color: 'text-sky-600' },
+      { min: 200, label: 'HIẾU HỌC', icon: '📖', color: 'text-cyan-600' },
+      { min: 100, label: 'SƠ CẤP', icon: '📝', color: 'text-teal-600' },
+      { min: 50, label: 'HAM HỌC', icon: '🌱', color: 'text-emerald-600' },
+      { min: 20, label: 'TẬP ĐỌC', icon: '👶', color: 'text-green-600' },
       { min: 0, label: 'NGƯỜI MỚI', icon: '🥚', color: 'text-slate-400' },
   ];
 
+  // 🎓 THI THỬ: Max cũ 5k -> Max mới 15k
   const EXAM_RANKS = [
-      { min: 5200, label: 'THẦN CƠ', icon: '🔮', color: 'text-red-700' },
-      { min: 4400, label: 'THÁI SƯ', icon: '🏮', color: 'text-orange-700' },
-      { min: 3700, label: 'ĐẠI HỌC SĨ', icon: '👴', color: 'text-orange-600' },
-      { min: 3100, label: 'TRẠNG NGUYÊN', icon: '🏆', color: 'text-yellow-600' },
-      { min: 2600, label: 'BẢNG NHÃN', icon: '👁️', color: 'text-yellow-500' },
-      { min: 2150, label: 'THÁM HOA', icon: '🌸', color: 'text-amber-600' },
-      { min: 1750, label: 'HOÀNG GIÁP', icon: '🐢', color: 'text-amber-500' },
-      { min: 1400, label: 'TIẾN SĨ', icon: '🎓', color: 'text-lime-700' },
-      { min: 1100, label: 'PHÓ BẢNG', icon: '🥈', color: 'text-lime-600' },
-      { min: 850, label: 'GIÁM SINH', icon: '🏛️', color: 'text-green-700' },
-      { min: 650, label: 'GIẢI NGUYÊN', icon: '🥇', color: 'text-green-600' },
-      { min: 500, label: 'CỬ NHÂN', icon: '🎓', color: 'text-emerald-600' },
-      { min: 380, label: 'CỐNG SINH', icon: '🎁', color: 'text-teal-600' },
-      { min: 280, label: 'TÚ TÀI', icon: '📜', color: 'text-cyan-600' },
-      { min: 200, label: 'KHÓA SINH', icon: '🎒', color: 'text-sky-700' },
-      { min: 140, label: 'NHO SINH', icon: '🎍', color: 'text-blue-700' },
-      { min: 90, label: 'THƯ SINH', icon: '📖', color: 'text-indigo-700' },
-      { min: 50, label: 'ĐỒNG SINH', icon: '🧒', color: 'text-violet-700' },
-      { min: 20, label: 'NHẬP MÔN', icon: '🎋', color: 'text-purple-700' },
+      { min: 15000, label: 'THẦN CƠ', icon: '🔮', color: 'text-red-700' },
+      { min: 12500, label: 'THÁI SƯ', icon: '🏮', color: 'text-orange-700' },
+      { min: 10500, label: 'ĐẠI HỌC SĨ', icon: '👴', color: 'text-orange-600' },
+      { min: 8800, label: 'TRẠNG NGUYÊN', icon: '🏆', color: 'text-yellow-600' },
+      { min: 7200, label: 'BẢNG NHÃN', icon: '👁️', color: 'text-yellow-500' },
+      { min: 5800, label: 'THÁM HOA', icon: '🌸', color: 'text-amber-600' },
+      { min: 4600, label: 'HOÀNG GIÁP', icon: '🐢', color: 'text-amber-500' },
+      { min: 3600, label: 'TIẾN SĨ', icon: '🎓', color: 'text-lime-700' },
+      { min: 2800, label: 'PHÓ BẢNG', icon: '🥈', color: 'text-lime-600' },
+      { min: 2100, label: 'GIÁM SINH', icon: '🏛️', color: 'text-green-700' },
+      { min: 1500, label: 'GIẢI NGUYÊN', icon: '🥇', color: 'text-green-600' },
+      { min: 1000, label: 'CỬ NHÂN', icon: '🎓', color: 'text-emerald-600' },
+      { min: 700, label: 'CỐNG SINH', icon: '🎁', color: 'text-teal-600' },
+      { min: 450, label: 'TÚ TÀI', icon: '📜', color: 'text-cyan-600' },
+      { min: 250, label: 'KHÓA SINH', icon: '🎒', color: 'text-sky-700' },
+      { min: 150, label: 'NHO SINH', icon: '🎍', color: 'text-blue-700' },
+      { min: 80, label: 'THƯ SINH', icon: '📖', color: 'text-indigo-700' },
+      { min: 40, label: 'ĐỒNG SINH', icon: '🧒', color: 'text-violet-700' },
+      { min: 15, label: 'NHẬP MÔN', icon: '🎋', color: 'text-purple-700' },
       { min: 0, label: 'VỠ LÒNG', icon: '👶', color: 'text-slate-400' },
   ];
 
+  // 🎮 GAME: Max cũ 5k -> Max mới 20k (Game dễ kiếm điểm nên tăng cao)
   const GAME_RANKS = [
-      { min: 5000, label: 'VUA TRÒ CHƠI', icon: '👑', color: 'text-yellow-500' },
-      { min: 4000, label: 'HUYỀN THOẠI', icon: '☠️', color: 'text-red-600' },
-      { min: 3200, label: 'THÁCH ĐẤU', icon: '🔥', color: 'text-red-500' },
-      { min: 2600, label: 'ĐẠI CAO THỦ', icon: '🎖️', color: 'text-orange-600' },
-      { min: 2100, label: 'CAO THỦ', icon: '⚔️', color: 'text-orange-500' },
-      { min: 1700, label: 'TINH ANH', icon: '✨', color: 'text-amber-500' },
-      { min: 1350, label: 'KIM CƯƠNG', icon: '💎', color: 'text-cyan-500' },
-      { min: 1100, label: 'LỤC BẢO', icon: '💚', color: 'text-emerald-500' },
-      { min: 900, label: 'BẠCH KIM', icon: '💠', color: 'text-teal-500' },
-      { min: 750, label: 'VÀNG ĐOÀN', icon: '🥇', color: 'text-yellow-500' },
-      { min: 630, label: 'BẠC I', icon: '🥈', color: 'text-slate-400' },
-      { min: 520, label: 'BẠC II', icon: '🥈', color: 'text-slate-500' },
-      { min: 420, label: 'BẠC III', icon: '🥈', color: 'text-slate-600' },
-      { min: 330, label: 'ĐỒNG I', icon: '🥉', color: 'text-orange-700' },
-      { min: 250, label: 'ĐỒNG II', icon: '🥉', color: 'text-orange-600' },
-      { min: 180, label: 'ĐỒNG III', icon: '🥉', color: 'text-stone-600' },
-      { min: 120, label: 'SẮT ĐOÀN', icon: '🔩', color: 'text-zinc-500' },
-      { min: 70, label: 'NHẬP MÔN', icon: '🕹️', color: 'text-gray-600' },
-      { min: 30, label: 'GÀ MỜ', icon: '🐣', color: 'text-slate-400' },
+      { min: 20000, label: 'VUA TRÒ CHƠI', icon: '👑', color: 'text-yellow-500' },
+      { min: 17000, label: 'HUYỀN THOẠI', icon: '☠️', color: 'text-red-600' },
+      { min: 14500, label: 'THÁCH ĐẤU', icon: '🔥', color: 'text-red-500' },
+      { min: 12000, label: 'ĐẠI CAO THỦ', icon: '🎖️', color: 'text-orange-600' },
+      { min: 10000, label: 'CAO THỦ', icon: '⚔️', color: 'text-orange-500' },
+      { min: 8200, label: 'TINH ANH', icon: '✨', color: 'text-amber-500' },
+      { min: 6500, label: 'KIM CƯƠNG', icon: '💎', color: 'text-cyan-500' },
+      { min: 5000, label: 'LỤC BẢO', icon: '💚', color: 'text-emerald-500' },
+      { min: 3800, label: 'BẠCH KIM', icon: '💠', color: 'text-teal-500' },
+      { min: 2800, label: 'VÀNG ĐOÀN', icon: '🥇', color: 'text-yellow-500' },
+      { min: 2000, label: 'BẠC I', icon: '🥈', color: 'text-slate-400' },
+      { min: 1400, label: 'BẠC II', icon: '🥈', color: 'text-slate-500' },
+      { min: 900, label: 'BẠC III', icon: '🥈', color: 'text-slate-600' },
+      { min: 600, label: 'ĐỒNG I', icon: '🥉', color: 'text-orange-700' },
+      { min: 350, label: 'ĐỒNG II', icon: '🥉', color: 'text-orange-600' },
+      { min: 150, label: 'ĐỒNG III', icon: '🥉', color: 'text-stone-600' },
+      { min: 80, label: 'SẮT ĐOÀN', icon: '🔩', color: 'text-zinc-500' },
+      { min: 40, label: 'NHẬP MÔN', icon: '🕹️', color: 'text-gray-600' },
+      { min: 10, label: 'GÀ MỜ', icon: '🐣', color: 'text-slate-400' },
       { min: 0, label: 'TẬP CHƠI', icon: '🎮', color: 'text-slate-300' },
   ];
 
+  // 🛡️ THỬ THÁCH: Max cũ 5k -> Max mới 12k
   const CHALLENGE_RANKS = [
-      { min: 5000, label: 'THỐNG LĨNH', icon: '🦅', color: 'text-red-800' },
-      { min: 4000, label: 'ĐẠI TƯỚNG', icon: '🌟🌟🌟🌟', color: 'text-red-700' },
-      { min: 3300, label: 'THƯỢNG TƯỚNG', icon: '🌟🌟🌟', color: 'text-red-600' },
-      { min: 2700, label: 'TRUNG TƯỚNG', icon: '🌟🌟', color: 'text-red-600' },
-      { min: 2200, label: 'THIẾU TƯỚNG', icon: '🌟', color: 'text-red-500' },
-      { min: 1800, label: 'ĐẠI TÁ', icon: '🔶🔶🔶🔶', color: 'text-orange-600' },
-      { min: 1450, label: 'THƯỢNG TÁ', icon: '🔶🔶🔶', color: 'text-orange-500' },
-      { min: 1150, label: 'TRUNG TÁ', icon: '🔶🔶', color: 'text-orange-400' },
-      { min: 900, label: 'THIẾU TÁ', icon: '🔶', color: 'text-orange-300' },
-      { min: 700, label: 'ĐẠI ÚY', icon: '⭐⭐⭐⭐', color: 'text-yellow-600' },
-      { min: 560, label: 'THƯỢNG ÚY', icon: '⭐⭐⭐', color: 'text-yellow-500' },
-      { min: 450, label: 'TRUNG ÚY', icon: '⭐⭐', color: 'text-yellow-500' },
-      { min: 350, label: 'THIẾU ÚY', icon: '⭐', color: 'text-yellow-500' },
-      { min: 270, label: 'CHUẨN ÚY', icon: '💠', color: 'text-lime-600' },
-      { min: 200, label: 'THƯỢNG SĨ', icon: '🔹', color: 'text-blue-600' },
-      { min: 140, label: 'TRUNG SĨ', icon: '🔹', color: 'text-blue-500' },
-      { min: 90, label: 'HẠ SĨ', icon: '🔹', color: 'text-sky-500' },
+      { min: 12000, label: 'THỐNG LĨNH', icon: '🦅', color: 'text-red-800' },
+      { min: 10000, label: 'ĐẠI TƯỚNG', icon: '🌟🌟🌟🌟', color: 'text-red-700' },
+      { min: 8500, label: 'THƯỢNG TƯỚNG', icon: '🌟🌟🌟', color: 'text-red-600' },
+      { min: 7200, label: 'TRUNG TƯỚNG', icon: '🌟🌟', color: 'text-red-600' },
+      { min: 6000, label: 'THIẾU TƯỚNG', icon: '🌟', color: 'text-red-500' },
+      { min: 5000, label: 'ĐẠI TÁ', icon: '🔶🔶🔶🔶', color: 'text-orange-600' },
+      { min: 4100, label: 'THƯỢNG TÁ', icon: '🔶🔶🔶', color: 'text-orange-500' },
+      { min: 3300, label: 'TRUNG TÁ', icon: '🔶🔶', color: 'text-orange-400' },
+      { min: 2600, label: 'THIẾU TÁ', icon: '🔶', color: 'text-orange-300' },
+      { min: 2000, label: 'ĐẠI ÚY', icon: '⭐⭐⭐⭐', color: 'text-yellow-600' },
+      { min: 1500, label: 'THƯỢNG ÚY', icon: '⭐⭐⭐', color: 'text-yellow-500' },
+      { min: 1100, label: 'TRUNG ÚY', icon: '⭐⭐', color: 'text-yellow-500' },
+      { min: 800, label: 'THIẾU ÚY', icon: '⭐', color: 'text-yellow-500' },
+      { min: 550, label: 'CHUẨN ÚY', icon: '💠', color: 'text-lime-600' },
+      { min: 350, label: 'THƯỢNG SĨ', icon: '🔹', color: 'text-blue-600' },
+      { min: 200, label: 'TRUNG SĨ', icon: '🔹', color: 'text-blue-500' },
+      { min: 100, label: 'HẠ SĨ', icon: '🔹', color: 'text-sky-500' },
       { min: 50, label: 'BINH NHẤT', icon: '🛡️', color: 'text-indigo-600' },
       { min: 20, label: 'BINH NHÌ', icon: '🛡️', color: 'text-violet-600' },
       { min: 0, label: 'TÂN BINH', icon: '👣', color: 'text-slate-400' },
   ];
 
+  // 🛠️ TẠO ĐỀ: Max cũ 5k -> Max mới 15k
   const MOCK_RANKS = [
-      { min: 5000, label: 'ĐẤNG SÁNG THẾ', icon: '🌌', color: 'text-violet-700' },
-      { min: 3500, label: 'TIÊN PHONG', icon: '🚩', color: 'text-fuchsia-600' },
-      { min: 2900, label: 'NHÀ PHÁT MINH', icon: '💡', color: 'text-pink-600' },
-      { min: 2000, label: 'QUY HOẠCH SƯ', icon: '🗺️', color: 'text-orange-600' },
-      { min: 1300, label: 'KIẾN TRÚC SƯ', icon: '📐', color: 'text-yellow-600' },
-      { min: 1000, label: 'NHÀ THIẾT KẾ', icon: '🎨', color: 'text-lime-600' },
-      { min: 800, label: 'THIẾT KẾ VIÊN', icon: '✏️', color: 'text-green-600' },
-      { min: 650, label: 'KỸ SƯ TRƯỞNG', icon: '🏗️', color: 'text-emerald-600' },
-      { min: 500, label: 'KỸ SƯ CHÍNH', icon: '⚙️', color: 'text-teal-600' },
-      { min: 400, label: 'KỸ SƯ', icon: '🔩', color: 'text-cyan-600' },
-      { min: 300, label: 'KỸ THUẬT VIÊN', icon: '🔧', color: 'text-sky-600' },
-      { min: 200, label: 'QUẢN CÔNG', icon: '📋', color: 'text-blue-600' },
-      { min: 120, label: 'THỢ CẢ', icon: '👷', color: 'text-indigo-600' },
-      { min: 70, label: 'THỢ LÀNH NGHỀ', icon: '🔨', color: 'text-violet-600' },
-      { min: 40, label: 'THỢ HỌC VIỆC', icon: '🧱', color: 'text-purple-600' },
-      { min: 20, label: 'PHỤ VIỆC', icon: '🧹', color: 'text-fuchsia-600' },
+      { min: 15000, label: 'ĐẤNG SÁNG THẾ', icon: '🌌', color: 'text-violet-700' },
+      { min: 12500, label: 'TIÊN PHONG', icon: '🚩', color: 'text-fuchsia-600' },
+      { min: 10500, label: 'NHÀ PHÁT MINH', icon: '💡', color: 'text-pink-600' },
+      { min: 8800, label: 'QUY HOẠCH SƯ', icon: '🗺️', color: 'text-orange-600' },
+      { min: 7200, label: 'KIẾN TRÚC SƯ', icon: '📐', color: 'text-yellow-600' },
+      { min: 5800, label: 'NHÀ THIẾT KẾ', icon: '🎨', color: 'text-lime-600' },
+      { min: 4600, label: 'THIẾT KẾ VIÊN', icon: '✏️', color: 'text-green-600' },
+      { min: 3500, label: 'KỸ SƯ TRƯỞNG', icon: '🏗️', color: 'text-emerald-600' },
+      { min: 2500, label: 'KỸ SƯ CHÍNH', icon: '⚙️', color: 'text-teal-600' },
+      { min: 1800, label: 'KỸ SƯ', icon: '🔩', color: 'text-cyan-600' },
+      { min: 1200, label: 'KỸ THUẬT VIÊN', icon: '🔧', color: 'text-sky-600' },
+      { min: 800, label: 'QUẢN CÔNG', icon: '📋', color: 'text-blue-600' },
+      { min: 500, label: 'THỢ CẢ', icon: '👷', color: 'text-indigo-600' },
+      { min: 300, label: 'THỢ LÀNH NGHỀ', icon: '🔨', color: 'text-violet-600' },
+      { min: 150, label: 'THỢ HỌC VIỆC', icon: '🧱', color: 'text-purple-600' },
+      { min: 80, label: 'PHỤ VIỆC', icon: '🧹', color: 'text-fuchsia-600' },
       { min: 0, label: 'TẬP SỰ', icon: '🔰', color: 'text-slate-400' },
   ];
 
-  // --- 2. DỮ LIỆU HUY HIỆU ---
+  // --- 2. DỮ LIỆU HUY HIỆU (ĐÃ CẬP NHẬT FULL 30 DANH HIỆU) ---
   const BADGE_DEFINITIONS = [
-      { icon: '👑', label: 'Độc tôn', desc: 'Top 1 Bảng xếp hạng', color: 'bg-yellow-100 text-yellow-700' },
-      { icon: '⚛️', label: 'Yêu Vật Lí', desc: 'Tổng điểm > 5000', color: 'bg-indigo-100 text-indigo-700' },
-      { icon: '💎', label: 'Đại gia', desc: 'Điểm Game > 3000', color: 'bg-fuchsia-100 text-fuchsia-700' },
-      { icon: '🏹', label: 'Thợ săn', desc: 'Điểm Thử thách > 500', color: 'bg-emerald-100 text-emerald-700' },
-      { icon: '🧠', label: 'Siêu trí tuệ', desc: 'Điểm thi thử > 9.5', color: 'bg-rose-100 text-rose-700' },
-      { icon: '🔥', label: 'Chăm chỉ', desc: 'Đăng nhập 3 ngày liên tiếp', color: 'bg-orange-100 text-orange-700' },
-      { icon: '⚡', label: 'Tia chớp', desc: 'Trả lời đúng < 5s', color: 'bg-yellow-100 text-yellow-700' },
-      { icon: '🎯', label: 'Xạ thủ', desc: 'Đúng 10 câu liên tiếp', color: 'bg-red-100 text-red-700' },
-      { icon: '🦉', label: 'Cú đêm', desc: 'Học bài sau 23h', color: 'bg-slate-100 text-slate-700' },
-      { icon: '🐓', label: 'Gà gáy', desc: 'Học bài sáng sớm (0h-5h)', color: 'bg-teal-100 text-teal-700' },
-      { icon: '🍀', label: 'Thần tài', desc: 'Quay trúng ô may mắn', color: 'bg-green-100 text-green-700' },
+      // 👑 NHÓM XẾP HẠNG
+      { icon: '👑', label: 'Top 1', desc: 'Đứng đầu Bảng xếp hạng', color: 'bg-yellow-100 text-yellow-700' },
+      { icon: '🥈', label: 'Top 2', desc: 'Top 2 Bảng xếp hạng', color: 'bg-slate-100 text-slate-700' },
+      { icon: '🥉', label: 'Top 3 ', desc: 'Top 3 Bảng xếp hạng', color: 'bg-orange-100 text-orange-700' },
+
+      // 🌟 NHÓM TỔNG ĐIỂM
+      { icon: '🌟', label: 'Huyền Thoại', desc: 'Tổng điểm > 50.000 XP', color: 'bg-purple-100 text-purple-700' },
+      { icon: '🔥', label: 'Chiến Thần', desc: 'Tổng điểm > 20.000 XP', color: 'bg-red-100 text-red-700' },
+      { icon: '⚛️', label: 'Yêu Vật Lí', desc: 'Tổng điểm > 5.000 XP', color: 'bg-indigo-100 text-indigo-700' },
+
+      // 🌳 NHÓM KHU VƯỜN
+      { icon: '🌳', label: 'Thần Rừng', desc: 'Cây đạt cấp tối đa (Lv.50)', color: 'bg-green-600 text-white' },
+      { icon: '🌲', label: 'Chủ Trang Trại', desc: 'Cây đạt cấp 30 trở lên', color: 'bg-lime-100 text-lime-700' },
+      { icon: '🌱', label: 'Yêu Thiên Nhiên', desc: 'Cây đạt cấp 10 trở lên', color: 'bg-teal-100 text-teal-700' },
+      { icon: '💧', label: 'Vua Thủy Tề', desc: 'Tích trữ 100 Nước', color: 'bg-sky-100 text-sky-700' },
+      { icon: '🧪', label: 'Nhà Hóa Học', desc: 'Tích trữ 50 Phân bón', color: 'bg-amber-100 text-amber-700' },
+
+      // 🧠 NHÓM KỸ NĂNG & ĐIỂM SỐ
+      { icon: '👽', label: 'Tuyệt Đối 10/10', desc: 'Đạt điểm 10 bài Thi thử', color: 'bg-rose-600 text-white' },
+      { icon: '🧠', label: 'Siêu Trí Tuệ', desc: 'Điểm Thi thử >= 9.0', color: 'bg-rose-100 text-rose-700' },
+      { icon: '🎰', label: 'Vua Trò Chơi', desc: 'Điểm Game > 10.000', color: 'bg-fuchsia-100 text-fuchsia-700' },
+      { icon: '🛡️', label: 'Thống Lĩnh', desc: 'Điểm Thử thách > 2.000', color: 'bg-emerald-100 text-emerald-700' },
+
+      // 🎯 NHÓM CHUỖI THẮNG
+      { icon: '🚀', label: 'Không Thể Cản Phá', desc: 'Đúng 50 câu liên tiếp', color: 'bg-red-600 text-white' },
+      { icon: '🎯', label: 'Bách Phát Bách Trúng', desc: 'Đúng 20 câu liên tiếp', color: 'bg-orange-100 text-orange-700' },
+      { icon: '🔫', label: 'Xạ Thủ', desc: 'Đúng 10 câu liên tiếp', color: 'bg-orange-50 text-orange-600' },
+
+      // ⚡ NHÓM TỐC ĐỘ & CHĂM CHỈ
+      { icon: '⚡', label: 'The Flash', desc: '100 lần trả lời cực nhanh', color: 'bg-yellow-300 text-yellow-800' },
+      { icon: '📅', label: 'Kiên Trì', desc: 'Đăng nhập 30 ngày liên tục', color: 'bg-blue-100 text-blue-700' },
+      { icon: '🔥', label: 'Chăm Chỉ', desc: 'Đăng nhập 7 ngày liên tục', color: 'bg-orange-100 text-orange-700' },
+
+      // ⏰ NHÓM GIỜ GIẤC
+      { icon: '🦉', label: 'Cú Đêm', desc: 'Học bài khung giờ 23h - 2h', color: 'bg-slate-800 text-white' },
+      { icon: '🐓', label: 'Gà Gáy Sớm', desc: 'Học bài khung giờ 4h - 6h', color: 'bg-teal-100 text-teal-700' },
+      { icon: '🍚', label: 'Xuyên Trưa', desc: 'Học bài khung giờ 11h - 13h', color: 'bg-stone-100 text-stone-700' },
+      
+      // 🍀 KHÁC
+      { icon: '🍀', label: 'Thần Tài Gõ Cửa', desc: '10 lần quay trúng ô may mắn', color: 'bg-green-100 text-green-700' },
+      { icon: '🛠️', label: 'Tác Giả', desc: 'Admin hệ thống', color: 'bg-slate-900 text-white' },
   ];
 
-  // --- 3. LOGIC XỬ LÝ (ĐÃ SỬA LẠI PHẦN FETCH) ---
+  // --- 3. LOGIC XỬ LÝ (GIỮ NGUYÊN) ---
   const getCurrentRankList = () => {
       switch(category) {
           case 'PRACTICE': return PRACTICE_RANKS;
@@ -2326,7 +2362,6 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
           default: return TOTAL_RANKS;
       }
   };
-
   // 👇 HÀM FETCH DỮ LIỆU ĐÃ SỬA: BỎ LỌC LỚP/TRƯỜNG, GIỮ LẠI CATEGORY (6 TAB)
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -2443,18 +2478,67 @@ const LeaderboardScreen: React.FC<{ onBack: () => void; currentUser: UserProfile
 
   const getBadges = (u: UserProfile, index: number) => {
       const badges = [];
-      if (index === 0) badges.push({ icon: '👑', color: 'bg-yellow-400 text-white border border-yellow-500', label: 'Độc tôn' });
-      if ((u.totalScore || 0) > 5000) badges.push({ icon: '⚛️', color: 'bg-indigo-600 text-white border border-indigo-700', label: 'Yêu Vật Lí' });
-      if ((u.gameScore || 0) > 3000) badges.push({ icon: '💎', color: 'bg-fuchsia-500 text-white border border-fuchsia-600', label: 'Đại gia' });
-      if ((u.challengeScore || 0) >= 500) badges.push({ icon: '🏹', color: 'bg-emerald-600 text-white border border-emerald-700', label: 'Thợ săn' });
-      if ((u.examScore || 0) > 9.5) badges.push({ icon: '🧠', color: 'bg-rose-500 text-white border border-rose-600', label: 'Siêu trí tuệ' });
 
-      if (u.loginStreak && u.loginStreak >= 3) badges.push({ icon: '🔥', color: 'bg-orange-500 text-white border border-orange-600', label: 'Chăm chỉ' });
-      if (u.fastAnswerCount && u.fastAnswerCount > 0) badges.push({ icon: '⚡', color: 'bg-yellow-500 text-white border border-yellow-600', label: 'Tia chớp' });
-      if (u.correctStreak && u.correctStreak >= 10) badges.push({ icon: '🎯', color: 'bg-red-600 text-white border border-red-700', label: 'Xạ thủ' });
-      if (u.lastStudyHour !== undefined && u.lastStudyHour >= 23) badges.push({ icon: '🦉', color: 'bg-slate-800 text-white border border-slate-600', label: 'Cú đêm' });
-      if (u.lastStudyHour !== undefined && u.lastStudyHour >= 0 && u.lastStudyHour < 5) badges.push({ icon: '🐓', color: 'bg-teal-600 text-white border border-teal-700', label: 'Gà gáy' });
-      if (u.luckySpinCount && u.luckySpinCount > 0) badges.push({ icon: '🍀', color: 'bg-green-500 text-white border border-green-600', label: 'Thần tài' });
+      // --- 1. NHÓM XẾP HẠNG (Top Server) ---
+      // 👇 Đã sửa thành "Độc tôn" theo ý bạn
+      if (index === 0) badges.push({ icon: '👑', color: 'bg-yellow-100 text-yellow-700 border border-yellow-200', label: 'Top 1' });
+      if (index === 1) badges.push({ icon: '🥈', color: 'bg-slate-100 text-slate-700 border border-slate-200', label: 'Top 2' });
+      if (index === 2) badges.push({ icon: '🥉', color: 'bg-orange-100 text-orange-700 border border-orange-200', label: 'Top 3' });
+
+      // --- 2. NHÓM TỔNG ĐIỂM ---
+      if ((u.totalScore || 0) >= 50000) badges.push({ icon: '🌟', color: 'bg-purple-100 text-purple-700 border border-purple-200', label: 'Huyền Thoại' });
+      else if ((u.totalScore || 0) >= 20000) badges.push({ icon: '🔥', color: 'bg-red-100 text-red-700 border border-red-200', label: 'Chiến Thần' });
+      else if ((u.totalScore || 0) > 5000) badges.push({ icon: '⚛️', color: 'bg-indigo-100 text-indigo-700 border border-indigo-200', label: 'Yêu Vật Lí' });
+
+      // --- 3. NHÓM KỸ NĂNG (Thành phần) ---
+      // Game: Giữ "Đại gia" cho >3000
+      if ((u.gameScore || 0) >= 10000) badges.push({ icon: '🎰', color: 'bg-fuchsia-100 text-fuchsia-700 border border-fuchsia-200', label: 'Vua Trò Chơi' });
+      else if ((u.gameScore || 0) > 3000) badges.push({ icon: '💎', color: 'bg-fuchsia-100 text-fuchsia-700 border border-fuchsia-200', label: 'Đại gia' });
+
+      // Thử thách: Giữ "Thợ săn" cho >500
+      if ((u.challengeScore || 0) >= 2000) badges.push({ icon: '🛡️', color: 'bg-emerald-100 text-emerald-700 border border-emerald-200', label: 'Thống Lĩnh' });
+      else if ((u.challengeScore || 0) >= 500) badges.push({ icon: '🏹', color: 'bg-emerald-100 text-emerald-700 border border-emerald-200', label: 'Thợ săn' });
+
+      // Thi thử: Giữ "Siêu trí tuệ" cho >9.5
+      if ((u.examScore || 0) === 10) badges.push({ icon: '👽', color: 'bg-rose-600 text-white border border-rose-700', label: 'Tuyệt Đối 10/10' });
+      else if ((u.examScore || 0) > 9.5) badges.push({ icon: '🧠', color: 'bg-rose-100 text-rose-700 border border-rose-200', label: 'Siêu trí tuệ' });
+
+      // --- 4. NHÓM KHU VƯỜN (Mới thêm vào) ---
+      if ((u.treeLevel || 1) >= 50) badges.push({ icon: '🌳', color: 'bg-green-600 text-white border border-green-700', label: 'Thần Rừng' });
+      else if ((u.treeLevel || 1) >= 30) badges.push({ icon: '🌲', color: 'bg-lime-100 text-lime-700 border border-lime-200', label: 'Chủ Trang Trại' });
+      else if ((u.treeLevel || 1) >= 10) badges.push({ icon: '🌱', color: 'bg-teal-100 text-teal-700 border border-teal-200', label: 'Yêu Thiên Nhiên' });
+      
+      if ((u.inventory?.water || 0) >= 100) badges.push({ icon: '💧', color: 'bg-sky-100 text-sky-700 border border-sky-200', label: 'Vua Thủy Tề' });
+      if ((u.inventory?.fertilizer || 0) >= 50) badges.push({ icon: '🧪', color: 'bg-amber-100 text-amber-700 border border-amber-200', label: 'Nhà Hóa Học' });
+
+      // --- 5. NHÓM THÓI QUEN ---
+      // Chuỗi thắng: Giữ "Xạ thủ"
+      if ((u.correctStreak || 0) >= 50) badges.push({ icon: '🚀', color: 'bg-red-600 text-white border border-red-700', label: 'Không Thể Cản Phá' });
+      else if ((u.correctStreak || 0) >= 20) badges.push({ icon: '🎯', color: 'bg-orange-100 text-orange-700 border border-orange-200', label: 'Bách Phát Bách Trúng' });
+      else if ((u.correctStreak || 0) >= 10) badges.push({ icon: '🎯', color: 'bg-red-100 text-red-700 border border-red-200', label: 'Xạ thủ' });
+
+      // Tốc độ: Giữ "Tia chớp"
+      if ((u.fastAnswerCount || 0) >= 100) badges.push({ icon: '⚡', color: 'bg-yellow-300 text-yellow-800 border border-yellow-400', label: 'The Flash' });
+      else if ((u.fastAnswerCount || 0) > 0) badges.push({ icon: '⚡', color: 'bg-yellow-100 text-yellow-700 border border-yellow-200', label: 'Tia chớp' });
+
+      // Đăng nhập: Giữ "Chăm chỉ"
+      if ((u.loginStreak || 0) >= 30) badges.push({ icon: '📅', color: 'bg-blue-100 text-blue-700 border border-blue-200', label: 'Kiên Trì 1 Tháng' });
+      else if ((u.loginStreak || 0) >= 3) badges.push({ icon: '🔥', color: 'bg-orange-100 text-orange-700 border border-orange-200', label: 'Chăm chỉ' });
+
+      // --- 6. NHÓM GIỜ GIẤC ---
+      if (u.lastStudyHour !== undefined) {
+          if (u.lastStudyHour >= 23 || u.lastStudyHour <= 2) badges.push({ icon: '🦉', color: 'bg-slate-800 text-white border border-slate-600', label: 'Cú đêm' });
+          if (u.lastStudyHour >= 4 && u.lastStudyHour <= 6) badges.push({ icon: '🐓', color: 'bg-teal-100 text-teal-700 border border-teal-200', label: 'Gà gáy' });
+          if (u.lastStudyHour >= 11 && u.lastStudyHour <= 13) badges.push({ icon: '🍚', color: 'bg-stone-100 text-stone-700 border border-stone-200', label: 'Xuyên Trưa' });
+      }
+
+      // --- 7. KHÁC ---
+      if ((u.luckySpinCount || 0) > 0) badges.push({ icon: '🍀', color: 'bg-green-100 text-green-700 border border-green-200', label: 'Thần tài' });
+
+      if (u.email === 'lebaoanhnss@gmail.com') {
+          badges.unshift({ icon: '🛠️', color: 'bg-slate-900 text-white border border-slate-700', label: 'Tác Giả' });
+      }
+
       return badges;
   }
 
