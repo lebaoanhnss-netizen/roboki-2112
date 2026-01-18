@@ -4940,6 +4940,136 @@ $$c = \\frac{Q}{m\\Delta T}
     answerKey: '',
     explanationText: 'Bài toán ứng dụng NL Mặt Trời, hiệu suất và so sánh chi phí năng lượng.'
   },
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Nhận biết',
+  type: 'MCQ',
+  promptText: 'Từ thông qua một mạch kín được xác định bằng công thức nào sau đây?',
+  imageUrl: '',
+  options: [
+    'Φ = B.S.sinα',
+    'Φ = B.S.tanα',
+    'Φ = B.S.cosα',
+    'Φ = B.S.cotα'
+  ],
+  answerKey: 'Φ = B.S.cosα',
+  explanationText: 'Từ thông qua khung dây được xác định bởi công thức Φ = B.S.cosα, trong đó α là góc giữa vectơ cảm ứng từ và pháp tuyến của mặt khung.'
+},
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Hiểu',
+  type: 'MCQ',
+  promptText: 'Phát biểu nào sau đây không đúng khi nói về từ thông?',
+  imageUrl: '',
+  options: [
+    'Biểu thức định nghĩa của từ thông là Φ = B.S.cosα.',
+    'Đơn vị của từ thông là Vêbe (Wb).',
+    'Từ thông là một đại lượng đại số.',
+    'Từ thông là một đại lượng có hướng.'
+  ],
+  answerKey: 'Từ thông là một đại lượng có hướng.',
+  explanationText: 'Từ thông là đại lượng đại số (có thể dương, âm hoặc bằng 0) chứ không phải là đại lượng vectơ.'
+},
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Hiểu',
+  type: 'MCQ',
+  promptText: 'Một vòng dây kín nằm trong mặt phẳng vuông góc với các đường cảm ứng từ. Nếu độ lớn cảm ứng từ tăng 2 lần thì từ thông qua vòng dây',
+  imageUrl: '',
+  options: [
+    'tăng 2 lần.',
+    'tăng 4 lần.',
+    'không đổi.',
+    'giảm 4 lần.'
+  ],
+  answerKey: 'tăng 2 lần.',
+  explanationText: 'Khi mặt phẳng vòng dây vuông góc với các đường cảm ứng từ thì Φ = B.S. Nếu B tăng 2 lần thì Φ cũng tăng 2 lần.'
+},
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Nhận biết',
+  type: 'MCQ',
+  promptText: 'Từ thông phụ thuộc vào các yếu tố nào sau đây?',
+  imageUrl: '',
+  options: [
+    'Điện trở suất dây dẫn làm khung.',
+    'Đường kính dây dẫn làm khung.',
+    'Hình dạng và kích thước của khung dây dẫn.',
+    'Điện trở của dây dẫn.'
+  ],
+  answerKey: 'Hình dạng và kích thước của khung dây dẫn.',
+  explanationText: 'Từ thông phụ thuộc vào cảm ứng từ B, diện tích S của khung dây và góc đặt của khung trong từ trường.'
+},
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Hiểu',
+  type: 'MCQ',
+  promptText: 'Từ thông qua khung dây có diện tích S đặt trong từ trường đều đạt giá trị lớn nhất khi',
+  imageUrl: '',
+  options: [
+    'các đường sức từ hợp với mặt phẳng khung dây góc 40°.',
+    'các đường sức từ song song với mặt phẳng khung dây.',
+    'các đường sức từ hợp với mặt phẳng khung dây góc 0°.',
+    'các đường sức từ vuông góc với mặt phẳng khung dây.'
+  ],
+  answerKey: 'các đường sức từ vuông góc với mặt phẳng khung dây.',
+  explanationText: 'Từ thông đạt cực đại khi vectơ cảm ứng từ vuông góc với mặt phẳng khung dây (cosα = 1).'
+},
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Vận dụng',
+  type: 'MCQ',
+  promptText: 'Một khung dây dẫn hình vuông cạnh 20 cm nằm trong từ trường đều độ lớn $B = 1{,}2\\,\\text{T}$ sao cho các đường sức vuông góc với mặt khung dây. Từ thông qua khung dây đó là',
+  imageUrl: '',
+  options: [
+    '24 Wb.',
+    '0,048 Wb.',
+    '480 Wb.',
+    '0 Wb.'
+  ],
+  answerKey: '0,048 Wb.',
+  explanationText: 'Diện tích khung dây $S = (0{,}2)^2 = 0{,}04\\,\\text{m}^2$. Do các đường sức từ vuông góc với mặt khung nên $\\alpha = 0^\\circ$, $\\cos\\alpha = 1$. Từ thông: $\\Phi = B.S.\\cos\\alpha = 1{,}2 \\times 0{,}04 = 0{,}048\\,\\text{Wb}$.'
+},
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Vận dụng',
+  type: 'MCQ',
+  promptText: 'Một khung dây có diện tích $5\\,\\text{cm}^2$ gồm 50 vòng dây. Đặt khung dây trong từ trường đều có cảm ứng từ $B$ và quay khung theo mọi hướng. Từ thông qua khung có giá trị cực đại là $5.10^{-3}\\,\\text{Wb}$. Cảm ứng từ $B$ có giá trị',
+  imageUrl: '',
+  options: [
+    '0,2 T.',
+    '0,02 T.',
+    '2,5 T.',
+    '0,25 T.'
+  ],
+  answerKey: '0,2 T.',
+  explanationText: 'Đổi $S = 5\\,\\text{cm}^2 = 5 \\times 10^{-4}\\,\\text{m}^2$. Khi từ thông cực đại: $\\Phi_{\\max} = N.B.S$. Suy ra $B = \\dfrac{\\Phi_{\\max}}{N.S} = \\dfrac{5 \\times 10^{-3}}{50 \\times 5 \\times 10^{-4}} = 0{,}2\\,\\text{T}$.'
+},
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Vận dụng',
+  type: 'MCQ',
+  promptText: 'Một hình vuông cạnh 5 cm đặt trong từ trường đều có cảm ứng từ $B = 8.10^{-4}\\,\\text{T}$. Từ thông qua hình vuông đó bằng $10^{-6}\\,\\text{Wb}$. Góc hợp bởi vectơ cảm ứng từ với mặt phẳng của hình vuông đó là',
+  imageUrl: '',
+  options: [
+    '30°.',
+    '45°.',
+    '60°.',
+    '0°.'
+  ],
+  answerKey: '30°.',
+  explanationText: 'Diện tích hình vuông $S = (0{,}05)^2 = 2{,}5 \\times 10^{-3}\\,\\text{m}^2$. Gọi $\\theta$ là góc giữa $\\vec B$ và mặt phẳng khung, khi đó $\\Phi = B.S.\\sin\\theta$. Suy ra $\\sin\\theta = \\dfrac{10^{-6}}{8 \\times 10^{-4} \\times 2{,}5 \\times 10^{-3}} = 0{,}5$, nên $\\theta = 30^\\circ$.'
+},
+
+
 
 
 
