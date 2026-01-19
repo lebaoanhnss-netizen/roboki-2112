@@ -5068,6 +5068,735 @@ $$c = \\frac{Q}{m\\Delta T}
   answerKey: '30°.',
   explanationText: 'Diện tích hình vuông $S = (0{,}05)^2 = 2{,}5 \\times 10^{-3}\\,\\text{m}^2$. Gọi $\\theta$ là góc giữa $\\vec B$ và mặt phẳng khung, khi đó $\\Phi = B.S.\\sin\\theta$. Suy ra $\\sin\\theta = \\dfrac{10^{-6}}{8 \\times 10^{-4} \\times 2{,}5 \\times 10^{-3}} = 0{,}5$, nên $\\theta = 30^\\circ$.'
 },
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Vận dụng',
+  type: 'Short',
+  promptText: 'Một vòng dây phẳng giới hạn diện tích $S = 10\\,\\text{cm}^2$ đặt trong từ trường đều có cảm ứng từ $B = 0{,}2\\,\\text{T}$. Mặt phẳng vòng dây làm thành với từ trường góc $\\alpha = 30^\\circ$. Từ thông qua $S$ có dạng $a.10^{-4}\\,\\text{Wb}$. Tính $a$.',
+  imageUrl: '',
+  answerKey: '1',
+  explanationText: 'Đổi $S = 10^{-3}\\,\\text{m}^2$. Góc giữa $\\vec B$ và pháp tuyến là $60^\\circ$. $\\Phi = B.S.\\cos60^\\circ = 0{,}2 \\times 10^{-3} \\times 0{,}5 = 1 \\times 10^{-4}\\,\\text{Wb}$.'
+},
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Vận dụng',
+  type: 'Short',
+  promptText: 'Một khung dây hình vuông cạnh $5\\,\\text{cm}$ đặt trong từ trường đều có cảm ứng từ $B = 8.10^{-4}\\,\\text{T}$. Từ thông qua khung là $\\Phi = 10^{-6}\\,\\text{Wb}$. Góc hợp giữa vectơ cảm ứng từ và vectơ pháp tuyến của khung dây bằng bao nhiêu độ?',
+  imageUrl: '',
+  answerKey: '60',
+  explanationText: 'Diện tích $S = (0{,}05)^2 = 2{,}5 \\times 10^{-3}\\,\\text{m}^2$. $\\cos\\alpha = \\dfrac{\\Phi}{B.S} = \\dfrac{10^{-6}}{8 \\times 10^{-4} \\times 2{,}5 \\times 10^{-3}} = 0{,}5$. Suy ra $\\alpha = 60^\\circ$.'
+},
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Vận dụng',
+  type: 'Short',
+  promptText: 'Một khung dây hình tam giác có cạnh đáy $10\\,\\text{cm}$, đường cao $8\\,\\text{cm}$ đặt trong từ trường đều sao cho các đường sức vuông góc với khung dây. Từ thông qua khung là $4.10^{-5}\\,\\text{Wb}$. Tính độ lớn cảm ứng từ $B$ (đơn vị Tesla).',
+  imageUrl: '',
+  answerKey: '0,01',
+  explanationText: 'Diện tích tam giác $S = \\dfrac{1}{2}.0{,}1.0{,}08 = 4 \\times 10^{-3}\\,\\text{m}^2$. Do $\\alpha = 0^\\circ$ nên $\\Phi = B.S$. Suy ra $B = \\dfrac{\\Phi}{S} = \\dfrac{4 \\times 10^{-5}}{4 \\times 10^{-3}} = 0{,}01\\,\\text{T}$.'
+},
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Đơn vị của từ thông là',
+    imageUrl: '',
+    options: [
+      'Tesla (T).',
+      'Ampe (A).',
+      'Vêbe (Wb).',
+      'Vôn (V).'
+    ],
+    answerKey: 'Vêbe (Wb).',
+    explanationText: 'Đơn vị của từ thông là Vêbe (Wb).'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Hiểu',
+    type: 'MCQ',
+    promptText: 'Chọn câu sai. Từ thông qua mặt kín $S$ đặt trong từ trường phụ thuộc vào',
+    imageUrl: '',
+    options: [
+      'độ nghiêng của mặt $S$ so với vectơ cảm ứng từ.',
+      'độ lớn của chu vi của đường giới hạn mặt $S$.',
+      'độ lớn của vectơ cảm ứng từ.',
+      'độ lớn của diện tích mặt $S$.'
+    ],
+    answerKey: 'độ lớn của chu vi của đường giới hạn mặt $S$.',
+    explanationText: 'Từ thông $\\Phi = B.S.\\cos\\alpha$ không phụ thuộc vào chu vi của mặt $S$.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Hiểu',
+    type: 'MCQ',
+    promptText: 'Giá trị tuyệt đối của từ thông qua diện tích $S$ đặt vuông góc với cảm ứng từ $B$',
+    imageUrl: '',
+    options: [
+      'tỉ lệ với số đường sức qua một đơn vị diện tích $S$.',
+      'tỉ lệ với độ lớn chu vi của diện tích $S$.',
+      'là giá trị của cảm ứng từ $B$ tại nơi đặt diện tích $S$.',
+      'tỉ lệ với số đường sức qua diện tích $S$.'
+    ],
+    answerKey: 'tỉ lệ với số đường sức qua diện tích $S$.',
+    explanationText: 'Khi $S \\perp \\vec B$ thì $|\\Phi| = B.S$, tỉ lệ với số đường sức từ xuyên qua diện tích $S$.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Hiểu',
+    type: 'MCQ',
+    promptText: 'Mạch kín $(C)$ không biến dạng trong từ trường đều. Trường hợp nào sau đây từ thông qua mạch biến thiên?',
+    imageUrl: '',
+    options: [
+      '(C) quay quanh trục cố định nằm trong mặt phẳng chứa mạch và trục này không song song với đường sức từ.',
+      '(C) quay quanh trục cố định vuông góc với mặt phẳng chứa mạch.',
+      '(C) chuyển động trong mặt phẳng vuông góc với đường sức từ.',
+      '(C) chuyển động tịnh tiến.'
+    ],
+    answerKey: '(C) quay quanh trục cố định nằm trong mặt phẳng chứa mạch và trục này không song song với đường sức từ.',
+    explanationText: 'Trường hợp này làm thay đổi góc giữa pháp tuyến của mạch và $\\vec B$ nên từ thông biến thiên.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Hiểu',
+    type: 'MCQ',
+    promptText: 'Từ thông qua một mạch kín không đổi khi',
+    imageUrl: '',
+    options: [
+      'thay đổi tiết diện của dây dẫn.',
+      'thay đổi từ trường qua mạch kín.',
+      'cho mạch kín di chuyển lại gần nam châm.',
+      'quay khung dây trong mặt phẳng vuông góc với trục nam châm.'
+    ],
+    answerKey: 'quay khung dây trong mặt phẳng vuông góc với trục nam châm.',
+    explanationText: 'Khi quay trong mặt phẳng này, góc giữa pháp tuyến khung và $\\vec B$ không đổi nên $\\Phi$ không đổi.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Một khung dây hình chữ nhật $(4\\,\\text{cm} \\times 5\\,\\text{cm})$ đặt trong từ trường đều $B = 3.10^{-3}\\,\\text{T}$. Khi mặt phẳng khung dây hợp với vectơ cảm ứng từ góc $45^\\circ$, từ thông qua khung là $50{,}91.10^{-6}\\,\\text{Wb}$. Tính số vòng dây của khung.',
+    imageUrl: '',
+    options: [
+      '10',
+      '12',
+      '20',
+      '25'
+    ],
+    answerKey: '12',
+    explanationText: 'Diện tích $S = 0{,}04 \\times 0{,}05 = 2.10^{-3}\\,\\text{m}^2$. $\\Phi = N.B.S.\\cos45^\\circ$. Suy ra $N = 12$.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Một khung dây phẳng hình vuông đặt trong từ trường đều $B = 5.10^{-2}\\,\\text{T}$, mặt phẳng khung hợp với đường cảm ứng từ góc $30^\\circ$. Độ lớn từ thông là $4.10^{-5}\\,\\text{Wb}$. Độ dài cạnh khung là',
+    imageUrl: '',
+    options: [
+      '8 cm.',
+      '2 cm.',
+      '4 cm.',
+      '6 cm.'
+    ],
+    answerKey: '4 cm.',
+    explanationText: '$\\Phi = B.S.\\sin30^\\circ$. Suy ra $S = 1{,}6.10^{-3}\\,\\text{m}^2$ nên cạnh khung $a = 4\\,\\text{cm}$.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Một khung dây phẳng có diện tích $10\\,\\text{cm}^2$ đặt trong từ trường đều, mặt phẳng khung hợp với đường cảm ứng từ góc $30^\\circ$. Độ lớn từ thông là $3.10^{-5}\\,\\text{Wb}$. Cảm ứng từ có giá trị',
+    imageUrl: '',
+    options: [
+      '$B = 3.10^{-2}\\,\\text{T}$',
+      '$B = 4.10^{-2}\\,\\text{T}$',
+      '$B = 5.10^{-2}\\,\\text{T}$',
+      '$B = 6.10^{-2}\\,\\text{T}$'
+    ],
+    answerKey: '$B = 6.10^{-2}\\,\\text{T}$',
+    explanationText: '$B = \\dfrac{\\Phi}{S.\\sin30^\\circ} = 6.10^{-2}\\,\\text{T}$.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Một khung dây hình vuông được quay đều trong từ trường đều có $B = 4.10^{-4}\\,\\text{T}$. Từ thông cực đại qua $20$ vòng dây là $2{,}88.10^{-5}\\,\\text{Wb}$. Tính cạnh hình vuông.',
+    imageUrl: '',
+    options: [
+      '6 cm.',
+      '0,36 m.',
+      '0,6 cm.',
+      '0,8 cm.'
+    ],
+    answerKey: '6 cm.',
+    explanationText: '$\\Phi_{\\max} = N.B.S \\Rightarrow S = 3{,}6.10^{-3}\\,\\text{m}^2$, suy ra cạnh $a = 6\\,\\text{cm}$.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Từ trường là dạng vật chất tồn tại trong không gian và',
+    imageUrl: '',
+    options: [
+      'tác dụng lực hút lên các vật.',
+      'tác dụng lực điện lên điện tích.',
+      'tác dụng lực từ lên nam châm và dòng điện.',
+      'tác dụng lực đẩy lên các vật đặt trong nó.'
+    ],
+    answerKey: 'tác dụng lực từ lên nam châm và dòng điện.',
+    explanationText: 'Tính chất cơ bản của từ trường là tác dụng lực từ.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Hiểu',
+    type: 'MCQ',
+    promptText: 'Chọn một đáp án sai khi nói về từ trường:',
+    imageUrl: '',
+    options: [
+      'Tại mỗi điểm trong từ trường chỉ vẽ được một và chỉ một đường sức từ đi qua.',
+      'Các đường sức từ là những đường cong không khép kín.',
+      'Các đường sức từ không cắt nhau.',
+      'Tính chất cơ bản của từ trường là tác dụng lực từ lên nam châm hay dòng điện đặt trong nó.'
+    ],
+    answerKey: 'Các đường sức từ là những đường cong không khép kín.',
+    explanationText: 'Đường sức từ là các đường cong kín hoặc vô hạn ở hai đầu.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Hiểu',
+    type: 'MCQ',
+    promptText: 'Phát biểu nào sau đây là không đúng? Người ta nhận ra từ trường tồn tại xung quanh dây dẫn mang dòng điện vì có lực tác dụng lên một',
+    imageUrl: '',
+    options: [
+      'dòng điện khác đặt song song cạnh nó.',
+      'kim nam châm đặt song song cạnh nó.',
+      'hạt mang điện chuyển động dọc theo nó.',
+      'hạt mang điện đứng yên đặt bên cạnh nó.'
+    ],
+    answerKey: 'hạt mang điện đứng yên đặt bên cạnh nó.',
+    explanationText: 'Điện tích đứng yên không chịu tác dụng của lực từ.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Tính chất cơ bản của từ trường là:',
+    imageUrl: '',
+    options: [
+      'gây ra lực từ tác dụng lên nam châm hoặc lên dòng điện đặt trong nó.',
+      'gây ra lực đàn hồi tác dụng lên các dòng điện và nam châm đặt trong nó.',
+      'gây ra sự biến đổi về tính chất điện của môi trường xung quanh.',
+      'gây ra lực hấp dẫn lên các vật đặt trong nó.'
+    ],
+    answerKey: 'gây ra lực từ tác dụng lên nam châm hoặc lên dòng điện đặt trong nó.',
+    explanationText: 'Đây là định nghĩa cơ bản của từ trường.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Hiểu',
+    type: 'MCQ',
+    promptText: 'Phát biểu nào sau đây là không đúng?',
+    imageUrl: '',
+    options: [
+      'Tương tác giữa hai dòng điện là tương tác từ.',
+      'Cảm ứng từ là đại lượng đặc trưng cho từ trường về mặt gây ra tác dụng từ.',
+      'Xung quanh mỗi điện tích đứng yên tồn tại điện trường và từ trường.',
+      'Đi qua mỗi điểm trong từ trường chỉ có một đường sức từ.'
+    ],
+    answerKey: 'Xung quanh mỗi điện tích đứng yên tồn tại điện trường và từ trường.',
+    explanationText: 'Điện tích đứng yên chỉ tạo ra điện trường, không tạo ra từ trường.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Dây dẫn mang dòng điện không tương tác với',
+    imageUrl: '',
+    options: [
+      'các điện tích chuyển động.',
+      'nam châm đứng yên.',
+      'các điện tích đứng yên.',
+      'nam châm chuyển động.'
+    ],
+    answerKey: 'các điện tích đứng yên.',
+    explanationText: 'Lực từ không tác dụng lên điện tích đứng yên.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Lực nào sau đây không phải lực từ?',
+    imageUrl: '',
+    options: [
+      'Lực Trái Đất tác dụng lên vật nặng.',
+      'Lực hai dây dẫn mang dòng điện tác dụng lên nhau.',
+      'Lực Trái Đất tác dụng lên kim nam châm làm nó định hướng Bắc – Nam.',
+      'Lực nam châm tác dụng lên dây dẫn bằng nhôm mang dòng điện.'
+    ],
+    answerKey: 'Lực Trái Đất tác dụng lên vật nặng.',
+    explanationText: 'Đây là lực hấp dẫn.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Các đường sức từ là các đường cong vẽ trong không gian có từ trường sao cho',
+    imageUrl: '',
+    options: [
+      'pháp tuyến tại mọi điểm trùng với hướng của từ trường.',
+      'tiếp tuyến tại mọi điểm trùng với hướng của từ trường.',
+      'pháp tuyến tại mỗi điểm tạo với hướng của từ trường một góc không đổi.',
+      'tiếp tuyến tại mọi điểm tạo với hướng của từ trường một góc không đổi.'
+    ],
+    answerKey: 'tiếp tuyến tại mọi điểm trùng với hướng của từ trường.',
+    explanationText: 'Định nghĩa của đường sức từ.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Hiểu',
+    type: 'MCQ',
+    promptText: 'Đặc điểm nào không phải của các đường sức từ do dòng điện thẳng dài tạo ra?',
+    imageUrl: '',
+    options: [
+      'Các đường sức là các đường tròn.',
+      'Mặt phẳng chứa các đường sức vuông góc với dây dẫn.',
+      'Chiều các đường sức xác định bằng quy tắc bàn tay trái.',
+      'Chiều các đường sức không phụ thuộc chiều dòng điện.'
+    ],
+    answerKey: 'Chiều các đường sức không phụ thuộc chiều dòng điện.',
+    explanationText: 'Chiều đường sức phụ thuộc chiều dòng điện.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Hiểu',
+    type: 'MCQ',
+    promptText: 'Đường sức từ không có tính chất nào sau đây?',
+    imageUrl: '',
+    options: [
+      'Qua mỗi điểm trong không gian chỉ vẽ được một đường sức.',
+      'Các đường sức của cùng một từ trường có thể cắt nhau.',
+      'Chiều của các đường sức là chiều của từ trường.',
+      'Các đường sức là các đường cong kín hoặc vô hạn.'
+    ],
+    answerKey: 'Các đường sức của cùng một từ trường có thể cắt nhau.',
+    explanationText: 'Các đường sức từ không bao giờ cắt nhau.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Từ phổ là',
+    imageUrl: '',
+    options: [
+      'hình ảnh các mạt sắt cho ta hình ảnh các đường sức từ.',
+      'hình ảnh tương tác của hai nam châm.',
+      'hình ảnh tương tác giữa dòng điện và nam châm.',
+      'hình ảnh tương tác của hai dòng điện.'
+    ],
+    answerKey: 'hình ảnh các mạt sắt cho ta hình ảnh các đường sức từ.',
+    explanationText: 'Từ phổ là hình ảnh trực quan của đường sức từ.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Hiểu',
+    type: 'MCQ',
+    promptText: 'Phát biểu nào sau đây là không đúng?',
+    imageUrl: '',
+    options: [
+      'Qua bất kỳ điểm nào trong từ trường cũng vẽ được một đường sức.',
+      'Đường sức từ của nam châm thẳng là những đường thẳng.',
+      'Đường sức mau nơi cảm ứng từ lớn.',
+      'Các đường sức từ là những đường cong kín.'
+    ],
+    answerKey: 'Đường sức từ của nam châm thẳng là những đường thẳng.',
+    explanationText: 'Đường sức từ của nam châm là các đường cong kín.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Hiểu',
+    type: 'MCQ',
+    promptText: 'Phát biểu nào sau đây là đúng?',
+    imageUrl: '',
+    options: [
+      'Các đường mạt sắt chính là các đường sức từ.',
+      'Các đường sức từ luôn là những đường cong kín.',
+      'Các đường sức từ của từ trường đều luôn cách đều nhau.',
+      'Quỹ đạo hạt mang điện tròn chính là đường sức từ.'
+    ],
+    answerKey: 'Các đường sức từ luôn là những đường cong kín.',
+    explanationText: 'Đây là tính chất cơ bản của đường sức từ.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Đường sức từ là những đường thẳng song song, cùng chiều, cách đều nhau xuất hiện',
+    imageUrl: '',
+    options: [
+      'xung quanh dòng điện thẳng.',
+      'xung quanh thanh nam châm thẳng.',
+      'trong lòng nam châm chữ U.',
+      'xung quanh dòng điện tròn.'
+    ],
+    answerKey: 'trong lòng nam châm chữ U.',
+    explanationText: 'Trong lòng nam châm chữ U từ trường gần như đều.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Hiểu',
+    type: 'MCQ',
+    promptText: 'Phát biểu nào dưới đây là sai?',
+    imageUrl: '',
+    options: [
+      'Dựa vào mạt sắt ta xác định được chiều đường sức.',
+      'Dùng quy tắc nắm bàn tay phải xác định chiều đường sức.',
+      'Dùng kim nam châm thử xác định chiều đường sức.',
+      'Mạt sắt quanh dòng điện thẳng là các đường tròn đồng tâm.'
+    ],
+    answerKey: 'Dựa vào mạt sắt ta xác định được chiều đường sức.',
+    explanationText: 'Mạt sắt chỉ cho hình dạng, không cho chiều.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Phát biểu nào sai? Từ trường tồn tại gần',
+    imageUrl: '',
+    options: [
+      'một nam châm.',
+      'thanh thủy tinh nhiễm điện.',
+      'dây dẫn có dòng điện.',
+      'chùm tia điện từ.'
+    ],
+    answerKey: 'thanh thủy tinh nhiễm điện.',
+    explanationText: 'Điện tích đứng yên không tạo ra từ trường.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Hiểu',
+    type: 'MCQ',
+    promptText: 'Đặt kim nam châm nhỏ trên mặt phẳng vuông góc với dòng điện thẳng. Khi cân bằng, kim nam châm sẽ nằm theo phương',
+    imageUrl: '',
+    options: [
+      'theo phương một đường sức từ của dòng điện.',
+      'song song với dòng điện.',
+      'vuông góc với đường sức từ.',
+      'cắt dòng điện.'
+    ],
+    answerKey: 'theo phương một đường sức từ của dòng điện.',
+    explanationText: 'Kim nam châm luôn định hướng theo chiều đường sức từ.'
+  },
+// CHỦ ĐỀ: TỪ TRƯỜNG
+// BÀI: Khái niệm từ trường
+// lessonId: l3.1
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+    promptText: 'Phát biểu nào dưới đây là đúng? Từ trường không tương tác với',
+    imageUrl: '',
+    options: [
+      'các điện tích chuyển động',
+      'các điện tích đứng yên',
+      'nam châm đứng yên',
+      'nam châm chuyển động'
+    ],
+    answerKey: 'các điện tích đứng yên',
+    explanationText: 'Từ trường chỉ tác dụng lực từ lên điện tích chuyển động hoặc nam châm.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+    promptText: 'Chọn một đáp án sai khi nói về từ trường',
+    imageUrl: '',
+    options: [
+      'Các đường sức từ là những đường cong không khép kín',
+      'Các đường sức từ không cắt nhau',
+      'Tính chất cơ bản của từ trường là tác dụng lực từ lên nam châm hay dòng điện',
+      'Tại mỗi điểm trong từ trường chỉ vẽ được một đường sức từ'
+    ],
+    answerKey: 'Các đường sức từ là những đường cong không khép kín',
+    explanationText: 'Đường sức từ là các đường cong khép kín.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+    promptText: 'Một nam châm vĩnh cửu không tác dụng lực lên',
+    imageUrl: '',
+    options: [
+      'thanh sắt bị nhiễm từ',
+      'thanh sắt chưa bị nhiễm từ',
+      'điện tích không chuyển động',
+      'điện tích chuyển động'
+    ],
+    answerKey: 'điện tích không chuyển động',
+    explanationText: 'Nam châm không tác dụng lực từ lên điện tích đứng yên.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+    promptText: 'Kim nam châm của la bàn chỉ hướng Bắc – Nam địa lí vì',
+    imageUrl: '',
+    options: [
+      'lực hấp dẫn của Trái Đất',
+      'lực điện của Trái Đất',
+      'từ trường của Trái Đất',
+      'lực hướng tâm do Trái Đất quay'
+    ],
+    answerKey: 'từ trường của Trái Đất',
+    explanationText: 'Kim nam châm định hướng theo từ trường Trái Đất.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+    promptText: 'Trường hợp nào sau đây là tương tác từ?',
+    imageUrl: '',
+    options: [
+      'Trái Đất hút Mặt Trăng',
+      'Lược nhựa hút giấy vụn',
+      'Hai quả cầu tích điện đặt gần nhau',
+      'Hai dây dẫn có dòng điện đặt gần nhau'
+    ],
+    answerKey: 'Hai dây dẫn có dòng điện đặt gần nhau',
+    explanationText: 'Hai dòng điện có thể hút hoặc đẩy nhau.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+    promptText: 'Để xác định một điểm trong không gian có từ trường hay không, ta đặt tại đó một',
+    imageUrl: '',
+    options: [
+      'điện tích',
+      'kim nam châm',
+      'sợi dây dẫn',
+      'sợi dây tơ'
+    ],
+    answerKey: 'kim nam châm',
+    explanationText: 'Kim nam châm chịu tác dụng của từ trường.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Thông hiểu', type: 'MCQ',
+    promptText: 'Chọn câu trả lời sai',
+    imageUrl: '',
+    options: [
+      'Xung quanh điện tích đứng yên có điện trường và từ trường',
+      'Cảm ứng từ đặc trưng cho từ trường về tác dụng lực từ',
+      'Qua mỗi điểm chỉ vẽ được một đường sức từ',
+      'Tương tác giữa các dòng điện là tương tác từ'
+    ],
+    answerKey: 'Xung quanh điện tích đứng yên có điện trường và từ trường',
+    explanationText: 'Điện tích đứng yên chỉ tạo ra điện trường.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Thông hiểu', type: 'MCQ',
+    promptText: 'Câu nào dưới đây nói về từ trường là không đúng?',
+    imageUrl: '',
+    options: [
+      'Xung quanh mỗi nam châm đều tồn tại từ trường',
+      'Xung quanh mỗi dòng điện đều tồn tại từ trường',
+      'Hướng từ trường là hướng Nam – Bắc của kim nam châm cân bằng',
+      'Kim nam châm luôn quay theo từ trường Trái Đất'
+    ],
+    answerKey: 'Kim nam châm luôn quay theo từ trường Trái Đất',
+    explanationText: 'Kim nam châm chịu tác dụng tổng hợp của các từ trường.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Thông hiểu', type: 'MCQ',
+    promptText: 'Chọn câu sai',
+    imageUrl: '',
+    options: [
+      'Mạt sắt cho biết dạng đường sức từ',
+      'Các đường sức điện không kín, đường sức từ kín',
+      'Các đường sức từ luôn là các đường cong cách đều nhau',
+      'Đường sức từ biểu diễn từ trường'
+    ],
+    answerKey: 'Các đường sức từ luôn là các đường cong cách đều nhau',
+    explanationText: 'Mật độ đường sức phụ thuộc độ mạnh của từ trường.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+    promptText: 'Từ trường tại một điểm có hướng',
+    imageUrl: '',
+    options: [
+      'theo hướng lực từ',
+      'ngược hướng đường sức từ',
+      'theo hướng đường sức từ',
+      'ngược hướng lực từ'
+    ],
+    answerKey: 'theo hướng đường sức từ',
+    explanationText: 'Hướng từ trường trùng với tiếp tuyến của đường sức từ.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+    promptText: 'Tại một điểm có từ trường khi',
+    imageUrl: '',
+    options: [
+      'kim nam châm chỉ Đông – Tây',
+      'kim nam châm chỉ Đông – Nam',
+      'kim nam châm chỉ Tây – Bắc',
+      'kim nam châm chỉ Bắc – Nam'
+    ],
+    answerKey: 'kim nam châm chỉ Bắc – Nam',
+    explanationText: 'Kim nam châm định hướng theo đường sức từ.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+    promptText: 'Nhận định nào sau đây không đúng về tương tác từ?',
+    imageUrl: '',
+    options: [
+      'Dòng điện tác dụng lực lên nam châm',
+      'Nam châm tác dụng lực lên dòng điện',
+      'Hai dòng điện có thể tương tác',
+      'Hai dòng điện không thể tương tác'
+    ],
+    answerKey: 'Hai dòng điện không thể tương tác',
+    explanationText: 'Hai dòng điện song song có thể hút hoặc đẩy nhau.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+    promptText: 'Các đường sức từ trong lòng nam châm chữ U là',
+    imageUrl: '',
+    options: [
+      'đường thẳng song song cách đều',
+      'đường cong cách đều',
+      'đường thẳng từ Nam sang Bắc',
+      'đường cong từ Nam sang Bắc'
+    ],
+    answerKey: 'đường thẳng song song cách đều',
+    explanationText: 'Trong khe nam châm chữ U, từ trường gần như đều.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Thông hiểu', type: 'MCQ',
+    promptText: 'Nhận định nào sau đây không đúng về cảm ứng từ của dòng điện thẳng dài?',
+    imageUrl: '',
+    options: [
+      'phụ thuộc bản chất dây dẫn',
+      'phụ thuộc môi trường xung quanh',
+      'phụ thuộc hình dạng dây dẫn',
+      'phụ thuộc cường độ dòng điện'
+    ],
+    answerKey: 'phụ thuộc hình dạng dây dẫn',
+    explanationText: 'Dây dẫn thẳng dài có hình dạng xác định.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+    promptText: 'Đường sức từ của dòng điện thẳng dài có dạng',
+    imageUrl: '',
+    options: [
+      'đường thẳng song song',
+      'đường tròn',
+      'đường thẳng cách đều',
+      'đường tròn đồng tâm trong mặt phẳng vuông góc với dây'
+    ],
+    answerKey: 'đường tròn đồng tâm trong mặt phẳng vuông góc với dây',
+    explanationText: 'Xác định theo quy tắc nắm tay phải.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+    promptText: 'Các đường sức từ của dòng điện thẳng dài là',
+    imageUrl: '',
+    options: [
+      'đường thẳng vuông góc dòng điện',
+      'đường tròn vuông góc dòng điện',
+      'đường tròn đồng tâm, tâm nằm trên dòng điện',
+      'đường tròn bất kỳ'
+    ],
+    answerKey: 'đường tròn đồng tâm, tâm nằm trên dòng điện',
+    explanationText: 'Mặt phẳng đường sức vuông góc với dây dẫn.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+    promptText: 'Từ trường đều là từ trường có các đường sức',
+    imageUrl: '',
+    options: [
+      'thẳng',
+      'song song',
+      'thẳng song song',
+      'thẳng song song, cách đều'
+    ],
+    answerKey: 'thẳng song song, cách đều',
+    explanationText: 'Mật độ đường sức không đổi.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Thông hiểu', type: 'MCQ',
+    promptText: 'Nhận xét nào sau đây không đúng về cảm ứng từ $\\vec{B}$?',
+    imageUrl: '',
+    options: [
+      'Đặc trưng cho tác dụng lực từ',
+      'Phụ thuộc chiều dài dây dẫn',
+      'Trùng với hướng từ trường',
+      'Có đơn vị là Tesla'
+    ],
+    answerKey: 'Phụ thuộc chiều dài dây dẫn',
+    explanationText: 'Cảm ứng từ không phụ thuộc chiều dài dây dẫn.'
+  },
+
+
+
+
 
 
 
