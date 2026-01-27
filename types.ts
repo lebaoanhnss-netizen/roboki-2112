@@ -61,8 +61,7 @@ export interface UserProfile {
   challengeScore: number;  // Điểm thử thách
   examScore: number;       // Điểm thi thử
   mockScore?: number;      // Điểm tự tạo đề (Dấu ? nghĩa là có thể chưa có với user cũ)
-  
-  rank?: number;           // Thứ hạng hiện tại
+    rank?: number;           // Thứ hạng hiện tại
 
   // --- HỆ THỐNG HUY HIỆU & THỐNG KÊ (MỚI) ---
   loginStreak?: number;        // Số ngày đăng nhập liên tiếp (Huy hiệu Chăm chỉ)
@@ -75,4 +74,5 @@ export interface UserProfile {
   treeLevel?: number;      // Cấp độ cây
   treeExp?: number;        // Kinh nghiệm cây
   inventory?: { water: number; fertilizer: number; }; // Kho đồ (Nước/Phân bón)
+  topicStats?: { [topic: string]: { correct: number; total: number } };
 }

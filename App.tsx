@@ -300,7 +300,228 @@ const LessonCard: React.FC<{
     </div>
   );
 };
+//// --- SUB COMPONENT: BIỂU ĐỒ NĂNG LỰC (Đã nâng cấp nút Deep Link) ---
+const CompetencyChart: React.FC<{ 
+  stats?: { [key: string]: { correct: number; total: number } };
+  onStudyTopic?: (topicLabel: string) => void; // 👇 Thêm prop này để xử lý click
+}> = ({ stats, onStudyTopic }) => {
+  if (!stats || Object.keys(stats).length === 0) {
+    return (
+      <div className="text-center p-6 bg-slate-50 rounded-2xl border border-slate-100 border-dashed mt-4">
+        <div className="text-4xl mb-2 opacity-50">📊</div>
+        <p className="text-slate-500 text-xs font-bold">Chưa có dữ liệu phân tích.</p>
+      </div>
+    );
+  }
 
+  const data = Object.entries(stats).map(([topic, s]) => {
+    const percent = s.total > 0 ? Math.round((s.correct / s.total) * 100) : 0;
+    return { topic, percent, ...s };
+  }).sort((a, b) => a.percent - b.percent); 
+
+  return (
+    <div className="space-y-4 mt-4">
+      {data.map((item) => {
+        let color = 'bg-emerald-500';
+        let label = 'Tốt';
+        let textColor = 'text-emerald-600';
+        
+        if (item.percent < 50) { 
+            color = 'bg-rose-500'; 
+            label = 'Yếu'; 
+            textColor = 'text-rose-600';
+        } else if (item.percent < 80) { 
+            color = 'bg-amber-500'; 
+            label = 'Khá'; 
+            textColor = 'text-amber-600';
+        }
+
+        return (
+          <div key={item.topic} className="bg-white border border-slate-100 p-3 rounded-2xl shadow-sm">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-xs font-black text-slate-700 uppercase truncate max-w-[180px]">{item.topic}</span>
+              <span className={`text-[9px] font-bold px-2 py-0.5 rounded text-white ${color}`}>{label}</span>
+            </div>
+            
+            <div className="flex items-center gap-3">
+               <div className="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden relative">
+                  <div className={`h-full rounded-full transition-all duration-1000 ${color}`} style={{ width: `${item.percent}%` }}></div>
+               </div>
+               <span className="text-xs font-bold text-slate-600 w-8 text-right">{item.percent}%</span>
+            </div>
+            
+            <div className="flex justify-between items-center mt-2 pt-2 border-t border-slate-50">
+               <span className="text-[10px] text-slate-400 font-medium">Đúng {item.correct}/{item.total} câu</span>
+               
+               {/* 👇 LOGIC NÚT BẤM THÔNG MINH 👇 */}
+               {item.percent < 50 && onStudyTopic ? (
+                   <button 
+                     onClick={() => onStudyTopic(item.topic)}
+                     className="text-[10px] font-bold bg-rose-50 text-rose-600 px-3 py-1.5 rounded-full hover:bg-rose-100 transition-colors flex items-center gap-1 border border-rose-100 shadow-sm animate-pulse"
+                   >
+                     Học ngay <ArrowRight size={10}/>
+                   </button>
+               ) : (
+                   <span className={`text-[10px] font-bold ${textColor}`}>
+                     {item.percent < 80 ? 'Cần luyện thêm' : 'Giữ phong độ!'}
+                   </span>
+               )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+// --- LOGIC PHÂN TÍCH AI (AI ANALYZER) - ĐÃ CẬP NHẬT LỜI THOẠI & ĐIỀU KIỆN ---
+const analyzeUserPerformance = (user: UserProfile) => {
+  const stats = user.topicStats || {};
+  const entries = Object.entries(stats);
+
+  // 1. Nếu chưa học gì
+  if (entries.length === 0) {
+    return {
+      mood: 'NEUTRAL',
+      title: 'Chào bạn mới!',
+      message: `Chào ${user.name}, Roboki chưa có dữ liệu về sức học của bạn. Hãy thử làm một bài Luyện tập để mình đánh giá nhé!`,
+      actionLabel: 'Làm bài ngay',
+      actionTarget: 'PRACTICE'
+    };
+  }
+
+  // 2. Tính toán chỉ số
+  let weakestTopic = { name: '', percent: 100 };
+  let strongestTopic = { name: '', percent: 0 };
+  let totalQ = 0;
+
+  entries.forEach(([topic, s]) => {
+    const p = s.total > 0 ? (s.correct / s.total) * 100 : 0;
+    totalQ += s.total;
+    
+    // 🔥 Sửa điều kiện: Chỉ cần làm >= 1 câu là xét (để bạn dễ test)
+    if (p < weakestTopic.percent && s.total >= 1) { 
+        weakestTopic = { name: topic, percent: p };
+    }
+    if (p > strongestTopic.percent && s.total >= 1) {
+        strongestTopic = { name: topic, percent: p };
+    }
+  });
+
+  // 3. Ra quyết định (Decision Tree)
+  
+  // A. Trường hợp Yếu (< 50%) -> 👇 ĐÚNG MẪU CÂU BẠN YÊU CẦU
+  if (weakestTopic.percent < 50 && weakestTopic.name) {
+    return {
+      mood: 'WORRIED',
+      title: 'Lưu ý!',
+      message: `Chào ${user.name}, Roboki thấy bạn đang yếu phần "${weakestTopic.name}" (chỉ đúng ${Math.round(weakestTopic.percent)}%), hãy ôn tập ngay nhé!`,
+      actionLabel: `Ôn lại ${weakestTopic.name}`,
+      actionTarget: 'LESSON',
+      targetId: weakestTopic.name 
+    };
+  }
+
+  // B. Trường hợp Giỏi (> 80%)
+  if (strongestTopic.percent >= 80) {
+    return {
+      mood: 'HAPPY',
+      title: 'Phong độ tuyệt vời!',
+      message: `Chào ${user.name}, bạn làm rất tốt phần "${strongestTopic.name}". Hãy thử sức với các đề thi khó hơn để chinh phục điểm 10 nhé!`,
+      actionLabel: 'Thi thử ngay',
+      actionTarget: 'EXAM'
+    };
+  }
+
+  // C. Mặc định
+  return {
+    mood: 'NEUTRAL',
+    title: 'Tiếp tục cố gắng',
+    message: `Chào ${user.name}, mỗi ngày 15 phút luyện tập sẽ giúp bạn tiến bộ vượt bậc. Hôm nay chúng ta cùng ôn luyện tiếp nhé?`,
+    actionLabel: 'Vào luyện tập',
+    actionTarget: 'PRACTICE'
+  };
+};
+
+// --- UI CỐ VẤN ROBOKI (GIAO DIỆN HỢP NHẤT 1 CỘT) ---
+const RobokiAdvisor: React.FC<{ 
+  user: UserProfile; 
+  onAction: (target: string, param?: string) => void;
+  onChat: () => void; // Thêm prop để mở Chat
+}> = ({ user, onAction, onChat }) => {
+  const analysis = analyzeUserPerformance(user);
+  
+  // Logic màu sắc
+  let theme = {
+    bg: 'bg-white',
+    border: 'border-slate-100',
+    title: 'text-roboki-600',
+    btnAction: 'bg-roboki-500 shadow-roboki-200',
+    lightBg: 'bg-roboki-50'
+  };
+
+  if (analysis.mood === 'WORRIED') { 
+    theme = {
+      bg: 'bg-rose-50',
+      border: 'border-rose-100',
+      title: 'text-rose-600',
+      btnAction: 'bg-rose-500 shadow-rose-200',
+      lightBg: 'bg-rose-100'
+    };
+  } else if (analysis.mood === 'HAPPY' || analysis.mood === 'PROUD') {
+    theme = {
+      bg: 'bg-amber-50',
+      border: 'border-amber-100',
+      title: 'text-amber-600',
+      btnAction: 'bg-amber-500 shadow-amber-200',
+      lightBg: 'bg-amber-100'
+    };
+  }
+
+  return (
+    <div className={`rounded-3xl p-5 shadow-lg shadow-slate-200/60 border relative overflow-hidden ${theme.bg} ${theme.border}`}>
+      {/* Background Decor */}
+      <div className={`absolute -top-10 -right-10 w-32 h-32 rounded-full opacity-30 blur-2xl ${analysis.mood === 'WORRIED' ? 'bg-rose-300' : 'bg-roboki-300'}`}></div>
+      
+      <div className="relative z-10 flex flex-col gap-4">
+        {/* Phần 1: Logo và Lời nhắn */}
+        <div className="flex gap-4 items-start">
+            <div className="w-16 h-16 rounded-2xl bg-white p-1 shadow-sm border border-slate-100 shrink-0 flex items-center justify-center">
+               <img src="/logo1.png" alt="Logo" className="w-full h-full object-contain" />
+            </div>
+            
+            <div className="flex-1">
+                <h4 className={`font-black text-sm uppercase mb-1 flex items-center gap-2 ${theme.title}`}>
+                    {analysis.mood === 'WORRIED' ? <ShieldAlert size={16}/> : <Bot size={16}/>}
+                    {analysis.title}
+                </h4>
+                <p className="text-xs text-slate-600 font-medium leading-relaxed line-clamp-3">
+                    {analysis.message.replace(`Chào ${user.name}, `, '')}
+                </p>
+            </div>
+        </div>
+
+        {/* Phần 2: Hai nút hành động lớn */}
+        <div className="grid grid-cols-2 gap-3 pt-2">
+            {/* Nút 1: Hành động theo ngữ cảnh (Ôn tập/Thi thử...) */}
+            <button 
+                onClick={() => onAction(analysis.actionTarget, analysis.targetId)}
+                className={`col-span-1 py-3 px-2 rounded-xl text-white text-xs font-bold shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5 ${theme.btnAction}`}
+            >
+                {analysis.actionLabel} <ArrowRight size={14}/>
+            </button>
+
+            {/* Nút 2: Chat với Roboki */}
+            <button 
+                onClick={onChat}
+                className="col-span-1 py-3 px-2 rounded-xl bg-slate-800 text-white text-xs font-bold shadow-md shadow-slate-300 active:scale-95 transition-all flex items-center justify-center gap-1.5 border border-slate-700"
+            >
+                Hỏi Roboki ngay <MessageCircle size={14} className="text-roboki-400"/>
+            </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 // --- AUTH SCREEN ---
 const AuthScreen: React.FC<{ onLoginSuccess: (user: UserProfile) => void }> = ({ onLoginSuccess }) => {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -427,38 +648,35 @@ const AuthorScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     );
 }
 
-// --- PROFILE SCREEN ---
+// --- PROFILE SCREEN (Đã nâng cấp nút "Học ngay") ---
 const ProfileScreen: React.FC<{ 
     user: UserProfile; 
     onBack: () => void; 
     onUpdate: (updatedUser: UserProfile) => void;
     onNavToAuthor: () => void;
-}> = ({ user, onBack, onUpdate, onNavToAuthor }) => {
+    onStudyTopic: (topic: string) => void; // 👈 Đã thêm prop này
+}> = ({ user, onBack, onUpdate, onNavToAuthor, onStudyTopic }) => { // 👈 Đã nhận prop này
     const [isEditing, setIsEditing] = useState(false);
-    const [formData, setFormData] = useState(user);
+    const [localData, setLocalData] = useState(user);
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => { setFormData(user); }, [user]);
+    useEffect(() => { setLocalData(user); }, [user]);
 
     const handleSave = async () => {
         setLoading(true);
         try {
             await updateDoc(doc(db, 'users', user.uid), {
-                name: formData.name,
-                class: formData.class,
-                school: formData.school || ''
+                name: localData.name,
+                class: localData.class,
+                school: localData.school || ''
             });
-            onUpdate(formData);
+            onUpdate(localData);
             setIsEditing(false);
         } catch (error) {
-            alert("Lỗi cập nhật hồ sơ. Vui lòng thử lại.");
+            alert("Lỗi cập nhật. Thử lại sau.");
         } finally {
             setLoading(false);
         }
-    };
-
-    const handleLogout = async () => {
-        try { await signOut(auth); } catch (error) { console.error(error); }
     };
 
     return (
@@ -468,84 +686,75 @@ const ProfileScreen: React.FC<{
                 <h2 className="text-xl font-black text-slate-800">Hồ sơ cá nhân</h2>
             </div>
             
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex-1 overflow-y-auto">
+            <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex-1 overflow-y-auto custom-scrollbar">
+                {/* Avatar */}
                 <div className="flex flex-col items-center mb-8">
-                    <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-roboki-400 to-orange-500 flex items-center justify-center text-white text-4xl font-black mb-4 shadow-lg shadow-roboki-200 border-4 border-white">{formData.name.charAt(0)}</div>
+                    <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-roboki-400 to-orange-500 flex items-center justify-center text-white text-4xl font-black mb-4 shadow-lg border-4 border-white">{localData.name.charAt(0)}</div>
                     <div className="text-center">
-                        <h3 className="text-xl font-black text-slate-800">{formData.email}</h3>
-                        <p className="text-slate-400 text-xs font-bold mt-1 bg-slate-100 px-3 py-1 rounded-full inline-block">UID: {formData.uid.slice(0, 8)}...</p>
+                        <h3 className="text-xl font-black text-slate-800">{localData.email}</h3>
                     </div>
                 </div>
 
-                <div className="space-y-5">
-                    <div className="space-y-1">
-                        <label className="text-xs font-bold text-slate-400 uppercase ml-1">Họ và tên</label>
-                        <div className="relative">
-                            <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"/>
-                            <input disabled={!isEditing} value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className={`w-full pl-11 py-4 rounded-2xl border font-bold text-slate-700 transition-all ${isEditing ? 'bg-white border-roboki-500 ring-2 ring-roboki-100' : 'bg-slate-50 border-slate-100 text-slate-500'}`} />
-                        </div>
+                {/* Form */}
+                <div className="space-y-4">
+                    <div>
+                        <label className="text-xs font-bold text-slate-400 uppercase ml-1">Họ tên</label>
+                        <input disabled={!isEditing} value={localData.name} onChange={e => setLocalData({...localData, name: e.target.value})} className={`w-full p-3 rounded-xl border font-bold ${isEditing ? 'bg-white border-roboki-500' : 'bg-slate-50 border-slate-100'}`} />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-1">
+                        <div>
                             <label className="text-xs font-bold text-slate-400 uppercase ml-1">Lớp</label>
-                            <div className="relative">
-                                <BookOpen size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"/>
-                                <input disabled={!isEditing} value={formData.class} onChange={e => setFormData({...formData, class: e.target.value})} className={`w-full pl-11 py-4 rounded-2xl border font-bold text-slate-700 transition-all ${isEditing ? 'bg-white border-roboki-500 ring-2 ring-roboki-100' : 'bg-slate-50 border-slate-100 text-slate-500'}`} />
-                            </div>
+                            <input disabled={!isEditing} value={localData.class} onChange={e => setLocalData({...localData, class: e.target.value})} className={`w-full p-3 rounded-xl border font-bold ${isEditing ? 'bg-white border-roboki-500' : 'bg-slate-50 border-slate-100'}`} />
                         </div>
-                        <div className="space-y-1">
+                        <div>
                             <label className="text-xs font-bold text-slate-400 uppercase ml-1">Trường</label>
-                            <div className="relative">
-                                <School size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"/>
-                                <input disabled={!isEditing} value={formData.school || ''} onChange={e => setFormData({...formData, school: e.target.value})} placeholder="Chưa cập nhật" className={`w-full pl-11 py-4 rounded-2xl border font-bold text-slate-700 transition-all ${isEditing ? 'bg-white border-roboki-500 ring-2 ring-roboki-100' : 'bg-slate-50 border-slate-100 text-slate-500'}`} />
-                            </div>
+                            <input disabled={!isEditing} value={localData.school || ''} onChange={e => setLocalData({...localData, school: e.target.value})} className={`w-full p-3 rounded-xl border font-bold ${isEditing ? 'bg-white border-roboki-500' : 'bg-slate-50 border-slate-100'}`} />
                         </div>
                     </div>
+                </div>
+
+                {/* 👇 BIỂU ĐỒ NĂNG LỰC (Đã kết nối nút bấm) 👇 */}
+                <div className="mt-8 pt-6 border-t border-slate-100">
+                    <h3 className="font-black text-slate-800 text-base mb-2 flex items-center gap-2">
+                        <BarChart3 className="text-indigo-600" size={20}/> Phân tích Năng lực
+                    </h3>
+                    {/* 👇 Đã thêm prop onStudyTopic vào đây 👇 */}
+                    <CompetencyChart stats={user.topicStats} onStudyTopic={onStudyTopic} />
                 </div>
             </div>
 
+            {/* Footer Buttons */}
             <div className="mt-4">
                 {isEditing ? (
                     <div className="flex gap-3">
-                        <button onClick={() => { setIsEditing(false); setFormData(user); }} className="flex-1 bg-white text-slate-500 py-4 rounded-2xl font-bold border border-slate-200">Hủy</button>
-                        <button onClick={handleSave} disabled={loading} className="flex-[2] bg-emerald-500 text-white py-4 rounded-2xl font-bold shadow-lg shadow-emerald-200 flex items-center justify-center gap-2">
-                            {loading ? <Loader2 className="animate-spin"/> : <Save size={20}/>} Lưu thay đổi
-                        </button>
+                        <button onClick={() => { setIsEditing(false); setLocalData(user); }} className="flex-1 bg-white text-slate-500 py-3 rounded-xl font-bold border border-slate-200">Hủy</button>
+                        <button onClick={handleSave} disabled={loading} className="flex-[2] bg-emerald-500 text-white py-3 rounded-xl font-bold shadow-lg">Lưu</button>
                     </div>
                 ) : (
-                    <button onClick={() => setIsEditing(true)} className="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold shadow-xl flex items-center justify-center gap-2">
-                        <Edit3 size={20}/> Chỉnh sửa hồ sơ
-                    </button>
+                    <button onClick={() => setIsEditing(true)} className="w-full bg-slate-800 text-white py-3 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2"><Edit3 size={18}/> Chỉnh sửa</button>
                 )}
-                
-                {!isEditing && (
-                    <button onClick={handleLogout} className="w-full mt-3 text-rose-500 font-bold py-3 flex items-center justify-center gap-2 hover:bg-rose-50 rounded-2xl transition-colors">
-                        <LogOut size={18}/> Đăng xuất
-                    </button>
-                )}
+                {!isEditing && <button onClick={() => signOut(auth)} className="w-full mt-2 text-rose-500 font-bold py-3 rounded-xl hover:bg-rose-50">Đăng xuất</button>}
             </div>
         </div>
     );
 };
 
-// 1. HOME SCREEN
+// 1. HOME SCREEN (Giao diện 2 Cột: AI + Chat)
 const ContentScreen: React.FC<{
   onCopy: (txt: string) => void; onNavToPractice: () => void; onNavToMockTest: () => void;
-  onNavToExam: () => void;
-  onNavToGarden: () => void; 
+  onNavToExam: () => void; onNavToGarden: () => void; 
   onNavToGames: () => void; onNavToChallenge: () => void; onNavToLeaderboard: () => void;
   onNavToProfile: () => void; onNavToChat: () => void; user: UserProfile;
-  
   selectedTopic: { id: string, label: string } | null; setSelectedTopic: (topic: { id: string, label: string } | null) => void;
   expandedLessonIds: string[]; toggleLesson: (id: string) => void; lessons: Lesson[];
 }> = ({
   onCopy, onNavToPractice, onNavToMockTest, onNavToExam, onNavToGames, onNavToChallenge,
-  onNavToGarden,
-  onNavToLeaderboard, onNavToProfile, onNavToChat, user,
+  onNavToGarden, onNavToLeaderboard, onNavToProfile, onNavToChat, user,
   selectedTopic, setSelectedTopic, expandedLessonIds, toggleLesson, lessons
 }) => {
   const TOPICS = [{ id: 't1', label: 'VẬT LÍ NHIỆT', icon: Thermometer }, { id: 't2', label: 'KHÍ LÍ TƯỞNG', icon: Wind }, { id: 't3', label: 'TỪ TRƯỜNG', icon: Magnet }, { id: 't4', label: 'HẠT NHÂN & PHÓNG XẠ', icon: Atom }];
   
+  // --- GIỮ NGUYÊN LOGIC RANK CŨ CỦA BẠN (Rút gọn để code đỡ dài) ---
   const TOTAL_RANKS = [
       { min: 10000, label: 'ĐA VŨ TRỤ', icon: '🌌', color: 'from-slate-900 via-purple-900 to-slate-900' },
       { min: 9000, label: 'VÔ CỰC', icon: '♾️', color: 'from-indigo-600 via-purple-600 to-pink-600' },
@@ -589,22 +798,15 @@ const ContentScreen: React.FC<{
       { min: 0, label: 'KHỞI NGUYÊN', icon: '🥚', color: 'from-slate-100 to-slate-300' },
   ];
 
-  // --- 2. TÍNH TOÁN LEVEL VÀ TIẾN ĐỘ ---
   const currentScore = user.totalScore || 0;
   const currentRankIndex = TOTAL_RANKS.findIndex(r => currentScore >= r.min);
   const actualRankIndex = currentRankIndex !== -1 ? currentRankIndex : TOTAL_RANKS.length - 1;
   const currentRank = TOTAL_RANKS[actualRankIndex];
-  
-  // TÍNH SỐ LEVEL (40 - index)
   const currentLevel = TOTAL_RANKS.length - actualRankIndex;
-
-  // Tìm rank tiếp theo (để tính %)
   const nextRank = actualRankIndex > 0 ? TOTAL_RANKS[actualRankIndex - 1] : null;
-
   let progressPercent = 100;
   let nextRankLabel = "MAX";
   let scoreNeeded = 0;
-
   if (nextRank) {
       const range = nextRank.min - currentRank.min;
       const gained = currentScore - currentRank.min;
@@ -612,7 +814,26 @@ const ContentScreen: React.FC<{
       nextRankLabel = nextRank.label;
       scoreNeeded = Math.round((nextRank.min - currentScore) * 100) / 100;
   }
-  // HÀM TẶNG QUÀ TOÀN SERVER (ADMIN ONLY)
+
+  // 👇 HÀM XỬ LÝ KHI BẤM NÚT "ÔN TẬP NGAY" TRÊN WIDGET AI
+  const handleAIAction = (target: string, param?: string) => {
+      if (target === 'PRACTICE') {
+          if (param) { 
+              const topicObj = TOPICS.find(t => t.label === param);
+              if (topicObj) setSelectedTopic(topicObj); 
+              else onNavToPractice();
+          } else {
+              onNavToPractice();
+          }
+      }
+      else if (target === 'LESSON' && param) {
+           const topicObj = TOPICS.find(t => t.label === param);
+           if (topicObj) setSelectedTopic(topicObj);
+      }
+      else if (target === 'EXAM') onNavToExam();
+      else if (target === 'LEADERBOARD') onNavToLeaderboard();
+  };
+
   const handleGiftAll = async () => {
     if (!confirm("⚠️ ADMIN CHÚ Ý:\nBạn có chắc muốn tặng 10 Nước & 10 Phân cho TẤT CẢ học sinh không?")) return;
     try {
@@ -620,28 +841,19 @@ const ContentScreen: React.FC<{
       const snapshot = await getDocs(q);
       const batch = writeBatch(db);
       let count = 0;
-
       snapshot.forEach((d) => {
         const uData = d.data();
         const currentInv = uData.inventory || { water: 0, fertilizer: 0 };
-        const newInv = {
-          water: (currentInv.water || 0) + 10,
-          fertilizer: (currentInv.fertilizer || 0) + 10
-        };
+        const newInv = { water: (currentInv.water || 0) + 10, fertilizer: (currentInv.fertilizer || 0) + 10 };
         batch.update(doc(db, 'users', d.id), { inventory: newInv });
         count++;
       });
-
       await batch.commit();
       alert(`✅ Đã tặng quà cho ${count} bạn thành công!`);
       window.location.reload();
-    } catch (err) {
-      console.error(err);
-      alert("Lỗi khi tặng quà!");
-    }
+    } catch (err) { console.error(err); alert("Lỗi khi tặng quà!"); }
   };
 
-  // 👆👆👆 KẾT THÚC ĐOẠN CHÈN 👆👆👆
   if (selectedTopic) {
     const topicLessons = lessons.filter(l => l.topic === selectedTopic.label);
     return (
@@ -657,7 +869,7 @@ const ContentScreen: React.FC<{
 
   return (
     <div className="pb-28 pt-2 px-4 space-y-5 bg-slate-50 min-h-full">
-      {/* HEADER */}
+      {/* 1. HEADER (GIỮ NGUYÊN) */}
       <div className="flex justify-between items-start pt-2">
         <div className="flex flex-col gap-1 flex-1 mr-4">
            <div className="flex items-baseline gap-2 mb-1">
@@ -665,67 +877,42 @@ const ContentScreen: React.FC<{
                 <span className="text-xl font-black text-slate-800 truncate">{user.name} 👋</span>
            </div>
            
-           {/* KHU VỰC THANH KINH NGHIỆM */}
            <div className="w-full max-w-[220px]">
                 <div className="flex items-end justify-between mb-1">
                     <div className="flex items-center gap-1.5">
-                        <span className="bg-orange-600 text-white text-[10px] font-red px-1.5 py-0.5 rounded">
-                            Lv.{currentLevel}
-                        </span>
-                        <span className="text-[11px] font-bold text-black-700 uppercase flex items-center gap-1">
-                            {currentRank.icon} {currentRank.label}
-                        </span>
+                        <span className="bg-orange-600 text-white text-[10px] font-red px-1.5 py-0.5 rounded">Lv.{currentLevel}</span>
+                        <span className="text-[11px] font-bold text-black-700 uppercase flex items-center gap-1">{currentRank.icon} {currentRank.label}</span>
                     </div>
-                    {nextRank ? (
-                        <span className="text-[9px] font-bold text-slate-400">
-                            +{scoreNeeded} XP lên <span className="text-indigo-600">{nextRankLabel}</span>
-                        </span>
-                    ) : (
-                        <span className="text-[9px] font-bold text-green-400">{Math.round(currentScore * 100) / 100} XP</span>
-                    )}
+                    {nextRank ? (<span className="text-[9px] font-bold text-slate-400">+{scoreNeeded} XP lên <span className="text-indigo-600">{nextRankLabel}</span></span>) : (<span className="text-[9px] font-bold text-green-400">{Math.round(currentScore * 100) / 100} XP</span>)}
                 </div>
-                
                 <div className="h-3.5 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200 shadow-inner relative">
                     <div className="absolute top-0 bottom-0 right-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-10 z-10"></div>
-                    <div 
-                        className={`h-full bg-gradient-to-r ${currentRank.color} rounded-full transition-all duration-1000 ease-out shadow-sm relative flex items-center justify-end pr-1.5`}
-                        style={{ width: `${progressPercent}%` }}
-                    >
-                        <div className="absolute top-0 right-0 bottom-0 w-full bg-gradient-to-b from-white/20 to-transparent"></div>
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center text-[8px] font-black text-orange-600/80 z-20 mix-blend-multiply">
-                        {Math.round(progressPercent)}%
-                    </div>
+                    <div className={`h-full bg-gradient-to-r ${currentRank.color} rounded-full transition-all duration-1000 ease-out shadow-sm relative flex items-center justify-end pr-1.5`} style={{ width: `${progressPercent}%` }}><div className="absolute top-0 right-0 bottom-0 w-full bg-gradient-to-b from-white/20 to-transparent"></div></div>
+                    <div className="absolute inset-0 flex items-center justify-center text-[8px] font-black text-orange-600/80 z-20 mix-blend-multiply">{Math.round(progressPercent)}%</div>
                 </div>
-                
-                <div className="flex justify-between mt-1 px-0.5">
-                    <span className="text-[9px] font-bold text-green-400">{currentScore} XP</span>
-                    {nextRank && <span className="text-[9px] font-bold text-green-300">{nextRank.min} XP</span>}
-                </div>
+                <div className="flex justify-between mt-1 px-0.5"><span className="text-[9px] font-bold text-green-400">{currentScore} XP</span>{nextRank && <span className="text-[9px] font-bold text-green-300">{nextRank.min} XP</span>}</div>
             </div>
         </div>
 
-        {/* Avatar bên phải */}
         <div className="flex items-center gap-3 mt-2 shrink-0">
             <button onClick={onNavToProfile} className="w-12 h-12 rounded-full bg-white p-1 shadow-md active:scale-95 transition-transform border border-slate-100 relative group">
-                <div className="w-full h-full rounded-full bg-gradient-to-tr from-orange-400 to-orange-600 flex items-center justify-center text-white text-lg font-black shadow-inner">
-                    {user.name.charAt(0)}
-                </div>
-                <div className="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[9px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
-                    {currentLevel}
-                </div>
+                <div className="w-full h-full rounded-full bg-gradient-to-tr from-orange-400 to-orange-600 flex items-center justify-center text-white text-lg font-black shadow-inner">{user.name.charAt(0)}</div>
+                <div className="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[9px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">{currentLevel}</div>
             </button>
         </div>
       </div>
 
-      <div onClick={onNavToChat} className="group relative overflow-hidden bg-tech-dark rounded-3xl p-4 shadow-lg shadow-slate-300 cursor-pointer active:scale-[0.98] transition-all border border-slate-700">
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `radial-gradient(circle at 20% 50%, #f97316 0%, transparent 20%), radial-gradient(circle at 80% 80%, #22c55e 0%, transparent 20%), linear-gradient(0deg, transparent 49%, #334155 50%, transparent 51%), linear-gradient(90deg, transparent 49%, #334155 50%, transparent 51%)`, backgroundSize: '100% 100%, 100% 100%, 20px 20px, 20px 20px' }}></div>
-        <div className="relative z-10 flex justify-between items-center">
-          <div><div className="bg-slate-800/80 backdrop-blur-sm w-fit px-2 py-0.5 rounded-md text-[10px] font-bold mb-2 text-slate-300 uppercase tracking-wide border border-slate-600">Trợ lý AI</div><div className="font-black text-2xl mb-1 flex flex-col leading-none"><span className="text-neon-green tracking-tighter drop-shadow-[0_0_5px_rgba(34,197,94,0.6)]">HỎI</span><span className="text-roboki-500 tracking-wide drop-shadow-[0_0_5px_rgba(249,115,22,0.6)]">ROBOKI</span></div><div className="text-slate-400 text-[10px] mb-4 font-medium">Giải đáp Vật lí cực nhanh</div><button className="bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.4)] flex items-center gap-1.5 group-hover:bg-emerald-400 transition-colors border border-emerald-400">Hỏi Ngay <MessageCircle size={14} className="group-hover:translate-x-0.5 transition-transform"/></button></div>
-          <div className="w-24 h-24 relative"><Bot size={80} className="text-roboki-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_0_15px_rgba(249,115,22,0.5)] animate-float" /><div className="absolute top-0 right-0 w-3 h-3 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_#4ade80]"></div></div>
-        </div>
+      {/* 👇 GIAO DIỆN MỚI: 1 HÀNG DUY NHẤT (TÍCH HỢP AI & CHAT) 👇 */}
+      <div className="mb-4 animate-fade-in">
+         <RobokiAdvisor 
+            user={user} 
+            onAction={handleAIAction} 
+            onChat={onNavToChat} // Truyền hàm mở chat vào đây
+         />
       </div>
+      {/* 👆 KẾT THÚC GIAO DIỆN HỢP NHẤT 👆 */}
 
+      {/* 3. MENU CHỦ ĐỀ */}
       <div>
         <h3 className="font-bold text-slate-800 text-base mb-3 flex items-center gap-2"><BookOpen size={18} className="text-roboki-500"/> Chủ đề ôn tập</h3>
         <div className="grid grid-cols-2 gap-3">
@@ -738,76 +925,45 @@ const ContentScreen: React.FC<{
         </div>
       </div>
 
+      {/* 4. MENU HOẠT ĐỘNG */}
       <div className="pb-4">
         <h3 className="font-bold text-slate-800 text-base mb-3 flex items-center gap-2"><Zap size={18} className="text-roboki-500"/> Hoạt động</h3>
         <div className="grid grid-cols-2 gap-2.5">
-             <div onClick={onNavToPractice} className="bg-orange-50 p-3 rounded-3xl border border-orange-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-roboki-600 shadow-sm"><SwatchBook size={20} /></div>
-                <div><div className="font-bold text-roboki-900 text-sm group-hover:text-roboki-600 transition-colors">LUYỆN TẬP</div><div className="text-[10px] text-roboki-600/70">Luyện theo bài</div></div>
-             </div>
-             
-             <div onClick={onNavToExam} className="bg-red-50 p-3 rounded-3xl border border-red-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-red-600 shadow-sm"><GraduationCap size={20} /></div>
-                <div><div className="font-bold text-red-900 text-sm group-hover:text-red-600 transition-colors">THI THỬ</div><div className="text-[10px] text-red-600/70">Đề chuẩn 2025</div></div>
-             </div>
-
-             <div onClick={onNavToMockTest} className="bg-purple-50 p-3 rounded-3xl border border-purple-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-purple-600 shadow-sm"><ClipboardList size={20} /></div>
-                <div><div className="font-bold text-purple-900 text-sm group-hover:text-purple-600 transition-colors">TỰ TẠO ĐỀ</div><div className="text-[10px] text-purple-600/70">Tự cấu hình đề</div></div>
-             </div>
-
-             <div onClick={onNavToGames} className="bg-emerald-50 p-3 rounded-3xl border border-emerald-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-emerald-600 shadow-sm"><Gamepad2 size={20} /></div>
-                <div><div className="font-bold text-emerald-900 text-sm group-hover:text-emerald-600 transition-colors">Trò chơi</div><div className="text-[10px] text-emerald-600/70">Vừa học vừa chơi</div></div>
-             </div>
-             
-             <div onClick={onNavToChallenge} className="bg-sky-50 p-3 rounded-3xl border border-sky-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-sky-600 shadow-sm"><Target size={20} /></div>
-                <div><div className="font-bold text-sky-900 text-sm group-hover:text-sky-600 transition-colors">Thử thách</div><div className="text-[10px] text-sky-600/70">Nhiệm vụ ngày</div></div>
-             </div>
-             <div onClick={onNavToLeaderboard} className="bg-indigo-50 p-3 rounded-3xl border border-indigo-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-indigo-600 shadow-sm"><Trophy size={20} /></div>
-                <div><div className="font-bold text-indigo-900 text-sm group-hover:text-indigo-600 transition-colors">Xếp hạng</div><div className="text-[10px] text-indigo-600/70">Top học sinh</div></div>
-             </div>
-             <div onClick={onNavToGarden} className="col-span-2 bg-lime-50 p-3 rounded-3xl border border-lime-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-lime-600 shadow-sm"><Sprout size={20} /></div>
-                <div><div className="font-bold text-lime-900 text-sm group-hover:text-lime-600 transition-colors">Vườn Cây Tri Thức</div><div className="text-[10px] text-lime-600/70">Chăm sóc cây & Thu hoạch</div></div>
-             </div>
+             <div onClick={onNavToPractice} className="bg-orange-50 p-3 rounded-3xl border border-orange-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group"><div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-roboki-600 shadow-sm"><SwatchBook size={20} /></div><div><div className="font-bold text-roboki-900 text-sm group-hover:text-roboki-600 transition-colors">LUYỆN TẬP</div><div className="text-[10px] text-roboki-600/70">Luyện theo bài</div></div></div>
+             <div onClick={onNavToExam} className="bg-red-50 p-3 rounded-3xl border border-red-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group"><div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-red-600 shadow-sm"><GraduationCap size={20} /></div><div><div className="font-bold text-red-900 text-sm group-hover:text-red-600 transition-colors">THI THỬ</div><div className="text-[10px] text-red-600/70">Đề chuẩn 2025</div></div></div>
+             <div onClick={onNavToMockTest} className="bg-purple-50 p-3 rounded-3xl border border-purple-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group"><div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-purple-600 shadow-sm"><ClipboardList size={20} /></div><div><div className="font-bold text-purple-900 text-sm group-hover:text-purple-600 transition-colors">TỰ TẠO ĐỀ</div><div className="text-[10px] text-purple-600/70">Tự cấu hình đề</div></div></div>
+             <div onClick={onNavToGames} className="bg-emerald-50 p-3 rounded-3xl border border-emerald-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group"><div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-emerald-600 shadow-sm"><Gamepad2 size={20} /></div><div><div className="font-bold text-emerald-900 text-sm group-hover:text-emerald-600 transition-colors">Trò chơi</div><div className="text-[10px] text-emerald-600/70">Vừa học vừa chơi</div></div></div>
+             <div onClick={onNavToChallenge} className="bg-sky-50 p-3 rounded-3xl border border-sky-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group"><div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-sky-600 shadow-sm"><Target size={20} /></div><div><div className="font-bold text-sky-900 text-sm group-hover:text-sky-600 transition-colors">Thử thách</div><div className="text-[10px] text-sky-600/70">Nhiệm vụ ngày</div></div></div>
+             <div onClick={onNavToLeaderboard} className="bg-indigo-50 p-3 rounded-3xl border border-indigo-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group"><div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-indigo-600 shadow-sm"><Trophy size={20} /></div><div><div className="font-bold text-indigo-900 text-sm group-hover:text-indigo-600 transition-colors">Xếp hạng</div><div className="text-[10px] text-indigo-600/70">Top học sinh</div></div></div>
+             <div onClick={onNavToGarden} className="col-span-2 bg-lime-50 p-3 rounded-3xl border border-lime-100/50 shadow-sm flex flex-col items-center text-center gap-2 cursor-pointer transition-all hover:shadow-md active:scale-95 group"><div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-lime-600 shadow-sm"><Sprout size={20} /></div><div><div className="font-bold text-lime-900 text-sm group-hover:text-lime-600 transition-colors">Vườn Cây Tri Thức</div><div className="text-[10px] text-lime-600/70">Chăm sóc cây & Thu hoạch</div></div></div>
         </div>
-        {/* 👇👇👇 DÁN ĐOẠN CODE NÚT TẶNG QUÀ VÀO ĐÂY 👇👇👇 */}
         
         {user.email === 'lebaoanhnss@gmail.com' && (
           <div className="mt-8 mb-4 border-t border-slate-200 pt-4">
-            <h3 className="font-bold text-slate-800 text-base mb-3 flex items-center gap-2">
-               🛡️ Admin Control
-            </h3>
-            <button 
-                onClick={handleGiftAll}
-                className="w-full bg-gradient-to-r from-pink-500 to-rose-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-pink-200 flex items-center justify-center gap-2 active:scale-95 transition-transform"
-            >
-                🎁 Tặng quà toàn Server (10 Nước - 10 Phân)
-            </button>
+            <h3 className="font-bold text-slate-800 text-base mb-3 flex items-center gap-2">🛡️ Admin Control</h3>
+            <button onClick={handleGiftAll} className="w-full bg-gradient-to-r from-pink-500 to-rose-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-pink-200 flex items-center justify-center gap-2 active:scale-95 transition-transform">🎁 Tặng quà toàn Server (10 Nước - 10 Phân)</button>
           </div>
         )}
-
-        {/* 👆👆👆 KẾT THÚC ĐOẠN DÁN 👆👆👆 */}
       </div>
     </div>
   );
 };
-
 // ... (Các component PracticeScreen, MockTestScreen, ExamScreen, GameScreen giữ nguyên code như cũ)
-// 2. PRACTICE SCREEN
+// 2. PRACTICE SCREEN (Đã tích hợp Biểu đồ năng lực)
 const PracticeScreen: React.FC<{
   onCopy: (txt: string) => void,
   onScore: (pts: number, type?: 'game'|'practice'|'exam'|'challenge'|'mock') => void,
+  
+  // 👇 1. THÊM PROP NÀY: Hàm cập nhật biểu đồ
+  onUpdateStats: (topic: string, isCorrect: boolean) => void, 
+
   sessionData: PracticeSessionData,
   setSessionData: React.Dispatch<React.SetStateAction<PracticeSessionData>>,
   questions: Question[],
   lessons: Lesson[],
   onSave: () => void, 
   onExit: () => void
-}> = ({ onCopy, onScore, sessionData, setSessionData, questions, lessons }) => {
+}> = ({ onCopy, onScore, sessionData, setSessionData, questions, lessons, onUpdateStats }) => { // 👈 Nhớ lấy onUpdateStats ở đây
   const {
     configMode, selectedTopic, selectedLessonId, selectedLevel, selectedType, errorMsg,
     quizQuestions, currentQIndex, selectedOpt, subAnswers, isSubmitted
@@ -837,7 +993,12 @@ const PracticeScreen: React.FC<{
         let correctCount = 0;
         currentQ.subQuestions.forEach(sq => { if (subAnswers && subAnswers[sq.id] === sq.isCorrect) correctCount++; });
         
-        // ✅ SỬA: Luôn gọi onScore dù điểm = 0 để phát âm thanh Wrong
+        // Logic: Đúng trên 50% ý thì coi là nắm được Topic đó
+        const isMastered = correctCount >= (currentQ.subQuestions.length / 2);
+        
+        // 👇 2. GỌI HÀM CẬP NHẬT STATS CHO BIỂU ĐỒ
+        if (currentQ.topic) onUpdateStats(currentQ.topic, isMastered);
+
         onScore(correctCount * 0.25, 'practice');
 
     } else {
@@ -846,11 +1007,10 @@ const PracticeScreen: React.FC<{
         if (currentQ.type === 'Short') { isCorrect = selectedOpt?.trim().toLowerCase() === currentQ.answerKey.trim().toLowerCase(); }
         else { isCorrect = selectedOpt === currentQ.answerKey; }
         
-        // ✅ SỬA: Luôn gọi onScore dù sai (0 điểm)
-        onScore(isCorrect ? 0.25 : 0, 'practice');
+        // 👇 2. GỌI HÀM CẬP NHẬT STATS CHO BIỂU ĐỒ
+        if (currentQ.topic) onUpdateStats(currentQ.topic, isCorrect);
         
-        // 👇 Nếu bạn đã thêm tính năng Biểu đồ năng lực ở bước trước, hãy giữ dòng này:
-        // if (currentQ.topic && onUpdateStats) onUpdateStats(currentQ.topic, isCorrect);
+        onScore(isCorrect ? 0.25 : 0, 'practice');
     }
   };
 
@@ -898,22 +1058,22 @@ const PracticeScreen: React.FC<{
     );
   }
 
+  // ... (Phần Giao diện làm bài giữ nguyên như code cũ của bạn) ...
+  // 👇 CHÚ Ý: Hãy giữ nguyên phần `return` ở dưới (phần hiển thị câu hỏi)
+  // Nếu bạn muốn tôi paste nốt phần đó ra thì bảo nhé, còn không thì chỉ cần thay đoạn trên là đủ logic rồi.
+  
   // --- GIAO DIỆN LÀM BÀI ---
   const currentQ = quizQuestions[currentQIndex];
   const isGroupQuestion = currentQ.subQuestions && currentQ.subQuestions.length > 0;
 
   const handleAskRoboki = () => {
       let content = currentQ.promptText;
-      
-      // Kiểm tra nếu là câu Đúng/Sai thì nối thêm 4 ý con
       if (currentQ.subQuestions && currentQ.subQuestions.length > 0) {
           content += "\n\nXÉT CÁC PHÁT BIỂU SAU:";
           currentQ.subQuestions.forEach((sq, idx) => {
               content += `\n${idx + 1}) ${sq.content}`;
           });
       }
-      
-      // Gọi lệnh copy
       onCopy(generateRobokiPrompt(
           currentQ.topic, 
           `Câu hỏi ${currentQ.level}`, 
@@ -3498,6 +3658,55 @@ useEffect(() => {
   // --- LOGIC TÍNH ĐIỂM (ĐÃ SỬA CHUẨN) ---
 // ✅ DÁN ĐOẠN NÀY VÀO (Code mới: Chỉ cộng dồn, không gửi ngay)
 // 👇 HÀM TÍNH ĐIỂM & QUÀ TẶNG (LOGIC & MÔ TẢ MỚI)
+// --- HÀM CẬP NHẬT BIỂU ĐỒ (Chèn vào trong App) ---
+  // --- HÀM CẬP NHẬT BIỂU ĐỒ (Mới thêm vào) ---
+  const updateTopicStats = async (topic: string, isCorrect: boolean) => {
+    if (!user || !topic) return;
+
+    setUser(prev => {
+        if (!prev) return null;
+        
+        // Lấy thống kê hiện tại
+        const currentStats = prev.topicStats || {};
+        const topicData = currentStats[topic] || { correct: 0, total: 0 };
+        
+        // Tính toán số liệu mới
+        const newStats = {
+            ...currentStats,
+            [topic]: {
+                correct: topicData.correct + (isCorrect ? 1 : 0),
+                total: topicData.total + 1
+            }
+        };
+
+        // Lưu ngầm lên Firebase
+        updateDoc(doc(db, 'users', prev.uid), { topicStats: newStats }).catch(e => console.log("Lỗi lưu stats:", e));
+        
+        // Cập nhật giao diện ngay lập tức
+        return { ...prev, topicStats: newStats };
+    });
+  };
+// --- HÀM XỬ LÝ CHUYỂN HƯỚNG HỌC TẬP (Deep Link) ---
+  const handleDeepLinkStudy = (topicLabel: string) => {
+      // Danh sách chủ đề để đối chiếu
+      const TOPICS = [
+          { id: 't1', label: 'VẬT LÍ NHIỆT' }, 
+          { id: 't2', label: 'KHÍ LÍ TƯỞNG' }, 
+          { id: 't3', label: 'TỪ TRƯỜNG' }, 
+          { id: 't4', label: 'HẠT NHÂN & PHÓNG XẠ' }
+      ];
+      
+      // Tìm chủ đề tương ứng với nhãn (label)
+      const targetTopic = TOPICS.find(t => t.label === topicLabel);
+      
+      if (targetTopic) {
+          setSelectedTopic(targetTopic); // Chọn chủ đề
+          setScreen('HOME'); // Chuyển về màn hình chính để hiển thị bài học
+      } else {
+          setScreen('PRACTICE'); // Nếu không tìm thấy thì vào trang Luyện tập
+      }
+  };
+  // 👇 HÀM TÍNH ĐIỂM & QUÀ TẶNG (LOGIC CŨ - GIỮ NGUYÊN)
   const handleScore = (pts: number, type: 'game'|'practice'|'exam'|'challenge'|'mock' = 'game') => { 
     if(!user) return; 
 
@@ -3525,22 +3734,15 @@ useEffect(() => {
 
         // A. CHẾ ĐỘ THI CỬ (Exam / Mock)
         if (type === 'exam' || type === 'mock') {
-            addWater = Math.floor(pts); // 8.5 điểm = 8 Nước
-            
-            if (pts >= 9) { 
-                addFertilizer = 2; // Xuất sắc: 2 Phân
-            } else if (pts >= 8) { 
-                addFertilizer = 1; // Giỏi: 1 Phân
-            }
+            addWater = Math.floor(pts); 
+            if (pts >= 9) addFertilizer = 2; 
+            else if (pts >= 8) addFertilizer = 1; 
         } 
         // B. CHẾ ĐỘ KHÁC (Luyện tập / Game / Thử thách)
         else {
             addWater = Math.floor(pts);
-            if (addWater < 1) addWater = 1; // Tối thiểu luôn nhận 1 Nước
-            
-            if (pts >= 10) {
-                addFertilizer = 1; // Điểm cao: Tặng 1 Phân
-            }
+            if (addWater < 1) addWater = 1; 
+            if (pts >= 10) addFertilizer = 1; 
         }
 
         // Cập nhật kho và tạo thông báo
@@ -3549,12 +3751,8 @@ useEffect(() => {
             newInv.fertilizer += addFertilizer;
             hasDrop = true;
 
-            // 👇 VIẾT LẠI MÔ TẢ TẠI ĐÂY 👇
-            if (addFertilizer > 0) {
-                dropMsg = ` | 🎁 +${addFertilizer} Phân & +${addWater} Nước`;
-            } else {
-                dropMsg = ` | 🎁 +${addWater} Nước`;
-            }
+            if (addFertilizer > 0) dropMsg = ` | 🎁 +${addFertilizer} Phân & +${addWater} Nước`;
+            else dropMsg = ` | 🎁 +${addWater} Nước`;
         }
 
         // Lưu vào Firebase
@@ -3578,7 +3776,6 @@ useEffect(() => {
         return nu;
     });
     
-    // Hiển thị thông báo (Toast)
     const sign = pts > 0 ? '+' : '';
     setToastMsg(`${sign}${pts} điểm${dropMsg}`); 
   };
@@ -3693,7 +3890,23 @@ pendingUpdates.current = { game: 0, practice: 0, exam: 0, challenge: 0, mock: 0,
             )}
             
             {/* 👇 KẾT NỐI HÀM LƯU DỮ LIỆU VÀO CÁC MÀN HÌNH 👇 */}
-            {screen === 'PRACTICE' && <PracticeScreen onCopy={handleCopy} onScore={handleScore} sessionData={practiceSession} setSessionData={setPracticeSession} questions={questions} lessons={lessons} onSave={saveData} onExit={()=>navigateTo('HOME')}/>}
+            {screen === 'PRACTICE' && (
+                <PracticeScreen 
+                    onCopy={handleCopy} 
+                    onScore={handleScore} 
+                    
+                    // 👇 ĐÃ THÊM DÒNG NÀY ĐỂ TRUYỀN HÀM XUỐNG 👇
+                    onUpdateStats={updateTopicStats} 
+                    // 👆
+                    
+                    sessionData={practiceSession} 
+                    setSessionData={setPracticeSession} 
+                    questions={questions} 
+                    lessons={lessons} 
+                    onSave={saveData} 
+                    onExit={()=>navigateTo('HOME')}
+                />
+            )}
             {screen === 'MOCK_TEST' && <MockTestScreen onBack={()=>navigateTo('HOME')} session={mockTestSession} setSession={setMockTestSession} questions={questions} onScore={handleScore} onCopy={handleCopy} onSave={saveData}/>}
             {screen === 'EXAM' && (
   <ExamScreen 
@@ -3706,7 +3919,7 @@ pendingUpdates.current = { game: 0, practice: 0, exam: 0, challenge: 0, mock: 0,
     onCopy={handleCopy} // 👈 NHỚ THÊM DÒNG NÀY
   />
 )}
-            
+           
             {screen === 'GAME' && <GameScreen onCopy={handleCopy} onScore={handleScore} sessionData={gameSession} setSessionData={setGameSession} questions={questions}/>}
            {screen === 'CHALLENGE' && (
     <ChallengeScreen 
@@ -3740,7 +3953,17 @@ pendingUpdates.current = { game: 0, practice: 0, exam: 0, challenge: 0, mock: 0,
             )}
             {/* 👆👆👆 KẾT THÚC ĐOẠN DÁN 👆👆👆 */}
             {screen === 'CHAT' && <ChatScreen onBack={()=>{navigateTo('HOME');setCopyText('')}} initialPrompt={copyText}/>}
-            {screen === 'PROFILE' && <ProfileScreen user={user} onBack={()=>navigateTo('HOME')} onUpdate={setUser} onNavToAuthor={()=>navigateTo('AUTHOR')} />}
+            {screen === 'PROFILE' && (
+                <ProfileScreen 
+                    user={user} 
+                    onBack={()=>navigateTo('HOME')} 
+                    onUpdate={setUser} 
+                    onNavToAuthor={()=>navigateTo('AUTHOR')}
+                    
+                    // 👇 THÊM DÒNG NÀY ĐỂ SỬA LỖI 👇
+                    onStudyTopic={handleDeepLinkStudy} 
+                />
+            )}
             {screen === 'AUTHOR' && <AuthorScreen onBack={()=>navigateTo('PROFILE')} />}
         </div>
 
