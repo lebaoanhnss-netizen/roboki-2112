@@ -442,38 +442,36 @@ const analyzeUserPerformance = (user: UserProfile) => {
   };
 };
 
-// --- UI CỐ VẤN ROBOKI (GIAO DIỆN HỢP NHẤT 1 CỘT) ---
+// --- UI CỐ VẤN ROBOKI (Nút Chat chuẩn màu Roboki) ---
 const RobokiAdvisor: React.FC<{ 
   user: UserProfile; 
   onAction: (target: string, param?: string) => void;
-  onChat: () => void; // Thêm prop để mở Chat
+  onChat: () => void;
 }> = ({ user, onAction, onChat }) => {
   const analysis = analyzeUserPerformance(user);
   
-  // Logic màu sắc
+  // Logic màu sắc cho phần thông báo (Bên trái)
   let theme = {
     bg: 'bg-white',
     border: 'border-slate-100',
     title: 'text-roboki-600',
-    btnAction: 'bg-roboki-500 shadow-roboki-200',
-    lightBg: 'bg-roboki-50'
+    btnAction: 'bg-roboki-500 shadow-roboki-200 text-white', 
   };
 
+  // Nếu có cảnh báo (Yếu)
   if (analysis.mood === 'WORRIED') { 
     theme = {
       bg: 'bg-rose-50',
       border: 'border-rose-100',
       title: 'text-rose-600',
-      btnAction: 'bg-rose-500 shadow-rose-200',
-      lightBg: 'bg-rose-100'
+      btnAction: 'bg-rose-500 shadow-rose-200 text-white',
     };
   } else if (analysis.mood === 'HAPPY' || analysis.mood === 'PROUD') {
     theme = {
       bg: 'bg-amber-50',
       border: 'border-amber-100',
       title: 'text-amber-600',
-      btnAction: 'bg-amber-500 shadow-amber-200',
-      lightBg: 'bg-amber-100'
+      btnAction: 'bg-amber-500 shadow-amber-200 text-white',
     };
   }
 
@@ -491,31 +489,31 @@ const RobokiAdvisor: React.FC<{
             
             <div className="flex-1">
                 <h4 className={`font-black text-sm uppercase mb-1 flex items-center gap-2 ${theme.title}`}>
-                    {analysis.mood === 'WORRIED' ? <ShieldAlert size={16}/> : <Bot size={16}/>}
-                    {analysis.title}
+                     {analysis.mood === 'WORRIED' ? <ShieldAlert size={16}/> : <Bot size={16}/>}
+                     {analysis.mood === 'WORRIED' ? 'LƯU Ý!' : 'GÓC HỌC TẬP'}
                 </h4>
                 <p className="text-xs text-slate-600 font-medium leading-relaxed line-clamp-3">
-                    {analysis.message.replace(`Chào ${user.name}, `, '')}
+                    {analysis.message.replace(`Chào ${user.name}, `, '').replace(`Chào ${user.name}`, '')}
                 </p>
             </div>
         </div>
 
-        {/* Phần 2: Hai nút hành động lớn */}
+        {/* Phần 2: Hai nút hành động */}
         <div className="grid grid-cols-2 gap-3 pt-2">
-            {/* Nút 1: Hành động theo ngữ cảnh (Ôn tập/Thi thử...) */}
+            {/* Nút 1: Hành động (Ôn tập/Thi thử) */}
             <button 
                 onClick={() => onAction(analysis.actionTarget, analysis.targetId)}
-                className={`col-span-1 py-3 px-2 rounded-xl text-white text-xs font-bold shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5 ${theme.btnAction}`}
+                className={`col-span-1 py-3 px-2 rounded-xl text-xs font-bold shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5 ${theme.btnAction}`}
             >
                 {analysis.actionLabel} <ArrowRight size={14}/>
             </button>
 
-            {/* Nút 2: Chat với Roboki */}
+            {/* Nút 2: Hỏi Roboki - ĐÚNG MÀU VÀNG ROBOKI (bg-roboki-500) */}
             <button 
                 onClick={onChat}
-                className="col-span-1 py-3 px-2 rounded-xl bg-slate-800 text-white text-xs font-bold shadow-md shadow-slate-300 active:scale-95 transition-all flex items-center justify-center gap-1.5 border border-slate-700"
+                className="col-span-1 py-3 px-2 rounded-xl bg-roboki-500 text-white text-xs font-bold shadow-md shadow-roboki-200 active:scale-95 transition-all flex items-center justify-center gap-1.5 border border-roboki-400 hover:bg-roboki-600"
             >
-                Hỏi Roboki ngay <MessageCircle size={14} className="text-roboki-400"/>
+                Hỏi Roboki ngay <MessageCircle size={14} className="text-white"/>
             </button>
         </div>
       </div>
