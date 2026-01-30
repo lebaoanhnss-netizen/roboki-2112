@@ -558,10 +558,15 @@ const AuthScreen: React.FC<{ onLoginSuccess: (user: UserProfile) => void }> = ({
       <div className="absolute bottom-[-50px] left-[-50px] w-64 h-64 bg-orange-100 rounded-full blur-3xl opacity-50"></div>
       <div className="w-full max-w-sm relative z-10">
         <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-gradient-to-tr from-roboki-500 to-orange-600 rounded-3xl mx-auto flex items-center justify-center shadow-lg shadow-roboki-200 mb-4 transform rotate-3"><Bot size={48} className="text-white" /></div>
-          <h1 className="text-3xl font-black text-slate-800">Roboki AI</h1>
-          <p className="text-slate-500 font-medium mt-1">Chinh phục vũ trụ Vật lí 12</p>
-        </div>
+  {/* 👇 Đã thay bằng ảnh logo-roboki.png */}
+  <img 
+    src="/logo-roboki.png" 
+    alt="Roboki AI" 
+    className="w-24 h-24 mx-auto mb-4 object-contain drop-shadow-md hover:scale-105 transition-transform" 
+  />
+  <h1 className="text-3xl font-black text-slate-800">Roboki AI</h1>
+  <p className="text-slate-500 font-medium mt-1">Chinh phục vũ trụ Vật lí 12</p>
+</div>
         <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-100">
            <div className="flex justify-center mb-6">
                 {/* <img src="/logo-robok.png" alt="Logo" className="h-32 w-auto object-contain" /> */}
