@@ -1259,23 +1259,51 @@ const MockTestScreen: React.FC<{
   };
 
   // 👇 THAY THẾ HÀM finishExam TRONG MockTestScreen
+  // 👇 HÀM TÍNH ĐIỂM ĐÃ QUY ĐỔI VỀ THANG 10
   const finishExam = () => {
-      let totalScore = 0;
+      let actualScore = 0;      // Điểm thực tế học sinh làm được
+      let maxPossibleScore = 0; // Tổng điểm tối đa của cái đề này
+
       quizQuestions.forEach(q => {
-          const uAns = userAnswers[q.id];
-          if (!uAns) return;
+          // 1. TÍNH TỔNG ĐIỂM TỐI ĐA (Mẫu số)
           if (q.subQuestions) {
-              let correctSub = 0;
-              q.subQuestions.forEach(sq => { if (uAns[sq.id] === sq.isCorrect) correctSub++; });
-              totalScore += correctSub * 0.25; 
-          } else if (q.type === 'Short') {
-              // ✅ ĐÃ SỬA: Điền từ chỉ được 0.25 điểm
-              if (uAns.trim().toLowerCase() === q.answerKey.trim().toLowerCase()) totalScore += 0.25; 
+              // Nếu là câu Đúng/Sai (có nhiều ý nhỏ), mỗi ý 0.25đ
+              maxPossibleScore += q.subQuestions.length * 0.25;
           } else {
-              if (uAns === q.answerKey) totalScore += 0.25; 
+              // Trắc nghiệm hoặc Điền từ: 0.25đ
+              maxPossibleScore += 0.25;
+          }
+
+          // 2. TÍNH ĐIỂM HỌC SINH ĐẠT ĐƯỢC (Tử số)
+          const uAns = userAnswers[q.id];
+          if (!uAns) return; // Chưa làm thì thôi
+
+          if (q.subQuestions) {
+              // Câu Đúng/Sai
+              q.subQuestions.forEach(sq => { 
+                  if (uAns[sq.id] === sq.isCorrect) actualScore += 0.25; 
+              });
+          } else if (q.type === 'Short') {
+              // Câu Điền từ
+              if (uAns.toString().trim().toLowerCase() === q.answerKey.trim().toLowerCase()) {
+                  actualScore += 0.25; 
+              }
+          } else {
+              // Câu Trắc nghiệm (MCQ)
+              if (uAns === q.answerKey) actualScore += 0.25; 
           }
       });
-      const finalPoints = Math.round(totalScore * 100)/100;
+
+      // 3. QUY ĐỔI RA THANG 10
+      // Công thức: (Điểm đạt được / Tổng điểm tối đa) * 10
+      let finalScoreOnScale10 = 0;
+      if (maxPossibleScore > 0) {
+          finalScoreOnScale10 = (actualScore / maxPossibleScore) * 10;
+      }
+
+      // Làm tròn 2 chữ số thập phân (ví dụ: 8.75)
+      const finalPoints = Math.round(finalScoreOnScale10 * 100) / 100;
+
       onScore(finalPoints, 'mock'); 
       updateSession({ mode: 'RESULT', score: finalPoints });
   };

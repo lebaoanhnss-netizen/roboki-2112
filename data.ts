@@ -419,7 +419,7 @@ const RAW_DATA: QuestionInput[] = [
   },
   {
     topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.3', level: 'Biết', type: 'MCQ',
-    promptText: 'Độ không tuyệt đối ($0 K$) tương ứng với bao nhiêu độ C?',
+    promptText: 'Độ không tuyệt đối ($0 K$) tương ứng với bao nhiêu độ C? Cho T(K)=t(C)+273',
     imageUrl: '', options: ['$0^oC$', '$273^oC$', '$-273^oC$', '$100^oC$'],
     answerKey: '$-273^oC$', explanationText: '$t = T - 273 = 0 - 273 = -273^oC$.'
   },
@@ -461,17 +461,17 @@ const RAW_DATA: QuestionInput[] = [
   },
   {
     topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.3', level: 'Hiểu', type: 'Short',
-    promptText: '$0 K$ bằng bao nhiêu độ C?',
+    promptText: '$0 K$ bằng bao nhiêu độ C? Cho T(K)=t(C)+273',
     imageUrl: '', answerKey: '-273', explanationText: '-273.'
   },
   {
     topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.3', level: 'Hiểu', type: 'Short',
-    promptText: 'Nhiệt độ nước đá đang tan ($0^oC$) là bao nhiêu K?',
+    promptText: 'Nhiệt độ nước đá đang tan ($0^oC$) là bao nhiêu K? Cho T(K)=t(C)+273',
     imageUrl: '', answerKey: '273', explanationText: '273 K.'
   },
   {
     topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.3', level: 'Vận dụng', type: 'Short',
-    promptText: '$30^oC$ bằng bao nhiêu K?',
+    promptText: '$30^oC$ bằng bao nhiêu K? Cho T(K)=t(C)+273',
     imageUrl: '', answerKey: '303', explanationText: '30 + 273 = 303.'
   },
   {
@@ -691,8 +691,8 @@ const RAW_DATA: QuestionInput[] = [
   },
   {
     topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.3', level: 'Vận dụng', type: 'Short',
-    promptText: 'Mật độ $2,5.10^{25}$, $E_d=6.10^{-21} J$. Áp suất là bao nhiêu Pa?',
-    imageUrl: '', answerKey: '100000', explanationText: '$p = \\frac{2}{3} . 2,5.10^{25} . 6.10^{-21} = 100000 Pa$.'
+    promptText: 'Mật độ $2,5.10^{25}$, $E_d=6.10^{-21} J$. Áp suất là bao nhiêu 10^{5} Pa?',
+    imageUrl: '', answerKey: '1', explanationText: '$p = \\frac{2}{3} . 2,5.10^{25} . 6.10^{-21} = 100000 Pa$.'
   },
   {
     topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.3', level: 'Vận dụng', type: 'Short',
@@ -761,7 +761,7 @@ const RAW_DATA: QuestionInput[] = [
   },
   {
     topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Vận dụng', type: 'Short',
-    promptText: 'Một nam châm thẳng có bao nhiêu cực từ?',
+    promptText: 'Một nam châm thẳng có bao nhiêu cực từ ( điền số nguyên)?',
     imageUrl: '', answerKey: '2', explanationText: 'Bắc (N) và Nam (S).'
   },
 
@@ -792,7 +792,7 @@ const RAW_DATA: QuestionInput[] = [
   },
   {
     topic: 'TỪ TRƯỜNG', lessonId: 'l3.2', level: 'Hiểu', type: 'Short',
-    promptText: 'Nếu dây dẫn đặt song song với đường sức từ thì lực từ bằng bao nhiêu?',
+    promptText: 'Nếu dây dẫn đặt song song với đường sức từ thì lực từ bằng bao nhiêu NewTon ( điền số?',
     imageUrl: '', answerKey: '0', explanationText: '$\\sin 0^o = 0$.'
   },
   {
@@ -802,7 +802,7 @@ const RAW_DATA: QuestionInput[] = [
   },
   {
     topic: 'TỪ TRƯỜNG', lessonId: 'l3.2', level: 'Vận dụng', type: 'Short',
-    promptText: 'Nếu giảm cường độ dòng điện đi 2 lần thì lực từ sẽ giảm đi mấy lần?',
+    promptText: 'Nếu giảm cường độ dòng điện đi 2 lần thì lực từ sẽ giảm đi mấy lần? (điền số)',
     imageUrl: '', answerKey: '2', explanationText: 'F tỉ lệ thuận với I.'
   },
 
@@ -5793,6 +5793,1331 @@ $$c = \\frac{Q}{m\\Delta T}
     answerKey: 'Phụ thuộc chiều dài dây dẫn',
     explanationText: 'Cảm ứng từ không phụ thuộc chiều dài dây dẫn.'
   },
+
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Câu nào sau đây nói về chuyển động của phân tử là không đúng?',
+    imageUrl: '',
+    options: [
+      'Chuyển động của phân tử là do lực tương tác phân tử gây ra.',
+      'Các phân tử chuyển động không ngừng.',
+      'Các phân tử chuyển động càng nhanh thì nhiệt độ càng cao.',
+      'Các phân tử khí không dao động quanh vị trí cân bằng.'
+    ],
+    answerKey: 'Chuyển động của phân tử là do lực tương tác phân tử gây ra.',
+    explanationText: 'Chuyển động nhiệt của phân tử là chuyển động hỗn loạn không ngừng do năng lượng nhiệt, không phải do lực tương tác phân tử gây ra.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Câu nào sau đây nói về lực tương tác phân tử là không đúng?',
+    imageUrl: '',
+    options: [
+      'Lực phân tử chỉ đáng kể khi các phân tử ở rất gần nhau.',
+      'Lực hút phân tử có thể lớn hơn lực đẩy phân tử.',
+      'Lực hút phân tử không thể lớn hơn lực đẩy phân tử.',
+      'Lực hút phân tử có thể bằng lực đẩy phân tử.'
+    ],
+    answerKey: 'Lực hút phân tử không thể lớn hơn lực đẩy phân tử.',
+    explanationText: 'Tùy khoảng cách giữa các phân tử, lực hút có thể lớn hơn, nhỏ hơn hoặc bằng lực đẩy phân tử.'
+  },
+  {
+    topic: 'KHÍ LÍ TƯỞNG',
+    lessonId: 'l2.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Trong các tính chất sau, tính chất nào là của các phân tử chất rắn?',
+    imageUrl: '',
+    options: [
+      'Không có hình dạng cố định.',
+      'Chiếm toàn bộ thể tích của bình chứa.',
+      'Có lực tương tác phân tử lớn.',
+      'Chuyển động hỗn loạn không ngừng.'
+    ],
+    answerKey: 'Có lực tương tác phân tử lớn.',
+    explanationText: 'Trong chất rắn, các phân tử liên kết chặt chẽ với nhau do lực tương tác phân tử rất lớn.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Nhận định nào sau đây không đúng về nam châm?',
+    imageUrl: '',
+    options: [
+      'Hướng bắc – nam của nam châm là hướng của từ trường tại điểm đặt nam châm.',
+      'Các cực cùng tên của các nam châm thì đẩy nhau.',
+      'Mọi nam châm đều hút được sắt.',
+      'Mọi nam châm bao giờ cũng có hai cực.'
+    ],
+    answerKey: 'Mọi nam châm đều hút được sắt.',
+    explanationText: 'Không phải mọi nam châm đều hút được mọi loại sắt thép.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Cho hai dây dẫn đặt gần nhau và song song. Khi có hai dòng điện cùng chiều chạy qua thì hai dây dẫn',
+    imageUrl: '',
+    options: ['Hút nhau.', 'Đẩy nhau.', 'Không tương tác.', 'Đều dao động.'],
+    answerKey: 'Hút nhau.',
+    explanationText: 'Hai dòng điện cùng chiều thì hút nhau.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Lực nào sau đây không phải lực từ?',
+    imageUrl: '',
+    options: [
+      'Lực Trái Đất tác dụng lên vật nặng.',
+      'Lực Trái Đất tác dụng lên kim nam châm tự do.',
+      'Lực nam châm tác dụng lên dây dẫn bằng nhôm mang dòng điện.',
+      'Lực hai dây dẫn mang dòng điện tác dụng lên nhau.'
+    ],
+    answerKey: 'Lực Trái Đất tác dụng lên vật nặng.',
+    explanationText: 'Đó là lực hấp dẫn, không phải lực từ.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Từ trường là dạng vật chất tồn tại trong không gian và',
+    imageUrl: '',
+    options: [
+      'tác dụng lực hút lên các vật.',
+      'tác dụng lực điện lên điện tích.',
+      'tác dụng lực từ lên nam châm và dòng điện.',
+      'tác dụng lực đẩy lên các vật.'
+    ],
+    answerKey: 'tác dụng lực từ lên nam châm và dòng điện.',
+    explanationText: 'Tính chất cơ bản của từ trường là gây ra lực từ.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Đặc điểm nào sau đây không phải của các đường sức từ của dòng điện thẳng dài?',
+    imageUrl: '',
+    options: [
+      'Các đường sức là các đường tròn.',
+      'Mặt phẳng chứa các đường sức vuông góc với dây dẫn.',
+      'Chiều các đường sức xác định theo quy tắc bàn tay trái.',
+      'Chiều các đường sức không phụ thuộc chiều dòng điện.'
+    ],
+    answerKey: 'Chiều các đường sức không phụ thuộc chiều dòng điện.',
+    explanationText: 'Chiều đường sức phụ thuộc vào chiều dòng điện.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Các đường sức từ là các đường cong sao cho',
+    imageUrl: '',
+    options: [
+      'pháp tuyến trùng với hướng từ trường.',
+      'tiếp tuyến trùng với hướng từ trường.',
+      'pháp tuyến tạo góc không đổi với từ trường.',
+      'tiếp tuyến tạo góc không đổi với từ trường.'
+    ],
+    answerKey: 'tiếp tuyến trùng với hướng từ trường.',
+    explanationText: 'Định nghĩa chuẩn của đường sức từ.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Từ trường đều là từ trường mà các đường sức từ là các đường',
+    imageUrl: '',
+    options: ['thẳng.', 'song song.', 'thẳng song song.', 'thẳng song song và cách đều nhau.'],
+    answerKey: 'thẳng song song và cách đều nhau.',
+    explanationText: 'Đặc trưng của từ trường đều.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Hai dây dẫn thẳng song song, dây hai sẽ dịch chuyển ra xa dây một khi',
+    imageUrl: '',
+    options: [
+      'có hai dòng điện ngược chiều chạy qua.',
+      'chỉ có dòng điện qua dây một.',
+      'có hai dòng điện cùng chiều.',
+      'dòng điện dây hai lớn hơn dây một.'
+    ],
+    answerKey: 'có hai dòng điện ngược chiều chạy qua.',
+    explanationText: 'Hai dòng điện ngược chiều thì đẩy nhau.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Hai dây dẫn thẳng song song, dây hai sẽ dịch chuyển về phía dây một khi',
+    imageUrl: '',
+    options: [
+      'có hai dòng điện ngược chiều.',
+      'chỉ có dòng điện qua dây một.',
+      'có hai dòng điện cùng chiều.',
+      'dòng điện dây hai lớn hơn dây một.'
+    ],
+    answerKey: 'có hai dòng điện cùng chiều.',
+    explanationText: 'Hai dòng điện cùng chiều thì hút nhau.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Trong từ trường, cảm ứng từ tại một điểm',
+    imageUrl: '',
+    options: [
+      'nằm theo hướng của lực từ.',
+      'ngược hướng với đường sức từ.',
+      'nằm theo hướng của đường sức từ.',
+      'ngược hướng với lực từ.'
+    ],
+    answerKey: 'nằm theo hướng của đường sức từ.',
+    explanationText: 'Theo định nghĩa, hướng của cảm ứng từ trùng với hướng của đường sức từ.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Phát biểu nào sau đây không đúng?',
+    imageUrl: '',
+    options: [
+      'Qua mỗi điểm trong từ trường chỉ có một đường sức từ.',
+      'Tương tác giữa hai dòng điện là tương tác từ.',
+      'Xung quanh mỗi điện tích đứng yên tồn tại điện trường và từ trường.',
+      'Cảm ứng từ là đại lượng đặc trưng cho từ trường về mặt gây ra lực từ.'
+    ],
+    answerKey: 'Xung quanh mỗi điện tích đứng yên tồn tại điện trường và từ trường.',
+    explanationText: 'Điện tích đứng yên chỉ tạo ra điện trường, không tạo ra từ trường.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Phát biểu nào sau đây sai? Người ta nhận ra từ trường tồn tại quanh dây dẫn mang dòng điện vì có lực từ tác dụng lên',
+    imageUrl: '',
+    options: [
+      'một dòng điện khác đặt song song.',
+      'một kim nam châm đặt bên cạnh.',
+      'một hạt mang điện chuyển động.',
+      'một hạt mang điện đứng yên.'
+    ],
+    answerKey: 'một hạt mang điện đứng yên.',
+    explanationText: 'Hạt mang điện đứng yên không chịu tác dụng của lực từ.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Tính chất cơ bản của từ trường là gây ra',
+    imageUrl: '',
+    options: [
+      'lực từ tác dụng lên nam châm hoặc dòng điện.',
+      'lực hấp dẫn lên các vật.',
+      'lực đàn hồi lên dòng điện.',
+      'sự biến đổi tính chất điện của môi trường.'
+    ],
+    answerKey: 'lực từ tác dụng lên nam châm hoặc dòng điện.',
+    explanationText: 'Đây là tính chất đặc trưng nhất của từ trường.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Phát biểu nào sau đây là sai?',
+    imageUrl: '',
+    options: [
+      'Qua mỗi điểm trong từ trường đều vẽ được một đường sức.',
+      'Đường sức từ của nam châm thẳng là các đường thẳng.',
+      'Nơi từ trường mạnh thì đường sức mau.',
+      'Các đường sức từ là các đường cong kín.'
+    ],
+    answerKey: 'Đường sức từ của nam châm thẳng là các đường thẳng.',
+    explanationText: 'Đường sức từ của nam châm là các đường cong kín.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Để xác định một điểm trong không gian có từ trường hay không, ta đặt tại đó',
+    imageUrl: '',
+    options: ['một điện tích.', 'một kim nam châm.', 'một sợi dây dẫn.', 'một sợi dây tơ.'],
+    answerKey: 'một kim nam châm.',
+    explanationText: 'Kim nam châm chịu tác dụng của lực từ.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Phát biểu nào sau đây là sai?',
+    imageUrl: '',
+    options: [
+      'Có thể xác định chiều đường sức từ nhờ mạt sắt.',
+      'Dùng quy tắc nắm tay phải xác định chiều đường sức.',
+      'Nam châm thử cho biết chiều đường sức từ.',
+      'Đường mạt sắt quanh dây thẳng là các đường tròn đồng tâm.'
+    ],
+    answerKey: 'Có thể xác định chiều đường sức từ nhờ mạt sắt.',
+    explanationText: 'Mạt sắt chỉ cho hình dạng, không cho biết chiều.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Dây dẫn mang dòng điện không tương tác với',
+    imageUrl: '',
+    options: [
+      'điện tích đang chuyển động.',
+      'nam châm đứng yên.',
+      'điện tích đứng yên.',
+      'nam châm đang chuyển động.'
+    ],
+    answerKey: 'điện tích đứng yên.',
+    explanationText: 'Lực từ không tác dụng lên điện tích đứng yên.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Đường sức từ không có tính chất nào sau đây?',
+    imageUrl: '',
+    options: [
+      'Qua mỗi điểm chỉ có một đường sức.',
+      'Là các đường cong kín hoặc vô hạn.',
+      'Chiều trùng với chiều từ trường.',
+      'Các đường sức có thể cắt nhau.'
+    ],
+    answerKey: 'Các đường sức có thể cắt nhau.',
+    explanationText: 'Các đường sức từ không bao giờ cắt nhau.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Đặt kim nam châm nhỏ gần dòng điện thẳng, khi cân bằng kim sẽ nằm theo hướng',
+    imageUrl: '',
+    options: [
+      'song song dòng điện.',
+      'cắt dòng điện.',
+      'một đường sức từ của dòng điện.',
+      'vuông góc đường sức từ.'
+    ],
+    answerKey: 'một đường sức từ của dòng điện.',
+    explanationText: 'Kim nam châm luôn nằm theo hướng đường sức từ.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Từ trường của một nam châm giống với từ trường được tạo bởi',
+    imageUrl: '',
+    options: [
+      'dây dẫn thẳng.',
+      'ống dây có dòng điện.',
+      'nam châm móng ngựa.',
+      'vòng dây tròn.'
+    ],
+    answerKey: 'ống dây có dòng điện.',
+    explanationText: 'Từ trường của ống dây giống từ trường nam châm thẳng.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Từ phổ là',
+    imageUrl: '',
+    options: [
+      'hình ảnh các đường mạt sắt biểu diễn đường sức từ.',
+      'hình ảnh tương tác hai nam châm.',
+      'hình ảnh tương tác dòng điện và nam châm.',
+      'hình ảnh tương tác hai dòng điện.'
+    ],
+    answerKey: 'hình ảnh các đường mạt sắt biểu diễn đường sức từ.',
+    explanationText: 'Định nghĩa của từ phổ.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Các đường sức từ của dòng điện chạy trong dây dẫn thẳng dài có dạng',
+    imageUrl: '',
+    options: [
+      'đường thẳng.',
+      'đường tròn đồng tâm.',
+      'đường tròn đồng tâm vuông góc với dòng điện, tâm trên dây.',
+      'đường tròn.'
+    ],
+    answerKey: 'đường tròn đồng tâm vuông góc với dòng điện, tâm trên dây.',
+    explanationText: 'Đặc trưng từ trường của dòng điện thẳng dài.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.1',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Các đường sức từ bên trong ống dây mang dòng điện có dạng',
+    imageUrl: '',
+    options: [
+      'đường tròn.',
+      'đường thẳng vuông góc trục.',
+      'đường thẳng song song trục và cách đều.',
+      'đường xoắn ốc.'
+    ],
+    answerKey: 'đường thẳng song song trục và cách đều.',
+    explanationText: 'Bên trong ống dây là từ trường đều.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.2',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Một đoạn dây dẫn thẳng dài mang dòng điện nằm song song với đường sức từ và có chiều ngược với chiều của đường sức từ. Gọi F là lực từ tác dụng lên đoạn dòng điện đó thì',
+    imageUrl: '',
+    options: [
+      'F = 0.',
+      'F ≠ 0.',
+      'F còn tùy thuộc chiều dài của đoạn dòng điện.',
+      'F còn tùy thuộc độ lớn cường độ dòng điện.'
+    ],
+    answerKey: 'F = 0.',
+    explanationText: 'Khi dòng điện song song với vectơ cảm ứng từ thì góc giữa I và B bằng 0°, nên lực từ bằng 0.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.2',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Lực từ tác dụng lên một đoạn dây dẫn mang dòng điện đặt trong từ trường đều có vectơ cảm ứng từ vuông góc với dây sẽ không đổi khi',
+    imageUrl: '',
+    options: [
+      'dòng điện đổi chiều.',
+      'từ trường đổi chiều.',
+      'cường độ dòng điện thay đổi.',
+      'dòng điện và từ trường đồng thời đổi chiều.'
+    ],
+    answerKey: 'dòng điện và từ trường đồng thời đổi chiều.',
+    explanationText: 'Khi I và B đồng thời đổi chiều thì tích vectơ I × B không đổi nên lực từ không đổi.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.2',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Lực từ tác dụng lên một đoạn dây dẫn thẳng dài có dòng điện chạy qua đặt cùng phương với vectơ cảm ứng từ',
+    imageUrl: '',
+    options: [
+      'luôn cùng hướng với đường sức từ.',
+      'luôn ngược hướng với đường sức từ.',
+      'luôn vuông góc với đường sức từ.',
+      'luôn bằng 0.'
+    ],
+    answerKey: 'luôn bằng 0.',
+    explanationText: 'Khi dòng điện song song với vectơ cảm ứng từ thì lực từ bằng 0.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.2',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Lực từ tác dụng lên một đoạn dây dẫn có dòng điện chạy qua có hướng hợp với hướng dòng điện một góc α có độ lớn',
+    imageUrl: '',
+    options: [
+      'cực đại khi α = 0°.',
+      'cực đại khi α = 90°.',
+      'không phụ thuộc góc α.',
+      'dương khi α nhọn và âm khi α tù.'
+    ],
+    answerKey: 'cực đại khi α = 90°.',
+    explanationText: 'Độ lớn lực từ F = BILsinα, đạt cực đại khi sinα = 1 (α = 90°).'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.2',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Hướng của dòng điện, hướng của từ trường và hướng của lực điện từ tác dụng lên dòng điện này',
+    imageUrl: '',
+    options: [
+      'tạo thành một tam diện thuận.',
+      'luôn hợp với nhau một góc α.',
+      'luôn cùng hướng với nhau.',
+      'tạo thành một tam giác vuông.'
+    ],
+    answerKey: 'tạo thành một tam diện thuận.',
+    explanationText: 'Theo quy tắc bàn tay trái (hoặc quy tắc tích vectơ), I, B, F tạo thành một tam diện thuận.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.2',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Chọn câu sai. Lực từ tác dụng lên một đoạn dây dẫn có dòng điện đặt trong từ trường đều tỉ lệ với',
+    imageUrl: '',
+    options: [
+      'cường độ dòng điện trong đoạn dây.',
+      'chiều dài đoạn dây.',
+      'góc hợp bởi đoạn dây và đường sức từ.',
+      'cảm ứng từ tại điểm đặt đoạn dây.'
+    ],
+    answerKey: 'góc hợp bởi đoạn dây và đường sức từ.',
+    explanationText: 'Lực từ F = BILsinα nên tỉ lệ với sinα chứ không tỉ lệ trực tiếp với góc α.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.2',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Khi tăng cường độ dòng điện lên n lần thì thấy lực từ tác dụng lên đoạn dây tăng lên n lần. Khi đó cảm ứng từ sẽ',
+    imageUrl: '',
+    options: [
+      'tăng n lần.',
+      'giảm n lần.',
+      'không đổi.',
+      'tăng n² lần.'
+    ],
+    answerKey: 'không đổi.',
+    explanationText: 'Cảm ứng từ B là đặc trưng của từ trường, không phụ thuộc vào cường độ dòng điện chạy trong dây.'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.2',
+    level: 'Nhận biết',
+    type: 'MCQ',
+    promptText: 'Lực từ tác dụng lên một đoạn dây dẫn thẳng mang dòng điện tỉ lệ với',
+    imageUrl: '',
+    options: [
+      'điện trở của đoạn dây.',
+      'bình phương hiệu điện thế giữa hai đầu đoạn dây.',
+      'căn bậc hai của hiệu điện thế giữa hai đầu đoạn dây.',
+      'cường độ dòng điện qua đoạn dây.'
+    ],
+    answerKey: 'cường độ dòng điện qua đoạn dây.',
+    explanationText: 'Theo công thức F = BILsinα, lực từ tỉ lệ với cường độ dòng điện I.'
+  },
+// ===== CHỦ ĐỀ: LỰC TỪ (ĐỊNH LUẬT AM-PE) – l3.2 =====
+
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.2',
+  level: 'Vận dụng',
+  type: 'MCQ',
+  promptText: 'Một đoạn dây dẫn dài 5 cm đặt trong từ trường đều và vuông góc với vectơ cảm ứng từ. Dòng điện qua dây có cường độ 0,75 A. Lực từ tác dụng lên dây là 3·10^-2 N. Độ lớn cảm ứng từ của từ trường là',
+  imageUrl: '',
+  options: ['0,4 T', '0,6 T', '0,8 T', '1,2 T'],
+  answerKey: '0,8 T',
+  explanationText: 'Áp dụng F = BIL ⇒ B = F/(IL) = 0,03/(0,75·0,05) = 0,8 T.'
+},
+
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.2',
+  level: 'Vận dụng',
+  type: 'MCQ',
+  promptText: 'Một đoạn dây dẫn thẳng MN dài 6 cm có dòng điện 5 A đặt trong từ trường đều có cảm ứng từ B = 0,5 T. Lực từ tác dụng lên dây có độ lớn 7,5·10^-2 N. Góc hợp bởi dây MN và đường cảm ứng từ là',
+  imageUrl: '',
+  options: ['30°', '45°', '60°', '90°'],
+  answerKey: '30°',
+  explanationText: 'sinα = F/(BIL) = 0,075/(0,5·5·0,06) = 0,5 ⇒ α = 30°.'
+},
+
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.2',
+  level: 'Vận dụng',
+  type: 'MCQ',
+  promptText: 'Một đoạn dây dẫn thẳng dài 10 cm mang dòng điện 5 A đặt trong từ trường đều có cảm ứng từ B = 0,08 T. Biết dây vuông góc với vectơ cảm ứng từ. Lực từ tác dụng lên đoạn dây là',
+  imageUrl: '',
+  options: ['0,02 N', '0,04 N', '0,06 N', '0,08 N'],
+  answerKey: '0,04 N',
+  explanationText: 'F = BIL = 0,08·5·0,1 = 0,04 N.'
+},
+
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.2',
+  level: 'Vận dụng',
+  type: 'MCQ',
+  promptText: 'Một dây dẫn thẳng dài mang dòng điện 20 A đặt trong từ trường đều có cảm ứng từ B = 5·10^-3 T. Dây vuông góc với vectơ cảm ứng từ và chịu lực từ 10^-3 N. Chiều dài đoạn dây là',
+  imageUrl: '',
+  options: ['4 cm', '3 cm', '2 cm', '1 cm'],
+  answerKey: '1 cm',
+  explanationText: 'L = F/(BI) = 10^-3/(5·10^-3·20) = 0,01 m = 1 cm.'
+},
+
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.2',
+  level: 'Hiểu',
+  type: 'MCQ',
+  promptText: 'Một đoạn dây dẫn đặt trong từ trường đều. Nếu chiều dài dây dẫn và cường độ dòng điện qua dây đều tăng 2 lần thì độ lớn lực từ tác dụng lên dây',
+  imageUrl: '',
+  options: ['tăng 2 lần', 'giảm 2 lần', 'tăng 4 lần', 'không đổi'],
+  answerKey: 'tăng 4 lần',
+  explanationText: 'F = BIL ⇒ khi I và L cùng tăng 2 lần thì F tăng 4 lần.'
+},
+
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.2',
+  level: 'Vận dụng',
+  type: 'MCQ',
+  promptText: 'Treo đoạn dây dẫn dài 5 cm, khối lượng 5 g bằng hai dây mảnh sao cho dây nằm ngang. Từ trường có cảm ứng từ B = 0,5 T hướng thẳng đứng xuống dưới, dòng điện qua dây là 2 A. Lấy g = 10 m/s². Góc lệch của dây treo so với phương thẳng đứng là',
+  imageUrl: '',
+  options: ['30°', '45°', '60°', '75°'],
+  answerKey: '45°',
+  explanationText: 'F = BIL = 0,05 N; mg = 0,05 N ⇒ tanα = 1 ⇒ α = 45°.'
+},
+
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.2',
+  level: 'Hiểu',
+  type: 'MCQ',
+  promptText: 'Một đoạn dây có dòng điện đặt trong từ trường đều B. Để lực điện từ tác dụng lên dây đạt giá trị cực tiểu thì góc giữa dây dẫn và vectơ cảm ứng từ phải bằng',
+  imageUrl: '',
+  options: ['0°', '30°', '60°', '90°'],
+  answerKey: '0°',
+  explanationText: 'F = BIL sinα ⇒ F nhỏ nhất khi sinα = 0 ⇒ α = 0°.'
+},
+// ===== CHỦ ĐỀ: TỪ THÔNG & CẢM ỨNG ĐIỆN TỪ – l3.3 =====
+
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Nhận biết',
+  type: 'MCQ',
+  promptText: 'Đơn vị của từ thông là',
+  imageUrl: '',
+  options: ['Tesla (T)', 'Ampe (A)', 'Weber (Wb)', 'Volt (V)'],
+  answerKey: 'Weber (Wb)',
+  explanationText: 'Đơn vị của từ thông là Weber (Wb).'
+},
+
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Hiểu',
+  type: 'MCQ',
+  promptText: 'Phát biểu nào sau đây không đúng khi nói về từ thông?',
+  imageUrl: '',
+  options: [
+    'Biểu thức định nghĩa của từ thông là Φ = BS cosα.',
+    'Đơn vị của từ thông là Weber.',
+    'Từ thông là một đại lượng đại số.',
+    'Từ thông là một đại lượng có hướng.'
+  ],
+  answerKey: 'Từ thông là một đại lượng có hướng.',
+  explanationText: 'Từ thông là đại lượng vô hướng (đại số).'
+},
+
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Hiểu',
+  type: 'MCQ',
+  promptText: 'Từ thông phụ thuộc vào',
+  imageUrl: '',
+  options: [
+    'điện trở suất dây dẫn làm khung.',
+    'đường kính dây dẫn làm khung.',
+    'hình dạng và kích thước của khung dây dẫn.',
+    'điện trở của dây dẫn.'
+  ],
+  answerKey: 'hình dạng và kích thước của khung dây dẫn.',
+  explanationText: 'Φ phụ thuộc diện tích khung và góc đặt trong từ trường.'
+},
+
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Hiểu',
+  type: 'MCQ',
+  promptText: 'Từ thông qua một diện tích không phụ thuộc vào',
+  imageUrl: '',
+  options: [
+    'độ lớn cảm ứng từ.',
+    'diện tích đang xét.',
+    'góc tạo bởi pháp tuyến và vectơ cảm ứng từ.',
+    'nhiệt độ môi trường.'
+  ],
+  answerKey: 'nhiệt độ môi trường.',
+  explanationText: 'Φ = BS cosα không phụ thuộc nhiệt độ.'
+},
+
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Vận dụng',
+  type: 'MCQ',
+  promptText: 'Cho vectơ pháp tuyến của diện tích vuông góc với các đường sức từ. Khi độ lớn cảm ứng từ tăng 2 lần thì từ thông sẽ',
+  imageUrl: '',
+  options: ['bằng 0.', 'tăng 2 lần.', 'tăng 4 lần.', 'giảm 2 lần.'],
+  answerKey: 'tăng 2 lần.',
+  explanationText: 'Φ = BS ⇒ B tăng 2 lần thì Φ tăng 2 lần.'
+},
+
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Hiểu',
+  type: 'MCQ',
+  promptText: 'Từ thông qua một mạch kín không đổi khi',
+  imageUrl: '',
+  options: [
+    'thay đổi tiết diện của dây dẫn.',
+    'thay đổi từ trường qua mạch kín.',
+    'cho mạch kín di chuyển lại gần nam châm.',
+    'quay khung dây trong mặt phẳng vuông góc với trục nam châm.'
+  ],
+  answerKey: 'quay khung dây trong mặt phẳng vuông góc với trục nam châm.',
+  explanationText: 'Diện tích và góc không đổi nên từ thông không đổi.'
+},
+
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Nhận biết',
+  type: 'MCQ',
+  promptText: 'Vectơ pháp tuyến của diện tích S là vectơ',
+  imageUrl: '',
+  options: [
+    'có độ lớn bằng 1 đơn vị và có phương vuông góc với diện tích đã cho.',
+    'có độ lớn bằng 1 đơn vị và song song với diện tích đã cho.',
+    'có độ lớn bằng 1 đơn vị và tạo với diện tích đã cho một góc không đổi.',
+    'có độ lớn bằng hằng số và tạo với diện tích đã cho một góc không đổi.'
+  ],
+  answerKey: 'có độ lớn bằng 1 đơn vị và có phương vuông góc với diện tích đã cho.',
+  explanationText: 'Định nghĩa vectơ pháp tuyến.'
+},
+
+{
+  topic: 'TỪ TRƯỜNG',
+  lessonId: 'l3.3',
+  level: 'Hiểu',
+  type: 'MCQ',
+  promptText: 'Từ thông qua khung dây có diện tích S đặt trong từ trường đều đạt giá trị cực đại khi',
+  imageUrl: '',
+  options: [
+    'các đường sức từ vuông góc với mặt phẳng khung dây.',
+    'các đường sức từ song song với mặt phẳng khung dây.',
+    'các đường sức từ hợp với mặt phẳng khung dây góc 0°.',
+    'các đường sức từ hợp với mặt phẳng khung dây góc 40°.'
+  ],
+  answerKey: 'các đường sức từ vuông góc với mặt phẳng khung dây.',
+  explanationText: 'Khi pháp tuyến trùng với B thì Φ max.'
+},
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Một khung dây phẳng diện tích $S = 12\\,cm^2$, đặt trong từ trường đều có cảm ứng từ $B = 5\\times10^{-2}\\,T$. Mặt phẳng khung dây hợp với vectơ cảm ứng từ $\\vec B$ một góc $30^\\circ$. Từ thông qua diện tích S bằng',
+    imageUrl: '',
+    options: [
+      '$3\\times10^{-4}\\,Wb$',
+      '$3\\times10^{-5}\\,Wb$',
+      '$3\\sqrt{3}\\times10^{-5}\\,Wb$',
+      '$3\\times10^{-5}\\,Wb$'
+    ],
+    answerKey: '$3\\times10^{-5}\\,Wb$',
+    explanationText: '$S = 12\\,cm^2 = 12\\times10^{-4}\\,m^2.\\; \\alpha = 90^\\circ - 30^\\circ = 60^\\circ.\\; \\Phi = BScos\\alpha = 5\\times10^{-2}\\times12\\times10^{-4}\\times\\cos60^\\circ = 3\\times10^{-5}\\,Wb.$'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Một khung dây hình chữ nhật kích thước $3\\,cm \\times 4\\,cm$ đặt trong từ trường đều có cảm ứng từ $B = 5\\times10^{-4}\\,T$. Vectơ cảm ứng từ hợp với pháp tuyến của mặt phẳng khung một góc $60^\\circ$. Từ thông qua khung dây bằng',
+    imageUrl: '',
+    options: [
+      '$1{,}5\\times10^{-7}\\,Wb$',
+      '$1{,}5\\times10^{-7}\\,Wb$',
+      '$3\\times10^{-7}\\,Wb$',
+      '$2\\times10^{-7}\\,Wb$'
+    ],
+    answerKey: '$1{,}5\\times10^{-7}\\,Wb$',
+    explanationText: '$S = 3\\times4 = 12\\,cm^2 = 12\\times10^{-4}\\,m^2.\\; \\Phi = BScos60^\\circ = 5\\times10^{-4}\\times12\\times10^{-4}\\times\\frac{1}{2} = 1{,}5\\times10^{-7}\\,Wb.$'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Vận dụng cao',
+    type: 'MCQ',
+    promptText: 'Một khung dây dẫn phẳng dẹt hình chữ nhật gồm $N = 500$ vòng dây, diện tích mỗi vòng $S = 54\\,cm^2$. Khung quay đều quanh một trục đối xứng (vuông góc với mặt phẳng khung) trong từ trường đều có vectơ cảm ứng từ $B = 0{,}2\\,T$ vuông góc với trục quay. Từ thông cực đại qua khung dây là',
+    imageUrl: '',
+    options: [
+      '$54\\,Wb$',
+      '$5{,}4\\,Wb$',
+      '$0{,}54\\,Wb$',
+      '$540\\,Wb$'
+    ],
+    answerKey: '$5{,}4\\,Wb$',
+    explanationText: '$S = 54\\,cm^2 = 54\\times10^{-4}\\,m^2.\\; \\Phi_{max} = NBS = 500\\times0{,}2\\times54\\times10^{-4} = 5{,}4\\,Wb.$'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Một khung dây dẫn phẳng dẹt hình chữ nhật có diện tích $S = 60\\,cm^2$, quay đều quanh trục đối xứng (thuộc mặt phẳng khung) trong từ trường đều có vectơ cảm ứng từ vuông góc với trục quay và có độ lớn $B = 0{,}4\\,T$. Từ thông cực đại qua khung dây là',
+    imageUrl: '',
+    options: [
+      '$1{,}2\\times10^{-3}\\,Wb$',
+      '$4{,}8\\times10^{-3}\\,Wb$',
+      '$2{,}4\\times10^{-3}\\,Wb$',
+      '$0{,}6\\times10^{-3}\\,Wb$'
+    ],
+    answerKey: '$2{,}4\\times10^{-3}\\,Wb$',
+    explanationText: '$S = 60\\times10^{-4}\\,m^2.\\; \\Phi_{max} = BS = 0{,}4\\times60\\times10^{-4} = 2{,}4\\times10^{-3}\\,Wb.$'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Một khung dây phẳng hình vuông đặt trong từ trường đều $B = 5\\times10^{-2}\\,T$. Mặt phẳng khung dây hợp với đường cảm ứng từ một góc $30^\\circ$. Độ lớn từ thông qua khung là $4\\times10^{-5}\\,Wb$. Độ dài cạnh khung dây là',
+    imageUrl: '',
+    options: ['8 cm', '4 cm', '2 cm', '6 cm'],
+    answerKey: '4 cm',
+    explanationText: '$\\alpha = 60^\\circ.\\; \\Phi = BScos\\alpha \\Rightarrow S = \\frac{\\Phi}{Bcos60^\\circ} = \\frac{4\\times10^{-5}}{5\\times10^{-2}\\times0{,}5} = 1{,}6\\times10^{-3}\\,m^2.\\; a = \\sqrt{S} = 0{,}04\\,m = 4\\,cm.$'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Hiểu',
+    type: 'MCQ',
+    promptText: 'Hai khung dây tròn có mặt phẳng song song với nhau đặt trong từ trường đều. Khung dây 1 có đường kính $20\\,cm$ và từ thông qua nó là $30\\,mWb$. Cuộn dây 2 có đường kính $40\\,cm$ thì từ thông qua nó là',
+    imageUrl: '',
+    options: ['60 mWb', '120 mWb', '15 mWb', '7,5 mWb'],
+    answerKey: '120 mWb',
+    explanationText: '$\\Phi \\propto S \\propto d^2.\\; \\Rightarrow \\Phi_2 = \\Phi_1\\left(\\frac{40}{20}\\right)^2 = 30\\times4 = 120\\,mWb.$'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Một hình vuông cạnh $5\\,cm$ đặt trong từ trường đều có cảm ứng từ $B = 4\\times10^{-4}\\,T$. Từ thông qua diện tích hình vuông đó bằng $10^{-6}\\,Wb$. Góc hợp giữa vectơ cảm ứng từ và vectơ pháp tuyến của hình vuông là',
+    imageUrl: '',
+    options: ['$0^\\circ$', '$30^\\circ$', '$60^\\circ$', '$90^\\circ$'],
+    answerKey: '$60^\\circ$',
+    explanationText: '$S = 25\\times10^{-4}\\,m^2.\\; cos\\alpha = \\frac{\\Phi}{BS} = \\frac{10^{-6}}{4\\times10^{-4}\\times25\\times10^{-4}} = \\frac{1}{2}.\\; \\Rightarrow \\alpha = 60^\\circ.$'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Một vòng dây dẫn tròn, phẳng có đường kính $2\\,cm$ đặt trong từ trường đều có cảm ứng từ $B = \\frac{1}{5\\pi}\\,T$. Từ thông qua vòng dây khi vectơ cảm ứng từ $\\vec B$ hợp với pháp tuyến $\\vec n$ của mặt phẳng vòng dây góc $60^\\circ$ bằng',
+    imageUrl: '',
+    options: [
+      '$\\sqrt{3}\\times10^{-5}\\,Wb$',
+      '$10^{-5}\\,Wb$',
+      '$\\sqrt{3}\\times10^{-4}\\,Wb$',
+      '$10^{-4}\\,Wb$'
+    ],
+    answerKey: '$10^{-5}\\,Wb$',
+    explanationText: '$r = 1\\,cm = 10^{-2}\\,m.\\; S = \\pi r^2 = \\pi\\times10^{-4}.\\; \\Phi = BScos60^\\circ = \\frac{1}{5\\pi}\\times\\pi\\times10^{-4}\\times\\frac{1}{2} = 10^{-5}\\,Wb.$'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Một khung dây hình chữ nhật ABCD gồm 20 vòng, cạnh $5\\,cm$ và $4\\,cm$. Khung đặt trong từ trường đều $B = 3\\times10^{-3}\\,T$, đường sức vuông góc với mặt phẳng khung. Quay khung góc $60^\\circ$ quanh cạnh AB. Độ biến thiên từ thông qua khung bằng',
+    imageUrl: '',
+    options: [
+      '$-60\\times10^{-6}\\,Wb$',
+      '$-45\\times10^{-6}\\,Wb$',
+      '$54\\times10^{-6}\\,Wb$',
+      '$-56\\times10^{-6}\\,Wb$'
+    ],
+    answerKey: '$-45\\times10^{-6}\\,Wb$',
+    explanationText: '$S = 20\\times10^{-4}\\,m^2.\\; \\Delta\\Phi = NBS(cos60^\\circ - 1) = 20\\times3\\times10^{-3}\\times20\\times10^{-4}\\times(-0{,}5) = -45\\times10^{-6}\\,Wb.$'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Một khung dây hình chữ nhật có chiều dài $25\\,cm$ đặt vuông góc với các đường sức từ của từ trường đều $B = 4\\times10^{-3}\\,T$. Từ thông xuyên qua khung dây là $10^{-4}\\,Wb$. Chiều rộng của khung dây là',
+    imageUrl: '',
+    options: ['1 cm', '10 cm', '1 m', '10 m'],
+    answerKey: '10 cm',
+    explanationText: '$S = \\frac{\\Phi}{B} = \\frac{10^{-4}}{4\\times10^{-3}} = 2{,}5\\times10^{-2}\\,m^2.\\; b = \\frac{S}{0{,}25} = 0{,}1\\,m = 10\\,cm.$'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Một hình vuông cạnh $5\\,cm$ đặt trong từ trường đều có cảm ứng từ $B = 8\\times10^{-4}\\,T$. Từ thông qua hình vuông bằng $10^{-6}\\,Wb$. Góc hợp bởi vectơ cảm ứng từ với mặt phẳng hình vuông là',
+    imageUrl: '',
+    options: ['$30^\\circ$', '$45^\\circ$', '$60^\\circ$', '$0^\\circ$'],
+    answerKey: '$30^\\circ$',
+    explanationText: '$cos\\alpha = \\frac{\\Phi}{BS} = \\frac{10^{-6}}{8\\times10^{-4}\\times25\\times10^{-4}} = \\frac{\\sqrt{3}}{2}.\\; \\Rightarrow \\alpha = 30^\\circ.$'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Một khung dây phẳng có diện tích $10\\,cm^2$ đặt trong từ trường đều, mặt phẳng khung dây hợp với đường cảm ứng từ một góc $30^\\circ$. Độ lớn từ thông qua khung là $3\\times10^{-5}\\,Wb$. Cảm ứng từ có giá trị là',
+    imageUrl: '',
+    options: [
+      '$3\\times10^{-2}\\,T$',
+      '$4\\times10^{-2}\\,T$',
+      '$5\\times10^{-2}\\,T$',
+      '$6\\times10^{-2}\\,T$'
+    ],
+    answerKey: '$6\\times10^{-2}\\,T$',
+    explanationText: '$S = 10\\times10^{-4}\\,m^2.\\; \\alpha = 60^\\circ.\\; B = \\frac{\\Phi}{Scos\\alpha} = \\frac{3\\times10^{-5}}{10\\times10^{-4}\\times0{,}5} = 6\\times10^{-2}\\,T.$'
+  },
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Hiểu',
+    type: 'MCQ',
+    promptText: 'Trong vòng dây không xuất hiện dòng điện cảm ứng khi nào?',
+    imageUrl: '',
+    options: [
+      'Khi nam châm chuyển động theo phương song song với mặt phẳng chứa vòng dây.',
+      'Vòng dây bị bóp méo.',
+      'Từ thông qua vòng dây có sự biến đổi.',
+      'Nam châm chuyển động xuyên qua vòng dây.'
+    ],
+    answerKey: 'Khi nam châm chuyển động theo phương song song với mặt phẳng chứa vòng dây.',
+    explanationText: 'Dòng điện cảm ứng chỉ xuất hiện khi từ thông qua vòng dây biến thiên. Nam châm chuyển động song song mặt phẳng vòng dây không làm thay đổi từ thông.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Hiểu',
+    type: 'MCQ',
+    promptText: 'Định luật Lenz về chiều của dòng điện cảm ứng là hệ quả của định luật bảo toàn',
+    imageUrl: '',
+    options: [
+      'năng lượng.',
+      'điện tích.',
+      'động lượng.',
+      'khối lượng.'
+    ],
+    answerKey: 'năng lượng.',
+    explanationText: 'Định luật Lenz đảm bảo sự bảo toàn năng lượng trong các hiện tượng cảm ứng điện từ.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Vận dụng',
+    type: 'MCQ',
+    promptText: 'Trong một vùng không gian rộng có từ trường đều. Tịnh tiến một khung dây phẳng, kín theo các cách sau:\nI. Mặt phẳng khung luôn vuông góc với các đường sức từ.\nII. Mặt phẳng khung luôn song song với các đường sức từ.\nIII. Mặt phẳng khung luôn hợp với các đường sức từ một góc không đổi.\nTrường hợp nào xuất hiện dòng điện cảm ứng trong khung?',
+    imageUrl: '',
+    options: [
+      'Trường hợp I.',
+      'Trường hợp II.',
+      'Trường hợp III.',
+      'Không có trường hợp nào.'
+    ],
+    answerKey: 'Không có trường hợp nào.',
+    explanationText: 'Trong cả ba trường hợp, từ thông qua khung không thay đổi khi khung chỉ tịnh tiến trong từ trường đều, nên không xuất hiện dòng điện cảm ứng.'
+  },
+
+  {
+    topic: 'TỪ TRƯỜNG',
+    lessonId: 'l3.3',
+    level: 'Hiểu',
+    type: 'MCQ',
+    promptText: 'Định luật Lenz được dùng để xác định',
+    imageUrl: '',
+    options: [
+      'độ lớn của suất điện động cảm ứng trong một mạch điện kín.',
+      'chiều dòng điện cảm ứng xuất hiện trong một mạch điện kín.',
+      'cường độ của dòng điện cảm ứng xuất hiện trong một mạch điện kín.',
+      'sự biến thiên của từ thông qua một mạch điện kín, phẳng.'
+    ],
+    answerKey: 'chiều dòng điện cảm ứng xuất hiện trong một mạch điện kín.',
+    explanationText: 'Định luật Lenz cho biết chiều dòng điện cảm ứng sao cho từ trường do nó sinh ra chống lại nguyên nhân gây ra sự biến thiên từ thông.'
+  },
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+  promptText: 'Các tương tác sau đây, tương tác không phải tương tác bằng lực từ là tương tác giữa',
+  imageUrl: '',
+  options: [
+    'hai nam châm.',
+    'hai dây dẫn mang điện.',
+    'hai điện tích đứng yên.',
+    'một nam châm và một dây dẫn mang điện.'
+  ],
+  answerKey: 'hai điện tích đứng yên.',
+  explanationText: 'Từ trường chỉ tác dụng lực từ lên nam châm, dòng điện và điện tích chuyển động. Hai điện tích đứng yên chỉ tương tác bằng lực điện.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+  promptText: 'Cho hai dây dẫn mang dòng điện đặt gần nhau, chúng có thể hút hoặc đẩy nhau thông qua',
+  imageUrl: '',
+  options: [
+    'lực từ.',
+    'lực điện.',
+    'lực hấp dẫn.',
+    'lực ma sát.'
+  ],
+  answerKey: 'lực từ.',
+  explanationText: 'Hai dây dẫn mang dòng điện tạo ra từ trường và tác dụng lực từ lên nhau.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+  promptText: 'Xung quanh vật nào sau đây không có từ trường?',
+  imageUrl: '',
+  options: [
+    'Thanh gỗ.',
+    'Thanh sắt bị nhiễm từ.',
+    'Nam châm.',
+    'Dòng điện.'
+  ],
+  answerKey: 'Thanh gỗ.',
+  explanationText: 'Thanh gỗ không có khả năng tạo ra từ trường.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Thông hiểu', type: 'MCQ',
+  promptText: '(Sở Vĩnh Phúc – TN THPT 2025) Phát biểu nào sau đây sai? Tính chất cơ bản của từ trường là tác dụng lực từ lên',
+  imageUrl: '',
+  options: [
+    'điện tích đứng yên đặt trong nó.',
+    'điện tích chuyển động trong nó.',
+    'nam châm đặt trong nó.',
+    'dòng điện đặt trong nó.'
+  ],
+  answerKey: 'điện tích đứng yên đặt trong nó.',
+  explanationText: 'Từ trường không tác dụng lực từ lên điện tích đứng yên, chỉ tác dụng lên điện tích chuyển động, dòng điện và nam châm.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+  promptText: 'Các đường sức từ quanh dây dẫn thẳng có dòng điện chạy qua có dạng',
+  imageUrl: '',
+  options: [
+    'Các đường thẳng song song với dòng điện.',
+    'Các đường thẳng vuông góc với dòng điện như nan hoa xe đạp.',
+    'Những vòng tròn đồng tâm thuộc mặt phẳng vuông góc với phương của dây dẫn, tâm nằm trên dây dẫn.',
+    'Những đường xoắn ốc dọc theo dòng điện.'
+  ],
+  answerKey: 'Những vòng tròn đồng tâm thuộc mặt phẳng vuông góc với phương của dây dẫn, tâm nằm trên dây dẫn.',
+  explanationText: 'Theo quy tắc nắm tay phải, đường sức từ quanh dây dẫn thẳng là các vòng tròn đồng tâm vuông góc với dây dẫn.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Thông hiểu', type: 'TrueFalse',
+  promptText: 'Từ trường Trái Đất là yếu tố quan trọng để la bàn có thể được sử dụng. Hãy nhận định đúng/sai cho các phát biểu sau khi nói về từ trường Trái Đất và la bàn trong ứng dụng xác định phương hướng.',
+  imageUrl: '',
+  subQuestions: [
+    {
+      id: 'sq1',
+      content: 'La bàn là phương pháp xác định phương hướng duy nhất trước khi có hệ thống định vị toàn cầu (GPS) và các ứng dụng như Google Bản đồ.',
+      isCorrect: false,
+      explanation: 'Ngoài la bàn, con người còn dùng các vì sao, hiện tượng Mặt Trời mọc – lặn, hay pha của Mặt Trăng để xác định phương hướng.'
+    },
+    {
+      id: 'sq2',
+      content: 'Khi đi theo kim la bàn về hướng Bắc, hướng ta đi dẫn đến chính xác cực Bắc địa lý.',
+      isCorrect: false,
+      explanation: 'Cực từ không trùng với cực địa lý nên đi theo hướng Bắc của kim la bàn sẽ không đến chính xác cực Bắc địa lý.'
+    },
+    {
+      id: 'sq3',
+      content: 'Cực Bắc địa lý gần với cực Nam từ trường của Trái Đất.',
+      isCorrect: true,
+      explanation: 'Cực Bắc của kim nam châm bị hút về cực Nam của từ trường Trái Đất, nên cực Bắc địa lý gần với cực Nam từ trường.'
+    },
+    {
+      id: 'sq4',
+      content: 'Từ trường Trái Đất bảo vệ Trái Đất khỏi sự tàn phá của các luồng gió Mặt Trời.',
+      isCorrect: true,
+      explanation: 'Từ trường Trái Đất tác dụng lực từ lên các chùm ion năng lượng cao từ gió Mặt Trời, giúp bảo vệ khí quyển.'
+    }
+  ],
+  answerKey: '',
+  explanationText: 'Dựa vào đặc điểm của từ trường Trái Đất, sự khác nhau giữa cực từ và cực địa lý, cũng như vai trò bảo vệ Trái Đất của từ trường.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Thông hiểu', type: 'TrueFalse',
+  promptText: 'Hãy nhận định đúng/sai cho các phát biểu sau khi nói về đường sức từ.',
+  imageUrl: '',
+  subQuestions: [
+    {
+      id: 'sq1',
+      content: 'Đường sức từ là những đường cong có thể kín hoặc hở tùy vào loại nam châm sinh ra từ trường đó.',
+      isCorrect: false,
+      explanation: 'Đường sức từ luôn là những đường cong khép kín.'
+    },
+    {
+      id: 'sq2',
+      content: 'Qua mỗi điểm trong không gian vẽ được một và chỉ một đường sức từ.',
+      isCorrect: true,
+      explanation: 'Tại mỗi điểm trong từ trường, hướng của từ trường được xác định duy nhất nên chỉ có một đường sức từ đi qua.'
+    },
+    {
+      id: 'sq3',
+      content: 'Hình dạng đường sức từ là khác nhau đối với những nam châm có hình dạng khác nhau.',
+      isCorrect: true,
+      explanation: 'Hình dạng và sự phân bố từ trường phụ thuộc vào hình dạng và cấu tạo của nam châm.'
+    },
+    {
+      id: 'sq4',
+      content: 'Ta có thể tạo ra đơn cực từ bằng cách bẻ đôi một nam châm thẳng.',
+      isCorrect: false,
+      explanation: 'Khi bẻ một nam châm, ta thu được hai nam châm mới, mỗi nam châm đều có đủ cực Bắc và cực Nam; đơn cực từ chưa từng được tạo ra trong thực tế.'
+    }
+  ],
+  answerKey: '',
+  explanationText: 'Dựa vào các tính chất cơ bản của đường sức từ và nam châm.'
+},
+{
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.1', level: 'Nhận biết', type: 'MCQ',
+  promptText: 'Theo mô hình cấu tạo hạt nhân, hạt nhân nguyên tử được cấu tạo bởi các hạt nào sau đây?',
+  imageUrl: '',
+  options: [
+    'Electron và proton.',
+    'Proton và neutron.',
+    'Electron và neutron.',
+    'Electron, proton và neutron.'
+  ],
+  answerKey: 'Proton và neutron.',
+  explanationText: 'Theo mô hình cấu tạo hạt nhân, hạt nhân nguyên tử gồm các proton và neutron, gọi chung là các hạt nucleon.'
+},
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.1', level: 'Thông hiểu', type: 'MCQ',
+  promptText: 'Ta thường ngửi được mùi thơm từ một tô phở nóng trong không khí ngào ngạt hơn so với một tô phở đã nguội. Theo thuyết động học phân tử chất khí, hiện tượng này được giải thích chủ yếu là do ở nhiệt độ cao, các phân tử hương liệu',
+  imageUrl: '',
+  options: [
+    'chuyển động hỗn loạn càng nhanh.',
+    'giãn nở và kích thước lớn hơn.',
+    'tương tác hút nhau mạnh hơn.',
+    'tập trung lại gần nhau hơn.'
+  ],
+  answerKey: 'chuyển động hỗn loạn càng nhanh.',
+  explanationText: 'Nhiệt độ cao làm các phân tử khí chuyển động nhanh hơn, hiện tượng khuếch tán diễn ra mạnh hơn.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.2', level: 'Thông hiểu', type: 'MCQ',
+  promptText: 'Tại các bãi tái chế kim loại, để nam châm điện có thể hút được khối sắt nặng hơn, người điều khiển cần thực hiện thao tác nào sau đây?',
+  imageUrl: '',
+  options: [
+    'Tăng cường độ dòng điện chạy qua ống dây.',
+    'Đảo chiều dòng điện liên tục.',
+    'Giảm cường độ dòng điện chạy qua ống dây.',
+    'Giữ nguyên cường độ dòng điện và tăng thời gian hút.'
+  ],
+  answerKey: 'Tăng cường độ dòng điện chạy qua ống dây.',
+  explanationText: 'Lực từ của nam châm điện tăng khi cường độ dòng điện qua ống dây tăng.'
+},
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.1', level: 'Nhận biết', type: 'MCQ',
+  promptText: 'Trong mô hình khí lí tưởng, các phân tử khí được xem như',
+  imageUrl: '',
+  options: [
+    'các vật rắn và chuyển động theo quỹ đạo tròn.',
+    'các quả cầu đàn hồi và hút nhau bằng lực hấp dẫn.',
+    'các chất điểm và đẩy nhau bằng lực tĩnh điện.',
+    'các chất điểm và không tương tác với nhau trừ khi va chạm.'
+  ],
+  answerKey: 'các chất điểm và không tương tác với nhau trừ khi va chạm.',
+  explanationText: 'Theo mô hình khí lí tưởng, các phân tử được coi là chất điểm và chỉ tương tác khi va chạm.'
+},
+{
+  topic: 'KHÍ LÍ TƯỞNG', lessonId: 'l2.1', level: 'Nhận biết', type: 'MCQ',
+  promptText: 'Theo thuyết động học phân tử, các phân tử cấu tạo nên vật ở thể rắn có đặc điểm chuyển động nào sau đây?',
+  imageUrl: '',
+  options: [
+    'Dao động xung quanh các vị trí cân bằng luôn thay đổi.',
+    'Chuyển động hỗn loạn về mọi hướng.',
+    'Dao động xung quanh các vị trí cân bằng xác định.',
+    'Đứng yên tuyệt đối, không có bất kỳ chuyển động nào.'
+  ],
+  answerKey: 'Dao động xung quanh các vị trí cân bằng xác định.',
+  explanationText: 'Ở thể rắn, các phân tử dao động quanh các vị trí cân bằng xác định.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.1', level: 'Nhận biết', type: 'MCQ',
+  promptText: 'Đại lượng đặc trưng cho từ trường về phương diện tác dụng lực từ là',
+  imageUrl: '',
+  options: [
+    'cảm ứng từ.',
+    'từ thông.',
+    'suất điện động cảm ứng.',
+    'cường độ dòng điện cảm ứng.'
+  ],
+  answerKey: 'cảm ứng từ.',
+  explanationText: 'Cảm ứng từ $\\vec{B}$ đặc trưng cho tác dụng lực từ của từ trường.'
+},
+{
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.2', level: 'Thông hiểu', type: 'MCQ',
+  promptText: 'Trong các phản ứng hạt nhân tỏa năng lượng, tổng khối lượng nghỉ của các hạt tạo thành so với trước phản ứng sẽ',
+  imageUrl: '',
+  options: [
+    'bằng nhau.',
+    'lớn hơn.',
+    'nhỏ hơn.',
+    'lớn hơn hoặc nhỏ hơn tùy nhiệt độ.'
+  ],
+  answerKey: 'nhỏ hơn.',
+  explanationText: 'Phản ứng hạt nhân tỏa năng lượng đi kèm sự hụt khối, theo hệ thức $E=mc^2$.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Thông hiểu', type: 'MCQ',
+  promptText: 'Ở vùng núi cao, những ngày băng tuyết tan chảy thường lạnh hơn. Nguyên nhân chủ yếu là do quá trình băng tan',
+  imageUrl: '',
+  options: [
+    'tỏa nhiệt làm không khí lạnh đi.',
+    'thu nhiệt từ môi trường làm không khí lạnh đi.',
+    'làm giảm độ ẩm không khí.',
+    'cản trở sự đối lưu của không khí.'
+  ],
+  answerKey: 'thu nhiệt từ môi trường làm không khí lạnh đi.',
+  explanationText: 'Băng tan là quá trình nóng chảy, vật thu nhiệt từ môi trường.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.3', level: 'Nhận biết', type: 'MCQ',
+  promptText: 'Trong thang nhiệt độ Kelvin, độ không tuyệt đối tương ứng với nhiệt độ nào trong thang Celsius?',
+  imageUrl: '',
+  options: [
+    '273℃.',
+    '-273℃.',
+    '-100℃.',
+    '0℃.'
+  ],
+  answerKey: '-273℃.',
+  explanationText: 'Theo công thức $T(K)=t(^\\circ C)+273$, suy ra độ không tuyệt đối là $-273^\\circ C$.'
+},
+{
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.3', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Một mẫu chất phóng xạ có chu kì bán rã $T$. Sau thời gian $\\Delta t=3T$, số hạt nhân đã phóng xạ bằng',
+  imageUrl: '',
+  options: [
+    '$0,125N_0$.',
+    '$0,250N_0$.',
+    '$0,750N_0$.',
+    '$0,875N_0$.'
+  ],
+  answerKey: '$0,875N_0$.',
+  explanationText: '$\\Delta N=N_0(1-2^{-t/T})=N_0(1-2^{-3})=0,875N_0$.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.3', level: 'Thông hiểu', type: 'MCQ',
+  promptText: 'Đèn pin lắc (Faraday Flashlight) hoạt động dựa trên hiện tượng nào?',
+  imageUrl: '',
+  options: [
+    'giao thoa ánh sáng.',
+    'nhiễm điện do cảm ứng.',
+    'cảm ứng điện từ.',
+    'nhiễm điện do cọ xát.'
+  ],
+  answerKey: 'cảm ứng điện từ.',
+  explanationText: 'Nam châm chuyển động làm từ thông qua cuộn dây biến thiên, sinh ra dòng điện cảm ứng.'
+},
+{
+  topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.1', level: 'Thông hiểu', type: 'MCQ',
+  promptText: 'Kết quả thí nghiệm Rutherford cho thấy phần lớn hạt $\\alpha$ xuyên qua lá vàng không lệch hướng. Điều này chứng tỏ',
+  imageUrl: '',
+  options: [
+    'hạt nhân mang điện dương.',
+    'nguyên tử chủ yếu là không gian rỗng.',
+    'hạt nhân chiếm toàn bộ thể tích nguyên tử.',
+    'điện tích dương phân bố đều.'
+  ],
+  answerKey: 'nguyên tử chủ yếu là không gian rỗng.',
+  explanationText: 'Nếu nguyên tử đặc thì hạt $\\alpha$ sẽ bị lệch nhiều; thực nghiệm cho thấy nguyên tử phần lớn là rỗng.'
+},
+{
+  topic: 'TỪ TRƯỜNG', lessonId: 'l3.2', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Một đoạn dây dẫn thẳng dài $l = 0,2\\,m$ mang dòng điện $I = 5\\,A$ đặt trong từ trường đều có cảm ứng từ $B = 0,5\\,T$. Dây dẫn hợp với pháp tuyến của các đường sức từ một góc $30^\\circ$. Lực từ tác dụng lên đoạn dây có độ lớn bằng',
+  imageUrl: '',
+  options: [
+    '0,25 N.',
+    '0,34 N.',
+    '0,43 N.',
+    '0,50 N.'
+  ],
+  answerKey: '0,43 N.',
+  explanationText: 'Lực từ tác dụng lên đoạn dây: $F = BIl\\sin\\alpha = 0,5\\times5\\times0,2\\times\\sin(90^\\circ-30^\\circ) \\approx 0,43\\,N$.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.1', level: 'Thông hiểu', type: 'MCQ',
+  promptText: 'Trong công nghệ in 3D, vật liệu in được gia nhiệt để chuyển sang thể lỏng và sau khi ra khỏi đầu phun lại nhanh chóng chuyển sang thể rắn để định hình sản phẩm. Các quá trình chuyển thể nào liên quan trực tiếp đến công đoạn này?',
+  imageUrl: '',
+  options: [
+    'đông đặc và hóa hơi.',
+    'nóng chảy và ngưng tụ.',
+    'thăng hoa và ngưng kết.',
+    'nóng chảy và đông đặc.'
+  ],
+  answerKey: 'nóng chảy và đông đặc.',
+  explanationText: 'Gia nhiệt làm vật liệu chuyển từ rắn sang lỏng là quá trình nóng chảy; sau đó vật liệu chuyển từ lỏng sang rắn là quá trình đông đặc.'
+},
+{
+  topic: 'VẬT LÍ NHIỆT', lessonId: 'l1.2', level: 'Vận dụng', type: 'MCQ',
+  promptText: 'Một học sinh nhúng cylinder chứa khí vào nước đá lạnh và đồng thời dùng tay nén nhanh piston. Theo quy ước dấu của Nguyên lí I nhiệt động lực học, trong quá trình này',
+  imageUrl: '',
+  options: [
+    '$A < 0;\\ Q > 0$.',
+    '$A > 0;\\ Q < 0$.',
+    '$A > 0;\\ Q > 0$.',
+    '$A < 0;\\ Q < 0$.'
+  ],
+  answerKey: '$A > 0;\\ Q < 0$.',
+  explanationText: 'Khối khí nhận công từ bên ngoài nên $A > 0$; đồng thời khí tỏa nhiệt ra môi trường lạnh nên $Q < 0$.'
+},
+
+
+
+
+
+
+
+
 
 
 ];
