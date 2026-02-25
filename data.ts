@@ -7110,7 +7110,45 @@ $$c = \\frac{Q}{m\\Delta T}
   answerKey: '$A > 0;\\ Q < 0$.',
   explanationText: 'Khối khí nhận công từ bên ngoài nên $A > 0$; đồng thời khí tỏa nhiệt ra môi trường lạnh nên $Q < 0$.'
 },
+  {
+    topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.1', level: 'Hiểu', type: 'MCQ',
+    promptText: 'Hạt nhân nguyên tử được cấu tạo từ những hạt nào?',
+    imageUrl: '',
+    options: ['Electron và proton.', 'Proton và nơtron.', 'Electron và nơtron.', 'Proton, nơtron và electron.'],
+    answerKey: 'Proton và nơtron.',
+    explanationText: 'Hạt nhân gồm proton (mang điện dương) và nơtron (không mang điện).'
+  },
 
+  {
+    topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.2', level: 'Vận dụng', type: 'MCQ',
+    promptText: 'Độ hụt khối của hạt nhân được xác định bằng công thức nào?',
+    imageUrl: '',
+    options: ['Δm = Zm_p + Nm_n - m_hn', 'Δm = m_hn - Zm_p - Nm_n', 'Δm = Zm_p - Nm_n', 'Δm = m_hn + Zm_p + Nm_n'],
+    answerKey: 'Δm = Zm_p + Nm_n - m_hn',
+    explanationText: 'Độ hụt khối: Δm = Zm_p + Nm_n - m_hn.'
+  },
+
+  {
+    topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.3', level: 'Hiểu', type: 'TrueFalse',
+    promptText: 'Xét các phát biểu về hiện tượng phóng xạ:',
+    imageUrl: '',
+    subQuestions: [
+      { id: 'sq1', content: 'Phóng xạ là hiện tượng hạt nhân tự phát ra tia phóng xạ.', isCorrect: true, explanation: 'Phóng xạ là quá trình tự phát.' },
+      { id: 'sq2', content: 'Chu kì bán rã phụ thuộc vào nhiệt độ môi trường.', isCorrect: false, explanation: 'Chu kì bán rã chỉ phụ thuộc bản chất hạt nhân.' },
+      { id: 'sq3', content: 'Tia α là dòng các hạt nhân $^4_2He$.', isCorrect: true, explanation: 'Tia α chính là hạt nhân heli.' },
+      { id: 'sq4', content: 'Tia β luôn là dòng electron.', isCorrect: false, explanation: 'Tia β có thể là β⁻ hoặc β⁺.' }
+    ],
+    answerKey: '',
+    explanationText: 'Dựa vào bản chất các loại tia phóng xạ.'
+  },
+
+  {
+    topic: 'HẠT NHÂN & PHÓNG XẠ', lessonId: 'l4.3', level: 'Vận dụng', type: 'Short',
+    promptText: 'Một chất phóng xạ có chu kì bán rã T = 5 năm. Sau 15 năm, khối lượng còn lại bằng bao nhiêu phần trăm ban đầu?',
+    imageUrl: '',
+    answerKey: '12.5',
+    explanationText: '15 năm = 3T → m = m_0.(1/2)^3 = m_0/8 = 12,5%.'
+  },
 
 
 
