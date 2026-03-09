@@ -3835,6 +3835,10 @@ const saveData = async () => {
     try {
         await updateDoc(doc(db, 'users', user.uid), firestoreUpdates);
         console.log("Đã lưu điểm lên hệ thống!");
+        // 👇👇👇 THÊM 2 DÒNG NÀY VÀO ĐÂY 👇👇👇
+      localStorage.removeItem('bxh_ALL_TOTAL'); // Xóa cache BXH Tổng
+      localStorage.removeItem('time_bxh_ALL_TOTAL'); // Xóa mốc thời gian BXH Tổng
+      // 👆👆👆 KẾT THÚC THÊM 👆👆👆
     } catch (error) {
         console.error("Lỗi lưu điểm:", error);
     }
