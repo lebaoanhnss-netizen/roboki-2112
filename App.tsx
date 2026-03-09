@@ -3835,10 +3835,16 @@ const saveData = async () => {
     try {
         await updateDoc(doc(db, 'users', user.uid), firestoreUpdates);
         console.log("Đã lưu điểm lên hệ thống!");
-        // 👇👇👇 THÊM 2 DÒNG NÀY VÀO ĐÂY 👇👇👇
-      localStorage.removeItem('bxh_ALL_TOTAL'); // Xóa cache BXH Tổng
-      localStorage.removeItem('time_bxh_ALL_TOTAL'); // Xóa mốc thời gian BXH Tổng
-      // 👆👆👆 KẾT THÚC THÊM 👆👆👆
+        
+        // 👇👇👇 THAY BẰNG ĐOẠN NÀY ĐỂ QUÉT SẠCH MỌI CACHE BẢNG XẾP HẠNG 👇👇👇
+        Object.keys(localStorage).forEach(key => {
+            // Kiểm tra: Cứ cái nào là cache của bảng xếp hạng thì xóa hết
+            if (key.startsWith('bxh_') || key.startsWith('time_bxh_')) {
+                localStorage.removeItem(key);
+            }
+        });
+        // 👆👆👆 KẾT THÚC ĐOẠN QUÉT DỌN 👆👆👆
+        
     } catch (error) {
         console.error("Lỗi lưu điểm:", error);
     }
